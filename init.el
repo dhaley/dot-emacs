@@ -66,6 +66,17 @@
     (mapc (apply-partially #'add-to-list 'exec-path)
           (nreverse (split-string (getenv "PATH") ":")))))
 
+
+
+(setq auth-sources (quote ((:source "~/git/.emacs.d/.authinfo.gpg"
+                                    :host t :protocol t))))
+
+
+
+;;;_. load pre-settings
+(org-babel-load-file "~/git/.emacs.d/dkh-pre-setup.org")
+
+
 ;;;_ , Load customization settings
 
 (defvar running-alternate-emacs nil)
@@ -669,6 +680,14 @@
 (bind-key "C-h e v" 'find-variable)
 (bind-key "C-h e V" 'apropos-value)
 
+(setq package-archives
+      '(("original"    . "http://tromey.com/elpa/")
+        ("gnu"         . "http://elpa.gnu.org/packages/")
+        ("marmalade"   . "http://marmalade-repo.org/packages/")))
+(package-initialize)
+
+
+
 ;;;_. Packages
 
 ;;;_ , el-get
@@ -1240,23 +1259,23 @@
 (use-package bbdb-com
   :bind ("M-B" . bbdb))
 
-;;;_ , bm
+;_ , bm
 
-(use-package bm
-  :pre-init
-  (progn
-    (defvar ctl-period-breadcrumb-map)
-    (define-prefix-command 'ctl-period-breadcrumb-map)
-    (bind-key "C-. c" 'ctl-period-breadcrumb-map))
-
-  :bind (("C-. c b" . bm-last-in-previous-buffer)
-         ("C-. c f" . bm-first-in-next-buffer)
-         ("C-. c g" . bm-previous)
-         ("C-. c l" . bm-show-all)
-         ("C-. c c" . bm-toggle)
-         ("C-. c m" . bm-toggle)
-         ("C-. c n" . bm-next)
-         ("C-. c p" . bm-previous)))
+ (use-package bm
+   :pre-init
+   (progn
+     (defvar ctl-period-breadcrumb-map)
+     (define-prefix-command 'ctl-period-breadcrumb-map)
+     (bind-key "C-. c" 'ctl-period-breadcrumb-map))
+ 
+   :bind (("C-. c b" . bm-last-in-previous-buffer)
+          ("C-. c f" . bm-first-in-next-buffer)
+          ("C-. c g" . bm-previous)
+          ("C-. c l" . bm-show-all)
+          ("C-. c c" . bm-toggle)
+          ("C-. c m" . bm-toggle)
+          ("C-. c n" . bm-next)
+          ("C-. c p" . bm-previous)))
 
 ;;;_ , bookmark
 
@@ -1813,15 +1832,15 @@ FORM => (eval FORM)."
 (use-package gist
   :bind ("C-c G" . gist-region-or-buffer))
 
-;;;_ , gnus
 
-(use-package dot-gnus
+;;;_ , gnus
+(use-package dkh-gnus
   :bind (("M-G"   . switch-to-gnus)
          ("C-x m" . compose-mail))
   :init
   (progn
-    (setq gnus-init-file (expand-file-name "dot-gnus" user-emacs-directory)
-          gnus-home-directory "~/Messages/Gnus/")))
+    (setq gnus-init-file "~/git/.emacs.d/dot-gnus.el"
+          gnus-home-directory "~/git/gnus")))
 
 ;;;_ , grep
 
@@ -2689,27 +2708,35 @@ end tell" account account start duration commodity (if cleared "true" "false")
 
     (bind-key "C-H" 'tidy-xml-buffer nxml-mode-map)))
 
-;;;_ , org-mode
-
-(use-package dot-org
-  :commands org-agenda-list
-  :bind (("M-C"   . jump-to-org-agenda)
-         ("M-m"   . org-smart-capture)
-         ("M-M"   . org-inline-note)
-         ("C-c a" . org-agenda)
-         ("C-c S" . org-store-link)
-         ("C-c l" . org-insert-link))
-  :init
-  (progn
-    (unless running-alternate-emacs
-      (run-with-idle-timer 300 t 'jump-to-org-agenda))
-
-    (if (string-match "\\.elc\\'" load-file-name)
-        (add-hook 'after-init-hook
-                  #'(lambda ()
-                      (org-agenda-list)
-                      (org-fit-agenda-window)
-                      (org-resolve-clocks))) t)))
+;; ;;;_ , org-mode
+;; 
+ (setq org-user-agenda-files (quote (
+ "~/git/dkh-org/todo.org"
+ "~/git/dkh-org/refile.org"
+ "~/git/dkh-org/.org-jira/FIT.org"
+ )))
+;; 
+;; (require 'org-habit) ;; added by dkh
+;; 
+;; (use-package dkh-org
+;;   :commands org-agenda-list
+;;   :bind (("M-C"   . jump-to-org-agenda)
+;;          ("M-m"   . org-smart-capture)
+;;          ("M-M"   . org-inline-note)
+;;          ("C-c a" . org-agenda)
+;;          ("C-c S" . org-store-link)
+;;          ("C-c l" . org-insert-link))
+;;   :init
+;;   (progn
+;;     (unless running-alternate-emacs
+;;       (run-with-idle-timer 300 t 'jump-to-org-agenda))
+;; 
+;;     (if (string-match "\\.elc\\'" load-file-name)
+;;         (add-hook 'after-init-hook
+;;                   #'(lambda ()
+;;                       (org-agenda-list)
+;;                       (org-fit-agenda-window)
+;;                       (org-resolve-clocks))) t)))
 
 ;;;_ , paredit
 
@@ -3164,7 +3191,8 @@ end tell" account account start duration commodity (if cleared "true" "false")
 
 (use-package smart-compile
   :commands smart-compile
-  :bind (("C-c c" . smart-compile)
+  :bind (
+;;         ("C-c c" . smart-compile)
          ("A-n"   . next-error)
          ("A-p"   . previous-error))
   :init
@@ -3519,17 +3547,39 @@ end tell"))))
 
 (use-package workgroups
   :diminish workgroups-mode
+  :commands wg-switch-to-index-1
   :if (not noninteractive)
   :init
   (progn
+    (defvar workgroups-preload-map)
+    (define-prefix-command 'workgroups-preload-map)
+
+    (bind-key "C-8" 'workgroups-preload-map)
+    (bind-key "C-8" 'wg-switch-to-index-1 workgroups-preload-map)
+    (bind-key "0" 'wg-switch-to-index-0 workgroups-preload-map)
+    (bind-key " 1" 'wg-switch-to-index-1 workgroups-preload-map)
+    (bind-key " 2" 'wg-switch-to-index-2 workgroups-preload-map)
+    (bind-key " 3" 'wg-switch-to-index-3 workgroups-preload-map)
+    (bind-key " 4" 'wg-switch-to-index-4 workgroups-preload-map)
+    (bind-key " 5" 'wg-switch-to-index-5 workgroups-preload-map)
+    (bind-key " 6" 'wg-switch-to-index-6 workgroups-preload-map)
+    (bind-key " 7" 'wg-switch-to-index-7 workgroups-preload-map)
+    (bind-key " 8" 'wg-switch-to-index-8 workgroups-preload-map)
+    (bind-key " 9" 'wg-switch-to-index-9 workgroups-preload-map)
+)
+
+  :config
+  (progn
     (workgroups-mode 1)
 
-    (let ((workgroups-file (expand-file-name "workgroups" user-data-directory)))
+
+    (let ((workgroups-file (expand-file-name "workgroups" user-emacs-directory)))
       (if (file-readable-p workgroups-file)
           (wg-load workgroups-file)))
 
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
     (bind-key "\\" 'toggle-input-method wg-map)))
+
 
 ;;;_ , wrap-region
 
@@ -3615,11 +3665,11 @@ end tell"))))
 # --
 $0"))))
 
-    (bind-key "C-c y TAB" 'yas/expand)
-    (bind-key "C-c y n" 'yas/new-snippet)
-    (bind-key "C-c y f" 'yas/find-snippets)
-    (bind-key "C-c y r" 'yas/reload-all)
-    (bind-key "C-c y v" 'yas/visit-snippet-file)))
+(bind-key "C-c y TAB" 'yas/expand)
+(bind-key "C-c y n" 'yas/new-snippet)
+(bind-key "C-c y f" 'yas/find-snippets)
+(bind-key "C-c y r" 'yas/reload-all)
+(bind-key "C-c y v" 'yas/visit-snippet-file)))
 
 ;;;_ , yaoddmuse
 
@@ -3645,6 +3695,8 @@ $0"))))
     (defvar zencoding-mode-keymap (make-sparse-keymap))
     (bind-key "C-c C-c" 'zencoding-expand-line zencoding-mode-keymap)))
 
+
+
 ;;;_. Post initialization
 
 (when window-system
@@ -3659,6 +3711,30 @@ $0"))))
                  (message "Loading %s...done (%.3fs) [after-init]"
                           ,load-file-name elapsed)))
             t))
+
+
+;; fix ls probs with dired
+(when (eq system-type 'darwin)
+  (require 'ls-lisp)
+  (setq ls-lisp-use-insert-directory-program nil))
+
+(require 'color-theme)
+(require 'color-theme-solarized)
+(load-theme 'solarized-dark t)
+
+;;(require 'smex)
+(org-babel-load-file "~/.emacs.d/dkh-core.org")
+
+;;Mo functions
+(org-babel-load-file "~/.emacs.d/dkh-functions.org")
+
+;; Mo keybindings
+(org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
+
+(org-babel-load-file "~/.emacs.d/dkh-org.org")
+
+;;;_. Load some private settings
+(org-babel-load-file "~/git/.emacs.d/dkh-private.org")
 
 ;; Local Variables:
 ;;   mode: emacs-lisp

@@ -575,7 +575,7 @@ annotate your elisp in the following file:
 
 (unless noninteractive
   (if running-alternate-emacs
-      (progn
+      (progn 
         (defvar emacs-min-top (if (= 1050 (x-display-pixel-height)) 389 537))
         (defvar emacs-min-left 9)
         (defvar emacs-min-height (if (= 1050 (x-display-pixel-height)) 25 35))
@@ -7348,6 +7348,17 @@ This command will also put the text in register 0. (see: `copy-to-register')"
        (buffer-string) )) ) )
 
 #+end_src 
+** Increase text macros
+*** blow up text
+#+begin_src emacs-lisp 
+
+(fset 'blow_up_text_plus_four
+   [?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x])
+
+(global-set-key (kbd "C-c 4") 'blow_up_text_plus_four)
+
+#+end_src 
+
 * Value added packages
 ** Abbrev
 I like abbrev cause it saves typing
@@ -9366,7 +9377,7 @@ needed.
 #+end_src 
 
 *** For Gnus
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp 
 
 ;;(define-key gnus-article-mode-map (kbd "M-w") 'org-w3m-copy-for-org-mode)
 (define-key gnus-article-mode-map (kbd "C-c C-x M-w") 'org-w3m-copy-for-org-mode)
@@ -9375,7 +9386,7 @@ needed.
 
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp
 
 (setq apropos-url-alist
       '(("^gw?:? +\\(.*\\)" . ;; Google Web 
@@ -9457,7 +9468,7 @@ needed.
   (browse-url-url-at-point) 
 (thing-at-point 'word)
 ))
-  (if arg
+  (if rag
       (when url (browse-url-default-browser url))
     (if  url (browse-url url) (call-interactively 'browse-url))
     ))
@@ -9552,7 +9563,7 @@ or before point."
 
 (defun rgr/browse (url)
   "If prefix is specified use the system default browser else use the configured emacs one"
-  (if current-prefix-arg
+  (if current-prefix-rag
 ;;      (when url (browse-url-default-browser url))
       (when url (browse-url-generic url))
     (if  url (browse-url url) (call-interactively 'browse-url))
@@ -9624,7 +9635,7 @@ or before point."
                      "<a href=\\([^>]+\\)><img src=/\\(intl/[^/]+/\\)?nav_next.gif"
                      nil t)
                 (match-string 1)))
-        (prev (when (re-search-backward
+        (perv (when (re-search-backward
                      "<a href=\\([^>]+\\)><img src=/\\(intl/[^/]+/\\)?nav_previous.gif"
                      nil t)
                 (match-string 1))))

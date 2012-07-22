@@ -1,0 +1,11 @@
+;;; .w3m-session  -*- mode: emacs-lisp; coding: utf-8 -*-
+;; This file is generated automatically by emacs-w3m v1.4.442.
+
+(("Automatic saved sessions-1"
+  (20491 25755 203268)
+  (("http://www.google.com/search?q=http://www.google.com&ie=utf-8&oe=utf-8" nil nil "http://www.google.com - Google Search"))
+  0)
+ ("Automatic saved sessions-2"
+  (20490 13236 177630)
+  (("http://webhelper.centurylink.com/index.php?origURL=http://emacs_string-rectangle_ascii-art.html/" nil nil "Website Suggestions"))
+  nil))

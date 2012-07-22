@@ -59,8 +59,8 @@ http://www.boostpro.com") ("NewArtisans" "" "\"John Wiegley\" <johnw@newartisans
  '(gnus-score-default-duration (quote p))
  '(gnus-score-expiry-days 30)
  '(gnus-select-group-hook (quote (gnus-group-set-timestamp)))
- '(gnus-select-method (quote (nnimap "Local" (nnimap-stream shell) (nnimap-shell-program "/usr/local/libexec/dovecot/imap"))))
- '(gnus-sieve-file "~/Messages/dovecot.sieve")
+;; '(gnus-select-method (quote (nnimap "Local" (nnimap-stream shell) (nnimap-shell-program "/usr/local/libexec/dovecot/imap"))))
+;; '(gnus-sieve-file "~/Messages/dovecot.sieve")
  '(gnus-sieve-select-method "nnimap:Local")
  '(gnus-signature-separator (quote ("^-- $" "^-- *$" "^_____+$")))
  '(gnus-simplify-subject-functions (quote (gnus-simplify-subject-fuzzy)))
@@ -149,7 +149,9 @@ http://www.boostpro.com") ("NewArtisans" "" "\"John Wiegley\" <johnw@newartisans
  '(spam-report-gmane-use-article-number nil)
  '(spam-sa-learn-program "/opt/local/bin/sa-learn-5.12")
  '(spam-use-regex-headers t)
- '(spam-use-spamassassin t))
+ '(spam-use-spamassassin t)
+ '(gnus-init-file "~/git/.emacs.d/dkh-gnus.el")
+ '(message-signatrue-directory "~/git/.emacs.d/sig/"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
