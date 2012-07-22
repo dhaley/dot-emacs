@@ -828,6 +828,13 @@ annotate your elisp in the following file:
 #+end_src
 
 
+* Starter kit
+#+begin_src emacs-lisp 
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+#+end_src 
+
 * Custom settings
 ** Custom file location
 
@@ -1372,8 +1379,7 @@ dim-switch-window.el will look like if you happen to use it:
 
 Switch window the cowabunga, dude! way
 
-#+begin_src emacs-lisp :tangle no 
-
+#+begin_src emacs-lisp 
 (require 'switch-window)
 
 #+end_src 
@@ -1395,7 +1401,7 @@ Switch window the cowabunga, dude! way
 #+end_src 
 *** Window Number Mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp 
 
 (require 'window-number)
 (window-number-mode)
