@@ -39,7 +39,7 @@
  '(bm-highlight-style (quote bm-highlight-only-fringe))
  '(bmkp-bmenu-commands-file "~/.emacs.d/data/bmk-bmenu-commands.el")
  '(bmkp-bmenu-state-file "~/git/.emacs.d/.emacs-bmk-bmenu-state.el")
- '(bmkp-last-as-first-bookmark-file "~/git/.emacs.d/.emacs.bmk")
+ '(bmkp-last-as-first-bookmark-file nil)
  '(bookmark-default-file "~/git/.emacs.d/.emacs.bmk")
  '(browse-url-browser-function (quote ((".*" . browse-url-default-macosx-browser))))
  '(byte-compile-verbose nil)
