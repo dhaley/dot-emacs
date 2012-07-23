@@ -3814,6 +3814,8 @@ $0"))))
 
 (org-babel-load-file "~/.emacs.d/dkh-org.org")
 
+(org-babel-load-file "~/.emacs.d/dkh-php.org")
+
 ;;;_. Load some private settings
 (org-babel-load-file "~/git/.emacs.d/dkh-private.org")
 

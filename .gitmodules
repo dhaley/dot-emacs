@@ -247,3 +247,9 @@
 [submodule "site-lisp/org-jira"]
 	path = site-lisp/org-jira
 	url = https://github.com/baohaojun/org-jira
+[submodule "site-lisp/phpplus-mode"]
+	path = site-lisp/phpplus-mode
+	url = https://github.com/echosa/phpplus-mode.git
+[submodule "site-lisp/drupal-mode"]
+	path = site-lisp/drupal-mode
+	url = https://github.com/underhilllabs/drupal-mode.git
