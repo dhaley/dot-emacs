@@ -131,8 +131,6 @@
    "speedbar" "cedet" "ecb" "hook_menu_alter" "theme engine" "auto complete"
    "auto completion" "bbdb" "hippy" "\svariant\s" "json" "magit" "w3m"
    "dired" "bitcoin" ))
- '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs")
- '(erc-log-write-after-send t)
  '(erc-modules (quote (autojoin button completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track highlight-nicknames)))
  '(erc-nick "dkh")
  '(erc-port 6667)
@@ -142,7 +140,7 @@
  '(erc-replace-alist (quote (("</?FONT>" . ""))))
  '(erc-server "asimov.freenode.net")
  '(erc-services-mode t)
- '(erc-text-matched-hook (quote (erc-log-matches erc-hide-fools my-erc-hook)))
+ '(erc-text-matched-hook (quote (erc-hide-fools my-erc-hook)))
  '(erc-track-enable-keybindings t)
  '(erc-track-exclude-types (quote ("JOIN" "KICK" "NICK" "PART" "QUIT" "MODE" "333" "353")))
  '(erc-track-faces-priority-list (quote (erc-error-face (erc-nick-default-face erc-current-nick-face) erc-current-nick-face erc-keyword-face (erc-nick-default-face erc-pal-face) erc-pal-face erc-nick-msg-face erc-direct-msg-face)))

@@ -1,0 +1,5 @@
+;;; Automatically generated on Sun Jul 22 21:49:46 2012
+;;; Invoked by daha1836@UCOMM-WEB-L-010.local using 24.1.1
+(setq-default extended-command-history '("im"))
+(setq-default occur-collect-regexp-history '("\\1"))
+(setq-default yes-or-no-p-history '("yes"))

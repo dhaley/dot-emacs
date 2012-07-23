@@ -70,8 +70,8 @@
 
 (defvar running-alternate-emacs nil)
 
-(if (string-match (concat "/Applications/\\(Misc/\\)?"
-                          "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
+(if (string-match (concat "/Applications/\\(MacPorts\\)?"
+                          "/Emacs.app/Contents/MacOS/")
                   invocation-directory)
 
     (let ((settings (with-temp-buffer
@@ -79,7 +79,7 @@
                        (expand-file-name "settings.el" user-emacs-directory))
                       (goto-char (point-min))
                       (read (current-buffer))))
-          (suffix (downcase (match-string 2 invocation-directory))))
+          (suffix (downcase (match-string 1 invocation-directory))))
 
       (setq running-alternate-emacs t
             user-data-directory
@@ -3710,19 +3710,18 @@ $0"))))
 (require 'color-theme-solarized)
 (load-theme 'solarized-dark t)
 
-;;(require 'smex)
-(org-babel-load-file "~/.emacs.d/dkh-core.org")
-
-;;Mo functions
-(org-babel-load-file "~/.emacs.d/dkh-functions.org")
-
-;; Mo keybindings
-(org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
-
-(org-babel-load-file "~/.emacs.d/dkh-org.org")
-
-;;;_. Load some private settings
-(org-babel-load-file "~/git/.emacs.d/dkh-private.org")
+;; (org-babel-load-file "~/.emacs.d/dkh-core.org")
+;; 
+;; ;;Mo functions
+;; (org-babel-load-file "~/.emacs.d/dkh-functions.org")
+;; 
+;; ;; Mo keybindings
+;; (org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
+;; 
+;; (org-babel-load-file "~/.emacs.d/dkh-org.org")
+;; 
+;; ;;;_. Load some private settings
+;; (org-babel-load-file "~/git/.emacs.d/dkh-private.org")
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
