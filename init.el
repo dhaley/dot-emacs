@@ -714,7 +714,7 @@
 ;;;_ , el-get
 
 (use-package el-get
-  :disabled t
+;;  :disabled t
   :commands (el-get
              el-get-install
              el-get-update
@@ -1696,7 +1696,9 @@ The output appears in the buffer `*Async Shell Command*'."
     (use-package erc-alert)
     (use-package erc-highlight-nicknames)
 ;;    (use-package erc-patch)
-
+    
+;;    (use-package
+    (erc-match-mode 1)
     (use-package erc-yank
       :init
       (bind-key "C-y" 'erc-yank erc-mode-map))
@@ -1805,6 +1807,36 @@ but not mobile urls.")
     (eval-after-load 'erc-button
       '(add-to-list 'erc-button-alist
                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
+
+
+ ;;    (defvar growlnotify-command (executable-find "growlnotify") "The path to growlnotify")
+ ;;
+ ;;   (defun growl (title message)
+ ;;     "Shows a message through the growl notification system using
+ ;;`growlnotify-command` as the program."
+ ;;     (flet ((encfn (s) (encode-coding-string s (keyboard-coding-system))) )
+ ;;       (let* ((process (start-process "growlnotify" nil
+ ;;                                      growlnotify-command
+ ;;                                      (encfn title)
+ ;;                                      "-a" "Emacs"
+ ;;                                      "-n" "Emacs")))
+ ;;         (process-send-string process (encfn message))
+ ;;         (process-send-string process "\n")
+ ;;         (process-send-eof process)))
+ ;;     t)
+ ;;
+ ;;   (defun my-erc-hook (match-type nick message)
+ ;;     "Shows a growl notification, when user's nick was mentioned. If the buffer is currently not visible, makes it sticky."
+ ;;     (unless (posix-string-match "^\\** *Users on #" message)
+ ;;       (growl
+ ;;        (concat "ERC: name mentioned on: " (buffer-name (current-buffer)))
+ ;;        message
+ ;;        )))
+ ;;
+ ;;   (add-hook 'erc-text-matched-hook 'my-erc-hook)
+
+;; (remove-hook 'erc-text-matched-hook 'my-erc-hook)
+    
     ))
 
 ;;;_ , eshell
@@ -1920,6 +1952,18 @@ but not mobile urls.")
           nnml-directory "~/git/gnus/Mail"
           nntp-marks-directory "~/git/gnus/News/"
           )
+    (use-package org-mime)
+    (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
+    (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
+    ;;  (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
+    (add-hook 'message-mode-hook 'orgtbl-mode 'append)
+    (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
+    (add-hook 'message-mode-hook
+              '(lambda () (setq fill-column 72))
+              'append)
+    (add-hook 'message-mode-hook
+              '(lambda () (local-set-key (kbd "C-c M-o") 'org-mime-htmlize))
+              'append)
     ))
 
 
