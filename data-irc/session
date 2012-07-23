@@ -1,8 +1,18 @@
-;;; Automatically generated on Sun Jul 22 19:24:18 2012
+;;; Automatically generated on Sun Jul 22 21:00:07 2012
 ;;; Invoked by daha1836@UCOMM-WEB-L-010.local using 24.1.1
+(setq-default kill-ring '("/opt/local/etc/bitlbee/bitlbee.conf" #("(match-string 2 invocation-directory)" 0 1 (face esk-paren-face fontified t) 1 36 (fontified t) 36 37 (face esk-paren-face fontified t)) "
+
+"))
+(setq-default session-file-alist '(("~/git/dkh-org/refile.org" 1 nil 1 nil nil nil (overwrite-mode)) ("~/.emacs.d/org-clock-save.el" 295 nil 1 nil nil 295 (overwrite-mode)) ("~/.emacs.d/init.el" 2786 2677 1 nil nil 2714 (overwrite-mode))))
+(setq-default file-name-history '("~/.emacs.d/init.el"))
+(setq-default search-ring '("erc" "bmk" "suff" "alter"))
+(setq-default buffer-name-history '("init.el"))
+(setq-default command-history '((im) (td 1) (irc) (describe-function (quote im)) (describe-variable (quote user-data-directory)) (describe-variable (quote erc-auto-query)) (describe-function (quote with-temp-buffer)) (describe-variable (quote invocation-directory)) (switch-to-buffer "init.el") (describe-function (quote match-string))))
 (setq-default hi-lock-face-history '("hi-yellow" "hi-pink" "hi-green" "hi-blue" "hi-black-b" "hi-blue-b" "hi-red-b" "hi-green-b" "hi-black-hb"))
+(setq-default ido-buffer-history '("init.el"))
+(setq-default minibuffer-history '("6667" "erc" "im" "package-install" "td" "irc" "user-data-directory" "erc-auto-query" "with-temp-buffer" "invocation-directory" "match-string"))
 (setq-default occur-collect-regexp-history '("\\1"))
-(setq-default smex-history '(bookmark-save td bm-show-all w3m-search bookmark-bmenu-list rename-file eb))
+(setq-default smex-history '(package-install im td irc erc bookmark-save bm-show-all))
 (set-register 65 '(file . "~/git/.emacs.d/.eshell/alias"))
 (set-register 67 '(file . "~/git/cu/centers.org"))
 (set-register 69 '(file . "~/git/cu/eac.org"))

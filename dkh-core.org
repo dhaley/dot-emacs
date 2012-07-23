@@ -440,7 +440,7 @@ annotate your elisp in the following file:
    el-get ; el-get is self-hosting
    emacs-w3m
    emoticons
-   erc-highlight-nicknames
+   rec-highlight-nicknames
    erc-nick-notify
    face-list
    fliptext
@@ -5778,13 +5778,6 @@ variables in your `~/.gnus.el' file. This file is similar to
 #+begin_src emacs-lisp :tangle no 
 
 (custom-set-variables
- '(erc-auto-query (quote window-noselect))
- '(erc-autoaway-message "I'm at the cappuccino bar(after %i seconds of idle-time)")
- '(erc-fools (quote ("JordiGH")))
- '(erc-generate-log-file-name-function (quote erc-generate-log-file-name-short))
- '(erc-header-line-format nil)
- '(erc-hide-list (quote ("JOIN" "NICK" "PART" "QUIT" "MODE")))
- '(erc-ignore-list (quote ("rudybot!.*")))
  '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs/")
  '(erc-log-write-after-send t)
  '(erc-modules (quote (autojoin button completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track highlight-nicknames)))

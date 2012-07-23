@@ -1627,34 +1627,31 @@ The output appears in the buffer `*Async Shell Command*'."
 
 (use-package erc
   ;; :commands erc
-  :if running-alternate-emacs
+;;  :if running-alternate-emacs
   :init
   (progn
     (defun irc ()
       (interactive)
-      (erc-tls :server "irc.freenode.net"
+      (erc-tls :server "asimov.freenode.net"
                :port 6697
-               :nick "johnw"
+               :nick "dkh"
                :password (funcall
                           (plist-get
-                           (car (auth-source-search :host "irc.freenode.net"
-                                                    :user "johnw"
+                           (car (auth-source-search :host "asimov.freenode.net"
+                                                    :user "dkh"
                                                     :type 'netrc
                                                     :port 6667))
-                           :secret)))
-      (erc-tls :server "irc.oftc.net"
-               :port 6697
-               :nick "johnw"))
+                           :secret))))
 
     (defun im ()
       (interactive)
       (erc :server "localhost"
            :port 6667
-           :nick "johnw"
+           :nick "dkh"
            :password (funcall
                       (plist-get
                        (car (auth-source-search :host "bitlbee"
-                                                :user "johnw"
+                                                :user "dkh"
                                                 :type 'netrc
                                                 :port 6667))
                        :secret)))))

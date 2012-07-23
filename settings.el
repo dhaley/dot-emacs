@@ -39,10 +39,10 @@
  '(bind-key-segregation-regexp "\\`\\(\\(C-[chx.] \\|M-[gso] \\)\\([CM]-\\)?\\|.+-\\)")
  '(bm-highlight-style (quote bm-highlight-only-fringe))
  '(bmkp-bmenu-commands-file "~/.emacs.d/data/bmk-bmenu-commands.el")
- '(bmkp-bmenu-state-file "~/git/.emacs.d/.emacs-bmk-bmenu-state.el")
- '(bmkp-last-as-first-bookmark-file nil)
- '(bookmark-default-file "~/git/.emacs.d/.emacs.bmk")
- '(browse-url-browser-function (quote ((".*" . browse-url-default-macosx-browser))))
+ '(bmkp-bmenu-state-file "~/.emacs.d/data/bmk-bmenu-state.el")
+ '(bmkp-last-as-first-bookmark-file "~/Documents/bookmarks")
+ '(bookmark-default-file "~/Documents/bookmarks")
+ '(browse-url-browser-function (quote ((".*" . ebbrowse-url-default-macosx-browser))))
  '(byte-compile-verbose nil)
  '(c-default-style (quote ((java-mode . "gnu") (awk-mode . "awk") (other . "gnu"))))
  '(calendar-daylight-time-zone-name "CDT")
@@ -108,27 +108,45 @@
   '(erc-autoaway-message "I'm at the cappuccino bar(after %i seconds of idle-time)")
  '(erc-autojoin-channels-alist '((".*\\.freenode.net" "#drupal-colorado" "#emacs" "#fsf-members" "#erc" "#conkeror" "#org-mode" "#freedombox")))
  '(erc-autojoin-mode t)
+ '(erc-autojoin-timing :ident)
+ '(erc-fill-column 75)
  '(erc-fill-static-center 12)
  '(erc-fools (quote ("JordiGH")))
  '(erc-generate-log-file-name-function (quote erc-generate-log-file-name-short))
  '(erc-header-line-format nil)
  '(erc-hide-list (quote ("JOIN" "NICK" "PART" "QUIT" "MODE")))
  '(erc-ignore-list (quote ("rudybot!.*")))
- '(erc-keywords (quote ("wiegley" "ledger" "eshell")))
- '(erc-log-channels-directory "~/Messages/ERC")
+ '(erc-keywords '("\scu\s" "\stor\s" "Damon" "dkh" "dhaley"
+   "relation module" "contextual filter" "gmane" "gwene"
+   "usenet" "proxy" "privacy" "\ssocks\s"
+   "gnus" "workgroups" "wireshark" "chaos tools" "hushmail" 
+ "Stallman" "\sog\s" "compiz" "page manager" "super cookie" "[^\.]php"
+   "nxhtml" "nxml" "erc\-keywords" "libnotify" "emacs 24" "org\W?mode"
+   "\sunity\s" "starter\W?kit" "rate module" "conkeror" "jabber"
+   "noscript" "https\-everywhere" "\wfsf\w" "\seff\s" "Log4j" "\sperl\s"
+   "python" "generic-mode" "rainbow-mode" "SQLi" "sql-mode"
+   "references module" "flag module" "org2blog" "nodeone" "Johan Falk"
+   "singularity" "Lanier" "\serc\s" "mdb2" "\spear\s" "html5" "jquery"
+   "naquadah" "mumamo" "el\-get" "zenburn" "solarized" "gunnars"
+   "speedbar" "cedet" "ecb" "hook_menu_alter" "theme engine" "auto complete"
+   "auto completion" "bbdb" "hippy" "\svariant\s" "json" "magit" "w3m"
+   "dired" "bitcoin" ))
+ '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs")
  '(erc-log-write-after-send t)
  '(erc-modules (quote (autojoin button completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track highlight-nicknames)))
- '(erc-nick "johnw")
+ '(erc-nick "dkh")
  '(erc-port 6667)
+ '(erc-prompt ">")
  '(erc-priority-people-regexp "\\`[^#].+")
  '(erc-prompt-for-nickserv-password nil)
  '(erc-replace-alist (quote (("</?FONT>" . ""))))
- '(erc-server "irc.freenode.net")
+ '(erc-server "asimov.freenode.net")
  '(erc-services-mode t)
  '(erc-text-matched-hook (quote (erc-log-matches erc-hide-fools my-erc-hook)))
  '(erc-track-enable-keybindings t)
  '(erc-track-exclude-types (quote ("JOIN" "KICK" "NICK" "PART" "QUIT" "MODE" "333" "353")))
  '(erc-track-faces-priority-list (quote (erc-error-face (erc-nick-default-face erc-current-nick-face) erc-current-nick-face erc-keyword-face (erc-nick-default-face erc-pal-face) erc-pal-face erc-nick-msg-face erc-direct-msg-face)))
+ '(erc-track-priority-faces-only t)
  '(erc-user-full-name (quote user-full-name))
  '(eshell-directory-name "~/git/.emacs.d/eshell/")
  '(eshell-aliases-file "~/git/.emacs.d/eshell/alias")
