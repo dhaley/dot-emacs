@@ -1627,7 +1627,7 @@ The output appears in the buffer `*Async Shell Command*'."
 
 (use-package erc
   ;; :commands erc
-;;  :if running-alternate-emacs
+  :if running-alternate-emacs
   :init
   (progn
     (defun irc ()
@@ -1663,7 +1663,7 @@ The output appears in the buffer `*Async Shell Command*'."
 
     (use-package erc-alert)
     (use-package erc-highlight-nicknames)
-    (use-package erc-patch)
+;;    (use-package erc-patch)
 
     (use-package erc-yank
       :init
@@ -1683,6 +1683,16 @@ The output appears in the buffer `*Async Shell Command*'."
                 (message msg))
             (message (concat "No definition found for " (upcase term)))))))
 
+     (use-package sauron
+       :bind ("C-. s" . sauron-toggle-hide-show)
+       ("C-. R" . sauron-clear))
+ 
+     (add-hook 'sauron-event-block-functions
+               (lambda (origin prio msg &optional props)
+                 (or
+                  (string-match "^*** Users" msg)))) ;; filter out IRC spam
+     
+    
     (defun switch-to-bitlbee ()
       (interactive)
       (switch-to-buffer-other-window "&bitlbee")
@@ -1732,7 +1742,38 @@ FORM => (eval FORM)."
 
     (defun erc-cmd-DEOPME ()
       "Deop myself from current channel."
-      (erc-cmd-DEOP (format "%s" (erc-current-nick))))))
+      (erc-cmd-DEOP (format "%s" (erc-current-nick))))
+
+    (defun my-reformat-jabber-backlog ()
+      "Fix \"unkown participant\" backlog messages from bitlbee."
+      (save-excursion
+        (goto-char (point-min))
+        (if (looking-at
+    	 "^<root> System message: Message from unknown participant \\([^:]+\\):")
+    	(replace-match "<\\1>"))))
+    (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
+
+    ;; thanks to leathekd
+    (defvar twitter-url-pattern
+      (concat "\\(https?://\\)\\(?:.*\\)?\\(twitter.com/\\)"
+              "\\(?:#!\\)?\\([[:alnum:][:punct:]]+\\)")
+      "Matches regular twitter urls, including those with hashbangs,
+but not mobile urls.")
+
+    (defun browse-mobile-twitter (url)
+      "When given a twitter url, browse to the mobile version instead"
+      (string-match twitter-url-pattern url)
+      (let ((protocol (match-string 1 url))
+            (u (match-string 2 url))
+            (path (match-string 3 url)))
+        (browse-url (format "%smobile.%s%s" protocol u path) t)))
+
+    ;; Need to append otherwise the urls will be picked up by
+    ;; erc-button-url-regexp. Not sure why that is the case.
+    (eval-after-load 'erc-button
+      '(add-to-list 'erc-button-alist
+                    '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
+    ))
 
 ;;;_ , eshell
 
@@ -3710,18 +3751,18 @@ $0"))))
 (require 'color-theme-solarized)
 (load-theme 'solarized-dark t)
 
-;; (org-babel-load-file "~/.emacs.d/dkh-core.org")
-;; 
-;; ;;Mo functions
-;; (org-babel-load-file "~/.emacs.d/dkh-functions.org")
-;; 
-;; ;; Mo keybindings
-;; (org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
-;; 
-;; (org-babel-load-file "~/.emacs.d/dkh-org.org")
-;; 
-;; ;;;_. Load some private settings
-;; (org-babel-load-file "~/git/.emacs.d/dkh-private.org")
+(org-babel-load-file "~/.emacs.d/dkh-core.org")
+
+;;Mo functions
+(org-babel-load-file "~/.emacs.d/dkh-functions.org")
+
+;; Mo keybindings
+(org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
+
+(org-babel-load-file "~/.emacs.d/dkh-org.org")
+
+;;;_. Load some private settings
+(org-babel-load-file "~/git/.emacs.d/dkh-private.org")
 
 ;; Local Variables:
 ;;   mode: emacs-lisp

@@ -6018,7 +6018,7 @@ When you enter a Jabber conference room, past messages from people no longer in 
 
 The following elisp reformats them more legibly:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
     (defun my-reformat-jabber-backlog ()
       "Fix \"unkown participant\" backlog messages from bitlbee."
