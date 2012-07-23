@@ -66,17 +66,6 @@
     (mapc (apply-partially #'add-to-list 'exec-path)
           (nreverse (split-string (getenv "PATH") ":")))))
 
-
-
-(setq auth-sources (quote ((:source "~/git/.emacs.d/.authinfo.gpg"
-                                    :host t :protocol t))))
-
-
-
-;;;_. load pre-settings
-(org-babel-load-file "~/git/.emacs.d/dkh-pre-setup.org")
-
-
 ;;;_ , Load customization settings
 
 (defvar running-alternate-emacs nil)

@@ -22,6 +22,7 @@
  '(align-to-tab-stop nil)
  '(allout-command-prefix ".")
  '(ansi-color-names-vector ["black" "red" "green" "brown" "blue" "magenta" "blue" "white"])
+ '(auth-sources (quote ((:source "~/git/.emacs.d/.authinfo.gpg" :host t :protocol t))))
  '(auto-compression-mode t nil (jka-compr))
  '(auto-save-interval 1024)
  '(backup-directory-alist (quote (("/Volumes/Files/" . "/Volumes/Files/.backups") ("\\(recentf\\|archive/sent\\)" . "/tmp") (".*" . "~/.emacs.d/backups"))))
