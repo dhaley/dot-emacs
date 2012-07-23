@@ -70,8 +70,8 @@
 
 (defvar running-alternate-emacs nil)
 
-(if (string-match (concat "/Applications/\\(MacPorts\\)?"
-                          "/Emacs.app/Contents/MacOS/")
+(if (string-match (concat "/Applications/\\(Misc/\\)?"
+                          "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
                   invocation-directory)
 
     (let ((settings (with-temp-buffer
@@ -79,7 +79,7 @@
                        (expand-file-name "settings.el" user-emacs-directory))
                       (goto-char (point-min))
                       (read (current-buffer))))
-          (suffix (downcase (match-string 1 invocation-directory))))
+          (suffix (downcase (match-string 2 invocation-directory))))
 
       (setq running-alternate-emacs t
             user-data-directory
@@ -99,6 +99,38 @@
         (eval settings)))
 
   (load (expand-file-name "settings" user-emacs-directory)))
+
+;; (defvar running-alternate-emacs nil)
+;; 
+;; (if (string-match (concat "/Applications/\\(MacPorts\\)?"
+;;                           "/Emacs.app/Contents/MacOS/")
+;;                   invocation-directory)
+;; 
+;;     (let ((settings (with-temp-buffer
+;;                       (insert-file-contents
+;;                        (expand-file-name "settings.el" user-emacs-directory))
+;;                       (goto-char (point-min))
+;;                       (read (current-buffer))))
+;;           (suffix (downcase (match-string 1 invocation-directory))))
+;; 
+;;       (setq running-alternate-emacs t
+;;             user-data-directory
+;;             (replace-regexp-in-string "/data/" (format "/data-%s/" suffix)
+;;                                       user-data-directory))
+;; 
+;;       (let* ((regexp "/\\.emacs\\.d/data/")
+;;              (replace (format "/.emacs.d/data-%s/" suffix)))
+;;         (dolist (setting settings)
+;;           (let ((value (and (listp setting)
+;;                             (nth 1 (nth 1 setting)))))
+;;             (if (and (stringp value)
+;;                      (string-match regexp value))
+;;                 (setcar (nthcdr 1 (nth 1 setting))
+;;                         (replace-regexp-in-string regexp replace value)))))
+;; 
+;;         (eval settings)))
+;; 
+;;   (load (expand-file-name "settings" user-emacs-directory)))
 
 ;;;_ , Enable disabled commands
 

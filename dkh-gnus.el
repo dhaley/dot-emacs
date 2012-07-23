@@ -581,7 +581,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 ;; put everything in ~/.emacs.d
 (setq
- gnus-init-file "~/git/.emacs.d/dkh-gnus.el"
+;; gnus-init-file "~/git/.emacs.d/dkh-gnus.el"
  message-signatrue-directory "~/git/.emacs.d/sig/"
  )
 
