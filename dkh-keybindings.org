@@ -126,6 +126,16 @@ This is part of the [[file:dkh-core.org][E-Wax Starter Kit Instance]].
 
 #+end_src 
 
+
+* Toggin' windows
+
+#+begin_src emacs-lisp 
+
+
+(global-set-key (kbd "H-\\") 'my-toggle-window-split)
+(global-set-key (kbd "H-|") 'my-swap-windows)
+#+end_src 
+
 * Mo keybinding
 
 #+begin_src emacs-lisp :tangle no
@@ -142,7 +152,7 @@ This is part of the [[file:dkh-core.org][E-Wax Starter Kit Instance]].
 (global-set-key (kbd "H-I") 'rgr/ido-erc-buffer)
 (global-set-key (kbd "H-S")   'synonyms)
 (global-set-key (kbd "H-\"") 'dkh/select_q_string_region)
-(global-set-key (kbd "H-\\") 'my-toggle-window-split)
+
 (global-set-key (kbd "H-a")         'answers-define)
 (global-set-key (kbd "H-b") 'dkh/byte-compile-file)
 (global-set-key (kbd "H-c") 'ffap-copy-string-as-kill)
@@ -163,7 +173,7 @@ This is part of the [[file:dkh-core.org][E-Wax Starter Kit Instance]].
 (global-set-key (kbd "H-v") 'scroll-other-window)
 (global-set-key (kbd "H-w")         (quote copy-word)) ;; from dkh-copy.org
 (global-set-key (kbd "H-z") 'winner-undo) ;; C-c <left>
-(global-set-key (kbd "H-|") 'my-swap-windows)
+
 
 (global-set-key [?\C-c ?u] 'ucase_between_quotes)
 (global-set-key [?\C-x ?t] 'translate)

@@ -130,7 +130,7 @@
    "naquadah" "mumamo" "el\-get" "zenburn" "solarized" "gunnars"
    "speedbar" "cedet" "ecb" "hook_menu_alter" "theme engine" "auto complete"
    "auto completion" "bbdb" "hippy" "\svariant\s" "json" "magit" "w3m"
-   "dired" "bitcoin" ))
+   "dired" "bitcoin" "matu4291" "wwng" "ucomm" "crafts"))
  '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs")
  '(erc-log-write-after-send t)
  '(erc-match-mode 1)
@@ -267,6 +267,7 @@
  '(runner-init-file "~/.emacs.d/runner-conf.el")
  '(safe-local-variable-values (quote ((after-save-hook my-byte-recompile-file) (after-save-hook git-commit-changes) (org-refer-by-number-id . "1C72AB51-33C2-4FF8-9367-2B494D125027"))))
  '(same-window-buffer-names (quote ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
+ '(sauron-hide-mode-line t)
  '(save-abbrevs (quote silently))
  '(save-interprogram-paste-before-kill t)
  '(save-kill-file-name "~/.emacs.d/data/kill-ring-saved.el")

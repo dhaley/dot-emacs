@@ -1431,7 +1431,7 @@ Switch window the cowabunga, dude! way
 
 *** Window Functions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp
 
 (defun my-swap-windows ()
   "If you have 2 windows, it swaps them."
