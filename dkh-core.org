@@ -9562,7 +9562,7 @@ or before point."
 
 (defun rgr/browse (url)
   "If prefix is specified use the system default browser else use the configured emacs one"
-  (if current-prefix-rag
+  (if current-prefix-arg
 ;;      (when url (browse-url-default-browser url))
       (when url (browse-url-generic url))
     (if  url (browse-url url) (call-interactively 'browse-url))
