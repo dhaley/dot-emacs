@@ -1,15 +1,15 @@
 ;;; .w3m-session  -*- mode: emacs-lisp; coding: utf-8 -*-
 ;; This file is generated automatically by emacs-w3m v1.4.442.
 
-(("Crash recovery sessions"
-  (20494 7278 440812)
+(("Automatic saved sessions-1"
+  (20494 8696 752766)
   (("http://radar.oreilly.com/2012/07/four-short-links-23-july-2012.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+oreilly%2Fradar%2Fatom+%28O%27Reilly+Radar%29" nil nil "four-short-links-23-july-2012.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+oreilly%2Fradar%2Fatom+%28O%27Reilly+Radar%29"))
-  nil)
- ("Automatic saved sessions-1"
-  (20491 25755 203268)
-  (("http://www.google.com/search?q=http://www.google.com&ie=utf-8&oe=utf-8" nil nil "http://www.google.com - Google Search"))
   0)
  ("Automatic saved sessions-2"
+  (20491 25755 203268)
+  (("http://www.google.com/search?q=http://www.google.com&ie=utf-8&oe=utf-8" nil nil "http://www.google.com - Google Search"))
+  nil)
+ ("Automatic saved sessions-3"
   (20490 13236 177630)
   (("http://webhelper.centurylink.com/index.php?origURL=http://emacs_string-rectangle_ascii-art.html/" nil nil "Website Suggestions"))
   nil))

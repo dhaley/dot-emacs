@@ -130,7 +130,9 @@
 
         (eval settings)))
 
-  (load (expand-file-name "settings" user-emacs-directory)))
+  (load (expand-file-name "settings" user-emacs-directory))
+
+  )
 
 ;;;_ , Enable disabled commands
 
@@ -449,9 +451,10 @@
   (set-frame-parameter (selected-frame) 'height emacs-min-height)
   (set-frame-parameter (selected-frame) 'width emacs-min-width)
 
-  (when running-alternate-emacs
-    (set-background-color "grey85")
-    (set-face-background 'fringe "gray80")))
+  ;; (when running-alternate-emacs
+  ;;   (set-background-color "grey85")
+  ;;   (set-face-background 'fringe "gray80"))
+  )
 
 (if window-system
     (add-hook 'after-init-hook 'emacs-min))
@@ -1300,7 +1303,7 @@
 
 ;;;_ , bookmark
 
-(require 'bookmark+)
+;;(require 'bookmark+)
 
 (use-package bookmark
   :disabled t
@@ -2841,28 +2844,31 @@ end tell" account account start duration commodity (if cleared "true" "false")
  "~/git/dkh-org/refile.org"
  "~/git/dkh-org/.org-jira/FIT.org"
  )))
-;; 
-;; (require 'org-habit) ;; added by dkh
-;; 
-;; (use-package dkh-org
-;;   :commands org-agenda-list
-;;   :bind (("M-C"   . jump-to-org-agenda)
-;;          ("M-m"   . org-smart-capture)
-;;          ("M-M"   . org-inline-note)
-;;          ("C-c a" . org-agenda)
-;;          ("C-c S" . org-store-link)
-;;          ("C-c l" . org-insert-link))
-;;   :init
-;;   (progn
-;;     (unless running-alternate-emacs
-;;       (run-with-idle-timer 300 t 'jump-to-org-agenda))
-;; 
-;;     (if (string-match "\\.elc\\'" load-file-name)
-;;         (add-hook 'after-init-hook
-;;                   #'(lambda ()
-;;                       (org-agenda-list)
-;;                       (org-fit-agenda-window)
-;;                       (org-resolve-clocks))) t)))
+ 
+ (require 'org-habit) ;; added by dkh
+ 
+ (use-package dkh-org
+   :commands org-agenda-list
+   :bind (("M-C"   . jump-to-org-agenda)
+          ("M-m"   . org-smart-capture)
+          ("M-M"   . org-inline-note)
+          ("C-c a" . org-agenda)
+          ("C-c S" . org-store-link)
+          ("C-c l" . org-insert-link))
+   :init
+   (progn
+     (unless running-alternate-emacs
+       (run-with-idle-timer 300 t 'jump-to-org-agenda))
+ 
+     (if (string-match "\\.elc\\'" load-file-name)
+         (add-hook 'after-init-hook
+                   #'(lambda ()
+                       (org-agenda-list)
+                       (org-fit-agenda-window)
+                       (org-resolve-clocks))) t)
+
+  (use-package bookmark+)
+     ))
 
 ;;;_ , paredit
 
@@ -3165,17 +3171,17 @@ end tell" account account start duration commodity (if cleared "true" "false")
   (progn
     (session-initialize)
 
-    (defun remove-session-use-package-from-settings ()
-      (when (string= (buffer-file-name)
-                     (expand-file-name "settings.el"
-                                       user-emacs-directory))
-        (save-excursion
-          (goto-char (point-min))
-          (when (re-search-forward "^ '(session-use-package " nil t)
-            (delete-region (line-beginning-position)
-                           (1+ (line-end-position)))))))
+;;     (defun remove-session-use-package-from-settings ()
+;;       (when (string= (buffer-file-name)
+;;                      (expand-file-name "settings.el"
+;;                                        user-emacs-directory))
+;;         (save-excursion
+;;           (goto-char (point-min))
+;;           (when (re-search-forward "^ '(session-use-package " nil t)
+;;             (delete-region (line-beginning-position)
+;;                            (1+ (line-end-position)))))))
 
-    (add-hook 'before-save-hook 'remove-session-use-package-from-settings)
+;;    (add-hook 'before-save-hook 'remove-session-use-package-from-settings)
 
     ;; expanded folded secitons as required
     (defun le::maybe-reveal ()
