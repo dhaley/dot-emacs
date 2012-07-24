@@ -9467,7 +9467,7 @@ needed.
   (browse-url-url-at-point) 
 (thing-at-point 'word)
 ))
-  (if rag
+  (if arg
       (when url (browse-url-default-browser url))
     (if  url (browse-url url) (call-interactively 'browse-url))
     ))
