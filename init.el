@@ -2839,36 +2839,39 @@ end tell" account account start duration commodity (if cleared "true" "false")
 
 ;; ;;;_ , org-mode
 ;; 
- (setq org-user-agenda-files (quote (
- "~/git/dkh-org/todo.org"
- "~/git/dkh-org/refile.org"
- "~/git/dkh-org/.org-jira/FIT.org"
- )))
  
- (require 'org-habit) ;; added by dkh
  
- (use-package dkh-org
-   :commands org-agenda-list
-   :bind (("M-C"   . jump-to-org-agenda)
-          ("M-m"   . org-smart-capture)
-          ("M-M"   . org-inline-note)
-          ("C-c a" . org-agenda)
-          ("C-c S" . org-store-link)
-          ("C-c l" . org-insert-link))
-   :init
-   (progn
-     (unless running-alternate-emacs
-       (run-with-idle-timer 300 t 'jump-to-org-agenda))
- 
-     (if (string-match "\\.elc\\'" load-file-name)
-         (add-hook 'after-init-hook
-                   #'(lambda ()
-                       (org-agenda-list)
-                       (org-fit-agenda-window)
-                       (org-resolve-clocks))) t)
+;; (use-package dkh-org
+;;   :commands org-agenda-list
+;;   :bind (("M-C"   . jump-to-org-agenda)
+;;          ("M-m"   . org-smart-capture)
+;;          ("M-M"   . org-inline-note)
+;;          ("C-c a" . org-agenda)
+;;          ("C-c S" . org-store-link)
+;;          ("C-c l" . org-insert-link))
+;;   :init
+;;   (progn
+;;     (unless running-alternate-emacs
+;;       (run-with-idle-timer 300 t 'jump-to-org-agenda))
+;;     
+;;     (if (string-match "\\.elc\\'" load-file-name)
+;;         (add-hook 'after-init-hook
+;;                   #'(lambda ()
+;;                       (org-agenda-list)
+;;                       (org-fit-agenda-window)
+;;                       (org-resolve-clocks))) t)
+;; 
+;;     (use-package bookmark+)
+;;     ))
+;; 
+;;  (use-package org-habit)
 
-  (use-package bookmark+)
-     ))
+   (setq org-user-agenda-files (quote (
+                                       "~/git/dkh-org/todo.org"
+                                       "~/git/dkh-org/refile.org"
+                                       "~/git/dkh-org/.org-jira/FIT.org"
+                                       )))
+
 
 ;;;_ , paredit
 
