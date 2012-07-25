@@ -1697,11 +1697,14 @@ The output appears in the buffer `*Async Shell Command*'."
 
   :config
   (progn
+    (abbrev-table-put erc-mode-abbrev-table :parents (list text-mode-abbrev-table))
+    (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))
     (erc-track-minor-mode 1)
     (erc-track-mode 1)
 
     (use-package erc-alert)
     (use-package erc-highlight-nicknames)
+    (use-package erc-nick-notify)
 ;;    (use-package erc-patch)
     
 ;;    (use-package
@@ -1930,6 +1933,7 @@ but not mobile urls.")
           nnml-directory "~/git/gnus/Mail"
           nntp-marks-directory "~/git/gnus/News/"
           )
+    (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
     (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
     (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
