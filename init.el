@@ -1942,6 +1942,7 @@ but not mobile urls.")
     (add-hook 'message-mode-hook
               '(lambda () (local-set-key (kbd "C-c M-o") 'org-mime-htmlize))
               'append)
+     (add-hook 'message-mode-hook 'abbrev-mode 'footnote-mode 'turn-on-orgstruct)
     ))
 
 
