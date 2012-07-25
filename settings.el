@@ -42,7 +42,7 @@
  '(bmkp-bmenu-state-file "~/.emacs.d/data/bmk-bmenu-state.el")
  '(bmkp-last-as-first-bookmark-file nil)
  '(bookmark-default-file "~/Documents/bookmarks")
- '(browse-url-browser-function (quote ((".*" . ebbrowse-url-default-macosx-browser))))
+ '(browse-url-generic-program "conkeror")
  '(byte-compile-verbose nil)
  '(c-default-style (quote ((java-mode . "gnu") (awk-mode . "awk") (other . "gnu"))))
  '(calendar-daylight-time-zone-name "CDT")
