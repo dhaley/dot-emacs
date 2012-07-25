@@ -134,7 +134,7 @@
  '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs")
  '(erc-log-write-after-send t)
  '(erc-match-mode 1)
- '(erc-modules (quote (notifications autojoin button completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track highlight-nicknames)))
+ '(erc-modules (quote (notify notifications autojoin button completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track highlight-nicknames)))
  '(erc-nick "dkh")
  '(erc-port 6667)
  '(erc-prompt ">")
