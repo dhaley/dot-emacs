@@ -3716,11 +3716,10 @@ end tell"))))
       (if running-alternate-emacs
           (progn
             (setq wg-file "/Users/daha1836/.emacs.d/data-alt/workgroups")
-            (if (file-readable-p workgroups-file)        
-                (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups"))))
+            (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups"))
 
-      (if (file-readable-p workgroups-file)
-          (wg-load workgroups-file)))
+        (if (file-readable-p workgroups-file)
+            (wg-load workgroups-file))))
 
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
     (bind-key "\\" 'toggle-input-method wg-map)))
