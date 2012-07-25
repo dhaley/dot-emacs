@@ -105,7 +105,7 @@
  '(emms-source-file-default-directory "/Volumes/Data/Music/iTunes/iTunes Media/")
  '(enable-recursive-minibuffers t)
  '(erc-auto-query (quote window-noselect))
-  '(erc-autoaway-message "I'm at the cappuccino bar(after %i seconds of idle-time)")
+  '(erc-autoawayo-message "I'm at the cappuccino bar(after %i seconds of idle-time)")
  '(erc-autojoin-channels-alist '((".*\\.freenode.net" "#drupal-colorado" "#emacs" "#fsf-members" "#erc" "#conkeror" "#org-mode" "#freedombox")))
  '(erc-autojoin-mode t)
  '(erc-autojoin-timing :ident)

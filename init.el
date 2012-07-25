@@ -1305,6 +1305,9 @@
 
 ;;(require 'bookmark+)
 
+(use-package bookmark+)
+
+
 (use-package bookmark
   :disabled t
   :defer t
@@ -1811,35 +1814,6 @@ but not mobile urls.")
       '(add-to-list 'erc-button-alist
                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
 
-
- ;;    (defvar growlnotify-command (executable-find "growlnotify") "The path to growlnotify")
- ;;
- ;;   (defun growl (title message)
- ;;     "Shows a message through the growl notification system using
- ;;`growlnotify-command` as the program."
- ;;     (flet ((encfn (s) (encode-coding-string s (keyboard-coding-system))) )
- ;;       (let* ((process (start-process "growlnotify" nil
- ;;                                      growlnotify-command
- ;;                                      (encfn title)
- ;;                                      "-a" "Emacs"
- ;;                                      "-n" "Emacs")))
- ;;         (process-send-string process (encfn message))
- ;;         (process-send-string process "\n")
- ;;         (process-send-eof process)))
- ;;     t)
- ;;
- ;;   (defun my-erc-hook (match-type nick message)
- ;;     "Shows a growl notification, when user's nick was mentioned. If the buffer is currently not visible, makes it sticky."
- ;;     (unless (posix-string-match "^\\** *Users on #" message)
- ;;       (growl
- ;;        (concat "ERC: name mentioned on: " (buffer-name (current-buffer)))
- ;;        message
- ;;        )))
- ;;
- ;;   (add-hook 'erc-text-matched-hook 'my-erc-hook)
-
-;; (remove-hook 'erc-text-matched-hook 'my-erc-hook)
-    
     ))
 
 ;;;_ , eshell
@@ -3498,7 +3472,9 @@ This mode is used for editing .td files in the LLVM/Clang source code."
   :commands w3m-search
   :bind (("C-. u"   . w3m-browse-url)
          ("C-. U"   . w3m-browse-url-new-session)
-         ("C-. A-u" . w3m-browse-chrome-url-new-session))
+         ("C-. A-u" . w3m-browse-chrome-url-new-session)
+;;         ("<f4>" . rgr/browse-url)
+         )
   :init
   (progn
     (setq w3m-command "/opt/local/bin/w3m")
@@ -3545,6 +3521,35 @@ This mode is used for editing .td files in the LLVM/Clang source code."
         URL of active tab of front window
 end tell"))))
         (w3m-browse-url (substring url 1 (1- (length url))) t)))
+
+
+;;    (defun rgr/browse-url (arg &optional url)
+;;      "Browse the URL passed. Use a prefix arg for external default browser else use default browser which is probably W3m"
+;;      (interactive "P")
+;;      (setq url (or url (w3m-url-valid (w3m-anchor)) (browse-url-url-at-point) (region-or-word-at-point)))
+;;      (if arg
+;;          (when url (browse-url-default-browser url))
+;;        (if  url (browse-url url) (call-interactively 'browse-url))
+;;        ))
+
+;;     (setq browse-url-generic-program "conkeror")
+;;    
+;;     (defun rgr/browse (url)
+;;       "If prefix is specified use the system default browser else use the configured emacs one"
+;;       (if current-prefix-arg
+;;           ;;      (when url (browse-url-default-browser url))
+;;           (when url (browse-url-generic url))
+;;         (if  url (browse-url url) (call-interactively 'browse-url))
+;;         ))
+;; 
+;;     (defun rgr/browse-url (&optional url)
+;;       "browse the url passed in"
+;;       (interactive)
+;; ;;      (require 'browse-apropos-url)
+;; ;;      (require 'thingatpt+)
+;;       (setq url (or url (w3m-url-valid (w3m-anchor)) (browse-url-url-at-point) (region-or-word-at-point)))
+;;       (setq url (read-string (format "Url \"%s\" :" url) url nil url))
+;;       (rgr/browse url))
 
     (bind-key "A-M-e" 'goto-emacswiki)
     (bind-key "A-M-g" 'w3m-search)
