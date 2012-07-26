@@ -136,6 +136,10 @@
  '(erc-match-mode 1)
  '(erc-modules (quote (notify notifications autojoin button completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track highlight-nicknames)))
  '(erc-nick "dkh")
+ '(erc-notify-list (quote ("ultimateboy" "matu4291" "laimagaigalas" "crafts"
+                           "technomancy" "_schulte_" "linebarg" "sniderc"
+                           "alne1147" "kubie" "goldhamm" "kniffin" "kowalews"
+                           "orrie" "schaper" "johnw" "sachac")))
  '(erc-port 6667)
  '(erc-prompt ">")
  '(erc-priority-people-regexp "\\`[^#].+")
@@ -268,6 +272,8 @@
  '(safe-local-variable-values (quote ((after-save-hook my-byte-recompile-file) (after-save-hook git-commit-changes) (org-refer-by-number-id . "1C72AB51-33C2-4FF8-9367-2B494D125027"))))
  '(same-window-buffer-names (quote ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
  '(sauron-hide-mode-line t)
+ '(sauron-watch-patterns erc-keywords)
+ '(sauron-watch-nicks erc-notify-list)
  '(save-abbrevs (quote silently))
  '(save-interprogram-paste-before-kill t)
  '(save-kill-file-name "~/.emacs.d/data/kill-ring-saved.el")
