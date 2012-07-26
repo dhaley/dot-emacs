@@ -1838,9 +1838,6 @@ but not mobile urls.")
          (add-to-list 'erc-modules 'spelling)
          (set-face-foreground 'erc-input-face "dim gray")
          (set-face-foreground 'erc-my-nick-face "blue")))
-
-    
-
     ))
 
 ;;;_ , eshell
