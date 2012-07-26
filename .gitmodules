@@ -253,3 +253,6 @@
 [submodule "site-lisp/drupal-mode"]
 	path = site-lisp/drupal-mode
 	url = https://github.com/underhilllabs/drupal-mode.git
+[submodule "site-lisp/erc-hl-nicks"]
+	path = site-lisp/erc-hl-nicks
+	url = https://github.com/leathekd/erc-hl-nicks

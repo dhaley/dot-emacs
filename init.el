@@ -431,15 +431,20 @@
 (unless noninteractive
   (if running-alternate-emacs
       (progn
+;;        (defvar emacs-min-top (if (= 1050 (x-display-pixel-height)) 574 722))
+;;        (defvar emacs-min-left 5)
+;;        (defvar emacs-min-height 25)
+;;        (defvar emacs-min-width 80)
         (defvar emacs-min-top (if (= 1050 (x-display-pixel-height)) 574 722))
         (defvar emacs-min-left 5)
-        (defvar emacs-min-height 25)
-        (defvar emacs-min-width 80))
-
+        (defvar emacs-min-height 38)
+        (defvar emacs-min-width 158)
+        )
     (defvar emacs-min-top 22)
     (defvar emacs-min-left (- (x-display-pixel-width) 918))
     (defvar emacs-min-height (if (= 1050 (x-display-pixel-height)) 55 64))
-    (defvar emacs-min-width 100)))
+;;    (defvar emacs-min-width 100)
+    (defvar emacs-min-width 158)))
 
 (defun emacs-min ()
   (interactive)
@@ -1817,6 +1822,24 @@ but not mobile urls.")
     (eval-after-load 'erc-button
       '(add-to-list 'erc-button-alist
                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
+
+    (eval-after-load 'erc
+      '(progn
+         (when (not (package-installed-p 'erc-hl-nicks))
+           (package-install 'erc-hl-nicks))
+         (require 'erc-notify)
+         (require 'erc-spelling)
+         (require 'erc-truncate)
+         (require 'erc-hl-nicks)
+         (ignore-errors
+           ;; DO NOT use the version from marmalade
+           (erc-nick-notify-mode t))
+         (add-to-list 'erc-modules 'hl-nicks)
+         (add-to-list 'erc-modules 'spelling)
+         (set-face-foreground 'erc-input-face "dim gray")
+         (set-face-foreground 'erc-my-nick-face "blue")))
+
+    
 
     ))
 

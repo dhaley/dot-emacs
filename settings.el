@@ -136,10 +136,8 @@
  '(erc-match-mode 1)
  '(erc-modules (quote (notify notifications autojoin button completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track highlight-nicknames)))
  '(erc-nick "dkh")
- '(erc-notify-list (quote ("ultimateboy" "matu4291" "laimagaigalas" "crafts"
-                           "technomancy" "_schulte_" "linebarg" "sniderc"
-                           "alne1147" "kubie" "goldhamm" "kniffin" "kowalews"
-                           "orrie" "schaper" "johnw" "sachac")))
+ '(erc-notify-list (quote ("ultimateboy" "matu4291" "laimagaigalas" "crafts" "technomancy" "_schulte_" "linebarg" "sniderc" "alne1147" "kubie" "goldhamm" "kniffin" "kowalews" "orrie" "schaper" "johnw" "sachac")))
+ '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac")))
  '(erc-port 6667)
  '(erc-prompt ">")
  '(erc-priority-people-regexp "\\`[^#].+")
