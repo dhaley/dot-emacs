@@ -3483,6 +3483,7 @@ This mode is used for editing .td files in the LLVM/Clang source code."
          )
   :init
   (progn
+    (use-package rgr-web)
     (setq w3m-command "/opt/local/bin/w3m")
 
     (setq w3m-coding-system 'utf-8
@@ -3527,33 +3528,6 @@ This mode is used for editing .td files in the LLVM/Clang source code."
         URL of active tab of front window
 end tell"))))
         (w3m-browse-url (substring url 1 (1- (length url))) t)))
-
-    ;;(require 'org-w3m)
-
-    (setq browse-url-new-window-flag t)
-
-    (setq browse-url-browser-function 'w3m-browse-url-other-workgroup)
-
-    (defun w3m-browse-url-other-workgroup (url &optional newwin)
-      (let ((w3m-pop-up-windows t))
-        (wg-switch-to-index-5)
-        (w3m-browse-url url newwin)))
-
-    (defun rgr/browse (url)
-      "If prefix is specified use the system default browser else use the configured emacs one"
-      (if current-prefix-arg
-          ;;      (when url (browse-url-default-browser url))
-          (when url (browse-url-generic url))
-        (if  url (browse-url url) (call-interactively 'browse-url))
-        ))
-
-    (defun rgr/browse-url (&optional url)
-      "browse the url passed in"
-      (interactive)
-      (require 'w3m)
-      (setq url (or url (w3m-url-valid (w3m-anchor)) (browse-url-url-at-point) (region-or-word-at-point)))
-      (setq url (read-string (format "Url \"%s\" :" url) url nil url))
-      (rgr/browse url))
 
     (bind-key "A-M-e" 'goto-emacswiki)
     (bind-key "A-M-g" 'w3m-search)
@@ -3686,6 +3660,8 @@ end tell"))))
 
     (bind-key "M-N" 'winner-redo)
     (bind-key "M-P" 'winner-undo)))
+
+;;;_ , dkh-web.el
 
 ;;;_ , workgroups
 

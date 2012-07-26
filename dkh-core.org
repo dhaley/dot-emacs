@@ -2404,7 +2404,7 @@ if it is a script.
 
 ** Cyberpunk Cursor
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp
 
 (blink-cursor-mode 1)
 
