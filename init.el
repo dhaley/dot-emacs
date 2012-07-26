@@ -3472,6 +3472,15 @@ This mode is used for editing .td files in the LLVM/Clang source code."
   :config
   (setq vkill-show-all-processes t))
 
+(use-package rgr-web
+;;  :commands 
+  :load-path "~/.emacs.d/lisp/"
+  :bind (("<f4>" . rgr/browse-url)
+         ))
+
+
+
+
 ;;;_ , w3m
 
 (use-package w3m
@@ -3479,11 +3488,9 @@ This mode is used for editing .td files in the LLVM/Clang source code."
   :bind (("C-. u"   . w3m-browse-url)
          ("C-. U"   . w3m-browse-url-new-session)
          ("C-. A-u" . w3m-browse-chrome-url-new-session)
-         ("<f4>" . rgr/browse-url)
          )
   :init
   (progn
-    (use-package rgr-web)
     (setq w3m-command "/opt/local/bin/w3m")
 
     (setq w3m-coding-system 'utf-8
