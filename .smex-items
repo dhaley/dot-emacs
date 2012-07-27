@@ -1,0 +1,70 @@
+
+;; ----- smex-history -----
+(
+ td
+ eb
+ package-list-packages
+ org-narrow-to-subtree
+ irc
+ byte-compile-file
+ package-install
+)
+
+;; ----- smex-data -----
+(
+ (package-install . 8)
+ (dired-jump . 1)
+ (jira-mode . 3)
+ (menu-bar-showhide-tool-bar-menu-customize-enable-top . 1)
+ (tool-bar-mode . 2)
+ (jira-list-issues . 1)
+ (idna-shutdown . 1)
+ (td . 29)
+ (eb . 46)
+ (bookmark-set . 1)
+ (org-jira-get-issues . 7)
+ (magit-push . 13)
+ (name-last-kbd-macro . 1)
+ (insert-kbd-macro . 1)
+ (w3m-search . 3)
+ (replace-string . 4)
+ (w3m . 3)
+ (eval-buffer . 3)
+ (abbrev-mode . 1)
+ (auto-composition-mode . 1)
+ (helm-match-plugin-mode . 1)
+ (auto-fill-mode . 1)
+ (diff-auto-refine-mode . 1)
+ (override-global-mode . 1)
+ (flyspell-mode . 4)
+ (org-babel-load-file . 1)
+ (ffap . 1)
+ (el-get-install . 1)
+ (rename-file . 1)
+ (bookmark-bmenu-list . 2)
+ (bm-show-all . 3)
+ (bm-save . 3)
+ (bm-show . 1)
+ (bookmark-save . 1)
+ (linum-mode . 2)
+ (im . 13)
+ (irc . 7)
+ (ns-toggle-fullscreen . 1)
+ (color-theme-solarized . 5)
+ (sauron-start . 1)
+ (byte-compile-file . 8)
+ (erc-match-enable . 2)
+ (magit-pull . 22)
+ (dired . 2)
+ (vc-dir . 2)
+ (org-jira-update-issue . 1)
+ (org-narrow-to-subtree . 3)
+ (org-mime-htmlize . 2)
+ (text-mode . 1)
+ (gnus-summary-show-article . 1)
+ (gnus-summary-select-article-buffer . 1)
+ (rgr/browse-url . 1)
+ (git-fit . 1)
+ (wg-rename-workgroup . 3)
+ (package-list-packages . 1)
+)
