@@ -43,6 +43,7 @@
  '(bmkp-last-as-first-bookmark-file nil)
  '(bookmark-default-file "~/Documents/bookmarks")
  '(browse-url-generic-program "conkeror")
+ '(browse-url-default-browser "conkeror")
  '(byte-compile-verbose nil)
  '(c-default-style (quote ((java-mode . "gnu") (awk-mode . "awk") (other . "gnu"))))
  '(calendar-daylight-time-zone-name "CDT")

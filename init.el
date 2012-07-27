@@ -1920,8 +1920,8 @@ but not mobile urls.")
       (unless (condition-case nil
                   (eudc-expand-inline)
                 (error nil))
-        (backward-delete-char-untabify 1))
-      )
+        (backward-delete-char-untabify 1)
+      
 
     ;; Adds some hooks
 
@@ -1945,7 +1945,7 @@ but not mobile urls.")
            )
          )
 
-    ))
+    ))))
 ;;;_ , eval-expr
 
 (use-package eval-expr
@@ -2021,6 +2021,7 @@ but not mobile urls.")
           )
     (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
+    (use-package w3m)
     (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
     (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
     ;;  (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)

@@ -3512,6 +3512,29 @@ Don't use a file dialog to ask for files
 #+end_src 
 
 ** Shells
+
+*** Shell
+
+Make Emacs Always Start a New Shell
+
+In GNU Emacs, to start a second shell interface, call shell by first typing 【
+Ctrl+u】.
+
+Ellen Taylor provided the following code, which makes shell command always
+start a new shell.
+
+#+begin_src emacs-lisp 
+
+;; by Ellen Taylor, 2012-07-20
+(defadvice shell (around always-new-shell)
+  "Always start a new shell."
+  (let ((buffer (generate-new-buffer-name "*shell*"))) ad-do-it))
+
+(ad-activate 'shell)
+
+#+end_src 
+
+
 *** Eshell
 
 #+begin_src emacs-lisp :tangle no 

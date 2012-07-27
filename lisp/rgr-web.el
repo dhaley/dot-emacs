@@ -31,7 +31,39 @@
 ;; ;;     (setq default (read-string (format prompt default) default nil default))
 ;; ;;     (browse-apropos-url  (concat apropos-prefix " " default) nil current-prefix-arg)))
 ;; 
-;; 
+;;
+
+;;browse-url-generic-program
+(setq browse-url-default-browser "conkeror")
+;; w3m-view-this-url
+;; w3m-view-url-with-external-browser
+
+;; browse-url-browser-function
+;; browse-url-default-browser
+
+(defun rgr/browse (url)
+  "If prefix is specified use the system default browser else use the configured emacs one"
+  (if current-prefix-arg
+      (if  url
+          (w3m-browse-url url)
+        (call-interactively 'browse-url))
+;;    (when url (browse-url-generic url))
+    (when url (browse-url-default-browser url))
+    (message (concat "foo" url))
+    ))
+
+(defun rgr/browse-url (&optional url)
+  "browse the url passed in"
+  (interactive)
+  (setq url (or url (w3m-url-valid (w3m-anchor)) (browse-url-url-at-point) (region-or-word-at-point)))
+  (setq url (read-string (format "Url \"%s\" :" url) url nil url))
+  (rgr/browse url))
+
+(global-set-key (kbd "<f4>") 'rgr/browse-url)
+
+
+
+
 (defun rgr/browse (url)
   "If prefix is specified use the system default browser else use the configured emacs one"
   (if current-prefix-arg
