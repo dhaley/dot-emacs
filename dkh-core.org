@@ -4027,40 +4027,6 @@ currently with just `goto-address-mode`:
 #+end_src       
 
 Then added my hook to term-mode-hook:
-
-#+begin_src emacs-lisp :tangle no 
-
-    (add-hook 'term-mode-hook 'my-term-hook)
-
-#+end_src 
-    
-After this, I realized that C-y doesn't work in ansi-term like you'd
-expect. It pastes into the buffer, sure, but the text doesn't get sent
-to the process. So if you copy a bash command, then C-y it into the
-buffer, nothing happens when you press enter (because, as far as
-ansi-term is concerned, no text was entered at the prompt). The
-following function will paste whatever is copied into ansi-term in
-such a way that the process can, well, process it:
-
-#+begin_src emacs-lisp :tangle no 
-
-    (defun my-term-paste (&optional string)
-     (interactive)
-     (process-send-string
-      (get-buffer-process (current-buffer))
-      (if string string (current-kill 0))))
-
-#+end_src 
-      
-Then I just add the binding to my hook from before, making it this:
-
-#+begin_src emacs-lisp :tangle no
-
-    (defun my-term-hook ()
-      (goto-address-mode)
-      (define-key term-raw-map "\C-y" 'my-term-paste))
-
-#+end_src 
       
 Since I've already hooked it into 'term-mode-hook, there's no reason
 to do so again. Simply reevaluate the function.
@@ -5892,28 +5858,6 @@ variables in your `~/.gnus.el' file. This file is similar to
      (add-to-list 'erc-modules 'spelling)
      (set-face-foreground 'erc-input-face "dim gray")
      (set-face-foreground 'erc-my-nick-face "blue")))
-
-;; thanks to leathekd
-(defvar twitter-url-pattern
-  (concat "\\(https?://\\)\\(?:.*\\)?\\(twitter.com/\\)"
-          "\\(?:#!\\)?\\([[:alnum:][:punct:]]+\\)")
-  "Matches regular twitter urls, including those with hashbangs,
-but not mobile urls.")
-
-(defun browse-mobile-twitter (url)
-  "When given a twitter url, browse to the mobile version instead"
-  (string-match twitter-url-pattern url)
-  (let ((protocol (match-string 1 url))
-        (u (match-string 2 url))
-        (path (match-string 3 url)))
-    (browse-url (format "%smobile.%s%s" protocol u path) t)))
-
-;; Need to append otherwise the urls will be picked up by
-;; erc-button-url-regexp. Not sure why that is the case.
-(eval-after-load 'erc-button
-  '(add-to-list 'erc-button-alist
-                '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
-
 
 #+end_src 
 

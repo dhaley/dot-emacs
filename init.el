@@ -1078,6 +1078,27 @@
 
     (add-hook 'allout-mode-hook 'my-allout-mode-hook)))
 
+
+;;;_ , eshell
+
+(use-package ansi-term
+  :defer t
+  :init
+  (progn
+    (defun my-term-paste (&optional string)
+      (interactive)
+      (process-send-string
+       (get-buffer-process (current-buffer))
+       (if string string (current-kill 0))))
+
+    (defun my-term-hook ()
+      (goto-address-mode)
+      (define-key term-raw-map "\C-y" 'my-term-paste))
+
+    (add-hook 'term-mode-hook 'my-term-hook)))
+
+
+
 ;;;_ , ascii
 
 (use-package ascii
@@ -1802,26 +1823,26 @@ FORM => (eval FORM)."
     	(replace-match "<\\1>"))))
     (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
 
-    ;; thanks to leathekd
-    (defvar twitter-url-pattern
-      (concat "\\(https?://\\)\\(?:.*\\)?\\(twitter.com/\\)"
-              "\\(?:#!\\)?\\([[:alnum:][:punct:]]+\\)")
-      "Matches regular twitter urls, including those with hashbangs,
-but not mobile urls.")
-
-    (defun browse-mobile-twitter (url)
-      "When given a twitter url, browse to the mobile version instead"
-      (string-match twitter-url-pattern url)
-      (let ((protocol (match-string 1 url))
-            (u (match-string 2 url))
-            (path (match-string 3 url)))
-        (browse-url (format "%smobile.%s%s" protocol u path) t)))
-
-    ;; Need to append otherwise the urls will be picked up by
-    ;; erc-button-url-regexp. Not sure why that is the case.
-    (eval-after-load 'erc-button
-      '(add-to-list 'erc-button-alist
-                    '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
+;;     ;; thanks to leathekd
+;;     (defvar twitter-url-pattern
+;;       (concat "\\(https?://\\)\\(?:.*\\)?\\(twitter.com/\\)"
+;;               "\\(?:#!\\)?\\([[:alnum:][:punct:]]+\\)")
+;;       "Matches regular twitter urls, including those with hashbangs,
+;; but not mobile urls.")
+;; 
+;;     (defun browse-mobile-twitter (url)
+;;       "When given a twitter url, browse to the mobile version instead"
+;;       (string-match twitter-url-pattern url)
+;;       (let ((protocol (match-string 1 url))
+;;             (u (match-string 2 url))
+;;             (path (match-string 3 url)))
+;;         (browse-url (format "%smobile.%s%s" protocol u path) t)))
+;; 
+;;     ;; Need to append otherwise the urls will be picked up by
+;;     ;; erc-button-url-regexp. Not sure why that is the case.
+;;     (eval-after-load 'erc-button
+;;       '(add-to-list 'erc-button-alist
+;;                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
 
     (eval-after-load 'erc
       '(progn
