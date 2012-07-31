@@ -34,7 +34,7 @@
 (add-hook 'drupal-mode-hook (lambda () (flymake-mode 1)))
 (add-hook 'drupal-mode-hook (lambda () (yas/minor-mode 1)))
 (add-to-list 'auto-mode-alist '("\\.\\(php\\|test\\|module\\|inc\\|install\\|engine\\|profile\\|.theme\\)$" . drupal-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl.php$" . html-helper-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl.php$" . html-mode))
 (define-key drupal-mode-map '[M-S-up] 'flymake-goto-prev-error)
 (define-key drupal-mode-map '[M-S-down] 'flymake-goto-next-error)
 (define-key drupal-mode-map (kbd "C-c C-c") 'comment-dwim)
