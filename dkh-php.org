@@ -186,7 +186,7 @@ you switch to a file or buffer that resides inside that project's directory.
 
 #+end_src          
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle no
 
 (define-derived-mode drupal-mode php+-mode "Drupal"
   "Major mode for Drupal source code.
@@ -227,11 +227,19 @@ you switch to a file or buffer that resides inside that project's directory.
                              (buffer-file-name))))
 (add-to-list 'hs-special-modes-alist '(drupal-mode "{" "}" "/[*/]" nil hs-c-like-adjust-block-beginning))
 
+#+end_src
+
+#+begin_src emacs-lisp 
+
+  ;; Start Drupal IDE with `drupal-ide' command:
+  (setq drupal-ide-load-path (concat user-emacs-directory "drupal/drupal-init.el"))
+  (autoload 'drupal-ide drupal-ide-load-path "Start IDE for PHP & Drupal development" t)
+
 #+end_src 
 
 *** Drush
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle no
 
 (add-to-list 'load-path "~/.emacs.d/src/drupal-mode/")
 (require 'drupal-drush-commands)
