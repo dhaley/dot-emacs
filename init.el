@@ -1318,7 +1318,7 @@
      (defvar ctl-period-breadcrumb-map)
      (define-prefix-command 'ctl-period-breadcrumb-map)
      (bind-key "C-. c" 'ctl-period-breadcrumb-map))
- 
+
    :bind (("C-. c b" . bm-last-in-previous-buffer)
           ("C-. c f" . bm-first-in-next-buffer)
           ("C-. c g" . bm-previous)
@@ -1732,7 +1732,7 @@ The output appears in the buffer `*Async Shell Command*'."
     (use-package erc-highlight-nicknames)
     (use-package erc-nick-notify)
 ;;    (use-package erc-patch)
-    
+
 ;;    (use-package
     (erc-match-mode 1)
     (use-package erc-yank
@@ -1756,13 +1756,13 @@ The output appears in the buffer `*Async Shell Command*'."
      (use-package sauron
        :bind ("C-. s" . sauron-toggle-hide-show)
        ("C-. R" . sauron-clear))
- 
+
      (add-hook 'sauron-event-block-functions
                (lambda (origin prio msg &optional props)
                  (or
                   (string-match "^*** Users" msg)))) ;; filter out IRC spam
-     
-    
+
+
     (defun switch-to-bitlbee ()
       (interactive)
       (switch-to-buffer-other-window "&bitlbee")
@@ -1829,7 +1829,7 @@ FORM => (eval FORM)."
 ;;               "\\(?:#!\\)?\\([[:alnum:][:punct:]]+\\)")
 ;;       "Matches regular twitter urls, including those with hashbangs,
 ;; but not mobile urls.")
-;; 
+;;
 ;;     (defun browse-mobile-twitter (url)
 ;;       "When given a twitter url, browse to the mobile version instead"
 ;;       (string-match twitter-url-pattern url)
@@ -1837,7 +1837,7 @@ FORM => (eval FORM)."
 ;;             (u (match-string 2 url))
 ;;             (path (match-string 3 url)))
 ;;         (browse-url (format "%smobile.%s%s" protocol u path) t)))
-;; 
+;;
 ;;     ;; Need to append otherwise the urls will be picked up by
 ;;     ;; erc-button-url-regexp. Not sure why that is the case.
 ;;     (eval-after-load 'erc-button
@@ -1929,7 +1929,7 @@ FORM => (eval FORM)."
                        'ldap)
 
 
-    
+
     (eudc-protocol-set 'eudc-inline-expansion-format
                        '("%s <%s>"  displayName mail)
                        'ldap)
@@ -1942,7 +1942,7 @@ FORM => (eval FORM)."
                   (eudc-expand-inline)
                 (error nil))
         (backward-delete-char-untabify 1)
-      
+
 
     ;; Adds some hooks
 
@@ -2042,6 +2042,7 @@ FORM => (eval FORM)."
           )
     (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
+    (use-package eudc)
     (use-package w3m)
     (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
     (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
@@ -2934,9 +2935,9 @@ end tell" account account start duration commodity (if cleared "true" "false")
     (bind-key "C-H" 'tidy-xml-buffer nxml-mode-map)))
 
 ;; ;;;_ , org-mode
-;; 
- 
- 
+;;
+
+
 ;; (use-package dkh-org
 ;;   :commands org-agenda-list
 ;;   :bind (("M-C"   . jump-to-org-agenda)
@@ -2949,17 +2950,17 @@ end tell" account account start duration commodity (if cleared "true" "false")
 ;;   (progn
 ;;     (unless running-alternate-emacs
 ;;       (run-with-idle-timer 300 t 'jump-to-org-agenda))
-;;     
+;;
 ;;     (if (string-match "\\.elc\\'" load-file-name)
 ;;         (add-hook 'after-init-hook
 ;;                   #'(lambda ()
 ;;                       (org-agenda-list)
 ;;                       (org-fit-agenda-window)
 ;;                       (org-resolve-clocks))) t)
-;; 
+;;
 ;;     (use-package bookmark+)
 ;;     ))
-;; 
+;;
 ;;  (use-package org-habit)
 
    (setq org-user-agenda-files (quote (
@@ -3589,7 +3590,7 @@ This mode is used for editing .td files in the LLVM/Clang source code."
   (setq vkill-show-all-processes t))
 
 (use-package rgr-web
-;;  :commands 
+;;  :commands
   :load-path "~/.emacs.d/lisp/"
   :bind (("<f4>" . rgr/browse-url)
          ))
