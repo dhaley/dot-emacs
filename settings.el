@@ -149,7 +149,22 @@
  '(erc-services-mode t)
  '(erc-text-matched-hook (quote (erc-log-matches erc-hide-fools my-erc-hook)))
  '(erc-track-enable-keybindings t)
- '(erc-track-exclude-types (quote ("JOIN" "KICK" "NICK" "PART" "QUIT" "MODE" "333" "353")))
+ '(erc-track-exclude-types '("NICK" "JOIN" "PART" "QUIT" "MODE"
+                                "301" ; away notice
+                                "305" ; return from awayness
+                                "306" ; set awayness
+                                "332" ; topic notice
+                                "333" ; who set the topic
+                                "353" ; Names notice
+                                "324" ; modes
+                                "329" ; channel creation date
+                                ))
+ '(erc-track-exclude-server-buffer t)
+ '(erc-track-exclude '("*stickychan" "*status"))
+ '(erc-track-showcount t)
+ '(erc-track-shorten-start 1)
+ '(erc-track-switch-direction 'importance)
+ '(erc-track-visibility 'selected-visible)
  '(erc-track-faces-priority-list (quote (erc-error-face (erc-nick-default-face erc-current-nick-face) erc-current-nick-face erc-keyword-face (erc-nick-default-face erc-pal-face) erc-pal-face erc-nick-msg-face erc-direct-msg-face)))
  '(erc-track-priority-faces-only t)
  '(erc-user-full-name (quote user-full-name))
