@@ -98,6 +98,7 @@
  '(ediff-show-clashes-only t)
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(edit-server-new-frame nil)
+ '(egocentric-additional-keywords '("Damon" "Danjou" "dkh"))
  '(el-get-auto-update-cached-recipes nil)
  '(el-get-dir "~/.emacs.d/site-lisp/")
  '(el-get-generate-autoloads nil)
@@ -143,7 +144,7 @@
  '(erc-nick-notify-urgency "normal")
  '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac")))
  '(erc-port 6667)
- '(setq erc-prompt (lambda ()
+ '(erc-prompt (lambda ()
                    (if erc-network
                        (concat "[" (symbol-name erc-network) "]")
                      (concat "[" (car erc-default-recipients) "]"))))

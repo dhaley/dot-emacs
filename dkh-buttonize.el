@@ -1,3 +1,5 @@
+(use-package browse-url)
+
 (defun dkh:awesome-browse-bug (bug)
   "Browse an awesome bug. Argument is a bug number."
   (interactive

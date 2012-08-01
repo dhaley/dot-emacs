@@ -79,15 +79,16 @@
       gnus-summary-highlight
 )
 
-(if window-system
-    (setq
-     gnus-sum-thread-tree-false-root      ""
-     gnus-sum-thread-tree-single-indent   ""
-     gnus-sum-thread-tree-root            ""
-     gnus-sum-thread-tree-vertical        "|"
-     gnus-sum-thread-tree-leaf-with-other "+-> "
-     gnus-sum-thread-tree-single-leaf     "\\-> "
-     gnus-sum-thread-tree-indent          " "))
+;;(if window-system
+;;    (setq
+;;     gnus-sum-thread-tree-false-root      ""
+;;     gnus-sum-thread-tree-single-indent   ""
+;;     gnus-sum-thread-tree-root            ""
+;;     gnus-sum-thread-tree-vertical        "|"
+;;     gnus-sum-thread-tree-leaf-with-other "+-> "
+;;     gnus-sum-thread-tree-single-leaf     "\\-> "
+;;     gnus-sum-thread-tree-indent          " "
+;;     ))
 
 (defsubst dot-gnus-tos (time)
   "Convert TIME to a floating point number."
@@ -623,20 +624,44 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 (setq message-cite-prefix-regexp
 "\\([ ]*[-_.#[:word:]]+>+\\|[ ]*[]>|}]\\)+")
 
-(setq gnus-score-over-mark ?\u2191          ; \u2191 \u2600
-      gnus-score-below-mark ?\u2193         ; \u2193 \u2602
-      gnus-ticked-mark ?\u2691
-      gnus-dormant-mark ?\u2690
-      gnus-expirable-mark ?\u267b
-      gnus-read-mark ?\u2713
-      gnus-del-mark ?\u2717
-      gnus-killed-mark ?\u2620
-      gnus-replied-mark ?\u27f2
-      gnus-forwarded-mark ?\u2933
-      gnus-cached-mark ?\u260d
-      gnus-recent-mark ?\u2605
-      gnus-unseen-mark ?\u2729
-      gnus-unread-mark ?\u2709
+(setq
+      gnus-summary-to-prefix "→"
+      gnus-summary-newsgroup-prefix "⇶"
+      gnus-ticked-mark ?⚑
+      gnus-dormant-mark ?⚐
+      gnus-expirable-mark ?♻
+      gnus-read-mark ?✓
+      gnus-del-mark ?✗
+      gnus-killed-mark ?☠
+      gnus-replied-mark ?⟲
+      gnus-forwarded-mark ?⤳
+      gnus-cached-mark ?☍
+      gnus-recent-mark ?★
+      gnus-unseen-mark ?✩
+      gnus-unread-mark ?✉
+      gnus-score-over-mark ?↑           ; ↑ ☀
+      gnus-score-below-mark ?↓         ; ↓ ☂
+      gnus-sum-thread-tree-false-root " ◌ "
+      gnus-sum-thread-tree-single-indent "◎ "
+      gnus-sum-thread-tree-indent "   "
+      gnus-sum-thread-tree-root "● "
+      gnus-sum-thread-tree-leaf-with-other "├─▶ "
+      gnus-sum-thread-tree-single-leaf     "└─▶ " ; "╰─►"
+      gnus-sum-thread-tree-vertical        "│ "
+;;      gnus-score-over-mark ?\u2191          ; \u2191 \u2600
+;;      gnus-score-below-mark ?\u2193         ; \u2193 \u2602
+;;      gnus-ticked-mark ?\u2691
+;;      gnus-dormant-mark ?\u2690
+;;      gnus-expirable-mark ?\u267b
+;;      gnus-read-mark ?\u2713
+;;      gnus-del-mark ?\u2717
+;;      gnus-killed-mark ?\u2620
+;;      gnus-replied-mark ?\u27f2
+;;      gnus-forwarded-mark ?\u2933
+;;      gnus-cached-mark ?\u260d
+;;      gnus-recent-mark ?\u2605
+;;      gnus-unseen-mark ?\u2729
+;;      gnus-unread-mark ?\u2709
 )
 
 (setq gnus-summary-line-format "%«%U%R %uS %ur %»%(%*%-14,14f   %1«%B%s%»%)
