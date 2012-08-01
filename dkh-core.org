@@ -1397,6 +1397,7 @@ Switch window the cowabunga, dude! way
 #+begin_src emacs-lisp :tangle no 
 
 (setq windmove-wrap-around t)
+(windmove-default-keybindings)	      ; Move between frames with Shift+arrow
 
 #+end_src 
 *** Window Number Mode
