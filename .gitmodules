@@ -39,7 +39,7 @@
         url = git://git.savannah.nongnu.org/bbdb.git
 [submodule "override/gnus"]
 	path = override/gnus
-	url = https://github.com/jwiegley/gnus
+	url = http://git.gnus.org/gnus.git
 [submodule "override/org-mode"]
 	path = override/org-mode
 	url = https://github.com/jwiegley/org-mode.git

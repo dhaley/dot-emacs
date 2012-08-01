@@ -1310,6 +1310,13 @@
 (use-package bbdb-com
   :bind ("M-B" . bbdb))
 
+
+;;;_ , bbdb
+
+(use-package bbdb
+  :bind ("M-B" . bbdb))
+
+
 ;_ , bm
 
  (use-package bm
@@ -1942,20 +1949,16 @@ FORM => (eval FORM)."
   :init
   (progn
     (use-package ldap)
-    (use-package bbdb)
-    (use-package ldap)
-    
+;;    (use-package bbdb)
     (eudc-protocol-set 'eudc-inline-query-format
                        '((firstname)
                          (lastname)
                          (firstname lastname)
                          (net))
                        'bbdb)
- 
     (eudc-protocol-set 'eudc-inline-expansion-format
                        '("%s %s <%s>" firstname lastname net)
                        'bbdb)
- 
     (eudc-protocol-set 'eudc-inline-query-format
                        '(
                          (cn)
@@ -1964,20 +1967,12 @@ FORM => (eval FORM)."
                          (Displayname)
                          (mail))
                        'ldap)
- 
+
     (eudc-protocol-set 'eudc-inline-expansion-format
                        '("%s <%s>"  displayName mail)
                        'ldap)
 
 
-     (eudc-protocol-set 'eudc-protocol-attributes-translation-alist
-             '((fistname . Displayname)
-               (name . cn)
-               (email . mail)
-               (phone . telephoneNumber)
-               (title . title)))
-
-    
     (defun enz-eudc-expand-inline()
       (interactive)
       (move-end-of-line 1)
@@ -1986,28 +1981,13 @@ FORM => (eval FORM)."
                   (eudc-expand-inline)
                 (error nil))
         (backward-delete-char-untabify 1)
- 
- 
         ;; Adds some hooks
- 
         (eval-after-load "message"
           '(define-key message-mode-map (kbd "TAB") 'enz-eudc-expand-inline))
         (eval-after-load "sendmail"
           '(define-key mail-mode-map (kbd "TAB") 'enz-eudc-expand-inline))
         (eval-after-load "post"
-          '(define-key post-mode-map (kbd "TAB") 'enz-eudc-expand-inline))
- 
-                                        ; Protocol local. A mapping between EUDC attribute names and corresponding
-        ;; protocol specific names.  The following names are defined by EUDC and may be
-        ;; included in that list: `name' , `firstname', `email', `phone'
-;;        (set eudc-protocol-attributes-translation-alist
-;;             '((fistname . Displayname)
-;;               (name . cn)
-;;               (email . mail)
-;;               (phone . telephoneNumber)
-;;               (title . title)))
- 
-        ))))
+          '(define-key post-mode-map (kbd "TAB") 'enz-eudc-expand-inline))))))
 
 
 ;;;_ , eval-expr
@@ -2087,6 +2067,7 @@ FORM => (eval FORM)."
     (use-package org-mime)
     (use-package eudc)
     (use-package w3m)
+    (use-package bbdb-gnus)
     (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
     (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
     ;;  (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
