@@ -1928,72 +1928,88 @@ FORM => (eval FORM)."
   :load-path "site-lisp/ess/lisp/"
   :commands R)
 
-;; ;;;_ , eudc
-;; 
-;; (use-package eudc
-;;   :config
-;;   (progn
-;;     (use-package ldap)
-;;     :init
-;;     (eudc-protocol-set 'eudc-inline-query-format
-;;                        '((firstname)
-;;                          (lastname)
-;;                          (firstname lastname)
-;;                          (net))
-;;                        'bbdb)
-;; 
-;;     (eudc-protocol-set 'eudc-inline-expansion-format
-;;                        '("%s %s <%s>" firstname lastname net)
-;;                        'bbdb)
-;; 
-;;     (eudc-protocol-set 'eudc-inline-query-format
-;;                        '(
-;;                          (cn)
-;;                          (cn cn)
-;;                          (cn cn cn)
-;;                          (Displayname)
-;;                          (mail))
-;;                        'ldap)
-;; 
-;; 
-;; 
-;;     (eudc-protocol-set 'eudc-inline-expansion-format
-;;                        '("%s <%s>"  displayName mail)
-;;                        'ldap)
-;; 
-;;     (defun enz-eudc-expand-inline()
-;;       (interactive)
-;;       (move-end-of-line 1)
-;;       (insert "*")
-;;       (unless (condition-case nil
-;;                   (eudc-expand-inline)
-;;                 (error nil))
-;;         (backward-delete-char-untabify 1)
-;; 
-;; 
-;;     ;; Adds some hooks
-;; 
-;;     (eval-after-load "message"
-;;       '(define-key message-mode-map (kbd "TAB") 'enz-eudc-expand-inline))
-;;     (eval-after-load "sendmail"
-;;       '(define-key mail-mode-map (kbd "TAB") 'enz-eudc-expand-inline))
-;;     (eval-after-load "post"
-;;       '(define-key post-mode-map (kbd "TAB") 'enz-eudc-expand-inline))
-;; 
-;;                                         ; Protocol local. A mapping between EUDC attribute names and corresponding
-;;     ;; protocol specific names.  The following names are defined by EUDC and may be
-;;     ;; included in that list: `name' , `firstname', `email', `phone'
-;;     (set eudc-protocol-attributes-translation-alist
-;;          '(
-;;            (fistname . Displayname)
-;;            (name . cn)
-;;            (email . mail)
-;;            (phone . telephoneNumber)
-;;            (title . title)
-;;            )
-;;          )
-;; 
-;;     ))))
+;;;_ , ldap
+
+(use-package ldap
+  :init
+  (progn
+    (setq ldap-ldapsearch-args (quote ("-tt" "-LLL" "-x")))
+    (setq ldap-host-parameters-alist '(("directory.colorado.edu" base "dc=colorado,dc=edu")))))
+
+;;;_ , eudc
+
+(use-package eudc
+  :init
+  (progn
+    (use-package ldap)
+    (use-package bbdb)
+    (use-package ldap)
+    
+    (eudc-protocol-set 'eudc-inline-query-format
+                       '((firstname)
+                         (lastname)
+                         (firstname lastname)
+                         (net))
+                       'bbdb)
+ 
+    (eudc-protocol-set 'eudc-inline-expansion-format
+                       '("%s %s <%s>" firstname lastname net)
+                       'bbdb)
+ 
+    (eudc-protocol-set 'eudc-inline-query-format
+                       '(
+                         (cn)
+                         (cn cn)
+                         (cn cn cn)
+                         (Displayname)
+                         (mail))
+                       'ldap)
+ 
+    (eudc-protocol-set 'eudc-inline-expansion-format
+                       '("%s <%s>"  displayName mail)
+                       'ldap)
+
+
+     (eudc-protocol-set 'eudc-protocol-attributes-translation-alist
+             '((fistname . Displayname)
+               (name . cn)
+               (email . mail)
+               (phone . telephoneNumber)
+               (title . title)))
+
+    
+    (defun enz-eudc-expand-inline()
+      (interactive)
+      (move-end-of-line 1)
+      (insert "*")
+      (unless (condition-case nil
+                  (eudc-expand-inline)
+                (error nil))
+        (backward-delete-char-untabify 1)
+ 
+ 
+        ;; Adds some hooks
+ 
+        (eval-after-load "message"
+          '(define-key message-mode-map (kbd "TAB") 'enz-eudc-expand-inline))
+        (eval-after-load "sendmail"
+          '(define-key mail-mode-map (kbd "TAB") 'enz-eudc-expand-inline))
+        (eval-after-load "post"
+          '(define-key post-mode-map (kbd "TAB") 'enz-eudc-expand-inline))
+ 
+                                        ; Protocol local. A mapping between EUDC attribute names and corresponding
+        ;; protocol specific names.  The following names are defined by EUDC and may be
+        ;; included in that list: `name' , `firstname', `email', `phone'
+;;        (set eudc-protocol-attributes-translation-alist
+;;             '((fistname . Displayname)
+;;               (name . cn)
+;;               (email . mail)
+;;               (phone . telephoneNumber)
+;;               (title . title)))
+ 
+        ))))
+
+
 ;;;_ , eval-expr
 
 (use-package eval-expr
