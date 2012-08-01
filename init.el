@@ -1844,6 +1844,19 @@ FORM => (eval FORM)."
     ;;       '(add-to-list 'erc-button-alist
     ;;                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
 
+    (use-package dkh-buttonize)
+
+    (dolist (button dkh:button-alist)
+      (add-to-list 'erc-button-alist
+                   (apply (lambda (context-regexp regexp button callback par)
+                            `(,regexp
+                              ,button
+                              (string-match-p ,context-regexp (car erc-default-recipients))
+                              ,callback
+                              ,par))
+                          button)))
+
+    
     (defun erc-button-url-previous ()
       "Go to the previous URL button in this buffer."
       (interactive)
@@ -2070,8 +2083,30 @@ FORM => (eval FORM)."
               '(lambda () (local-set-key (kbd "C-c M-o") 'org-mime-htmlize))
               'append)
      (add-hook 'message-mode-hook 'abbrev-mode 'footnote-mode 'turn-on-orgstruct)
-    ))
 
+     (use-package dkh-buttonize)
+
+     (dolist (button dkh:button-alist)
+       (add-to-list 'gnus-header-button-alist
+                    (apply (lambda (context-regexp regexp button callback par)
+                             `("Subject:"
+                               ,regexp
+                               ,button
+                               (string-match-p ,context-regexp gnus-newsgroup-name)
+                               ,callback
+                               ,par))
+                           button))
+       (add-to-list 'gnus-button-alist
+                    (apply (lambda (context-regexp regexp button callback par)
+                             `(,regexp
+                               ,button
+                               (string-match-p ,context-regexp gnus-newsgroup-name)
+                               ,callback
+                               ,par))
+                           button)))
+
+     (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+     ))
 
 
 ;;;_ , grep

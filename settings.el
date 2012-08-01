@@ -98,7 +98,7 @@
  '(ediff-show-clashes-only t)
  '(ediff-window-setup-function (quote ediff-setup-windows-plain))
  '(edit-server-new-frame nil)
- '(egocentric-additional-keywords '("Damon" "Danjou" "dkh"))
+ '(egocentric-additional-keywords '("Damon" "vinylis" "dkh"))
  '(el-get-auto-update-cached-recipes nil)
  '(el-get-dir "~/.emacs.d/site-lisp/")
  '(el-get-generate-autoloads nil)
