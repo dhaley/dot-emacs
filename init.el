@@ -1314,7 +1314,45 @@
 ;;;_ , bbdb
 
 (use-package bbdb
-  :bind ("M-B" . bbdb))
+  :init
+  (progn
+    (bbdb-initialize 'gnus 'message)
+    (setq bbdb-accept-name-mismatch                 t
+          bbdb-completion-display-record            nil
+          bbdb-message-all-addresses                t
+          bbdb-mua-update-interactive-p             '(create . query))
+    (setq rs-bbdb-ignored-from-list '(
+                                      "@public.gmane.org"
+                                      "post <at> gwene.org"
+                                      "post@gwene.org"
+                                      "bozo@dev.null.invalid"
+                                      "no.?reply"
+                                      "DAEMON"
+                                      "daemon"
+                                      "facebookmail"
+                                      "twitter"
+                                      "do-not-reply"
+                                      "lists.math.uh.edu"
+                                      "emacs-orgmode-confirm"
+                                      "-confirm"
+                                      "gnulist"
+                                      "privacy-noreply"
+                                      "-request@kgnu.org"
+                                      "confirm-nomail"
+                                      "noreply"
+                                      "webappsec-return"
+                                      "vinylisl"
+                                      "MAILER-DAEMON"
+                                      "noreply"
+                                      "mailman-owner"
+                                      ))
+    (setq bbdb-ignore-message-alist
+          `(("From" . , (regexp-opt rs-bbdb-ignored-from-list))))
+
+    (defun message-read-from-minibuffer (prompt &optional initial-contents)
+      "Read from the minibuffer while providing abbrev expansion."
+      (bbdb-completing-read-mails prompt initial-contents))
+    ))
 
 
 ;_ , bm
@@ -1949,16 +1987,14 @@ FORM => (eval FORM)."
   :init
   (progn
     (use-package ldap)
-;;    (use-package bbdb)
+
     (eudc-protocol-set 'eudc-inline-query-format
                        '((firstname)
                          (lastname)
                          (firstname lastname)
                          (net))
                        'bbdb)
-    (eudc-protocol-set 'eudc-inline-expansion-format
-                       '("%s %s <%s>" firstname lastname net)
-                       'bbdb)
+
     (eudc-protocol-set 'eudc-inline-query-format
                        '(
                          (cn)
@@ -1967,6 +2003,13 @@ FORM => (eval FORM)."
                          (Displayname)
                          (mail))
                        'ldap)
+
+    ;; How to display results?
+    (defalias 'bbdb-record-net 'bbdb-record-mail) ; Compatibility bbdbv3/v2
+
+    (eudc-protocol-set 'eudc-inline-expansion-format
+                       '("%s %s <%s>" firstname lastname net)
+                       'bbdb)
 
     (eudc-protocol-set 'eudc-inline-expansion-format
                        '("%s <%s>"  displayName mail)
@@ -2067,7 +2110,9 @@ FORM => (eval FORM)."
     (use-package org-mime)
     (use-package eudc)
     (use-package w3m)
+;;    (use-package bbdb)
     (use-package bbdb-gnus)
+    (use-package bbdb-message)
     (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
     (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
     ;;  (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
@@ -2104,6 +2149,7 @@ FORM => (eval FORM)."
 ;;                           button)))
 
      (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+     (add-hook 'message-setup-hook 'bbdb-mail-aliases) ; BBDB 3.x
      ))
 
 
