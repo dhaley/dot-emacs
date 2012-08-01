@@ -1819,31 +1819,45 @@ FORM => (eval FORM)."
       (save-excursion
         (goto-char (point-min))
         (if (looking-at
-    	 "^<root> System message: Message from unknown participant \\([^:]+\\):")
-    	(replace-match "<\\1>"))))
+             "^<root> System message: Message from unknown participant \\([^:]+\\):")
+            (replace-match "<\\1>"))))
     (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
 
-;;     ;; thanks to leathekd
-;;     (defvar twitter-url-pattern
-;;       (concat "\\(https?://\\)\\(?:.*\\)?\\(twitter.com/\\)"
-;;               "\\(?:#!\\)?\\([[:alnum:][:punct:]]+\\)")
-;;       "Matches regular twitter urls, including those with hashbangs,
-;; but not mobile urls.")
-;;
-;;     (defun browse-mobile-twitter (url)
-;;       "When given a twitter url, browse to the mobile version instead"
-;;       (string-match twitter-url-pattern url)
-;;       (let ((protocol (match-string 1 url))
-;;             (u (match-string 2 url))
-;;             (path (match-string 3 url)))
-;;         (browse-url (format "%smobile.%s%s" protocol u path) t)))
-;;
-;;     ;; Need to append otherwise the urls will be picked up by
-;;     ;; erc-button-url-regexp. Not sure why that is the case.
-;;     (eval-after-load 'erc-button
-;;       '(add-to-list 'erc-button-alist
-;;                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
+    ;;     ;; thanks to leathekd
+    ;;     (defvar twitter-url-pattern
+    ;;       (concat "\\(https?://\\)\\(?:.*\\)?\\(twitter.com/\\)"
+    ;;               "\\(?:#!\\)?\\([[:alnum:][:punct:]]+\\)")
+    ;;       "Matches regular twitter urls, including those with hashbangs,
+    ;; but not mobile urls.")
+    ;;
+    ;;     (defun browse-mobile-twitter (url)
+    ;;       "When given a twitter url, browse to the mobile version instead"
+    ;;       (string-match twitter-url-pattern url)
+    ;;       (let ((protocol (match-string 1 url))
+    ;;             (u (match-string 2 url))
+    ;;             (path (match-string 3 url)))
+    ;;         (browse-url (format "%smobile.%s%s" protocol u path) t)))
+    ;;
+    ;;     ;; Need to append otherwise the urls will be picked up by
+    ;;     ;; erc-button-url-regexp. Not sure why that is the case.
+    ;;     (eval-after-load 'erc-button
+    ;;       '(add-to-list 'erc-button-alist
+    ;;                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
 
+    (defun erc-button-url-previous ()
+      "Go to the previous URL button in this buffer."
+      (interactive)
+      (let* ((point (point))
+             (found (catch 'found
+                      (while (setq point (previous-single-property-change point 'erc-callback))
+                        (when (eq (get-text-property point 'erc-callback) 'browse-url)
+                          (throw 'found point))))))
+        (if found
+            (goto-char found)
+          (error "No previous URL button."))))
+
+    (define-key erc-mode-map [backtab] 'erc-button-url-previous)
+    
     (eval-after-load 'erc
       '(progn
          (when (not (package-installed-p 'erc-hl-nicks))
