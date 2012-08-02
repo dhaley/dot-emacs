@@ -3,7 +3,7 @@
 
 ;;(use-package browse-apropos-url)
 (use-package browse-url)
-(use-package thingatpt+)
+(require 'thingatpt+)
 (use-package w3m)
 
 (defun rgr/browse (url)
