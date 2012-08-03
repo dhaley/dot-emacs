@@ -1314,6 +1314,7 @@
 ;;;_ , bbdb
 
 (use-package bbdb
+  :if (not running-alternate-emacs)
   :init
   (progn
     (bbdb-initialize 'gnus 'message)
@@ -1984,6 +1985,7 @@ FORM => (eval FORM)."
 ;;;_ , eudc
 
 (use-package eudc
+  :if (not running-alternate-emacs)
   :init
   (progn
     (use-package ldap)
@@ -2082,6 +2084,7 @@ FORM => (eval FORM)."
 
 ;;;_ , gnus
 (use-package dkh-gnus
+  :if (not running-alternate-emacs)
   :bind (("M-G"   . switch-to-gnus)
          ("C-x m" . compose-mail))
   :init
