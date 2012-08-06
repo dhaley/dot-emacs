@@ -1890,32 +1890,32 @@ FORM => (eval FORM)."
     ;;       '(add-to-list 'erc-button-alist
     ;;                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
 
-    (use-package dkh-buttonize)
-
-    (dolist (button dkh:button-alist)
-      (add-to-list 'erc-button-alist
-                   (apply (lambda (context-regexp regexp button callback par)
-                            `(,regexp
-                              ,button
-                              (string-match-p ,context-regexp (car erc-default-recipients))
-                              ,callback
-                              ,par))
-                          button)))
-
-    
-    (defun erc-button-url-previous ()
-      "Go to the previous URL button in this buffer."
-      (interactive)
-      (let* ((point (point))
-             (found (catch 'found
-                      (while (setq point (previous-single-property-change point 'erc-callback))
-                        (when (eq (get-text-property point 'erc-callback) 'browse-url)
-                          (throw 'found point))))))
-        (if found
-            (goto-char found)
-          (error "No previous URL button."))))
-
-    (define-key erc-mode-map [backtab] 'erc-button-url-previous)
+;;     (use-package dkh-buttonize)
+;; 
+;;     (dolist (button dkh:button-alist)
+;;       (add-to-list 'erc-button-alist
+;;                    (apply (lambda (context-regexp regexp button callback par)
+;;                             `(,regexp
+;;                               ,button
+;;                               (string-match-p ,context-regexp (car erc-default-recipients))
+;;                               ,callback
+;;                               ,par))
+;;                           button)))
+;; 
+;;     
+;;     (defun erc-button-url-previous ()
+;;       "Go to the previous URL button in this buffer."
+;;       (interactive)
+;;       (let* ((point (point))
+;;              (found (catch 'found
+;;                       (while (setq point (previous-single-property-change point 'erc-callback))
+;;                         (when (eq (get-text-property point 'erc-callback) 'browse-url)
+;;                           (throw 'found point))))))
+;;         (if found
+;;             (goto-char found)
+;;           (error "No previous URL button."))))
+;; 
+;;     (define-key erc-mode-map [backtab] 'erc-button-url-previous)
     
     (eval-after-load 'erc
       '(progn
