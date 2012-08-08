@@ -1891,7 +1891,7 @@ FORM => (eval FORM)."
     ;;                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
 
 ;;     (use-package dkh-buttonize)
-;; 
+;;
 ;;     (dolist (button dkh:button-alist)
 ;;       (add-to-list 'erc-button-alist
 ;;                    (apply (lambda (context-regexp regexp button callback par)
@@ -1901,8 +1901,8 @@ FORM => (eval FORM)."
 ;;                               ,callback
 ;;                               ,par))
 ;;                           button)))
-;; 
-;;     
+;;
+;;
 ;;     (defun erc-button-url-previous ()
 ;;       "Go to the previous URL button in this buffer."
 ;;       (interactive)
@@ -1914,9 +1914,9 @@ FORM => (eval FORM)."
 ;;         (if found
 ;;             (goto-char found)
 ;;           (error "No previous URL button."))))
-;; 
+;;
 ;;     (define-key erc-mode-map [backtab] 'erc-button-url-previous)
-    
+
     (eval-after-load 'erc
       '(progn
          (when (not (package-installed-p 'erc-hl-nicks))
@@ -2141,7 +2141,7 @@ FORM => (eval FORM)."
 ;;                               ,callback
 ;;                               ,par))
 ;;                           button))
-     
+
 ;;       (add-to-list 'gnus-button-alist
 ;;                    (apply (lambda (context-regexp regexp button callback par)
 ;;                             `(,regexp
@@ -4081,6 +4081,16 @@ $0"))))
 
 ;;;_. Load some private settings
 (org-babel-load-file "~/git/.emacs.d/dkh-private.org")
+
+
+(defun byte-compile-current-buffer ()
+  "`byte-compile' current buffer if it's emacs-lisp-mode and compiled file exists."
+  (interactive)
+  (when (and (eq major-mode 'emacs-lisp-mode)
+             (file-exists-p (byte-compile-dest-file buffer-file-name)))
+    (byte-compile-file buffer-file-name)))
+
+(add-hook 'after-save-hook 'byte-compile-current-buffer)
 
 ;; Local Variables:
 ;;   mode: emacs-lisp

@@ -854,7 +854,6 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 
 
-
 (defun gnus-goto-last-link ()
   "A lot of articles just have one link to goto"
   (interactive)
