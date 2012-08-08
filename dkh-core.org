@@ -56,8 +56,8 @@ Open up a scratch buffer and evaluate this lisp
    (lambda (s) (let (el-get-master-branch) (goto-char (point-max))
    (eval-print-last-sexp))))
 
-#+end_src 
-   
+#+end_src
+
 It will take a minute or four for el-get to clone itself, but when this
 process is no longer in a ps listing, then you can close down emacs.
 
@@ -73,7 +73,7 @@ You should see this message:
 
 cd ~/.emacs.d git submodule add https://github.com/dhaley/ewax.git $USER
 
-#+end_src 
+#+end_src
 
 6. Now, let's run the E-WAX install script.
 
@@ -81,11 +81,11 @@ cd ~/.emacs.d git submodule add https://github.com/dhaley/ewax.git $USER
 
 cd $USER ./install.sh
 
-#+end_src 
+#+end_src
 
 This will take probably five to ten minutes while gnus and org-mode
 download (and byte compile your .el into .elc).
-    
+
 When the script is finished, run emacs, which will download some stuff
 with el-get.
 
@@ -105,7 +105,7 @@ YOU'RE DONE!!!!!
 HOPEFULLY!!!
 
 ♡(✿ˇ◡ˇ)人(ˇ◡ˇ✿)♡
-    
+
 ** Starter Kit functionality that needs improvement:
 
 One thing I don't like about starter kit is that if one has all the
@@ -118,9 +118,9 @@ To prevent, that I always end my literate config files (in ~/emacs.d/$USER)
 #+begin_src emacs-lisp :tangle no
 
 (message (concat "0 " (buffer-name) "... Done"))
-    
+
 #+end_src
-            
+
 Also, I included a MAKEFILE in E-Wax to automatically delete .el files
 generated from org-babel-tangle file. This is because as you change
 your configs, the starter kit is not smart enough to regenerate your
@@ -133,11 +133,11 @@ It just does this:
 LISP:
 	rm -f *.el
 
-#+end_src 
+#+end_src
 
 This assumes that you don't have any non-literate config files not
 generated from org-mode based config files.
-        
+
 ** E-WAX FUNCTIONALITY THAT NEEDS IMPROVEMENT ［ ］Pass［✔］Fail
 
 E-Wax needs much more annotation.  A lot of documentation and comments
@@ -155,11 +155,11 @@ annotation for it to make since to someone new to Gnus.
 The PHP and Drupal fucntionality need to be reviewed.
 
 More documentation both inside the code and in this file to come...
-        
+
 E-wax is written, stolen or maintained by Damon Haley
 <dhaley@hushmail.com>
 http://vinylisland.org
-    
+
 Remember: This is free software. Reuse and learning from existing code
 is not just allowed but encouraged.
 
@@ -195,7 +195,7 @@ number of messages kept in the buffer with the variable
 ** initialization
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq message-log-max 16384)
 
@@ -206,12 +206,12 @@ number of messages kept in the buffer with the variable
 
 (require 'use-package)
 
-#+end_src 
+#+end_src
 
 
 ** Utility macros and functions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defmacro hook-into-modes (func modes)
   `(dolist (mode-hook ,modes)
@@ -249,7 +249,7 @@ $\\|P.+\\\\\n\\)" nil t)
                                (buffer-file-name))
                  (cleanup-term-log)))))
 
-#+end_src 
+#+end_src
 
 
 ** Read system environment
@@ -271,19 +271,19 @@ $\\|P.+\\\\\n\\)" nil t)
     (mapc (apply-partially #'add-to-list 'exec-path)
           (nreverse (split-string (getenv "PATH") ":")))))
 
-#+end_src 
+#+end_src
 
-   
+
 **  Load customization settings
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defvar running-alternate-emacs nil)
 
-#+end_src 
-    
-    
+#+end_src
+
+
 #+begin_src emacs-lisp :tangle no
 
 
@@ -319,8 +319,8 @@ $\\|P.+\\\\\n\\)" nil t)
 ;;  (load (expand-file-name "settings" user-emacs-directory))
 )
 
-#+end_src   
-     
+#+end_src
+
 *** Enable disabled commands
 
 #+begin_src emacs-lisp :tangle no
@@ -333,39 +333,39 @@ $\\|P.+\\\\\n\\)" nil t)
 (put 'set-goal-column  'disabled nil)
 (put 'upcase-region    'disabled nil)   ; Let upcasing work
 
-#+end_src 
+#+end_src
 
 ** Pre-process
 
 If there is anything you want to load before running E-Wax, then
 annotate your elisp in the following file:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (org-babel-load-file "~/git/.emacs.d/dkh-pre-setup.org")
 
-#+end_src 
+#+end_src
 
 ** Load Starter Kit packages
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (starter-kit-load "misc-recommended")
 
-#+end_src 
+#+end_src
 ** Verbose debug
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (message "emacs-init started ...")
 (setq debug-on-error t)
 
-#+end_src 
+#+end_src
 
 ** Packages
 *** El-Get
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; added by dkh
 (add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
@@ -386,7 +386,7 @@ annotate your elisp in the following file:
 ;;(add-to-list 'load-path (expand-file-name "~/git/src/use-package"))
 
 
-#+end_src 
+#+end_src
 
 **** Get stable branch
 
@@ -398,7 +398,7 @@ annotate your elisp in the following file:
      (end-of-buffer)
      (eval-print-last-sexp))))
 
-#+end_src 
+#+end_src
 
 **** OR get devel branch
 
@@ -410,7 +410,7 @@ annotate your elisp in the following file:
    (lambda (s) (let (el-get-master-branch) (goto-char (point-max))
    (eval-print-last-sexp))))
 
-#+end_src 
+#+end_src
 
 
 **** Sources and packages
@@ -475,12 +475,12 @@ annotate your elisp in the following file:
 
 (el-get 'sync my:el-get-packages)
 
-#+end_src 
+#+end_src
 
 
 *** Install the packages I need if not already installed
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun rwd-require-package (name)
 (or (package-installed-p name) (package-install name)))
@@ -534,7 +534,7 @@ annotate your elisp in the following file:
 ;; (package-refresh-contents)
 (dolist (package dkh-required-packages) (when (not (package-installed-p package)) (package-install package)))
 
-#+end_src 
+#+end_src
 
 
 ** Recursive-edit-with-single-window
@@ -562,7 +562,7 @@ annotate your elisp in the following file:
        (error "Current window is the only window in its frame")
      (delete-other-windows))))
 
-#+end_src 
+#+end_src
 
 
 #+begin_src emacs-lisp :tangle no
@@ -575,7 +575,7 @@ annotate your elisp in the following file:
 
 (unless noninteractive
   (if running-alternate-emacs
-      (progn 
+      (progn
         (defvar emacs-min-top (if (= 1050 (x-display-pixel-height)) 389 537))
         (defvar emacs-min-left 9)
         (defvar emacs-min-height (if (= 1050 (x-display-pixel-height)) 25 35))
@@ -632,11 +632,11 @@ annotate your elisp in the following file:
 
 (bind-key "C-c m" 'emacs-toggle-size)
 
-#+end_src 
+#+end_src
 
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq user-initials "dkh")
 
@@ -688,7 +688,7 @@ annotate your elisp in the following file:
 (bind-key "C-c u" 'rename-uniquely)
 
 
-#+end_src   
+#+end_src
 
 #+begin_src emacs-lisp :tangle no
 
@@ -744,7 +744,7 @@ annotate your elisp in the following file:
 (bind-key "C-c =" 'count-matches)
 (bind-key "C-c ;" 'comment-or-uncomment-region)
 
-#+end_src 
+#+end_src
 
 ;;;_  . C-c C-?
 
@@ -796,27 +796,27 @@ annotate your elisp in the following file:
       (unfill-paragraph 1)
       (forward-paragraph))))
 
-#+end_src       
+#+end_src
 
 ;;;_ , ctl-period-map
 
 ;;;_  . C-. ?
 
-#+begin_src emacs-lisp :tangle no  
+#+begin_src emacs-lisp :tangle no
 
 (bind-key "C-. m" 'kmacro-keymap)
 
-#+end_src 
+#+end_src
 ;;;_  . C-. C-i
 
 #+begin_src emacs-lisp :tangle no
 
 (bind-key "C-. C-i" 'indent-rigidly)
 
-#+end_src 
+#+end_src
 
 ** Help map
-#+begin_src emacs-lisp :tangle no  
+#+begin_src emacs-lisp :tangle no
 
 (defvar lisp-find-map)
 (define-prefix-command 'lisp-find-map)
@@ -829,11 +829,11 @@ annotate your elisp in the following file:
 
 
 * Starter kit
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-#+end_src 
+#+end_src
 
 * Custom settings
 ** Custom file location
@@ -841,19 +841,19 @@ annotate your elisp in the following file:
 
 *** Ewax default files directory
 
-#+begin_src emacs-lisp :tangle no  
+#+begin_src emacs-lisp :tangle no
 
 (setq ewax-default-directory "~/git/.emacs.d")
 
 ;;(expand-file-name "dkh-gnus.el" ewax-default-directory)
 
-#+end_src 
+#+end_src
 
-#+begin_src emacs-lisp :tangle no  
+#+begin_src emacs-lisp :tangle no
 
 (setq custom-file (expand-file-name "custom.el" ewax-default-directory))
 
-#+end_src 
+#+end_src
 
 ** Default directory
 
@@ -861,25 +861,25 @@ annotate your elisp in the following file:
 
 (setq default-directory "~/git/")
 
-#+end_src 
+#+end_src
 
 ** Save my history
 
-#+begin_src emacs-lisp :tangle no  
+#+begin_src emacs-lisp :tangle no
 
 (setq savehist-file "~/.emacs.d/history")
 
-#+end_src 
+#+end_src
 
 
 ** Scratch Buffer
 
-#+begin_src emacs-lisp :tangle no  
+#+begin_src emacs-lisp :tangle no
 
 (setq initial-scratch-message "ಠ_ಠ")
 ;; empty out the comments on the scratch buffer, (i hate that text)
 
-#+end_src 
+#+end_src
 
 ** Enable all disabled commands
 
@@ -887,20 +887,20 @@ annotate your elisp in the following file:
 
 ;; Enable all disabled commands (eval-expression, narrow-to-..., etc.)
 (setq disabled-command-function nil)
-#+end_src 
+#+end_src
 
 ** Window settings
 *** Pop up windows
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq pop-up-windows nil)
 
-#+end_src 
+#+end_src
 
 *** Use same window
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-to-list 'same-window-buffer-names "*Help*")
 (add-to-list 'same-window-buffer-names "*Apropos*")
@@ -931,7 +931,7 @@ annotate your elisp in the following file:
 
 (add-to-list 'same-window-regexps "\\*dictem.*")
 
-#+end_src 
+#+end_src
 
 *** Clean buffers
 
@@ -944,11 +944,11 @@ clean-buffer-list-kill-regexps (quote (".*")))
 
 
 
-#+end_src 
+#+end_src
 
 ** Icomplete mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (icomplete-mode 1)
 
@@ -956,22 +956,22 @@ clean-buffer-list-kill-regexps (quote (".*")))
 
 (global-set-key (kbd "RET") 'newline-and-indent)
 
-#+end_src 
+#+end_src
 
 ** Scrollbars
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (scroll-bar-mode -1)                   ;; turn off the scrollbar
 ;;(scroll-bar-mode 1)                       ;; otherwise, show a scrollbar...
 ;;(set-scroll-bar-mode 'right))             ;; ... on the right
 
-#+end_src 
+#+end_src
 
 
 ** Fonts
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq mswindows-p (string-match "windows" (symbol-name system-type)))
 (setq macosx-p (string-match "darwin" (symbol-name system-type)))
@@ -998,7 +998,7 @@ clean-buffer-list-kill-regexps (quote (".*")))
   ;;avoid hiding with M-h
   (setq mac-pass-command-to-system nil))
 
-#+end_src 
+#+end_src
 
  You can get text properties of any char by typing `C-u C-x ='
 
@@ -1078,7 +1078,7 @@ clean-buffer-list-kill-regexps (quote (".*")))
  Then do a `xrdb -merge ~/.Xresources' or restart your X11 to validate the
  modification. I let emacs do this for me:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun merge-x-resources ()
   (let ((file (file-name-nondirectory (buffer-file-name))))
@@ -1089,7 +1089,7 @@ clean-buffer-list-kill-regexps (quote (".*")))
 
 (add-hook 'after-save-hook 'merge-x-resources)
 
-#+end_src 
+#+end_src
 
 Now Emacs should start with that font.
 
@@ -1100,29 +1100,29 @@ Rather than using (set-default-font ...) in .emacs, stick the font
 definition in your .Xresources file (key 'Emacs*font') and then use 'xrdb
 -load' to activate it. You will find that startup time is greatly improved!
 
-#+begin_src emacs-lisp :tangle no  
+#+begin_src emacs-lisp :tangle no
 
 ;; avoid Emacs hanging for a while changing default font
 (modify-frame-parameters nil '((wait-for-wm . nil)))
 
-#+end_src 
+#+end_src
 
 *** Faces
 
 #+begin_src emacs-lisp :tangle no
 
-(custom-set-faces                                                                           
-  ;; custom-set-faces was added by Custom.                                                  
-  ;; If you edit it by hand, you could mess it up, so be careful.                           
-  ;; Your init file should contain only one such instance.                                  
- ;; If there is more than one, they won't work right.                                      
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(mumamo-background-chunk-major ((((class color) (min-colors 8)) (:background "white")))))
 
-#+end_src 
+#+end_src
 
 *** Cycle font (functions)
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun cycle-font (num)
   "Change font in current frame.
@@ -1138,7 +1138,7 @@ Warning: tested on Windows Vista only."
 ;;"Lucida Console-10"
                     "DejaVu Sans-10"
 ;; "Lucida Sans Unicode-10"
-;; "Arial Unicode MS-10" 
+;; "Arial Unicode MS-10"
 ;;                    "inconsolata-11"
 "DejaVu Sans Mono-9" "DejaVu Sans Mono-10" "DejaVu Sans Mono-12"
 ))
@@ -1170,11 +1170,11 @@ See `cycle-font'."
   (cycle-font -1)
   )
 
-#+end_src 
+#+end_src
 
 ** Recent files mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; enable recent files mode.
 (recentf-mode t)
@@ -1182,7 +1182,7 @@ See `cycle-font'."
 (setq recentf-save-file "~/.emacs.d/recentf")
 
 
-#+end_src 
+#+end_src
 
 ** Recursive minibuffers (config)
 
@@ -1190,7 +1190,7 @@ See `cycle-font'."
 
 (setq enable-recursive-minibuffers t)
 
-#+end_src 
+#+end_src
 
 ** Security (PGP)
 
@@ -1199,20 +1199,20 @@ http://docs.funtoo.org/wiki/Keychain) a tool for loading the SSH
 Agent and keeping it running and accessible on a machine for longer
 than a single login session.
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'keychain-environment)
 
-#+end_src 
+#+end_src
 
 ** Emacs maintenance
 *** Delete old versions
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq delete-old-versions t)
 
-#+end_src 
- 
+#+end_src
+
 ** Guru Mode
 
 Guru mode disables some common keybindings and suggests the use of the
@@ -1231,15 +1231,15 @@ established Emacs alternatives instead.
 If you wish your place in any file to always be automatically saved,
 simply put this in your `~/.emacs' file:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq-default save-place t)
 (require 'saveplace)
 
-#+end_src 
+#+end_src
 
 ** Faces
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -1270,26 +1270,26 @@ simply put this in your `~/.emacs' file:
  '(trailing-whitespace ((((class color) (background light)) (:background "light salmon"))))
  '(whitespace-line ((t (:background "lemon chiffon" :foreground "dark violet")))))
 
-#+end_src 
+#+end_src
 ** autosave
 
 #+begin_src emacs-lisp :tangle no
 
-(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))) 
+(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
-#+end_src 
+#+end_src
 
 * Functionality (Ease of use)
 *** Modes
 
 This stuff is needed to auto spell checking in gnus, etc.
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-hook 'c-mode-common-hook 'flyspell-prog-mode)
 (add-hook 'tcl-mode-hook 'flyspell-prog-mode)
 
-#+end_src 
+#+end_src
 
 ** Frame functionality
 *** Positioning of frame when starting Emacs
@@ -1303,7 +1303,7 @@ This stuff is needed to auto spell checking in gnus, etc.
                             ))
 (setq initial-frame-alist '((top . 72) (left . 775)))
 
-#+end_src 
+#+end_src
 
 *** Set up initial frame
 
@@ -1338,11 +1338,11 @@ This stuff is needed to auto spell checking in gnus, etc.
                '((left . 0) (height . 46)))))
 )
 
-#+end_src 
+#+end_src
 
 *** Set frame size according to resolution
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun set-frame-size-according-to-resolution ()
     (interactive)
@@ -1360,11 +1360,11 @@ This stuff is needed to auto spell checking in gnus, etc.
   ;; (set-frame-size-according-to-resolution)
   (global-set-key (kbd "C-x 9") 'set-frame-size-according-to-resolution)
 
-#+end_src 
+#+end_src
 
 *** Frame title
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 (setq frame-title-format
   '("" invocation-name ": "(:eval (if (buffer-file-name)
                 (abbreviate-file-name (buffer-file-name))
@@ -1379,14 +1379,14 @@ dim-switch-window.el will look like if you happen to use it:
 
 Switch window the cowabunga, dude! way
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 (require 'switch-window)
 
-#+end_src 
+#+end_src
 
 *** Show a marker in the left fringe for lines not in the buffer
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq default-indicate-empty-lines t)
 
@@ -1394,25 +1394,25 @@ Switch window the cowabunga, dude! way
 
 *** Windmove
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq windmove-wrap-around t)
 (windmove-default-keybindings)	      ; Move between frames with Shift+arrow
 
-#+end_src 
+#+end_src
 *** Window Number Mode
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 (require 'window-number)
 (window-number-mode)
 (window-number-meta-mode)
 
-#+end_src 
+#+end_src
 
 *** Other window bindings
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 ;;; switch
 
 ;; Experiment with more convenient keys than `C-x o' and `M-- C-x o'.
@@ -1554,19 +1554,19 @@ frames with exactly two windows."
 
 (require 'buffer-move)
 
-#+end_src 
+#+end_src
 
 *** Window functions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun select-next-window ()
-  "Switch to the next window" 
+  "Switch to the next window"
   (interactive)
   (select-window (next-window)))
 
 (defun select-previous-window ()
-  "Switch to the previous window" 
+  "Switch to the previous window"
   (interactive)
   (select-window (previous-window)))
 
@@ -1593,7 +1593,7 @@ frames with exactly two windows."
 
 *** More Window functions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;;----------------------------------------------------------------------------
 ;; When splitting window, show (other-buffer) in the new window
@@ -1626,33 +1626,33 @@ frames with exactly two windows."
 (global-set-key "\C-x|" 'split-window-horizontally-instead)
 (global-set-key "\C-x_" 'split-window-vertically-instead)
 
-#+end_src 
+#+end_src
 
 ** Copy/Paste functionality
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; have pasting work right in emacs 24
 (setq x-select-enable-primary t)
 
-#+end_src 
+#+end_src
 
 replace a region in emacs with yank buffer contents
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (delete-selection-mode t)
 
-#+end_src 
+#+end_src
 
 In linux, if copy/paste doesn't work with other apps, you need to add
 this line:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq x-select-enable-clipboard t)
 
-#+end_src 
+#+end_src
 
 *** Copy current file path
 
@@ -1770,7 +1770,7 @@ modified to use CLIPBOARD rather than the PRIMARY selection.
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun copy-buffer-file-name (use-backslashes)
   "Puts the file name of the current buffer (or the current directory,
@@ -1787,7 +1787,7 @@ uses backslashes instead of forward slashes."
               ;; that case, let's return the directory.
               (expand-file-name default-directory)))))
     (when (null fn)
-      (error "Buffer doesn't appear to be associated with any file or 
+      (error "Buffer doesn't appear to be associated with any file or
 directory."))
     (kill-new fn)
     (message "%s" fn)
@@ -1795,23 +1795,23 @@ directory."))
 
 (global-set-key (kbd "H-f") 'copy-buffer-file-name)
 
-#+end_src 
+#+end_src
 
 
 ** Completion functionality
 *** Ignore case in completion
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq completion-ignore-case t)
 
-#+end_src 
+#+end_src
 
 
 
 *** Some files I don't want to see often
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq completion-ignored-extensions
       (append (list
@@ -1824,11 +1824,11 @@ directory."))
                     )
               completion-ignored-extensions))
 
-#+end_src 
+#+end_src
 
 *** Pc-Complete
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defconst pcmpl-git-commands
   '("add" "bisect" "branch" "checkout" "clone"
@@ -1836,10 +1836,10 @@ directory."))
     "init" "log" "merge" "mv" "pull" "push" "rebase"
     "reset" "rm" "show" "status" "tag" )
   "List of `git' commands")
- 
+
 (defvar pcmpl-git-ref-list-cmd "git for-each-ref refs/ --format='%(refname)'"
   "The `git' command to run to get a list of refs")
- 
+
 (defun pcmpl-git-get-refs (type)
   "Return a list of `git' refs filtered by TYPE"
   (with-temp-buffer
@@ -1849,11 +1849,11 @@ directory."))
       (while (re-search-forward (concat "^refs/" type "/\\(.+\\)$") nil t)
         (add-to-list 'ref-list (match-string 1)))
       ref-list)))
- 
+
 (defun pcomplete/git ()
   "Completion for `git'"
   ;; Completion for the command argument.
-  (pcomplete-here* pcmpl-git-commands)  
+  (pcomplete-here* pcmpl-git-commands)
   ;; complete files/dirs forever if the command is `add' or `rm'
   (cond
    ((pcomplete-match (regexp-opt '("add" "rm")) 1)
@@ -1862,25 +1862,25 @@ directory."))
    ((pcomplete-match "checkout" 1)
     (pcomplete-here* (pcmpl-git-get-refs "heads")))))
 
-#+end_src 
+#+end_src
 
 ** Mode-line functionality
 *** Show approx buffer size in modeline
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (size-indication-mode)
 
-#+end_src 
+#+end_src
 
 *** Show buffer position in modeline
 
 ;; show buffer pos in the
 ;; use sml-modeline if available
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
-(if (require 'sml-modeline nil 'noerror)    
+(if (require 'sml-modeline nil 'noerror)
   (progn (sml-modeline-mode 1) mode line))
 
 #+end_src
@@ -1898,7 +1898,7 @@ line pollution? Well, many parts of emacs like to announce their
 presence and state in the mode line. With the limited space available
 there, this can become a bit of an issue, the (Lisp Interaction
 company Yas abbrev) takes quite some space:
-                                                  
+
 
 But there are some ways to limit the space taken by modes and
 minor-modes. Note, these snippets should go in your .emacs, and you
@@ -1909,7 +1909,7 @@ with C-h m); install the handy diminish.el (or get it using the
 emacs-goodies-el package when using Debian/Ubuntu) and add something
 like the following:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (when (require 'diminish nil 'noerror)
   (eval-after-load "company"
@@ -1919,27 +1919,27 @@ like the following:
 
 ;; And the major-modes, for example for Emacs Lisp mode:
 
-(add-hook 'emacs-lisp-mode-hook 
+(add-hook 'emacs-lisp-mode-hook
   (lambda()
     (setq mode-name "el")))
 
-#+end_src 
+#+end_src
 
 ** Mouse functionality
 *** Make URLs in comments/strings clickable
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-hook 'find-file-hooks 'goto-address-prog-mode)
 
-#+end_src 
+#+end_src
 
 ** Color functionality
 *** Color themes
 
 **** Long live Solarized
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'color-theme)
 (require 'color-theme-solarized)
@@ -1950,7 +1950,7 @@ like the following:
 
 *** Somewhere over the rainbow
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'rainbow-mode)
 (rainbow-mode t)
@@ -1976,11 +1976,11 @@ You can call list-colors-display to list colors and their RGB hex
 values. But the result is not sorted. Now, you can sort it by
 hue. Much better. Put this in your emacs init file:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq list-colors-sort 'hsv )
 
-#+end_src 
+#+end_src
 
 ** Point, Search Rectangle & Region functionality
 *** Store and restore point
@@ -1991,39 +1991,39 @@ same as in the other window, not as it was before we switched away.
 This mode tries to work around this problem by storing and
 restoring per-window positions for each buffer.
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'winpoint)
 (window-point-remember-mode 1)
 
-#+end_src 
+#+end_src
 
 *** I like returning to the same place
 
 Purpose: When you visit a file, point goes to the last place where
   it was when you previously visited the same file.
-  
+
 To use it, turn it on in the options menu - “Save place in files
 between Sessions”
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'saveplace)                          ;; get the package
 
-#+end_src 
+#+end_src
 
-*** Goto last change - this is bodacious 
+*** Goto last change - this is bodacious
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (when (require 'goto-last-change nil 'noerror)
   (global-set-key (kbd "C-x C-/") 'goto-last-change))
 
-#+end_src 
+#+end_src
 
 *** Expand Region
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-to-list 'load-path "~/.emacs.d/src/expand-region.el")
 (require 'expand-region)
@@ -2038,11 +2038,11 @@ between Sessions”
 
 (add-hook 'text-mode-hook 'er/add-text-mode-expansions)
 
-#+end_src 
+#+end_src
 
 *** Get Selection or unit under Point
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun get-selection-or-unit  (unit)
   "Return the string and boundary of text selection or UNIT under cursor.
@@ -2164,7 +2164,7 @@ or the thing at the point and its bounds if there is no region"
                         (replace-regexp-in-string " " "+" phrase)))))
 
 
-#+end_src 
+#+end_src
 
 *** Sacha Chua search word functions
 
@@ -2197,11 +2197,11 @@ or the thing at the point and its bounds if there is no region"
   (let ((case-fold-search t))
     ad-do-it))
 
-#+end_src 
+#+end_src
 
 *** Thing at point functions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun ash-forward-string (&optional arg)
   "Move forward to ARGth string."
@@ -2228,7 +2228,7 @@ or the thing at the point and its bounds if there is no region"
 
 (put 'string 'forward-op 'ash-forward-string)
 
-(defun ash-kill-string (&optional arg) 
+(defun ash-kill-string (&optional arg)
   "Kill ARG strings under point."
   (interactive "*p")
   (setq arg (or (and (not (zerop arg)) arg) 1))
@@ -2240,25 +2240,25 @@ or the thing at the point and its bounds if there is no region"
      (progn (forward-thing 'string 1) (point))
      (progn (forward-thing 'string arg) (point)))))
 
-#+end_src 
+#+end_src
 
 *** Translate word at point function
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun translate ()
   "Translate the word at point using WordReference."
   (interactive)
-  (browse-url (concat "http://www.wordreference.com/fren/" 
+  (browse-url (concat "http://www.wordreference.com/fren/"
               (thing-at-point 'word)))
 )
 
-#+end_src 
+#+end_src
 
 *** Thing at point
 **** Answers.com
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 (defun answers-define ()
   "Look up the word under cursor in a browser."
   (interactive)
@@ -2266,11 +2266,11 @@ or the thing at the point and its bounds if there is no region"
    (concat "http://www.answers.com/main/ntquery?s="
            (thing-at-point 'word))))
 
-#+end_src 
+#+end_src
 
 *** Replace region function
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun my-replace-region ()
   (interactive)
@@ -2284,28 +2284,28 @@ or the thing at the point and its bounds if there is no region"
       (while (search-forward what nil t)
         (replace-match replacement)))))
 
-#+end_src 
+#+end_src
 
 *** Rectangles
 **** Kill save rectangle function
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
-(defun kill-save-rectangle (start end &optional fill)       
-  "Save the rectangle as if killed, but don't kill it.  See 
-`kill-rectangle' for more information."                     
-  (interactive "r\nP")                                      
-  (kill-rectangle start end fill)                           
-  (goto-char start)                                         
+(defun kill-save-rectangle (start end &optional fill)
+  "Save the rectangle as if killed, but don't kill it.  See
+`kill-rectangle' for more information."
+  (interactive "r\nP")
+  (kill-rectangle start end fill)
+  (goto-char start)
   (yank-rectangle))
 
 (global-set-key (kbd "C-x r M-k") 'kill-save-rectangle)
 
-#+end_src 
+#+end_src
 
 ** Confirm exiting emacs
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun confirm-exit-emacs ()
         "ask for confirmation before exiting emacs"
@@ -2316,22 +2316,22 @@ or the thing at the point and its bounds if there is no region"
 (global-unset-key "\C-x\C-c")
 (global-set-key "\C-x\C-c" 'confirm-exit-emacs)
 
-#+end_src 
+#+end_src
 
 
 
 ** Saving history
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'savehist-20+)
 (savehist-mode 1)
 
-#+end_src 
+#+end_src
 
 ** Bell
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; provided by snogglethorpe
 (defcustom mode-line-bell-string "ding" ;"â™ª"
@@ -2372,7 +2372,7 @@ or the thing at the point and its bounds if there is no region"
 
 (setq ring-bell-function 'mode-line-bell)
 
-#+end_src 
+#+end_src
 
 ** auto byte-compile elisp files
 
@@ -2380,11 +2380,11 @@ If you code elisp, it's nice to have the elisp file automatically byte-compiled 
 
 ;; auto compile elisp files after save
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-hook 'emacs-lisp-mode-hook (lambda () (add-hook 'after-save-hook 'emacs-lisp-byte-compile t t)) )
 
-#+end_src 
+#+end_src
 
 ** Make script files executable automatically
 
@@ -2396,12 +2396,12 @@ treat it as a script if it finds it.
 Add this to your .emacs and Emacs will then make the file executable
 if it is a script.
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-hook 'after-save-hook
   'executable-make-buffer-file-executable-if-script-p)
 
-#+end_src 
+#+end_src
 
 ** Cyberpunk Cursor
 
@@ -2427,11 +2427,11 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
   (internal-show-cursor nil (not (internal-show-cursor-p)))
   )
 
-#+end_src 
+#+end_src
 
 ** CUA
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (cua-selection-mode t)
 
@@ -2441,7 +2441,7 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 ** Fill column
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'fill-column-indicator)
 
@@ -2451,11 +2451,11 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
 (global-fci-mode 1)
 
-#+end_src 
+#+end_src
 
 ** KeyChords
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'key-chord)
 (key-chord-mode 1)
@@ -2483,29 +2483,29 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 ** Line numbers
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
-(setq linum-mode-inhibit-modes-list '(eshell-mode                                                 
-                                      shell-mode                                                  
-                                      erc-mode                                                    
-                                      jabber-roster-mode                                          
-                                      jabber-chat-mode                                            
-                                      gnus-group-mode                                             
-                                      gnus-summary-mode                                           
-                                      gnus-article-mode))                                         
-                                                                                                  
-(defadvice linum-on (around linum-on-inhibit-for-modes)                                           
-  "Stop the load of linum-mode for some major modes."                                             
-    (unless (member major-mode linum-mode-inhibit-modes-list)                                     
-      ad-do-it))                                                                                  
-                                                                                                  
+(setq linum-mode-inhibit-modes-list '(eshell-mode
+                                      shell-mode
+                                      erc-mode
+                                      jabber-roster-mode
+                                      jabber-chat-mode
+                                      gnus-group-mode
+                                      gnus-summary-mode
+                                      gnus-article-mode))
+
+(defadvice linum-on (around linum-on-inhibit-for-modes)
+  "Stop the load of linum-mode for some major modes."
+    (unless (member major-mode linum-mode-inhibit-modes-list)
+      ad-do-it))
+
 (ad-activate 'linum-on)
 
-#+end_src 
+#+end_src
 
 ** Rotate text
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'rotate-text)
 (autoload 'rotate-text "rotate-text" nil t)
@@ -2515,7 +2515,7 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 ** artbollocks
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (if (require 'artbollocks-mode nil t)
     (progn
@@ -2546,20 +2546,20 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
       ))
 
-#+end_src 
+#+end_src
 
 ** miniedit
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (if (require 'miniedit nil t)
     (miniedit-install))
 
-#+end_src 
+#+end_src
 
 ** Auto-indent mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'auto-indent-mode)
 
@@ -2568,7 +2568,7 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ** Kill Ring
 *** Kill Ring
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 
 (global-set-key (kbd "C-M-y") '(lambda ()
@@ -2579,11 +2579,11 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 
 
-#+end_src 
+#+end_src
 
 *** Undo-tree
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'undo-tree)
 (global-undo-tree-mode 1)
@@ -2597,11 +2597,11 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 *** Kill ring hook
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-hook 'before-revert-hook  (lambda () (kill-ring-save (point-min) (point-max))))
 
-#+end_src 
+#+end_src
 
 ** electric-pair-mode
 
@@ -2613,11 +2613,11 @@ ASCII ones: ""''(){}[], but also any unicode ones: «»‹›“”‘’「」�
 《》〔〕…. (➲ Matching Brackets in Unicode)
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (electric-pair-mode)
 
-#+end_src 
+#+end_src
 
 
 Deleting one bracket doesn't delete the other. (If you want that,
@@ -2633,7 +2633,7 @@ Association List. ((info "(elisp) Association Lists"))
 For example, the double curly bracket isn't auto-closed when in
 text-mode. But if you put the following in your emacs init:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (global-set-key (kbd "C-H-'") "“")     ; insert opening double curly bracket by keypad 8
 
@@ -2654,12 +2654,12 @@ matching one will be automatically closed by electric-pair-mode.
 * Org (Organize your life)
 ** Org files
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq org-clock-persist-file (expand-file-name "org-clock-save" ewax-default-directory))
 (setq org-id-locations-file (expand-file-name "org-id-locations" ewax-default-directory))
 
-#+end_src 
+#+end_src
 
 
 ** Org Agenda
@@ -2672,10 +2672,10 @@ See ~/git/.emacs.d/dkh-pre-setup.org file
 
 (setq diary-file "~/git/.emacs.d/.diary")
 
-#+end_src 
+#+end_src
 
 > I just put a line in my .emacs, e.g.
-> 
+>
 > (add-to-list 'holiday-other-holidays '(holiday-fixed 7 24 "Pioneer Day"))
 
 That's even better! The variable holiday-local-holidays could be another choice.
@@ -2687,7 +2687,7 @@ That's even better! The variable holiday-local-holidays could be another choice.
 
 (require 'org-habit) ;; added by dkh
 
-#+end_src 
+#+end_src
 
 ** Org Latex
 
@@ -2778,7 +2778,7 @@ That's even better! The variable holiday-local-holidays could be another choice.
     ((eq format 'latex)
      (format "\\%s{%s}" path desc)))))
 
-#+end_src 
+#+end_src
 
 ** org subtree cut function
 #+begin_src emacs-lisp
@@ -2808,11 +2808,11 @@ That's even better! The variable holiday-local-holidays could be another choice.
 (org-babel-do-load-languages
     'org-babel-load-languages '((python . t) (R . t) (perl . t)))
 
-#+end_src 
+#+end_src
 
 ** org Jira
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 (add-to-list 'load-path (concat user-emacs-directory "elpa/jira-0.3.3"))
 
@@ -2820,13 +2820,13 @@ That's even better! The variable holiday-local-holidays could be another choice.
 (setq jira-url "https://cuboulder.atlassian.net//rpc/xmlrpc")
 
 
-;; you need make sure whether the "/jira" at the end is 
+;; you need make sure whether the "/jira" at the end is
 ;; necessary or not, see discussion at the end of this page
 
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/org-jira")
-(require 'org-jira) 
-(setq jiralib-url "https://cuboulder.atlassian.net") 
+(require 'org-jira)
+(setq jiralib-url "https://cuboulder.atlassian.net")
 ;; jiralib is not explicitly required, since org-jira will load it.
 
 (setq org-jira-working-dir "~/git/dkh-org/.org-jira")
@@ -2834,19 +2834,19 @@ That's even better! The variable holiday-local-holidays could be another choice.
 
 
 
-#+end_src 
+#+end_src
 
 * Navigation (Driving the car)
 ** Ibuffer
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq ibuffer-saved-filter-groups
       (quote
        (("default"
          ("ssh"
           (or
-           (name . "\\*tramp") 
+           (name . "\\*tramp")
            (name . "^\\*debug tramp")
            ))
 
@@ -2874,7 +2874,7 @@ That's even better! The variable holiday-local-holidays could be another choice.
                        (filename . "git\\/dkh\-org")
                        (mode . muse-mode)
                        ))
-         ("blog" (or 
+         ("blog" (or
                        (filename . "git\\/blog")
                        (filename . "git\\/netlsd")
                        ))
@@ -3027,7 +3027,7 @@ That's even better! The variable holiday-local-holidays could be another choice.
                         (buffer-local-value 'dired-directory buf))
        (string-match qualifier it))))
 
-#+end_src 
+#+end_src
 
 ** Iswitchb
 
@@ -3045,24 +3045,24 @@ That's even better! The variable holiday-local-holidays could be another choice.
 (add-to-list 'iswitchb-buffer-ignore "*jde-log")
 (add-to-list 'iswitchb-buffer-ignore "^[tT][aA][gG][sS]$")
 
-#+end_src 
+#+end_src
 
 
 ** IDO
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; ido makes competing buffers and finding files easier
 ;; http://www.emacswiki.org/cgi-bin/wiki/InteractivelyDoThings
 
-(setq 
+(setq
   ido-save-directory-list-file "~/.emacs.d/ido.last"
 )
 
 (set `ido-ignore-files '("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./"
 "\\`\\./" "\\.el?$"))
 
-(setq ido-ignore-buffers 
+(setq ido-ignore-buffers
   '("\\` " "^\*Mess" "^\*Back" ".*Completions" "^\*Ido" "^\*trace"
      "^\*compilation" "^\*GTAGS" "^session\.*" "^\*" "^\\*Completions\\*$"))
 
@@ -3091,14 +3091,14 @@ That's even better! The variable holiday-local-holidays could be another choice.
 
                                           ; 50 files ought to be enough.
   (setq recentf-max-saved-items 50)
-  
+
   (defun ido-recentf-open ()
     "Use `ido-completing-read' to \\[find-file] a recent file"
     (interactive)
     (if (find-file (ido-completing-read "Find recent file: " recentf-list))
         (message "Opening file...")
       (message "Aborting")))
-  
+
                                           ; IDO switch between irc channels.
 
 ;; get rid of `find-file-read-only' and replace it with something
@@ -3112,7 +3112,7 @@ That's even better! The variable holiday-local-holidays could be another choice.
 (defun rgr/ido-erc-buffer()
 (interactive)
 (switch-to-buffer
- (ido-completing-read "Channel:" 
+ (ido-completing-read "Channel:"
                       (save-excursion
                         (delq
                          nil
@@ -3160,7 +3160,7 @@ That's even better! The variable holiday-local-holidays could be another choice.
 
 (defun ido-sort-mtime ()
       (setq ido-temp-list
-            (sort ido-temp-list 
+            (sort ido-temp-list
                   (lambda (a b)
                     (let ((ta (nth 5 (file-attributes (concat ido-current-directory a))))
                           (tb (nth 5 (file-attributes (concat ido-current-directory b)))))
@@ -3172,11 +3172,11 @@ That's even better! The variable holiday-local-holidays could be another choice.
                   (lambda (x) (if (string-equal (substring x 0 1) ".") x))
                   ido-temp-list))))
 
-#+end_src                   
+#+end_src
 
 ** Find file as root function(s)
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun find-file-as-root ()
   "Find a file as root."
@@ -3233,11 +3233,11 @@ That's even better! The variable holiday-local-holidays could be another choice.
       (th-find-file-sudo (ad-get-arg 0))
     ad-do-it))
 
-#+end_src 
+#+end_src
 
 ** filecache
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'filecache)
 
@@ -3269,24 +3269,24 @@ directory, select directory. Lastly the file is opened."
 (add-to-list 'file-cache-filter-regexps "\\.svn-base$")
 (add-to-list 'file-cache-filter-regexps "\\.dump$")
 
-#+end_src 
+#+end_src
 
 ** Imenu
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq imenu-auto-rescan 't)
 
-#+end_src 
+#+end_src
 
 ** Smex
 smex-save-file is a variable defined in `smex.el'.
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq smex-save-file "~/.emacs.d/.smex-items")
 
-#+end_src 
+#+end_src
 
 ** Registers
 
@@ -3322,12 +3322,12 @@ A list of the form (FRAME-CONFIGURATION POSITION)
 (dolist (r `( (?e (file . "~/git/ewax/dkh-core.org"))))
              (set-register (car r) (cadr r)))
 
-#+end_src 
+#+end_src
 
 
 ** Command aliases
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 (defalias 'tc 'dkh/toggle-chrome)
 (defalias 'll 'load-library)  ;; dynamic, instead of require
@@ -3397,8 +3397,8 @@ A list of the form (FRAME-CONFIGURATION POSITION)
 (defalias 'acm 'auto-complete-mode)
 
 (defalias 'eu 'eudc-query-form)
-#+end_src 
-    
+#+end_src
+
 * Documentation
 ** Self-documentation
 *** Which func mode
@@ -3419,39 +3419,39 @@ imenu--index-alist is up to date.
 (setq which-func-modes t)
 (which-func-mode 1)
 
-#+end_src 
+#+end_src
 
 *** Man
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 (setq Man-switches "-a")
 
 (defadvice Man-build-page-list (after reverse-page-list activate)
   (setq Man-page-list (nreverse Man-page-list)))
 
-#+end_src 
-  
+#+end_src
+
 *** 25.16 Using (info "(emacs)Dialog Boxes")
 
 Don't use dialog boxes to ask questions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq use-dialog-box nil)
 
-#+end_src 
+#+end_src
 
 Don't use a file dialog to ask for files
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq use-file-dialog nil)
 
-#+end_src 
+#+end_src
 
 ** Google Definitions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'mm-url)
 (defun google-define-word-or-phrase (query)
@@ -3468,15 +3468,15 @@ Don't use a file dialog to ask for files
          (buffer-substring (search-forward "<li>") (- (search-forward "<") 1)))))))
     (message "%s: %s" query definition)))
 
-#+end_src 
+#+end_src
 
 ** Eldoc
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (eldoc-mode t)
 
-#+end_src 
+#+end_src
 
 
 * Utilities (tools)
@@ -3484,8 +3484,8 @@ Don't use a file dialog to ask for files
 ** Tramp
 
 *** General
-    
-#+begin_src emacs-lisp :tangle no 
+
+#+begin_src emacs-lisp :tangle no
 
 (setq tramp-default-method "ssh")
 
@@ -3500,17 +3500,17 @@ Don't use a file dialog to ask for files
 (setq tramp-backup-directory-alist backup-directory-alist)
 
 
-#+end_src 
+#+end_src
 
 *** Clean up tramp before saving desktop
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-hook 'desktop-save-hook 'tramp-cleanup-all-buffers)
 
 
 
-#+end_src 
+#+end_src
 
 ** Shells
 
@@ -3524,7 +3524,7 @@ Ctrl+u】.
 Ellen Taylor provided the following code, which makes shell command always
 start a new shell.
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 ;; by Ellen Taylor, 2012-07-20
 (defadvice shell (around always-new-shell)
@@ -3533,16 +3533,16 @@ start a new shell.
 
 (ad-activate 'shell)
 
-#+end_src 
+#+end_src
 
 
 *** Eshell
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq eshell-aliases-file "~/git/.emacs.d/eshell/alias")
 
-#+end_src 
+#+end_src
 
 #+begin_src emacs-lisp :tangle no
 
@@ -3679,7 +3679,7 @@ start a new shell.
   (shell-mode)))
   buffer)
 
-#+end_src 
+#+end_src
 
 *** AnsiTerm
 
@@ -3700,7 +3700,7 @@ still exists. In that case I don't want the third rule to switch me to
 a defunct terminal, so instead I want it to kill the buffer and create
 a new ansi-term. Here is my enhanced elisp:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun visit-ansi-term ()
   (interactive)
@@ -3711,7 +3711,7 @@ a new ansi-term. Here is my enhanced elisp:
 )
     (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
            (switch-to-buffer buffer-of-name))
-          ( t 
+          ( t
             (progn
               (ansi-term term-cmd)
               ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
@@ -3719,9 +3719,9 @@ a new ansi-term. Here is my enhanced elisp:
 
 ;;(global-set-key (kbd "C-8 a") 'visit-ansi-term)
 
-#+end_src 
+#+end_src
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun visit-devel ()
   (interactive)
@@ -3732,12 +3732,12 @@ a new ansi-term. Here is my enhanced elisp:
 )
     (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
            (switch-to-buffer buffer-of-name))
-          ( t 
+          ( t
             (progn
               (ansi-term term-cmd)
               ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
               (rename-buffer  (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))))))
-#+end_src 
+#+end_src
 
 
 Localhost
@@ -3745,7 +3745,7 @@ Localhost
 For terminal emulation on the local host, this simple function names
 the buffers *localhost*, *localhost<2>*, etc…
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun open-localhost ()
   (interactive)
@@ -3756,12 +3756,12 @@ the buffers *localhost*, *localhost<2>*, etc…
   (interactive)
   (ansi-term "bash" "localhost"))
 
-#+end_src 
+#+end_src
 
 For remote hosts, an additional function was required since the
 ansi-term command doesn’t support additional arguments:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; Use this for remote so I can specify command line arguments
 (defun remote-term (new-buffer-name cmd &rest switches)
@@ -3774,12 +3774,12 @@ ansi-term command doesn’t support additional arguments:
   (term-set-escape-char ?\C-x)
   (switch-to-buffer term-ansi-buffer-name))
 
-#+end_src 
+#+end_src
 
 You can then define a new function in your init file for each host you
 frequently visit with it’s own buffer name and connection parameters:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun open-prod ()
   (interactive)
@@ -3801,7 +3801,7 @@ frequently visit with it’s own buffer name and connection parameters:
 
 (defun git-fit ()
 (interactive)
-(magit-status 
+(magit-status
 (getenv "FIT_REPO")))
 
 ;;(global-set-key (kbd "C-8 g") 'git-fit)
@@ -3812,24 +3812,24 @@ frequently visit with it’s own buffer name and connection parameters:
 (global-set-key (kbd "C-x <f8>") 'open-stage)
 (global-set-key (kbd "C-x <f9>") 'open-prod)
 
-#+end_src 
+#+end_src
 
 *** Shell functions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
-(defun shell-command-on-region-to-string (start end command)                    
-  (with-output-to-string                                                        
-    (shell-command-on-region start end command standard-output)))               
-                                                                                
-(defun shell-command-on-region-with-output-to-end-of-buffer (start end command) 
-  (interactive                                                                  
-   (let ((command (read-shell-command "Shell command on region: ")))            
-     (if (use-region-p)                                                         
-         (list (region-beginning) (region-end) command)                         
-       (list (point-min) (point-max) command))))                                
-  (save-excursion                                                               
-    (goto-char (point-max))                                                     
+(defun shell-command-on-region-to-string (start end command)
+  (with-output-to-string
+    (shell-command-on-region start end command standard-output)))
+
+(defun shell-command-on-region-with-output-to-end-of-buffer (start end command)
+  (interactive
+   (let ((command (read-shell-command "Shell command on region: ")))
+     (if (use-region-p)
+         (list (region-beginning) (region-end) command)
+       (list (point-min) (point-max) command))))
+  (save-excursion
+    (goto-char (point-max))
     (insert (shell-command-on-region-to-string start end command))))
 
 (defun shell-here ()
@@ -3852,7 +3852,7 @@ frequently visit with it’s own buffer name and connection parameters:
 
 (setq ansi-color-map (ansi-color-make-color-map))
 
-(add-hook 'shell-mode-hook 
+(add-hook 'shell-mode-hook
      '(lambda () (toggle-truncate-lines 1)))
 (setq comint-prompt-read-only t)
 
@@ -3954,7 +3954,7 @@ the line, to capture multiline input. (This only has effect if
 ;; for other code, e.g. emacsclient in TRAMP ssh shells and automatically
 ;; closing completions buffers, see the links above.
 
-#+end_src 
+#+end_src
 
 *** Improving ansi-term
 
@@ -3979,8 +3979,8 @@ found the following solution, using defadvice:
         ad-do-it))
     (ad-activate 'term-sentinel)
 
-#+end_src 
-    
+#+end_src
+
 This tells term (which is used by ansi-term) to kill the buffer after
 the terminal is exited. The original I found online also killed the
 frame, but I use one frame with multiple windows, so I removed that
@@ -4001,12 +4001,12 @@ and perhaps one day I'll do that. For now, though, this works for me.
       (interactive (list my-term-shell)))
     (ad-activate 'ansi-term)
 
-#+end_src     
-    
+#+end_src
+
 Another issue I has was with the display of certain characters and
 control codes. The following hook sets the term to use UTF-8.
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
     (defun my-term-use-utf8 ()
       (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
@@ -4025,10 +4025,10 @@ currently with just `goto-address-mode`:
     (defun my-term-hook ()
       (goto-address-mode))
 
-#+end_src       
+#+end_src
 
 Then added my hook to term-mode-hook:
-      
+
 Since I've already hooked it into 'term-mode-hook, there's no reason
 to do so again. Simply reevaluate the function.
 
@@ -4045,7 +4045,7 @@ M-x package-list-packages. The one you probably want is
 `color-theme-solarized `.) So, adding the elisp he wrote to my
 my-term-hook results in this:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
     (defun my-term-hook ()
       (goto-address-mode)
@@ -4070,8 +4070,8 @@ my-term-hook results in this:
               (vconcat `(unspecified ,base02 ,red ,green ,yellow ,blue
                                      ,magenta ,cyan ,base2)))))
 
-#+end_src 
-                                     
+#+end_src
+
 Again, its already added to my term-mode-hook, so reevaluate and off
 we go.
 
@@ -4098,7 +4098,7 @@ On the other hand running M-x ansi-term just executes your regular
 
 (put 'dired-find-alternate-file 'disabled nil)
 
-#+end_src 
+#+end_src
 
 ** General
 
@@ -4121,17 +4121,17 @@ On the other hand running M-x ansi-term just executes your regular
 
 ;; (setq dired-omit-file "^\\.?#\\|^\\.$\\|^\\.\\.$")
 
-(setq dired-omit-files 
-      (rx (or (seq bol (? ".") "#")         ;; emacs autosave files 
-              (seq "~" eol)                 ;; backup-files 
-              (seq bol "svn" eol)           ;; svn dirs 
+(setq dired-omit-files
+      (rx (or (seq bol (? ".") "#")         ;; emacs autosave files
+              (seq "~" eol)                 ;; backup-files
+              (seq bol "svn" eol)           ;; svn dirs
 ;;              (seq ".git" eol)
-;;              (seq bol "." (not (any "."))) ;; dot-files                                                                                                                                                                    
+;;              (seq bol "." (not (any "."))) ;; dot-files
 ;;              (seq ".pyc" eol)
               )))
-(setq dired-omit-extensions 
-      (append dired-latex-unclean-extensions 
-              dired-bibtex-unclean-extensions 
+(setq dired-omit-extensions
+      (append dired-latex-unclean-extensions
+              dired-bibtex-unclean-extensions
               dired-texinfo-unclean-extensions))
 (add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
 
@@ -4145,19 +4145,19 @@ Require unix zip commandline tool."
     (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
     ))
 
-(autoload 'dired-jump "dired-x" "Jump to dired corresponding current buffer.") 
+(autoload 'dired-jump "dired-x" "Jump to dired corresponding current buffer.")
 (autoload 'dired-jump-other-window "dired-x" "jump to dired in other window.")
 
 
 (setq toggle-diredp-find-file-reuse-directory t)
 
-#+end_src 
+#+end_src
 
 ** Gnus
 
 *** Settings
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;;(setq check-mail-boxes (quote ("~/Messages/incoming/mail\\..*\\.spool")))
 ;; (setq check-mail-summary-function (quote check-mail-box-summary))
@@ -4165,11 +4165,11 @@ Require unix zip commandline tool."
 (setq gnus-activate-level 2)
 (setq gnus-after-getting-new-news-hook (quote (gnus-group-list-groups gnus-group-save-newsrc gnus-display-time-event-handler)))
 
-#+end_src 
+#+end_src
 
 *** Gnus agent
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
  (setq gnus-agent-expire-all t)
  (setq gnus-agent-expire-days 14)
@@ -4177,10 +4177,10 @@ Require unix zip commandline tool."
  (setq gnus-agent-mark-unread-after-downloaded nil)
  (setq gnus-agent-synchronize-flags t)
 
-#+end_src 
+#+end_src
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; (setq gnus-alias-default-identity "cu)
 ;; (setq gnus-alias-identity-alist (quote (("cu" "" nil "" nil "" "")
@@ -4290,7 +4290,7 @@ Require unix zip commandline tool."
  (setq gnus-thread-sort-functions (quote (gnus-thread-sort-by-most-recent-number gnus-thread-sort-by-score)))
 
 ;; ;; sort summary
-;;  (setq 
+;;  (setq
 ;;   gnus-thread-sort-functions '(gnus-thread-sort-by-number
 ;;                                (not gnus-thread-sort-by-date))
 ;;   )
@@ -4418,7 +4418,35 @@ Require unix zip commandline tool."
 (setq gnus-summary-save-parts-last-directory "~/Downloads")
 
 
-#+end_src 
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+
+
+(setq
+ mm-inline-text-html-renderer 'mm-inline-text-html-render-with-w3m
+ w3m-display-inline-image t
+ gnus-article-wash-function 'gnus-article-wash-html-with-w3m)
+
+(setq mm-text-html-renderer 'w3m)
+(setq mm-inline-text-html-with-images t)
+
+(defun gnus-summary-w3m-safe-toggle-inline-images (&optional arg)
+  "Toggle displaying of all images in the article buffer.
+  If the prefix arg is given, all images are considered to be safe."
+    (interactive "P")
+      (save-excursion
+          (set-buffer gnus-article-buffer)
+              (w3m-safe-toggle-inline-images arg)))
+
+              (eval-after-load "gnus-sum"
+                '(define-key gnus-summary-mode-map
+                     "\C-i" 'gnus-summary-w3m-safe-toggle-inline-images))
+
+
+
+#+end_src
+
 
 *** Keep threads collapsed
 
@@ -4436,18 +4464,18 @@ Require unix zip commandline tool."
 
 - Or use this setting :
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
   (setq gnus-auto-select-first nil)
 
 
-#+end_src 
+#+end_src
 
 *** General
 
 [[http://wikemacs.org/wiki/Gnus][Some nice tips on using gnus]]
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'gnus)
 (require 'starttls)
@@ -4483,12 +4511,12 @@ Require unix zip commandline tool."
         (gnus)
         (gnus-group-list-groups gnus-activate-level)
         (setq switch-to-gnus-run t)))))
-#+end_src 
+#+end_src
 
 *** fetchmail
 
 #+begin_src emacs-lisp :tangle no
-        
+
 (use-package fetchmail-ctl
   :init
   (progn
@@ -4501,16 +4529,16 @@ Require unix zip commandline tool."
 
     (add-hook 'gnus-startup-hook 'maybe-start-fetchmail-and-news)))
 
-#+end_src 
+#+end_src
 
 *** Mo jweigley
 
-#+begin_src emacs-lisp :tangle no 
-    
+#+begin_src emacs-lisp :tangle no
+
 
 (add-hook 'gnus-summary-mode-hook 'hl-line-mode)
 
-#+end_src 
+#+end_src
 
 *** set up message
 
@@ -4535,10 +4563,10 @@ Require unix zip commandline tool."
 (defadvice gnus-summary-resend-message-edit (after call-my-mhs-hook activate)
   (my-message-header-setup-hook))
 
-#+end_src 
+#+end_src
 
-#+begin_src emacs-lisp :tangle no 
-  
+#+begin_src emacs-lisp :tangle no
+
 (defun my-gnus-summary-save-parts (&optional arg)
   (interactive "P")
   (let ((directory "~/Downloads"))
@@ -4548,7 +4576,7 @@ Require unix zip commandline tool."
 
 (bind-key "X m" 'my-gnus-summary-save-parts gnus-summary-mode-map)
 
-#+end_src 
+#+end_src
 
 #+begin_src emacs-lisp :tangle no
 
@@ -4558,7 +4586,7 @@ Require unix zip commandline tool."
 
 (add-hook 'message-send-hook 'queue-message-if-not-connected)
 
-#+end_src 
+#+end_src
 
 #+begin_src emacs-lisp :tangle no
 
@@ -4571,11 +4599,11 @@ Require unix zip commandline tool."
 
 (add-hook 'message-sent-hook 'kick-postfix-if-needed)
 
-#+end_src 
+#+end_src
 
 *** exit gnus
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun exit-gnus-on-exit ()
   (if (and (fboundp 'gnus-group-exit)
@@ -4586,7 +4614,7 @@ Require unix zip commandline tool."
 
 (add-hook 'kill-emacs-hook 'exit-gnus-on-exit)
 
-#+end_src 
+#+end_src
 
 *** Bodacious need to get spam reporting working for me
 
@@ -4604,9 +4632,9 @@ This moves them into the Spam folder."
       (gnus-summary-delete-article arg)
     (gnus-summary-move-article arg "mail.trash")))
 
-#+end_src 
+#+end_src
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (define-key gnus-summary-mode-map [(meta ?q)] 'gnus-article-fill-long-lines)
 ;;(define-key gnus-summary-mode-map [?$] 'gmail-report-spam)
@@ -4627,11 +4655,11 @@ This moves them into the Spam folder."
       gnus-summary-highlight
 )
 
-#+end_src       
+#+end_src
 
 *** gnus summary thread
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (if window-system
     (setq
@@ -4643,15 +4671,15 @@ This moves them into the Spam folder."
      gnus-sum-thread-tree-single-leaf     "\\-> "
      gnus-sum-thread-tree-indent          " "))
 
-#+end_src      
+#+end_src
 
 #+begin_src emacs-lisp :tangle no
 
 (setq gnus-sum-thread-tree-single-indent "  ")
 
-#+end_src 
+#+end_src
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 (defsubst dot-gnus-tos (time)
   "Convert TIME to a floating point number."
   (+ (* (car time) 65536.0)
@@ -4769,18 +4797,18 @@ is:
 
 *** gnus-dired
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package gnus-dired
   :commands gnus-dired-mode
   :init
   (add-hook 'dired-mode-hook 'gnus-dired-mode))
 
-#+end_src 
-  
+#+end_src
+
 **** gnus scoring
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package my-gnus-score
   :init
@@ -4794,7 +4822,7 @@ is:
 
     (define-key gnus-group-mode-map [?v ?g] 'gnus-group-get-all-new-news)))
 
-#+end_src     
+#+end_src
 
 **** gnus daemon
 
@@ -4831,7 +4859,7 @@ is:
 
     (gnus-demon-add-handler 'save-gnus-newsrc nil 1)))
 
-#+end_src     
+#+end_src
 
 #+begin_src emacs-lisp :tangle no
 
@@ -4886,7 +4914,7 @@ is:
 
     (define-key global-map [(alt meta ?f)] 'gnus-query)))
 
-#+end_src     
+#+end_src
 
 **** Gnus harvest - eventually use this
 
@@ -4898,7 +4926,7 @@ is:
       (gnus-harvest-install 'message-x)
     (gnus-harvest-install)))
 
-#+end_src 
+#+end_src
 
 #+begin_src emacs-lisp :tangle no
 
@@ -4916,9 +4944,9 @@ is:
 
     (define-key message-mode-map "\C-c\C-f\C-p" 'gnus-alias-select-identity)))
 
-#+end_src 
+#+end_src
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package rs-gnus-summary
   :init
@@ -5021,11 +5049,11 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
     (define-key gnus-article-mode-map [(control ?c) (control ?o)]
       'gnus-article-browse-urls)))
 
-#+end_src       
+#+end_src
 
 *** saving mail locally & settings
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; (use-package dot-gnus
 ;;   :bind (("M-G"   . switch-to-gnus)
@@ -5041,7 +5069,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 (global-set-key (kbd "C-x m") 'compose-mail)
 
 
-#+end_src 
+#+end_src
 
 I put all of my settings relating to:
 
@@ -5060,7 +5088,7 @@ in my gnu init file (see below)
 #+end_src
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-hook 'message-sent-hook 'gnus-score-followup-article)
 (add-hook 'message-sent-hook 'gnus-score-followup-thread)
@@ -5074,12 +5102,12 @@ in my gnu init file (see below)
       (switch-to-buffer (get-buffer "*Group*"))
     (gnus)))
 
-#+end_src 
+#+end_src
 
 
 *** Main Gnus IMAP config
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq auth-sources (quote ((:source "~/.emacs.d/.authinfo.gpg"
                                     :host t :protocol t))))
@@ -5113,7 +5141,7 @@ in my gnu init file (see below)
 
 ;;           (require 'miniedit)
 
-#+end_src 
+#+end_src
 
 
 #+begin_src emacs-lisp :tangle no
@@ -5130,10 +5158,10 @@ in my gnu init file (see below)
       gnus-level-subscribed 5)
 
 
-#+end_src 
+#+end_src
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 
 (defun dkh/unread-face (f)
@@ -5179,7 +5207,7 @@ in my gnu init file (see below)
         (if (string-match "," to) "~" "»")
       (if (or (string-match dkh-mails
                             (gnus-extra-header 'Cc headers))
-              (string-match dkh-mails                                        
+              (string-match dkh-mails
                             (gnus-extra-header 'BCc headers)))
           "~"
         " "))))
@@ -5350,7 +5378,7 @@ in my gnu init file (see below)
 (global-set-key (kbd "C-c x") '(lambda()(interactive)(save-buffers-kill-emacs)))
 ;; Mark gcc'ed (archive) as read:
 
-#+end_src 
+#+end_src
 
 
 *** Gnus init file
@@ -5361,7 +5389,7 @@ If things do not go smoothly at startup, you have to twiddle some
 variables in your `~/.gnus.el' file. This file is similar to
 `~/.emacs', but is read when Gnus starts.
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; put everything in ~/.emacs.d
 (setq
@@ -5369,7 +5397,7 @@ variables in your `~/.gnus.el' file. This file is similar to
  message-signatrue-directory "~/git/.emacs.d/sig/"
  )
 
-#+end_src 
+#+end_src
 
 
 *** Second part
@@ -5377,48 +5405,48 @@ variables in your `~/.gnus.el' file. This file is similar to
 
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; (require 'info)
   (if (featurep 'xemacs)
       (add-to-list 'Info-directory-list "~/.emacs.d/el-get/nognus/texi/")
     (add-to-list 'Info-default-directory-list "~/.emacs.d/el-get/nognus/texi/"))
 
-(defcustom gnus-summary-save-parts-exclude-article nil                                                                                                                                                                     
-          "If non-nil don't save article along with attachments."                                                                                                                                                                  
-          :group 'gnus-article-mime                                                                                                                                                                                                
-          :type 'boolean)                                                                                                                                                                                                          
-                                                                                                                                                                                                                                   
-        (defun gnus-summary-save-parts-1 (type dir handle reverse)                                                                                                                                                                 
-          (if (stringp (car handle))                                                                                                                                                                                               
-(mapcar (lambda (h) (gnus-summary-save-parts-1 type dir h reverse))                                                                                                                                                  
-    (cdr handle))                                                                                                                                                                                                    
-            (when (if reverse                                                                                                                                                                                                      
-                  (not (string-match type (mm-handle-media-type handle)))                                                                                                                                                          
-                (string-match type (mm-handle-media-type handle)))                                                                                                                                                                 
-              (let* ((name (or                                                                                                                                                                                                     
-                            (mm-handle-filename handle)                                                                                                                                                                            
-                            (unless gnus-summary-save-parts-exclude-article                                                                                                                                                        
-                              (format "%s.%d.%d" gnus-newsgroup-name                                                                                                                                                               
-                                      (cdr gnus-article-current)                                                                                                                                                                   
-                                      gnus-summary-save-parts-counter))))                                                                                                                                                          
-                     (file (when name                                                                                                                                                                                              
-                             (expand-file-name                                                                                                                                                                                     
-                              (gnus-map-function                                                                                                                                                                                   
-                               mm-file-name-rewrite-functions                                                                                                                                                                      
-                               (file-name-nondirectory                                                                                                                                                                             
-                                name))                                                                                                                                                                                             
-                              dir))))                                                                                                                                                                                              
-                (when file                                                                                                                                                                                                         
-                  (incf gnus-summary-save-parts-counter)                                                                                                                                                                           
-                  (unless (file-exists-p file)                                                                                                                                                                                     
+(defcustom gnus-summary-save-parts-exclude-article nil
+          "If non-nil don't save article along with attachments."
+          :group 'gnus-article-mime
+          :type 'boolean)
+
+        (defun gnus-summary-save-parts-1 (type dir handle reverse)
+          (if (stringp (car handle))
+(mapcar (lambda (h) (gnus-summary-save-parts-1 type dir h reverse))
+    (cdr handle))
+            (when (if reverse
+                  (not (string-match type (mm-handle-media-type handle)))
+                (string-match type (mm-handle-media-type handle)))
+              (let* ((name (or
+                            (mm-handle-filename handle)
+                            (unless gnus-summary-save-parts-exclude-article
+                              (format "%s.%d.%d" gnus-newsgroup-name
+                                      (cdr gnus-article-current)
+                                      gnus-summary-save-parts-counter))))
+                     (file (when name
+                             (expand-file-name
+                              (gnus-map-function
+                               mm-file-name-rewrite-functions
+                               (file-name-nondirectory
+                                name))
+                              dir))))
+                (when file
+                  (incf gnus-summary-save-parts-counter)
+                  (unless (file-exists-p file)
                     (mm-save-part-to-file handle file)))))))
 
 (setq message-cite-prefix-regexp
 "\\([ ]*[-_.#[:word:]]+>+\\|[ ]*[]>|}]\\)+")
 
 
-#+end_src 
+#+end_src
 
 
 *** Gnus pop
@@ -5439,13 +5467,13 @@ variables in your `~/.gnus.el' file. This file is similar to
     :password ,(rest (assoc :freehost password-alist))
     :prescript "ssh -f -L 1235:mail.freehost.org:110 user@mail.freehost.org sleep 60 &")))
 
-#+end_src 
+#+end_src
 
 
 
 *** Display chars
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq gnus-score-over-mark ?\u2191          ; \u2191 \u2600
       gnus-score-below-mark ?\u2193         ; \u2193 \u2602
@@ -5475,11 +5503,11 @@ variables in your `~/.gnus.el' file. This file is similar to
 ;;                                        "\n"))
 
 
-#+end_src                                        
+#+end_src
 
 *** New settings
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq message-kill-buffer-on-exit t)
 (setq gnus-fetch-old-headers 'some)
@@ -5491,13 +5519,13 @@ variables in your `~/.gnus.el' file. This file is similar to
 (setq gnus-article-banner-alist '((iphone . "\\(^Sent from my iPhone$\\)")))
 
 
-#+end_src 
+#+end_src
 
 
 
 *** Remaining settings
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq gnus-novice-user nil)
 
@@ -5543,51 +5571,51 @@ variables in your `~/.gnus.el' file. This file is similar to
 
 (setq
  gnus-no-groups-message "No Gnus for Daemon."
- 
+
  mail-imenu-generic-expression '(("Subject"  "^Subject: *\\(.*\\)" 1)
                                  ("Cc"     "^C[Cc]: *\\(.*\\)" 1)
                                  ("To"     "^To: *\\(.*\\)" 1)
                                  ("From"  "^From: *\\(.*\\)" 1))
  ;; whether gnus bothers with faces. It should!
-  
+
  message-forward-ignored-headers "^Content-Transfer-Encoding:\\|^X-Gnus:\\|^To:\\|^Cc:\\|^From"
  message-make-forward-subject-function (quote message-forward-subject-fwd)
  gnus-visual t
 )
 
-#+end_src 
+#+end_src
 
 
 #+begin_src emacs-lisp :tangle no
 
 
- 
-
-#+end_src 
 
 
+#+end_src
 
-#+begin_src emacs-lisp :tangle no 
+
+
+#+begin_src emacs-lisp :tangle no
 
 
 ;;       gnus-permanently-visible-groups "\\.*"
 ;; all mails should be always displayed in the mailbox
 
-(setq 
+(setq
  gnus-visible-headers (quote ("^From:" "^Newsgroups:" "^Subject:" "^Date:" "^Followup-To:" "^Reply-To:" "^Organization:" "^Summary:" "^Keywords:" "^To:" "^[BGF]?Cc:" "^Posted-To:" "^Mail-Copies-To:" "^Mail-Followup-To:" "^Apparently-To:" "^Gnus-Warning:" "^Resent-From:" "^X-Sent:" "^User-Agent:"))
 
  ;; from http://nijino.homelinux.net/emacs/.gnus.el
  gnus-signature-limit 8.0
 
- 
+
  )
 
 (setq
  gnushush-sender-header (quote none)
  gnushush-user-agent-header (quote none)
 
- 
- 
+
+
  )
 
 ;; From pop sources
@@ -5617,13 +5645,13 @@ variables in your `~/.gnus.el' file. This file is similar to
  gnus-mime-display-multipart-related-as-mixed t
 
  mm-inline-large-images t
- 
+
 
  mm-external-terminal-program (quote urxvt)
 
  w3m-w3mkey-binding 'info
  w3m-safe-url-regexp nil
- 
+
  )
 
 
@@ -5650,13 +5678,13 @@ variables in your `~/.gnus.el' file. This file is similar to
    (y-or-n-p "Post the message? ")
    ))
 
-#+end_src 
+#+end_src
 
 
 
 **** ;; from making gnus more like pine
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defvar my-message-attachment-regexp
   "attach\\|\Wfiles?\W\\|enclose\\|\Wdraft\\|\Wversion")
@@ -5675,7 +5703,7 @@ variables in your `~/.gnus.el' file. This file is similar to
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (define-key gnus-article-mode-map (kbd "<deletechar>") 'gnus-article-goto-prev-page)
 
@@ -5712,8 +5740,8 @@ variables in your `~/.gnus.el' file. This file is similar to
   (gnus-article-show-summary)
   (gnus-summary-mark-as-read-forward 1)
   )
-  
-  
+
+
 ;; from Peter Munster
 
 
@@ -5749,23 +5777,23 @@ variables in your `~/.gnus.el' file. This file is similar to
 
 
 
-#+end_src 
+#+end_src
 
 
 ** Erc
 
 *** ERC settings
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq erc-user-full-name user-full-name)
 
-#+end_src 
+#+end_src
 
 
 **** jwiegley settings
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (custom-set-variables
  '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs/")
@@ -5788,17 +5816,17 @@ variables in your `~/.gnus.el' file. This file is similar to
  erc-nick-msg-face erc-direct-msg-face)))
 )
 
-#+end_src  
+#+end_src
 
 
 ***** erc keywords
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
-(setq erc-keywords '("\scu\s" "\stor\s" "Damon" 
+(setq erc-keywords '("\scu\s" "\stor\s" "Damon"
    "relation module" "contextual filter" "gmane" "gwene"
    "usenet" "proxy" "privacy" "\ssocks\s"
-   "gnus" "workgroups" "wireshark" "chaos tools" "hushmail" 
+   "gnus" "workgroups" "wireshark" "chaos tools" "hushmail"
  "Stallman" "\sog\s" "compiz" "page manager" "super cookie" "[^\.]php"
    "nxhtml" "nxml" "erc\-keywords" "libnotify" "emacs 24" "org\W?mode"
    "\sunity\s" "starter\W?kit" "rate module" "conkeror" "jabber"
@@ -5815,22 +5843,22 @@ variables in your `~/.gnus.el' file. This file is similar to
 (erc-match-mode 1)
 
 
-#+end_src    
+#+end_src
 
 
 ***** logging
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
   (if (not (file-exists-p erc-log-channels-directory))
       (mkdir erc-log-channels-directory t))
 
-#+end_src 
+#+end_src
 
 **** technomancy settings
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq erc-prompt ">")
 
@@ -5860,11 +5888,11 @@ variables in your `~/.gnus.el' file. This file is similar to
      (set-face-foreground 'erc-input-face "dim gray")
      (set-face-foreground 'erc-my-nick-face "blue")))
 
-#+end_src 
+#+end_src
 
 *** ERC initialization
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package erc
   ;; :commands erc
@@ -5975,7 +6003,7 @@ FORM => (eval FORM)."
       "Deop myself from current channel."
       (erc-cmd-DEOP (format "%s" (erc-current-nick))))))
 
-#+end_src       
+#+end_src
 
 
 *** Jabber conference room backlog
@@ -5997,11 +6025,11 @@ The following elisp reformats them more legibly:
     	(replace-match "<\\1>"))))
     (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
 
-#+end_src 
-    
+#+end_src
+
 ** Download utils
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'url)
 
@@ -6022,12 +6050,12 @@ The following elisp reformats them more legibly:
                             (or download-name
                                 (car (last (split-string url "/" t))))))))))
 
-#+end_src 
+#+end_src
 
 ** Calendar
 Embed location maps, with directions from home
 *** General Settings
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
   (setq calendar-latitude 40)
   (setq calendar-longitude -105)
@@ -6041,27 +6069,27 @@ Embed location maps, with directions from home
                   (calendar-absolute-from-gregorian (list month day year)))))
         'font-lock-face 'font-lock-function-name-face))
 
-(require 'calendar)                                                                                                                                             
-(defun display-a-month (day month year)                                                                                                                         
-  (insert (format "%s\n" (calendar-date-string (list  month day year))))                                                                                        
-  (if (< day 30)                                                                                                                                                
+(require 'calendar)
+(defun display-a-month (day month year)
+  (insert (format "%s\n" (calendar-date-string (list  month day year))))
+  (if (< day 30)
     (display-a-month (+ day 1) month year)))
 
-#+end_src 
+#+end_src
 
 *** Calfw - A calendar framework for Emacs
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'calfw)
 
 (require 'calfw-org)
 
-#+end_src 
+#+end_src
 
 ** LDAP and bbdb
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq
  eudc-ldap-bbdb-conversion-alist (quote ((name . displayName) (net . mail) (address eudc-bbdbify-address Postaladdress "Office") (phone (eudc-bbdbify-phone telephoneNumber "Office")) (notes . title)))
@@ -6081,7 +6109,7 @@ Embed location maps, with directions from home
 
 (setq eudc-options-file "~/git/.emacs.d/.eudc-options")
 
-#+end_src 
+#+end_src
 
 *** EUDC
 
@@ -6113,7 +6141,7 @@ Embed location maps, with directions from home
                    'ldap)
 
 
-                   
+
 (eudc-protocol-set 'eudc-inline-expansion-format
                    '("%s <%s>"  displayName mail)
                    'ldap)
@@ -6152,7 +6180,7 @@ Embed location maps, with directions from home
 
 ;; (provide 'dkh-directory)
 
-#+end_src 
+#+end_src
 
 ** Autoinstall
 
@@ -6165,33 +6193,33 @@ Embed location maps, with directions from home
 
 (require 'auto-install) ; auto update from wiki
 
-#+end_src 
+#+end_src
 
 ** bash completion
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-to-list 'load-path (expand-file-name "~/git/src/emacs-bash-completion"))
 
 (require 'bash-completion)
 (bash-completion-setup)
 
-#+end_src 
+#+end_src
 
 ** Macros
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
-(defun save-macro (name)                  
+(defun save-macro (name)
   "save a macro. Take a name as argument
-   and save the last defined macro under 
+   and save the last defined macro under
    this name at the end of your .emacs"
-   (interactive "SName of the macro :")  ; ask for the name of the macro    
-   (kmacro-name-last-macro name)         ; use this name for the macro    
-   (find-file (user-init-file))                   ; open ~/.emacs or other user init file 
+   (interactive "SName of the macro :")  ; ask for the name of the macro
+   (kmacro-name-last-macro name)         ; use this name for the macro
+   (find-file (user-init-file))                   ; open ~/.emacs or other user init file
    (goto-char (point-max))               ; go to the end of the .emacs
    (newline)                             ; insert a newline
-   (insert-kbd-macro name)               ; copy the macro 
+   (insert-kbd-macro name)               ; copy the macro
    (newline)                             ; insert a newline
    (switch-to-buffer nil))               ; return to the initial buffer
 
@@ -6203,10 +6231,10 @@ Embed location maps, with directions from home
 (global-set-key (kbd "H-<f5>") 'init-macro-counter-default)
 (global-set-key (kbd "M-<f5>") 'kmacro-insert-counter)
 
-#+end_src 
+#+end_src
 
 ** BBDB
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq bbdb-file "~/git/.emacs.d/.bbdb")           ;; keep ~/ clean; set before loading
 
@@ -6257,7 +6285,7 @@ Embed location maps, with directions from home
        bbdb-phone-style nil
        bbdb-mail-user-agent 'gnus)  ;; (bbdb3)
 
-#+end_src 
+#+end_src
 
 
 http://www.emacswiki.org/emacs/UpgradeBBDB
@@ -6287,10 +6315,10 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
 
 ;;(bbdb-records)
 
-#+end_src 
+#+end_src
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 
 ;;        (add-hook 'message-setup-hook 'bbdb-get-mail-aliases) ;; bbdb 3
@@ -6397,12 +6425,12 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
       `(("From" . , (regexp-opt rs-bbdb-ignored-from-list))))
 
 
-#+end_src 
+#+end_src
 
 * Custom functions
 ** Push to mark no activate
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun push-mark-no-activate ()
   "Pushes `point' to `mark-ring' and does not activate the region
@@ -6412,11 +6440,11 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
   (message "Pushed mark to ring"))
 (global-set-key (kbd "C-,") 'push-mark-no-activate)
 
-#+end_src 
+#+end_src
 
 ** Toggle Chrome
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun dkh/toggle-chrome ()
   "Show/hide toolbar and menubar."
@@ -6429,7 +6457,7 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
 
 ** Handle MS-Word
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; this seems to enable MS-Word documents
  (defun mm-inline-msword (handle)
@@ -6440,11 +6468,11 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
        (setq text (buffer-string)))
      (mm-insert-inline handle text)))
 
-#+end_src 
-     
+#+end_src
+
 ** Switch or start
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; stolen from old starter-kit
 (defun switch-or-start (function buffer)
@@ -6455,11 +6483,11 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
         (switch-to-buffer buffer)
       (funcall function))))
 
-#+end_src 
+#+end_src
 
 ** Open with sudo if necessary
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun find-alternative-file-with-sudo ()
     "Open current buffer as root!"
@@ -6471,10 +6499,10 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
 
 (global-set-key (kbd "C-x C-t") 'find-alternative-file-with-sudo)
 
-#+end_src 
+#+end_src
 
 ** Opacity
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun djcb-opacity-modify (&optional dec)
   "modify the transparency of the emacs frame; if DEC is t,
@@ -6493,11 +6521,11 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
 (global-set-key (kbd "H-0") '(lambda()(interactive)
                                (modify-frame-parameters nil `((alpha . 100)))))
 
-#+end_src 
+#+end_src
 
 ** Bracket functions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 (defun forward-open-bracket ()
   "Move cursor to the next occurrence of left bracket or quotation mark."
   (interactive)
@@ -6526,11 +6554,11 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
   (forward-char 1)
   )
 
-#+end_src 
-  
+#+end_src
+
 ** Point functions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun get-point (symbol &optional arg)
  "get the point"
@@ -6548,7 +6576,7 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
 
 (defun paste-to-mark(&optional arg)
   "Paste things to mark, or to the prompt in shell-mode"
-  (let ((pasteMe 
+  (let ((pasteMe
     (lambda()
       (if (string= "shell-mode" major-mode)
         (progn (comint-next-prompt 25535) (yank))
@@ -6575,11 +6603,11 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
   (end-of-line) ; move to end of line
   (set-mark (line-beginning-position)))
 
-#+end_src 
+#+end_src
 
 ** Full screen function
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun toggle-fullscreen (&optional f)
   (interactive)
@@ -6590,22 +6618,22 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
                                 (progn (setq old-fullscreen current-value)
                                        'fullboth)))))
 
-#+end_src 
+#+end_src
 
 ** Insert date function
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun insert-date ()
 "Insert date at point."
 (interactive)
 (insert (format-time-string "%d.%m.%Y %H:%M")))
 
-#+end_src 
+#+end_src
 
 ** dos 2 unix function(s)
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun dos-to-unix ()
   "Cut all visible ^M from the current buffer."
@@ -6622,11 +6650,11 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
     (while (search-forward "\n" nil t)
       (replace-match "\r\n"))))
 
-#+end_src 
+#+end_src
 
 ** rename file and buffer function
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun rename-file-and-buffer ()
   "Renames current buffer and file it is visiting."
@@ -6644,11 +6672,11 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
                (set-visited-file-name new-name)
                (set-buffer-modified-p nil)))))))
 
-#+end_src 
+#+end_src
 
 ** Other functions
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun remove-dupes (list)
   (let (tmp-list head)
@@ -6972,7 +7000,7 @@ expands it. Else indents the current line. Acts as normal in minibuffer."
        (localdir name))
     (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
            (switch-to-buffer buffer-of-name))
-          ( t 
+          ( t
             (progn
               (eshell)
               ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
@@ -6985,7 +7013,7 @@ expands it. Else indents the current line. Acts as normal in minibuffer."
   (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*"))))
     (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
            (switch-to-buffer buffer-of-name))
-          ( t 
+          ( t
             (progn
               (eshell t)
               ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
@@ -7017,11 +7045,11 @@ expands it. Else indents the current line. Acts as normal in minibuffer."
           (insert " "))))
     (kill-buffer mouse-buffer)))
 
-#+end_src 
+#+end_src
 
 ** toggle line spacing function
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun toggle-line-spacing ()
   "Toggle line spacing between no extra space to extra half line height."
@@ -7032,11 +7060,11 @@ expands it. Else indents the current line. Acts as normal in minibuffer."
     )
   (redraw-display))
 
-#+end_src 
+#+end_src
 
 ** Insert filename function
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun my-insert-file-name (filename &optional args)
   "Insert name of file FILENAME into buffer after point.
@@ -7122,7 +7150,7 @@ Based on `ffap'."
 #+end_src
 
 ** jwiegley functions
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun system-idle-time ()
   (with-temp-buffer
@@ -7297,10 +7325,10 @@ Based on `ffap'."
         (funcall current-mode))))
 
 
-#+end_src 
+#+end_src
 
 ** copy rectangle text to clipboard
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 
 (defun copy-rectangle-to-clipboard (p1 p2)
@@ -7314,23 +7342,23 @@ This command will also put the text in register 0. (see: `copy-to-register')"
        (insert-register ?0)
        (buffer-string) )) ) )
 
-#+end_src 
+#+end_src
 ** Increase text macros
 *** blow up text
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 (fset 'blow_up_text_plus_four
    [?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x])
 
 (global-set-key (kbd "C-c 4") 'blow_up_text_plus_four)
 
-#+end_src 
+#+end_src
 
 * Value added packages
 ** Abbrev
 I like abbrev cause it saves typing
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq abbrev-file-name "~/git/.emacs.d/.abbrev_defs")
 (read-abbrev-file abbrev-file-name t)
@@ -7339,10 +7367,10 @@ I like abbrev cause it saves typing
 ;;(setq abbrev-mode t)
 ;;(setq-default abbrev-mode t)
 
-#+end_src 
+#+end_src
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package abbrev
   :commands abbrev-mode
@@ -7363,13 +7391,13 @@ I like abbrev cause it saves typing
 #+end_src
 
 ** Ace-Jump
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package ace-jump-mode
   :bind ("H-<return>" . ace-jump-mode))
 
 
-#+end_src 
+#+end_src
 
 ** allout
 
@@ -7399,8 +7427,8 @@ I like abbrev cause it saves typing
 
     (add-hook 'allout-mode-hook 'my-allout-mode-hook)))
 
-#+end_src 
-    
+#+end_src
+
 ** ascii
 
 #+begin_src emacs-lisp :tangle no
@@ -7417,7 +7445,7 @@ I like abbrev cause it saves typing
 
     (bind-key "C-c e A" 'ascii-toggle)))
 
-#+end_src     
+#+end_src
 
 ** archive-region
 
@@ -7427,7 +7455,7 @@ I like abbrev cause it saves typing
   :commands kill-region-or-archive-region
   :bind ("C-w" . kill-region-or-archive-region))
 
-#+end_src 
+#+end_src
 
 ** auctex
 
@@ -7466,11 +7494,11 @@ I like abbrev cause it saves typing
                             :doc-spec '(("(latex2e)Concept Index" )
                                         ("(latex2e)Command Index"))))))
 
-#+end_src 
+#+end_src
 
 ** auto-complete
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package auto-complete-config
   :commands auto-complete-mode
@@ -7480,7 +7508,7 @@ I like abbrev cause it saves typing
     (ac-set-trigger-key "TAB")
     (setq ac-use-menu-map t)))
 
-#+end_src     
+#+end_src
 
 ** Autorevert
 
@@ -7488,7 +7516,7 @@ whenever an external process changes a file underneath emacs, and
 there was no unsaved changes in the corresponding buffer, just revert
 its content to reflect what's on-disk.
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package autorevert
   :commands auto-revert-mode
@@ -7498,7 +7526,7 @@ its content to reflect what's on-disk.
             #'(lambda ()
                 (auto-revert-mode 1))))
 
-#+end_src 
+#+end_src
 
 ** backup-each-save
 
@@ -7527,29 +7555,29 @@ its content to reflect what's on-disk.
 
     (setq backup-enable-predicate 'my-dont-backup-files-p)))
 
-#+end_src 
+#+end_src
 
 ** bookmarks
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq bm-repository-file "~/git/.emacs.d/.bm-repository")
 
 
 ;; (setq bm-restore-repository-on-load t)
-;; 
+;;
 ;; ;; make bookmarks persistent as default
 ;; (setq-default bm-buffer-persistence t)
-;;  
+;;
 ;; ;; Loading the repository from file when on start up.
 ;; (add-hook' after-init-hook 'bm-repository-load)
-;;  
+;;
 ;; ;; Restoring bookmarks when on file find.
 ;; (add-hook 'find-file-hooks 'bm-buffer-restore)
-;;  
+;;
 ;; ;; Saving bookmark data on killing a buffer
 ;; (add-hook 'kill-buffer-hook 'bm-buffer-save)
-;;  
+;;
 ;; ;; Saving the repository to file when on exit.
 ;; ;; kill-buffer-hook is not called when emacs is killed, so we
 ;; ;; must save all bookmarks first.
@@ -7572,7 +7600,7 @@ its content to reflect what's on-disk.
          ("C-. b n" . bm-next)
          ("C-. b p" . bm-previous)))
 
-#+end_src 
+#+end_src
 
 ** Bittlebee
 
@@ -7588,7 +7616,7 @@ Ever wondered what this 938748324 person is that sends messages to
 you. AFAIK bitlbee has no builtin support to query the white pages of
 ICQ, therefore i quickly hacked up this one:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun erc-cmd-ICQWHOIS (uin)
   "Queries icq-user with UIN `uin', and returns the result."
@@ -7598,12 +7626,12 @@ ICQ, therefore i quickly hacked up this one:
          (nick (cdr (assoc 'nick result))))
     (erc-display-message nil 'notice (current-buffer) (format "%s (%s %s)" nick fname lname))))
 
-#+end_src 
+#+end_src
 
 ** Bookmarks
 *** Bookmark locations
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq bookmark-default-file "~/git/.emacs.d/.emacs.bmk")
 
@@ -7611,11 +7639,11 @@ ICQ, therefore i quickly hacked up this one:
 
 (setq bmkp-bmenu-state-file "~/git/.emacs.d/.emacs-bmk-bmenu-state.el")
 
-#+end_src 
+#+end_src
 
 *** Bookmark+
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package bookmark
 ;;  :disabled t
@@ -7638,15 +7666,15 @@ ICQ, therefore i quickly hacked up this one:
 
 ** browse-kill-ring+
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package browse-kill-ring+)
 
-#+end_src                               
+#+end_src
 
 ** color-moccur
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 
 (let ((ad-redefinition-action 'accept))
@@ -7670,22 +7698,22 @@ ICQ, therefore i quickly hacked up this one:
 (use-package crosshairs
   :bind ("M-o c" . crosshairs-mode))
 
-#+end_src 
+#+end_src
 
 ** css-mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package css-mode
   :mode ("\\.css\\'" . css-mode))
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-hook 'css-mode-hook 'rainbow-mode)
 
-#+end_src 
+#+end_src
 
 ** debbugs
 
@@ -7694,7 +7722,7 @@ ICQ, therefore i quickly hacked up this one:
 (use-package debbugs
   :commands (debbugs-gnu debbugs-gnu-search))
 
-#+end_src 
+#+end_src
 
 ** dedicated
 
@@ -7703,11 +7731,11 @@ ICQ, therefore i quickly hacked up this one:
 (use-package dedicated
   :bind ("C-. d" . dedicated-mode))
 
-#+end_src 
+#+end_src
 
 ** Dictem
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq dictem-server "localhost")
 (require 'dictem)
@@ -7804,12 +7832,12 @@ ICQ, therefore i quickly hacked up this one:
 
         ; For highlighting the separator between the definitions found.
         ; This also creates hyperlink on database names.
-(add-hook 'dictem-postprocess-definition-hook 
+(add-hook 'dictem-postprocess-definition-hook
         'dictem-postprocess-definition-separator)
 
         ; For creating hyperlinks in dictem buffer
                                       ; that contains definitions.
-(add-hook 'dictem-postprocess-definition-hook 
+(add-hook 'dictem-postprocess-definition-hook
         'dictem-postprocess-definition-hyperlinks)
 
         ; For creating hyperlinks in dictem buffer
@@ -7818,22 +7846,22 @@ ICQ, therefore i quickly hacked up this one:
         'dictem-postprocess-definition-hyperlinks)
 
 
-#+end_src 
+#+end_src
 
 ** diff-mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package diff-mode
   :commands diff-mode
   :config
   (use-package diff-mode-))
 
-#+end_src 
+#+end_src
 
 ** dired
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package dired
   :defer t
@@ -7954,11 +7982,11 @@ ICQ, therefore i quickly hacked up this one:
   :disabled t
   :load-path "site-lisp/doxymacs/lisp/")
 
-#+end_src 
+#+end_src
 
 ** ediff
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package ediff
   :defer t
@@ -8057,7 +8085,7 @@ ICQ, therefore i quickly hacked up this one:
 
 ** edit-server
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package edit-server
   :if (and window-system (not running-alternate-emacs)
@@ -8067,8 +8095,8 @@ ICQ, therefore i quickly hacked up this one:
     (add-hook 'after-init-hook 'server-start t)
     (add-hook 'after-init-hook 'edit-server-start t)))
 
-#+end_src 
-    
+#+end_src
+
 ** emms
 
 #+begin_src emacs-lisp :tangle no
@@ -8114,7 +8142,7 @@ ICQ, therefore i quickly hacked up this one:
     (bind-key "C-. C--" 'emms-player-mplayer-volume-down)
     (bind-key "C-. C-=" 'emms-player-mplayer-volume-up)))
 
-#+end_src 
+#+end_src
 
 ** eshell
 
@@ -8149,7 +8177,7 @@ ICQ, therefore i quickly hacked up this one:
   :requires eshell
   :bind ("C-x C-z" . eshell-toggle))
 
-#+end_src 
+#+end_src
 
 ** ess
 
@@ -8173,27 +8201,27 @@ ICQ, therefore i quickly hacked up this one:
     (defun eval-expr-minibuffer-setup ()
       (set-syntax-table emacs-lisp-mode-syntax-table)
       (paredit-mode))))
-#+end_src 
+#+end_src
 
 ** flyspell
 
 It seems like this is needed for about everything
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq flyspell-use-meta-tab nil)
 
-#+end_src 
+#+end_src
 
 ** Ispell
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq ispell-personal-dictionary "~/git/.emacs.d/.aspell.US.pws")
 
-#+end_src 
+#+end_src
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 
 (use-package ispell
@@ -8209,31 +8237,31 @@ It seems like this is needed for about everything
   :config
   (define-key flyspell-mode-map [(control ?.)] nil))
 
-  #+end_src 
+  #+end_src
 
 ** fold-dwim
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package fold-dwim
   :bind (("<H-f10>" . fold-dwim-toggle)
          ("<H-f11>" . fold-dwim-hide-all)
          ("<H-f12>" . fold-dwim-show-all)))
 
-#+end_src 
-         
+#+end_src
+
 ** gist
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package gist
   :bind ("C-c G" . gist-region-or-buffer))
 
-#+end_src 
-          
+#+end_src
+
 ** grep
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package grep
   :bind (("M-s d" . find-grep-dired)
@@ -8262,11 +8290,11 @@ It seems like this is needed for about everything
      'grep-find-command
      '("find . -type f -print0 | xargs -P4 -0 egrep -nH -e " . 52))))
 
-#+end_src      
+#+end_src
 
 ** helm
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package helm-config
 ;;  :if (not running-alternate-emacs)
@@ -8348,22 +8376,22 @@ It seems like this is needed for about everything
       '(add-to-list 'helm-for-files-prefered-list
                     'helm-c-source-git-files))))
 
-#+end_src 
+#+end_src
 
 ** hi-lock
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package hi-lock
   :bind (("M-o l" . highlight-lines-matching-regexp)
          ("M-o r" . highlight-regexp)
          ("M-o w" . highlight-phrase)))
 
-#+end_src 
+#+end_src
 
 ** hilit-chg
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package hilit-chg
   :bind ("M-o C" . highlight-changes-mode))
@@ -8372,14 +8400,14 @@ It seems like this is needed for about everything
 
 ** hl-line
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package hl-line
   :bind ("M-o h" . hl-line-mode)
   :config
   (use-package hl-line+))
 
-#+end_src 
+#+end_src
 
 ** ibuffer
 
@@ -8388,11 +8416,11 @@ It seems like this is needed for about everything
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer))
 
-#+end_src 
+#+end_src
 
 ** Identi.ca mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'identica-mode)
 
@@ -8400,11 +8428,11 @@ It seems like this is needed for about everything
 ;; Add this to send direct messages
 (global-set-key "\C-cid" 'identica-direct-message-interactive)
 
-#+end_src 
+#+end_src
 
 ** ido
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package ido
   :defines (ido-cur-item
@@ -8469,22 +8497,22 @@ It seems like this is needed for about everything
 
     (bind-key "C-x 5 t" 'ido-switch-buffer-tiny-frame)))
 
-#+end_src 
+#+end_src
 
 ** image-file
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package image-file
   :disabled t
   :init
   (auto-image-file-mode 1))
 
-#+end_src 
+#+end_src
 
 ** Info
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package info
   :bind ("C-h C-i" . info-lookup-symbol)
@@ -8504,29 +8532,29 @@ It seems like this is needed for about everything
 (use-package info-look
   :commadns info-lookup-add-help)
 
-#+end_src 
+#+end_src
 
 ** indirect
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package indirect
   :bind ("C-c C" . indirect-region))
 
-#+end_src 
+#+end_src
 
 ** initsplit
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (eval-after-load "cus-edit"
   '(use-package initsplit))
 
-#+end_src 
+#+end_src
 
 ** ipa
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package ipa
   :commands ipa-insert
@@ -8535,20 +8563,20 @@ It seems like this is needed for about everything
     (autoload 'ipa-load-annotations-into-buffer "ipa")
     (add-hook 'find-file-hook 'ipa-load-annotations-into-buffer)))
 
-#+end_src 
+#+end_src
 
 ** js2-mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package js2-mode
   :mode ("\\.js\\'" . js2-mode))
 
-#+end_src 
+#+end_src
 
 ** ledger
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package "ldg-new"
   :commands ledger-mode
@@ -8598,11 +8626,11 @@ It seems like this is needed for about everything
             (insert account))
           (forward-line))))))
 
-#+end_src 
+#+end_src
 
 ** lisp-mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; Utilities every Emacs Lisp coders should master:
 ;;
@@ -8775,7 +8803,7 @@ It seems like this is needed for about everything
     (hook-into-modes #'my-lisp-mode-hook
                      '(emacs-lisp-mode-hook))))
 
-#+end_src 
+#+end_src
 
 ** llvm-mode
 
@@ -8784,17 +8812,17 @@ It seems like this is needed for about everything
 (use-package llvm-mode
   :mode ("\\.ll\\'" . llvm-mode))
 
-#+end_src 
+#+end_src
 
 ** log4j-mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package log4j-mode
   :disabled t
   :mode ("\\.log\\'" . log4j-mode))
 
-#+end_src 
+#+end_src
 
 ** Lorem Ipsum
 
@@ -8805,13 +8833,13 @@ Via EmacsWiki, I discover lorem-ipsum.el. I toss it into my elisp
 folder and set up some autoloads so that it will be loaded when
 needed.
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (autoload 'Lorem-ipsum-insert-paragraphs "lorem-ipsum" "" t)
 (autoload 'Lorem-ipsum-insert-sentences "lorem-ipsum" "" t)
 (autoload 'Lorem-ipsum-insert-list "lorem-ipsum" "" t)
 
-#+end_src 
+#+end_src
 
 ** Magit
 
@@ -8838,10 +8866,10 @@ needed.
     ;;(add-hook 'magit-status-mode-hook 'start-git-monitor)
     ))
 
-#+end_src     
-    
+#+end_src
+
 ** markdown-mode
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package markdown-mode
   :mode ("\\.md\\'" . markdown-mode)
@@ -8856,19 +8884,19 @@ needed.
 
     (bind-key "C-x M" 'markdown-preview-file)))
 
-#+end_src 
-    
+#+end_src
+
 ** Use pastebin.com
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'pastebin)
 
-#+end_src 
+#+end_src
 
 ** paredit
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package paredit
   :commands paredit-mode
@@ -8947,27 +8975,27 @@ needed.
                   (bind-key "M-k" 'paredit-raise-sexp allout-mode-map)
                   (bind-key "M-h" 'mark-containing-sexp allout-mode-map)))))
 
-#+end_src                   
+#+end_src
 
 ** paren
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package paren
   :init
   (show-paren-mode 1))
 
-#+end_src 
+#+end_src
 
 ** per-window-point
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package per-window-point
   :init
   (pwp-mode 1))
 
-#+end_src 
+#+end_src
 
 ** persistent-scratch
 
@@ -8977,18 +9005,18 @@ needed.
   :if (and window-system (not running-alternate-emacs)
            (not noninteractive)))
 
-#+end_src 
-           
+#+end_src
+
 ** popup-ruler
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package popup-ruler
   :bind (("C-. r" . popup-ruler)
          ("C-. R" . popup-ruler-vertical)))
 
-#+end_src 
-         
+#+end_src
+
 ** pp-c-l
 
 #+begin_src emacs-lisp :tangle no
@@ -8997,11 +9025,11 @@ needed.
   :init
   (hook-into-modes 'pretty-control-l-mode '(prog-mode-hook)))
 
-#+end_src 
-  
+#+end_src
+
 ** ps-print
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package ps-print
   :defer t
@@ -9020,15 +9048,15 @@ needed.
 
 ** puppet-mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package puppet-mode
   :mode ("\\.pp\\'" . puppet-mode))
 
-#+end_src 
+#+end_src
 ** recentf
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package recentf
   :if (not noninteractive)
@@ -9041,7 +9069,7 @@ needed.
           (recentf-add-file (file-name-nondirectory dired-directory))))
 
     (add-hook 'dired-mode-hook 'recentf-add-dired-directory)))
-#+end_src 
+#+end_src
 
 ;;;_ , selectkey
 
@@ -9051,7 +9079,7 @@ needed.
 ** Sauron
 *** Settings
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq sauron-max-line-length 120)
 
@@ -9065,18 +9093,18 @@ needed.
 
   (setq sauron-hide-mode-line t)
 
-#+end_src 
+#+end_src
 
 *** Init
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 
 (use-package sauron
 :bind ("C-. s" . sauron-toggle-hide-show)
        ("C-. R" . sauron-clear))
 
-#+end_src 
+#+end_src
 
 
 *** some sound/light effects for certain events
@@ -9094,11 +9122,11 @@ needed.
 	(sauron-fx-sox "/usr/share/sounds/alarm.wav")
 	(sauron-fx-gnome-osd(format "%S: %s" origin msg) 5)))))
 
-#+end_src 
+#+end_src
 
 *** events to ignore
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 
 (add-hook 'sauron-event-block-functions
@@ -9106,20 +9134,20 @@ needed.
     (or
       (string-match "^*** Users" msg)))) ;; filter out IRC spam
 
-#+end_src 
+#+end_src
 
 
-      
+
 ** Session save config
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq session-save-file "~/.emacs.d/.session")
 
-#+end_src 
+#+end_src
 
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package session
   :if (not noninteractive)
@@ -9168,8 +9196,8 @@ needed.
     (if window-system
         (add-hook 'after-init-hook 'session-initialize t))))
 
-#+end_src 
-        
+#+end_src
+
 ** sh-script
 
 #+begin_src emacs-lisp :tangle no
@@ -9198,7 +9226,7 @@ needed.
 (use-package sh-toggle
   :bind ("C-x M-z" . shell-toggle))
 
-#+end_src 
+#+end_src
 
 ** smart-compile
 
@@ -9224,8 +9252,8 @@ needed.
 
     (bind-key "M-O" 'show-compilation)))
 
-#+end_src 
-    
+#+end_src
+
 ** springboard
 
 #+begin_src emacs-lisp :tangle no
@@ -9233,7 +9261,7 @@ needed.
 (use-package springboard
   :bind ("C-. c" . springboard))
 
-#+end_src 
+#+end_src
 
 ** stopwatch
 
@@ -9242,11 +9270,11 @@ needed.
 (use-package stopwatch
   :bind ("<f8>" . stopwatch))
 
-#+end_src 
+#+end_src
 
 ** texinfo
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package texinfo
   :defines texinfo-section-list
@@ -9280,11 +9308,11 @@ needed.
                 (nth 1 entry)
               5)))))))
 
-#+end_src               
+#+end_src
 
 ** W3m
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package w3m
   :commands w3m-browse-url
@@ -9341,30 +9369,30 @@ needed.
     (bind-key "<return>" 'w3m-view-url-with-external-browser
               w3m-minor-mode-map)))
 
-#+end_src 
+#+end_src
 
 *** For Gnus
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 ;;(define-key gnus-article-mode-map (kbd "M-w") 'org-w3m-copy-for-org-mode)
 (define-key gnus-article-mode-map (kbd "C-c C-x M-w") 'org-w3m-copy-for-org-mode)
 
-#+end_src 
+#+end_src
 
 
 
 #+begin_src emacs-lisp :tangle no
 
 (setq apropos-url-alist
-      '(("^gw?:? +\\(.*\\)" . ;; Google Web 
+      '(("^gw?:? +\\(.*\\)" . ;; Google Web
          "http://www.google.com/search?q=\\1")
 
         ("^g!:? +\\(.*\\)" . ;; Google Lucky
          "http://www.google.com/search?btnI=I%27m+Feeling+Lucky&q=\\1")
-        
-        ("^gl:? +\\(.*\\)" .  ;; Google Linux 
+
+        ("^gl:? +\\(.*\\)" .  ;; Google Linux
          "http://www.google.com/linux?q=\\1")
-        
+
         ("^gi:? +\\(.*\\)" . ;; Google Images
          "http://images.google.com/images?sa=N&tab=wi&q=\\1")
 
@@ -9379,28 +9407,28 @@ needed.
 
         ("^gt:? +\\(\\w+\\)|? *\\(\\w+\\) +\\(\\w+://.*\\)" . ;; Google Translate URL
          "http://translate.google.com/translate?langpair=\\1|\\2&u=\\3")
-        
+
         ("^gt:? +\\(\\w+\\)|? *\\(\\w+\\) +\\(.*\\)" . ;; Google Translate Text
          "http://translate.google.com/translate_t?langpair=\\1|\\2&text=\\3")
 
-        ("^/\\.$" . ;; Slashdot 
+        ("^/\\.$" . ;; Slashdot
          "http://www.slashdot.org")
 
         ("^/\\.:? +\\(.*\\)" . ;; Slashdot search
-         "http://www.osdn.com/osdnsearch.pl?site=Slashdot&query=\\1")        
-        
+         "http://www.osdn.com/osdnsearch.pl?site=Slashdot&query=\\1")
+
         ("^fm$" . ;; Freshmeat
          "http://www.freshmeat.net")
 
         ("^ewiki:? +\\(.*\\)" . ;; Emacs Wiki Search
          "http://www.emacswiki.org/cgi-bin/wiki?search=\\1")
- 
-        ("^ewiki$" . ;; Emacs Wiki 
+
+        ("^ewiki$" . ;; Emacs Wiki
          "http://www.emacswiki.org")
 
-        ("^arda$" . ;; The Encyclopedia of Arda 
+        ("^arda$" . ;; The Encyclopedia of Arda
          "http://www.glyphweb.com/arda/")
-         
+
          ))
 
 (add-to-list 'apropos-url-alist '("^googledict:? +\\(\\w+\\)|? *\\(\\w+\\) +\\(.*\\)" . "http://www.google.com/dictionary?aq=f&langpair=\\1|\\2&q=\\3&hl=\\1"))
@@ -9410,11 +9438,11 @@ needed.
 
 (defun browse-apropos-url (text &optional new-window)
   (interactive (browse-url-interactive-arg "Location: "))
-  (let ((text (replace-regexp-in-string 
-               "^ *\\| *$" "" 
+  (let ((text (replace-regexp-in-string
+               "^ *\\| *$" ""
                (replace-regexp-in-string "[ \t\n]+" " " text))))
-    (let ((url (assoc-default 
-                text apropos-url-alist 
+    (let ((url (assoc-default
+                text apropos-url-alist
                 '(lambda (a b) (let () (setq __braplast a) (string-match a b)))
                 text)))
       (browse-url (replace-regexp-in-string __braplast url text) new-window))))
@@ -9432,7 +9460,7 @@ needed.
   "Browse the URL passed. Use a prefix arg for external default browser else use default browser which is probably W3m"
   (interactive "P")
   (setq url (or url (w3m-url-valid (w3m-anchor))
-  (browse-url-url-at-point) 
+  (browse-url-url-at-point)
 (thing-at-point 'word)
 ))
   (if arg
@@ -9476,9 +9504,9 @@ needed.
   "Launch google on the Word at Point"
   (interactive
    (list (let* ((word (thing-at-point 'symbol))
-                (input (read-string (format "Google%s: " 
+                (input (read-string (format "Google%s: "
                                 (if (not word) "" (format " (default %s)" word))))))
-           (if (string= input "") (if (not word) 
+           (if (string= input "") (if (not word)
                        (error "No keyword to search given") word) input) ;sinon input
            )))
   (browse-url (format "http:/www.google.com/search?q=%s" w))
@@ -9497,7 +9525,7 @@ point. This function returns a list (string) for use in `interactive'."
   (list (read-string prompt (or (and transient-mark-mode mark-active
                                      (buffer-substring-no-properties
                                       (region-beginning) (region-end)))
-                            (current-word))))) 
+                            (current-word)))))
 (defun pm/google (string)
   "Ask a WWW browser to google string.
 Prompts for a string, defaulting to the active region or the current word at
@@ -9671,7 +9699,7 @@ or before point."
   (define-key w3m-mode-map "m" 'sacha/w3m-mirror-current-page)
   (define-key w3m-mode-map "M" 'sacha/w3m-mirror-link)
   ;; I use search much more often than the context history list, although
-  ;; context is still cool. 
+  ;; context is still cool.
   (define-key w3m-mode-map "!" 'sacha/w3m-mirror-current-page)
   (define-key w3m-mode-map "s" 'w3m-search)
   (define-key w3m-mode-map "h" 'w3m-history)
@@ -9736,13 +9764,13 @@ or before point."
      (define-key w3m-mode-map "w" 'w3m-next-buffer)
      (define-key w3m-mode-map "x" 'w3m-close-window)))
 
-#+end_src 
+#+end_src
 
 *** Sometimes need to re-wrap page
 
 http://emacs-w3m.namazu.org/ml/msg10827.html
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (add-hook 'w3m-mode-hook
           (lambda ()
@@ -9776,25 +9804,25 @@ http://emacs-w3m.namazu.org/ml/msg10827.html
           (goto-char pos))
       (w3m-redisplay-this-page))))
 
-#+end_src 
+#+end_src
 
 #+begin_src emacs-lisp :tangle no
 
 (setq w3m-fill-column 120)
 
-#+end_src 
+#+end_src
 
 
 *** jwiegley settings
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq w3m-cookie-accept-bad-cookies (quote ask))
 (setq w3m-fill-column 80)
 
 
 
-#+end_src 
+#+end_src
 
 
 
@@ -9802,7 +9830,7 @@ http://emacs-w3m.namazu.org/ml/msg10827.html
 A feature to preserve split pane configuration. Use 【Ctrl+c ←】 and
 【Ctrl+c →】
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package winner
   :diminish winner-mode
@@ -9814,8 +9842,8 @@ A feature to preserve split pane configuration. Use 【Ctrl+c ←】 and
     (bind-key "M-N" 'winner-redo)
     (bind-key "M-P" 'winner-undo)))
 
-#+end_src 
-    
+#+end_src
+
 ** workgroups
 
 #+begin_src emacs-lisp :tangle no
@@ -9855,7 +9883,7 @@ A feature to preserve split pane configuration. Use 【Ctrl+c ←】 and
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
     (bind-key "\\" 'toggle-input-method wg-map)))
 
-#+end_src 
+#+end_src
 
 
 Very large terminal geometries (270x70 or higher) can also cause
@@ -9864,15 +9892,15 @@ handle this, you should just see what works, and either set your
 background color or turn off morphing with:
 
 #+begin_src emacs-lisp :tangle no
-    
+
 (setq wg-morph-on nil)
 
-#+end_src 
+#+end_src
 
 
 ** wrap-region
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package wrap-region
   :commands wrap-region-mode
@@ -9885,7 +9913,7 @@ background color or turn off morphing with:
                                  c-mode c++-mode))
      ("`" "`" nil (markdown-mode ruby-mode shell-script-mode)))))
 
-#+end_src 
+#+end_src
 
 ** yasnippet
 
@@ -9936,11 +9964,11 @@ $0"))))
     (bind-key "C-c y r" 'yas/reload-all)
     (bind-key "C-c y v" 'yas/visit-snippet-file)))
 
-#+end_src     
+#+end_src
 
 ** zencoding-mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (use-package zencoding-mode
   :commands zencoding-mode
@@ -9957,12 +9985,12 @@ $0"))))
     (defvar zencoding-mode-keymap (make-sparse-keymap))
     (bind-key "C-c C-c" 'zencoding-expand-line zencoding-mode-keymap)))
 
-#+end_src     
+#+end_src
 
 * Programming (IDE)
 ** Magit
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'magit)
 
@@ -9973,7 +10001,7 @@ $0"))))
         "/su:user@localhost:/home/www/project1"
 )))
 
-#+end_src 
+#+end_src
 
 ** Comment Box
 
@@ -9998,7 +10026,7 @@ moves as the buffer expands or contracts.
 
 Here’s what the revised code looks like
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 (defun jcs-comment-box (b e)
   "Draw a box comment around the region but arrange for the region
 to extend to at least the fill column. Place the point after the
@@ -10012,11 +10040,11 @@ comment box."
     (goto-char e)
     (set-marker e nil)))
 
-#+end_src 
+#+end_src
 
 ** Compilation settings
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq compilation-scroll-output 1)
 
@@ -10025,7 +10053,7 @@ comment box."
 ;;; Don't save *anything*
 (setq compilation-save-buffers-predicate '(lambda () nil))
 
-#+end_src 
+#+end_src
 
 
 
@@ -10042,16 +10070,16 @@ Emacs 23.2)
 To set it permanently, put one of the following in your emacs init
 file:
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (subword-mode 1) ; 1 for on, 0 for off
 (global-subword-mode 1) ; 1 for on, 0 for off
 
-#+end_src 
+#+end_src
 
 ** Whitespace
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'whitespace)
 (global-set-key (kbd "C-c w") 'whitespace-mode)
@@ -10068,25 +10096,25 @@ file:
                     :background "red1"
                     :foreground "yellow"
                     :weight 'bold)
-#+end_src 
+#+end_src
 
 ** Programming languages
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'js-mode-expansions)
 (require 'html-mode-expansions)
 (require 'css-mode-expansions)
 
-#+end_src 
+#+end_src
 
 ** Eclim
-         
+
 #+begin_src emacs-lisp :tangle no
 
 (setq eclim-auto-save t) ;; very important (global-eclim-mode)
 
-#+end_src 
+#+end_src
 
 ** Eproject
 
@@ -10138,12 +10166,12 @@ file:
 (.emacs-eproject-key "b" eproject-ibuffer)
 (.emacs-eproject-key "o" eproject-open-all-project-files)
 
-#+end_src 
+#+end_src
 
 
 ** Etags
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'etags-select)
 
@@ -10153,11 +10181,11 @@ file:
 "~/.emacs.d/TAGS"
         ))
 
-#+end_src 
+#+end_src
 
 *** TODO Etags with IDO
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (defun ido-find-tag ()
   "Find a tag using ido"
@@ -10169,7 +10197,7 @@ file:
           (push (prin1-to-string x t) tag-names)))
       tags-completion-table)
     (find-tag (ido-completing-read "Tag: " tag-names))))
- 
+
 (defun ido-find-file-in-tag-files ()
   (interactive)
   (save-excursion
@@ -10179,7 +10207,7 @@ file:
      (expand-file-name
       (ido-completing-read
        "Project file: " (tags-table-files) nil t)))))
- 
+
 (global-set-key [remap find-tag] 'ido-find-tag)
 (global-set-key (kbd "H-.") 'ido-find-file-in-tag-files)
 
@@ -10201,17 +10229,17 @@ file:
                 (error "no tags file found"))
                (t
                 (find-tags-file-r (directory-file-name parent)))))))
-    (catch 'found-it 
+    (catch 'found-it
       (find-tags-file-r (buffer-file-name)))))
 
 (defadvice find-tag (before pm/before-find-tag activate)
   (setq tags-file-name (pm/find-tags-file)))
 
-#+end_src 
+#+end_src
 
 ** Generic X (for Apache logs)
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (require 'generic-x)
 
@@ -10252,10 +10280,10 @@ file:
 
 ** HTML MODE
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
-(defun my-html-mode-setup ()                                    
-(auto-fill-mode -1))                                          
+(defun my-html-mode-setup ()
+(auto-fill-mode -1))
 (add-hook 'html-mode-hook 'my-html-mode-setup)
 
 (defun prettify-key-sequence (&optional omit-brackets)
@@ -10299,7 +10327,7 @@ file:
       (if omit-brackets
           (insert key-seq)
         (insert (concat "【" key-seq "】")))))
-  
+
 (defalias 'pks 'prettify-key-sequence)
 
 (defun open-in-desktop ()
@@ -10320,15 +10348,15 @@ Works in Microsoft Windows, Mac OS X, Linux."
 
 ** JavaScript
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (starter-kit-load "js")
 
-#+end_src 
+#+end_src
 
 ** PSVN (subversion)
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;;; psvn
 (setq svn-status-prefix-key '[(hyper s)])
@@ -10341,11 +10369,11 @@ Works in Microsoft Windows, Mac OS X, Linux."
 
 (add-hook 'svn-log-edit-mode-hook 'xsteve-svn-log-edit-setup)
 
-#+end_src 
+#+end_src
 
 ** Yas
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (yas/load-directory "~/git/.emacs.d/snippets2")
 
@@ -10360,7 +10388,7 @@ Works in Microsoft Windows, Mac OS X, Linux."
 
 (setq yas/indent-line nil)
 
-#+end_src 
+#+end_src
 
 ** ECB
 
@@ -10368,23 +10396,23 @@ Works in Microsoft Windows, Mac OS X, Linux."
 
 ;;(require 'cedet)
 
-(add-hook 'ecb-deactivate-hook                                                                                                                          
-      '(lambda ()                                                                                                                                       
+(add-hook 'ecb-deactivate-hook
+      '(lambda ()
          (ecb-disable-advices 'ecb-winman-not-supported-function-advices t)))
 
-#+end_src 
+#+end_src
 
 ** Stack Exchange mode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
-;; Integrate Emacs with Stack Exchange http://stackoverflow.com/a/10386560/789593                                                       
+;; Integrate Emacs with Stack Exchange http://stackoverflow.com/a/10386560/789593
 (add-to-list 'auto-mode-alist '("\\(stack\\(exchange\\|overflow\\)\\|superuser\\|askubuntu\\)\\.com\\.[a-z0-9]+\\.txt" . markdown-mode))
 
-#+end_src 
+#+end_src
 
 ** Glasses mode
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; face to be put on capitals of an identifier looked through glasses
 (setq glasses-face 'bold)
@@ -10392,7 +10420,7 @@ Works in Microsoft Windows, Mac OS X, Linux."
 ;; string to be displayed as a visual separator in unreadable identifiers
 (setq glasses-separator "")
 
-#+end_src 
+#+end_src
 
 ** Quick Tip: Spaces instead of Tabs
 [2011-10-14 Fri 14:06]
@@ -10403,7 +10431,7 @@ Tab characters used as indentation of source code is a pet peeve of
 mine. Add this to your emacs initialization to make sure all
 indentation uses spaces instead.
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 ;; I hate tabs!
 ;; let tabs indent 4 spaces
@@ -10411,35 +10439,35 @@ indentation uses spaces instead.
 (setq default-tab-width 4)
 (setq indent-line-function 'insert-tab)
 
-#+end_src 
+#+end_src
 
 ** Whitespace mode
 
 As usual Prelude comes with a lot of whitespace handling magic
 pre-enabled (similar to the last tweets). whitespace-mode ftw :-)
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 
 (setq whitespace-action '(auto-cleanup)) (whitespace-mode) ;; automatically clean up bad whitespace
 
 (setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab)) ;; only show bad whitespace
 
-(setq whitespace-style '(face trailing lines-tail) whitespace-line-column 80) 
+(setq whitespace-style '(face trailing lines-tail) whitespace-line-column 80)
 
 ;; handy too: ;; highlight long lines tails
 
-#+end_src 
+#+end_src
 
 ** Semantic
 #+begin_src emacs-lisp :tangle no
 
 (setq semantic-load-turn-useful-things-on t)
 
-#+end_src 
+#+end_src
 
 * Unicode
 
-#+begin_src emacs-lisp :tangle no 
+#+begin_src emacs-lisp :tangle no
 ;; set unicode data file location. (used by what-cursor-position and describe-char)
 (let ((x "~/git/.emacs.d/UnicodeData.txt"))
   (when (file-exists-p x)
@@ -10455,7 +10483,7 @@ pre-enabled (similar to the last tweets). whitespace-mode ftw :-)
       (setq i (1+ i))
       )))
 
-#+end_src 
+#+end_src
 
 * Fun (random)
 ** life expectancy
@@ -10475,7 +10503,7 @@ pre-enabled (similar to the last tweets). whitespace-mode ftw :-)
              (/ days-left 30)
              (/ days-left 7))))
 
-#+end_src 
+#+end_src
 
 * Turn off debugging
 
@@ -10486,7 +10514,6 @@ pre-enabled (similar to the last tweets). whitespace-mode ftw :-)
 (if debug-on-error
     (setq debug-on-error nil))
 
-#+end_src 
+#+end_src
 
 * Footnotes
-
