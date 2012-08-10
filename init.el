@@ -1346,9 +1346,20 @@
                                       "MAILER-DAEMON"
                                       "noreply"
                                       "mailman-owner"
+                                      "vinylisl"
+                                      "dhaley"
+                                      "damon.haley"
                                       ))
     (setq bbdb-ignore-message-alist
           `(("From" . , (regexp-opt rs-bbdb-ignored-from-list))))
+
+
+;; ; NOTE: there can be only one entry per header (such as To, From)
+;;       ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
+;;       bbdb-ignore-some-messages-alist
+;;       `(("From" . ,(concat "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|"
+;;                            "gmane\\|ebay\\|amazon\\|tfl\\|trenitalia"))))
+    
 
     (defun message-read-from-minibuffer (prompt &optional initial-contents)
       "Read from the minibuffer while providing abbrev expansion."
@@ -1932,6 +1943,28 @@ FORM => (eval FORM)."
          (add-to-list 'erc-modules 'spelling)
          (set-face-foreground 'erc-input-face "dim gray")
          (set-face-foreground 'erc-my-nick-face "blue")))
+
+;;; ---------------------------------------------------------------------------
+;;; ERC notify when matching nick, and queries
+
+    (defun erc-current-nick-matched (match-type &optional arg1 arg2)
+      (when (string= match-type "current-nick")
+        (x-urgency-hint)))
+
+    (add-hook 'erc-text-matched-hook 'erc-current-nick-matched)
+
+    (defun erc-notify-query (string)
+      (let ((parsed (get-text-property 1 'erc-parsed string)))
+        (when parsed
+          (let ((command (erc-response.command parsed))
+                (args (erc-response.command-args parsed)))
+            (when (and (string= command "PRIVMSG")
+                       args
+                       (string= (car args) (erc-current-nick)))
+              (x-urgency-hint))))))
+
+    (add-hook 'erc-insert-pre-hook 'erc-notify-query)
+    
     ))
 
 ;;;_ , eshell
@@ -2116,6 +2149,11 @@ FORM => (eval FORM)."
 ;;    (use-package bbdb)
     (use-package bbdb-gnus)
     (use-package bbdb-message)
+
+
+;; (setq message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
+
+    
     (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
     (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
     ;;  (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
