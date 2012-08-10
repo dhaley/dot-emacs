@@ -6427,6 +6427,82 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
 
 #+end_src
 
+
+
+;; ;; regexp matching TeX groups
+;;       (setq mm-uu-tex-groups-regexp ".*")
+;; 
+;;       (eval-after-load "mm-uu"
+;;         '(progn
+;;            (add-to-list 'mailcap-mime-extensions '(".org" . "text/org"))
+;;            (add-to-list 'mm-automatic-display "text/org")
+;;            ;; (add-to-list 'mm-inlined-types "text/org")
+;;            (add-to-list 'mm-inline-media-tests
+;;                         '("text/org"
+;;                           my-display-org-inline
+;;                           identity))
+;; 
+;;            (defun my-display-org-inline (handle)
+;;              (mm-display-inline-fontify handle 'org-mode))
+;; 
+;;            (defun my-mm-org-babel-src-extract ()
+;;              (mm-make-handle (mm-uu-copy-to-buffer start-point end-point)
+;;                              '("text/org")
+;;                              nil nil
+;;                              (list mm-dissect-disposition
+;;                                    (cons 'filename "Org Babel source file"))))
+;; 
+;;            (add-to-list 'mm-uu-type-alist
+;;                         '(org-babel-block
+;;                           "^#\\+begin_"
+;;                           "^#\\+end_"
+;;                           ;; (lambda nil
+;;                           ;;   (mm-uu-verbatim-marks-extract 0 0))
+;;                           my-mm-org-babel-src-extract
+;;                           nil))
+;;            (mm-uu-configure)))
+
+*** Org-mode code block fontification
+Correctly fontify Org-mode attachments
+#+begin_src emacs-lisp
+    (add-to-list 'mailcap-mime-extensions '(".org" . "text/org"))
+    (add-to-list 'mm-automatic-display "text/org")
+
+    (add-to-list 'mm-inline-media-tests
+                 '("text/org" my-display-org-inline
+                   (lambda (el) t)))
+
+    (defun my-display-org-inline (handle)
+      (condition-case nil
+          (mm-display-inline-fontify handle 'org-mode)
+        (error
+         (insert (with-temp-buffer (mm-insert-part handle) (buffer-string))
+                 "\n"))))
+#+end_src
+
+Update =org-src-lang-modes= to provide some leeway for posters
+#+begin_src emacs-lisp
+  (add-to-list 'org-src-lang-modes
+               '("elisp" . emacs-lisp))
+  (add-to-list 'org-src-lang-modes
+               '("emacs_lisp" . emacs-lisp))
+#+end_src
+
+Fontify code blocks in the text of messages
+#+begin_src emacs-lisp
+  (defun my-mm-org-babel-src-extract ()
+    (mm-make-handle (mm-uu-copy-to-buffer start-point end-point) '("text/org")))
+
+  (add-to-list 'mm-uu-type-alist
+               '(org-src-block
+                 "^[ \t]*#\\+begin_"
+                 "^[ \t]*#\\+end_"
+                 my-mm-org-babel-src-extract
+                 nil))
+
+  (mm-uu-configure)
+#+end_src
+
 * Custom functions
 ** Push to mark no activate
 
