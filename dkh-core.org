@@ -6464,7 +6464,7 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
 
 *** Org-mode code block fontification
 Correctly fontify Org-mode attachments
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
     (add-to-list 'mailcap-mime-extensions '(".org" . "text/org"))
     (add-to-list 'mm-automatic-display "text/org")
 
@@ -6481,7 +6481,7 @@ Correctly fontify Org-mode attachments
 #+end_src
 
 Update =org-src-lang-modes= to provide some leeway for posters
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (add-to-list 'org-src-lang-modes
                '("elisp" . emacs-lisp))
   (add-to-list 'org-src-lang-modes
@@ -6489,7 +6489,7 @@ Update =org-src-lang-modes= to provide some leeway for posters
 #+end_src
 
 Fontify code blocks in the text of messages
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (defun my-mm-org-babel-src-extract ()
     (mm-make-handle (mm-uu-copy-to-buffer start-point end-point) '("text/org")))
 

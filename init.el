@@ -1947,23 +1947,34 @@ FORM => (eval FORM)."
 ;;; ---------------------------------------------------------------------------
 ;;; ERC notify when matching nick, and queries
 
-    (defun erc-current-nick-matched (match-type &optional arg1 arg2)
-      (when (string= match-type "current-nick")
-        (x-urgency-hint)))
-
-    (add-hook 'erc-text-matched-hook 'erc-current-nick-matched)
-
-    (defun erc-notify-query (string)
-      (let ((parsed (get-text-property 1 'erc-parsed string)))
-        (when parsed
-          (let ((command (erc-response.command parsed))
-                (args (erc-response.command-args parsed)))
-            (when (and (string= command "PRIVMSG")
-                       args
-                       (string= (car args) (erc-current-nick)))
-              (x-urgency-hint))))))
-
-    (add-hook 'erc-insert-pre-hook 'erc-notify-query)
+;; (defun erc-current-nick-matched (match-type &optional arg1 arg2)
+;;   (when (string= match-type "current-nick")
+;;     (x-urgency-hint)))
+;; 
+;; (add-hook 'erc-text-matched-hook 'erc-current-nick-matched)
+;; 
+;; (defun erc-notify-query (string)
+;;   (let ((parsed (get-text-property 1 'erc-parsed string)))
+;;     (when parsed
+;;       (let ((command (erc-response.command parsed))
+;;             (args (erc-response.command-args parsed)))
+;;         (when (and (string= command "PRIVMSG")
+;;                    args
+;;                    (string= (car args) (erc-current-nick)))
+;;           (x-urgency-hint))))))
+;; 
+;; 
+;; Taken from http://www.emacswiki.org/JabberEl
+;; (defun x-urgency-hint (&optional frame arg source)
+;;   (let* ((wm-hints (append (x-window-property
+;;                             "WM_HINTS" frame "WM_HINTS" source nil t) nil))
+;;          (flags (car wm-hints)))
+;;     (setcar wm-hints (if arg
+;;                          (logand flags #x1ffffeff)
+;;                        (logior flags #x00000100)))
+;;     (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t)))
+;; 
+;; (add-hook 'erc-insert-pre-hook 'erc-notify-query)
     
     ))
 
