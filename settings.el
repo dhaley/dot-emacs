@@ -250,7 +250,6 @@
  '(ipa-file "~/Documents/ipa")
  '(ipa-overlay-position "above")
  '(irfc-directory "~/Archives/Admin/RFC/")
- '(ispell-extra-args (quote ("--sug-mode=fast" "--keyboard=dvorak")))
  '(ispell-personal-dictionary "~/git/.emacs.d/.aspell.US.pws")
  '(kill-do-not-save-duplicates t)
  '(kill-whole-line t)
