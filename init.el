@@ -2156,7 +2156,7 @@ FORM => (eval FORM)."
     (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
     (use-package eudc)
-    (use-package w3m)
+    (use-package rgr-web)
 ;;    (use-package bbdb)
     (use-package bbdb-gnus)
     (use-package bbdb-message)
