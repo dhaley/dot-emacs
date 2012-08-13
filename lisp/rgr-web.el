@@ -1,10 +1,11 @@
-;;(autoload 'w3m-browse-url "w3m" nil t)
-;;(autoload 'browse-url-interactive-arg "browse-url")
+(autoload 'w3m-browse-url "w3m" nil t)
+(autoload 'browse-url-interactive-arg "browse-url")
 
 ;;(use-package browse-apropos-url)
 (use-package browse-url)
 (require 'thingatpt+)
-(use-package w3m)
+;;(use-package w3m)
+(require 'w3m)
 
 (defun rgr/browse (url)
   "If prefix is specified use the system default browser else use the configured emacs one"
