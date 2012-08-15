@@ -741,293 +741,6 @@
   (defalias 'el-get-init 'ignore
     "Don't use el-get for making packages available for use."))
 
-;;;_ , cc-mode
-
-(use-package cc-mode
-  :mode (("\\.h\\(h?\\|xx\\|pp\\)\\'" . c++-mode)
-         ("\\.m\\'"                   . c-mode)
-         ("\\.mm\\'"                  . c++-mode))
-  :init
-  (progn
-    (defun my-c-indent-or-complete ()
-      (interactive)
-      (let ((class (syntax-class (syntax-after (1- (point))))))
-        (if (or (bolp) (and (/= 2 class)
-                            (/= 3 class)))
-            (call-interactively 'indent-according-to-mode)
-          (if t
-              (call-interactively 'auto-complete)
-            (call-interactively 'company-complete-common)))))
-
-    (defvar printf-index 0)
-
-    (defun insert-counting-printf (arg)
-      (interactive "P")
-      (if arg
-          (setq printf-index 0))
-      (if t
-          (insert (format "std::cerr << \"step %d..\" << std::endl;\n"
-                          (setq printf-index (1+ printf-index))))
-        (insert (format "printf(\"step %d..\\n\");\n"
-                        (setq printf-index (1+ printf-index)))))
-      (forward-line -1)
-      (indent-according-to-mode)
-      (forward-line))
-
-    (defun my-c-mode-common-hook ()
-      (abbrev-mode 1)
-      (gtags-mode 1)
-      (hs-minor-mode 1)
-      (hide-ifdef-mode 1)
-      (whitespace-mode 1)
-      (which-function-mode 1)
-      (auto-complete-mode 1)
-      (yas/minor-mode 1)
-
-      (diminish 'gtags-mode)
-      (diminish 'hs-minor-mode)
-      (diminish 'hide-ifdef-mode)
-
-      (bind-key "C-c p" 'insert-counting-printf c-mode-base-map)
-
-      (if t
-          (progn
-            (auto-complete-mode 1)
-            (setq ac-sources (list (if (featurep 'semantic)
-                                       'ac-source-semantic
-                                     'ac-source-gtags)))
-            (bind-key "<A-tab>" 'ac-complete c-mode-base-map))
-        (company-mode 1)
-        (bind-key "<A-tab>" 'company-complete-common c-mode-base-map))
-
-      ;;(doxymacs-mode 1)
-      ;;(doxymacs-font-lock)
-
-      (bind-key "<return>" 'newline-and-indent c-mode-base-map)
-
-      (set (make-local-variable 'yas/fallback-behavior)
-           '(apply my-c-indent-or-complete . nil))
-      (bind-key "<tab>" 'yas/expand-from-trigger-key c-mode-base-map)
-
-      (unbind-key "M-j" c-mode-base-map)
-      (bind-key "C-c C-i" 'c-includes-current-file c-mode-base-map)
-
-      (set (make-local-variable 'parens-require-spaces) nil)
-      (setq indicate-empty-lines t)
-      (setq fill-column 72)
-
-      (bind-key "M-q" 'c-fill-paragraph c-mode-base-map)
-
-      (let ((bufname (buffer-file-name)))
-        (when bufname
-          (cond
-           ((string-match "/ledger/" bufname)
-            (c-set-style "ledger"))
-           ((string-match "/ansi/" bufname)
-            (c-set-style "edg")
-            (substitute-key-definition 'fill-paragraph 'ti-refill-comment
-                                       c-mode-base-map global-map)
-            (bind-key "M-q" 'ti-refill-comment c-mode-base-map))
-           (t
-            (c-set-style "clang")))))
-
-      (font-lock-add-keywords 'c++-mode '(("\\<\\(assert\\|DEBUG\\)("
-                                           1 font-lock-warning-face t))))
-
-    (add-hook 'c-mode-common-hook 'my-c-mode-common-hook))
-
-  :config
-  (progn
-    (setq c-syntactic-indentation nil)
-
-    (bind-key "#" 'self-insert-command c-mode-base-map)
-    (bind-key "{" 'self-insert-command c-mode-base-map)
-    (bind-key "}" 'self-insert-command c-mode-base-map)
-    (bind-key "/" 'self-insert-command c-mode-base-map)
-    (bind-key "*" 'self-insert-command c-mode-base-map)
-    (bind-key ";" 'self-insert-command c-mode-base-map)
-    (bind-key "," 'self-insert-command c-mode-base-map)
-    (bind-key ":" 'self-insert-command c-mode-base-map)
-    (bind-key "(" 'self-insert-command c-mode-base-map)
-    (bind-key ")" 'self-insert-command c-mode-base-map)
-    (bind-key "<" 'self-insert-command c++-mode-map)
-    (bind-key ">" 'self-insert-command c++-mode-map)
-
-    (use-package cedet
-      :disabled t
-      :init
-      (progn
-        ;; Add further minor-modes to be enabled by semantic-mode.  See
-        ;; doc-string of `semantic-default-submodes' for other things you can
-        ;; use here.
-        (dolist (submode '(global-semantic-idle-summary-mode
-                           global-semantic-mru-bookmark-mode
-                           global-semantic-idle-local-symbol-highlight-mode
-                           global-semantic-show-unmatched-syntax-mode))
-          (add-to-list 'semantic-default-submodes submode t))
-
-        ;; Enable Semantic
-        (semantic-mode 1)
-
-        (when nil              ; jww (2012-06-20): this kills buffers
-          ;; if you want to enable support for gnu global
-          (use-package semanticdb-global)
-
-          (semanticdb-enable-gnu-global-databases 'c-mode)
-          (semanticdb-enable-gnu-global-databases 'c++-mode))))
-
-    (add-to-list 'c-style-alist
-                 '("edg"
-                   (indent-tabs-mode . nil)
-                   (c-basic-offset . 3)
-                   (c-comment-only-line-offset . (0 . 0))
-                   (c-hanging-braces-alist
-                    . ((substatement-open before after)
-                       (arglist-cont-nonempty)))
-                   (c-offsets-alist
-                    . ((statement-block-intro . +)
-                       (knr-argdecl-intro . 5)
-                       (substatement-open . 0)
-                       (substatement-label . 0)
-                       (label . 0)
-                       (case-label . +)
-                       (statement-case-open . 0)
-                       (statement-cont . +)
-                       (arglist-intro . c-lineup-arglist-intro-after-paren)
-                       (arglist-close . c-lineup-arglist)
-                       (inline-open . 0)
-                       (brace-list-open . 0)
-                       (topmost-intro-cont
-                        . (first c-lineup-topmost-intro-cont
-                                 c-lineup-gnu-DEFUN-intro-cont))))
-                   (c-special-indent-hook . c-gnu-impose-minimum)
-                   (c-block-comment-prefix . "")))
-
-    (add-to-list 'c-style-alist
-                 '("ledger"
-                   (indent-tabs-mode . nil)
-                   (c-basic-offset . 2)
-                   (c-comment-only-line-offset . (0 . 0))
-                   (c-hanging-braces-alist
-                    . ((substatement-open before after)
-                       (arglist-cont-nonempty)))
-                   (c-offsets-alist
-                    . ((statement-block-intro . +)
-                       (knr-argdecl-intro . 5)
-                       (substatement-open . 0)
-                       (substatement-label . 0)
-                       (label . 0)
-                       (case-label . 0)
-                       (statement-case-open . 0)
-                       (statement-cont . +)
-                       (arglist-intro . +)
-                       (arglist-close . +)
-                       (inline-open . 0)
-                       (brace-list-open . 0)
-                       (topmost-intro-cont
-                        . (first c-lineup-topmost-intro-cont
-                                 c-lineup-gnu-DEFUN-intro-cont))))
-                   (c-special-indent-hook . c-gnu-impose-minimum)
-                   (c-block-comment-prefix . "")))
-
-    (add-to-list 'c-style-alist
-                 '("clang"
-                   (indent-tabs-mode . nil)
-                   (c-basic-offset . 2)
-                   (c-comment-only-line-offset . (0 . 0))
-                   (c-hanging-braces-alist
-                    . ((substatement-open before after)
-                       (arglist-cont-nonempty)))
-                   (c-offsets-alist
-                    . ((statement-block-intro . +)
-                       (knr-argdecl-intro . 5)
-                       (substatement-open . 0)
-                       (substatement-label . 0)
-                       (label . 0)
-                       (case-label . 0)
-                       (statement-case-open . 0)
-                       (statement-cont . +)
-                       (arglist-intro . +)
-                       (arglist-close . +)
-                       (inline-open . 0)
-                       (brace-list-open . 0)
-                       (topmost-intro-cont
-                        . (first c-lineup-topmost-intro-cont
-                                 c-lineup-gnu-DEFUN-intro-cont))))
-                   (c-special-indent-hook . c-gnu-impose-minimum)
-                   (c-block-comment-prefix . "")))
-
-    (defun opencl ()
-      (interactive)
-      (find-file "~/src/ansi/opencl.c")
-      (find-file-noselect "~/Contracts/TI/bugslayer/cl_0603/cl_0603.c")
-      (find-file-noselect "~/Contracts/TI/bugslayer")
-      (magit-status "~/src/ansi")
-      (gud-gdb "gdb --fullname ~/Contracts/TI/bin/c60/acpia6x"))
-
-    (defun ti-refill-comment ()
-      (interactive)
-      (let ((here (point)))
-        (goto-char (line-beginning-position))
-        (let ((begin (point)) end
-              (marker ?-) (marker-re "\\(-----\\|\\*\\*\\*\\*\\*\\)")
-              (leader-width 0))
-          (unless (looking-at "[ \t]*/\\*[-* ]")
-            (search-backward "/*")
-            (goto-char (line-beginning-position)))
-          (unless (looking-at "[ \t]*/\\*[-* ]")
-            (error "Not in a comment"))
-          (while (and (looking-at "\\([ \t]*\\)/\\* ")
-                      (setq leader-width (length (match-string 1)))
-                      (not (looking-at (concat "[ \t]*/\\*" marker-re))))
-            (forward-line -1)
-            (setq begin (point)))
-          (when (looking-at (concat "[^\n]+?" marker-re "\\*/[ \t]*$"))
-            (setq marker (if (string= (match-string 1) "-----") ?- ?*))
-            (forward-line))
-          (while (and (looking-at "[^\n]+?\\*/[ \t]*$")
-                      (not (looking-at (concat "[^\n]+?" marker-re
-                                               "\\*/[ \t]*$"))))
-            (forward-line))
-          (when (looking-at (concat "[^\n]+?" marker-re "\\*/[ \t]*$"))
-            (forward-line))
-          (setq end (point))
-          (let ((comment (buffer-substring-no-properties begin end)))
-            (with-temp-buffer
-              (insert comment)
-              (goto-char (point-min))
-              (flush-lines (concat "^[ \t]*/\\*" marker-re "[-*]+\\*/[ \t]*$"))
-              (goto-char (point-min))
-              (while (re-search-forward "^[ \t]*/\\* ?" nil t)
-                (goto-char (match-beginning 0))
-                (delete-region (match-beginning 0) (match-end 0)))
-              (goto-char (point-min))
-              (while (re-search-forward "[ \t]*\\*/[ \t]*$" nil t)
-                (goto-char (match-beginning 0))
-                (delete-region (match-beginning 0) (match-end 0)))
-              (goto-char (point-min)) (delete-trailing-whitespace)
-              (goto-char (point-min)) (flush-lines "^$")
-              (set-fill-column (- 80    ; width of the text
-                                  6     ; width of "/*  */"
-                                  leader-width))
-              (goto-char (point-min)) (fill-paragraph nil)
-              (goto-char (point-min))
-              (while (not (eobp))
-                (insert (make-string leader-width ? ) "/* ")
-                (goto-char (line-end-position))
-                (insert (make-string (- 80 3 (current-column)) ? ) " */")
-                (forward-line))
-              (goto-char (point-min))
-              (insert (make-string leader-width ? )
-                      "/*" (make-string (- 80 4 leader-width) marker) "*/\n")
-              (goto-char (point-max))
-              (insert (make-string leader-width ? )
-                      "/*" (make-string (- 80 4 leader-width) marker) "*/\n")
-              (setq comment (buffer-string)))
-            (goto-char begin)
-            (delete-region begin end)
-            (insert comment)))
-        (goto-char here)))))
 
 ;;;_ , abbrev
 
@@ -1308,6 +1021,7 @@
 ;;;_ , bbdb
 
 (use-package bbdb-com
+  :commands bbdb-create
   :bind ("M-B" . bbdb))
 
 
@@ -2157,7 +1871,6 @@ FORM => (eval FORM)."
     (use-package org-mime)
     (use-package eudc)
     (use-package rgr-web)
-;;    (use-package bbdb)
     (use-package bbdb-gnus)
     (use-package bbdb-message)
 
@@ -2291,31 +2004,6 @@ FORM => (eval FORM)."
     (bind-key "<f10>" 'gud-next)
     (bind-key "<f11>" 'gud-step)
     (bind-key "S-<f11>" 'gud-finish)))
-
-;;;_ , haskell-mode
-
-(use-package haskell-mode
-  :mode ("\\.l?hs\\'" . haskell-mode)
-  :config
-  (progn
-    (use-package inf-haskell)
-    (use-package hs-lint)
-
-    (use-package ghc
-      :commands ghc-init
-      :init
-      (add-hook 'haskell-mode-hook 'ghc-init))
-
-    (defun my-haskell-mode-hook ()
-      (setq haskell-saved-check-command haskell-check-command)
-
-      (bind-key "C-c w" 'flymake-display-err-menu-for-current-line
-                haskell-mode-map)
-      (bind-key "C-c *" 'flymake-start-syntax-check haskell-mode-map)
-      (bind-key "M-n" 'flymake-goto-next-error haskell-mode-map)
-      (bind-key "M-p" 'flymake-goto-prev-error haskell-mode-map))
-
-    (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)))
 
 ;;;_ , helm
 
@@ -2731,11 +2419,6 @@ FORM => (eval FORM)."
       (yas/minor-mode 1))
 
     (hook-into-modes #'my-lisp-mode-hook lisp-mode-hooks)))
-
-;;;_ , llvm-mode
-
-(use-package llvm-mode
-  :mode ("\\.ll\\'" . llvm-mode))
 
 ;;;_ , log4j-mode
 
@@ -3200,87 +2883,13 @@ end tell" account account start duration commodity (if cleared "true" "false")
 
     (setq ps-print-region-function 'ps-spool-to-pdf)))
 
+
 ;;;_ , puppet-mode
 
 (use-package puppet-mode
   :mode ("\\.pp\\'" . puppet-mode)
-
   :config
-  (progn
-    (push '(ruby-arrow
-            (regexp   . "\\(\\s-*\\)=>\\(\\s-*\\)")
-            (group    . (1 2))
-            (modes    . '(ruby-mode puppet-mode)))
-          align-rules-list)
-
-    (defvar puppet-anchor-point nil)
-
-    (defun puppet-set-anchor ()
-      (interactive)
-      (setq puppet-anchor-point (point-marker))
-      (message "puppet-mode anchor set at %s"
-               (marker-position puppet-anchor-point)))
-
-    (defun puppet-resource-beginning ()
-      (save-excursion
-        (and (re-search-backward
-              "^\\s-*\\(\\S-+\\)\\s-+{\\s-+\\([^:]+\\):" nil t)
-             (list (match-beginning 0)
-                   (match-string 1) (match-string 2)))))
-
-    (defun puppet-resource-end ()
-      (save-excursion
-        (and (re-search-forward "^\\s-*}" nil t)
-             (match-end 0))))
-
-    (defun puppet-create-require ()
-      (interactive)
-      (require 'align)
-      (if (null puppet-anchor-point)
-          (error "Anchor point has not been set")
-        (destructuring-bind (anchored-start resource name)
-            (save-excursion
-              (goto-char puppet-anchor-point)
-              (puppet-resource-beginning))
-          (save-excursion
-            (let ((beginning (car (puppet-resource-beginning)))
-                  (end (puppet-resource-end)))
-              (goto-char end)
-              (backward-char)
-              (let ((current-requires
-                     (when (re-search-backward
-                            "^\\s-*require\\s-*=>\\s-*" beginning t)
-                       (let ((start (match-beginning 0))
-                             (beg (match-end 0)))
-                         (if (looking-at "\\[")
-                             (forward-sexp))
-                         (re-search-forward "\\([,;]\\)?[ \t]*\n")
-                         (prog1
-                             (buffer-substring-no-properties
-                              beg (match-beginning 0))
-                           (delete-region start (point)))))))
-                (save-excursion
-                  (skip-chars-backward " \t\n\r")
-                  (when (looking-back ";")
-                    (delete-backward-char 1)
-                    (insert ?,)))
-                (insert "  require => ")
-                (if current-requires
-                    (insert "[ " current-requires ", "))
-                (insert (capitalize (substring resource 0 1))
-                        (substring resource 1) "[" name "]")
-                (if current-requires
-                    (insert " ]"))
-                (insert ";\n")
-                (mark-paragraph)
-                (align-code (region-beginning) (region-end))))))))
-
-    ;; (define-key puppet-mode-map [(control ?x) ? ] 'puppet-set-anchor)
-    ;; (define-key puppet-mode-map [(control ?x) space] 'puppet-set-anchor)
-    ;; (define-key puppet-mode-map [(control ?c) (control ?r)] 'puppet-create-require)
-
-    (bind-key "C-x SPC" 'puppet-set-anchor puppet-mode-map)
-    (bind-key "C-c C-r" 'puppet-create-require puppet-mode-map)))
+  (use-package puppet-ext))
 
 ;;;_ , python-mode
 
@@ -3677,13 +3286,6 @@ end tell" account account start duration commodity (if cleared "true" "false")
           (sr-history-push default-directory)
           (sr-beginning-of-buffer))))))
 
-;;;_ , tablegen-mode
-
-(use-package tablegen-mode
-  :description "\
-This mode is used for editing .td files in the LLVM/Clang source code."
-  :mode ("\\.td\\'" . tablegen-mode))
-
 ;;;_ , texinfo
 
 (use-package texinfo
@@ -3746,7 +3348,7 @@ This mode is used for editing .td files in the LLVM/Clang source code."
 ;;;_ , w3m
 
 (use-package w3m
-  :commands w3m-search
+  :commands (w3m-search w3m-find-file)
   :bind (("C-. u"   . w3m-browse-url)
          ("C-. U"   . w3m-browse-url-new-session)
          ("C-. A-u" . w3m-browse-chrome-url-new-session)
@@ -3766,6 +3368,19 @@ This mode is used for editing .td files in the LLVM/Clang source code."
 
     (autoload 'w3m-session-crash-recovery-remove "w3m-session")
 
+    (defun show-browser ()
+      (interactive)
+      (let ((w3m-buf
+             (catch 'found
+               (dolist (buf (buffer-list))
+                 (if (string-match "\\*w3m" (buffer-name buf))
+                     (throw 'found buf))))))
+        (if w3m-buf
+            (switch-to-buffer-other-window w3m-buf)
+          (call-interactively 'w3m-find-file))))
+
+    (bind-key "C-. w" 'show-browser)
+
     (defun wikipedia-query (term)
       (interactive (list (read-string "Wikipedia search: " (word-at-point))))
       (require 'w3m-search)
@@ -3777,7 +3392,7 @@ This mode is used for editing .td files in the LLVM/Clang source code."
     (defun wolfram-alpha-query (term)
       (interactive (list (read-string "Ask Wolfram Alpha: " (word-at-point))))
       (require 'w3m-search)
-      (w3m-browse-url (format "http://m.wolframalpha.com/input/?i=%s"
+      (w3m-browse-url (concat "http://m.wolframalpha.com/input/?i="
                               (w3m-search-escape-query-string term))))
 
     (defun goto-emacswiki ()
@@ -3794,13 +3409,12 @@ This mode is used for editing .td files in the LLVM/Clang source code."
       (interactive)
       (let ((url (do-applescript
                   (string-to-multibyte "tell application \"Google Chrome\"
-        URL of active tab of front window
-end tell"))))
+  URL of active tab of front window
+  end tell"))))
         (w3m-browse-url (substring url 1 (1- (length url))) t)))
 
     (bind-key "A-M-e" 'goto-emacswiki)
     (bind-key "A-M-g" 'w3m-search)
-    (bind-key "A-M-h" 'wolfram-alpha-query)
     (bind-key "A-M-w" 'wikipedia-query))
 
   :config
