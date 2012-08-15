@@ -3724,7 +3724,9 @@ $0"))))
 (require 'color-theme-solarized)
 (load-theme 'solarized-dark t)
 
-(org-babel-load-file "~/.emacs.d/dkh-core.org")
+(unless running-alternate-emacs
+  (org-babel-load-file "~/.emacs.d/dkh-core.org")
+)
 
 ;;Mo functions
 (org-babel-load-file "~/.emacs.d/dkh-functions.org")
@@ -3732,9 +3734,10 @@ $0"))))
 ;; Mo keybindings
 (org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
 
-(org-babel-load-file "~/.emacs.d/dkh-org.org")
 
 (org-babel-load-file "~/.emacs.d/dkh-php.org")
+
+(org-babel-load-file "~/.emacs.d/dkh-org.org")
 
 ;;;_. Load some private settings
 (org-babel-load-file "~/git/.emacs.d/dkh-private.org")
