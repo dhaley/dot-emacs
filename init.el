@@ -431,10 +431,6 @@
 (unless noninteractive
   (if running-alternate-emacs
       (progn
-;;        (defvar emacs-min-top (if (= 1050 (x-display-pixel-height)) 574 722))
-;;        (defvar emacs-min-left 5)
-;;        (defvar emacs-min-height 25)
-;;        (defvar emacs-min-width 80)
         (defvar emacs-min-top (if (= 1050 (x-display-pixel-height)) 574 722))
         (defvar emacs-min-left 5)
         (defvar emacs-min-height 38)
@@ -443,7 +439,6 @@
     (defvar emacs-min-top 22)
     (defvar emacs-min-left (- (x-display-pixel-width) 918))
     (defvar emacs-min-height (if (= 1050 (x-display-pixel-height)) 55 64))
-;;    (defvar emacs-min-width 100)
     (defvar emacs-min-width 158)))
 
 (defun emacs-min ()
@@ -891,7 +886,6 @@
                                      ruby-mode-hook
                                      python-mode-hook
                                      sh-mode-hook)))
-
 ;;;_ , autorevert
 
 (use-package autorevert

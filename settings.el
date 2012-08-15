@@ -295,7 +295,7 @@
  '(redisplay-dont-pause t t)
  '(regex-tool-backend (quote perl))
  '(runner-init-file "~/.emacs.d/runner-conf.el")
- '(safe-local-variable-values (quote ((after-save-hook my-byte-recompile-file) (after-save-hook git-commit-changes) (org-refer-by-number-id . "1C72AB51-33C2-4FF8-9367-2B494D125027"))))
+  '(safe-local-variable-values (quote ((eval require (quote edg)) (eval ignore-errors (require (quote edg))) (after-save-hook my-byte-recompile-file) (after-save-hook git-commit-changes) (org-refer-by-number-id . "1C72AB51-33C2-4FF8-9367-2B494D125027"))))
  '(same-window-buffer-names (quote ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
  '(sauron-hide-mode-line t)
  '(sauron-watch-patterns erc-keywords)
@@ -314,17 +314,7 @@
  '(slime-kill-without-query-p t)
  '(slime-repl-history-file "~/.emacs.d/data/slime-history.eld")
  '(slime-startup-animation nil)
- '(smart-compile-alist (quote (((lambda (buf) (let ((case-fold-search t)) (and
-                                                                      (string-match
-                                                                       "/ansi/"
-                                                                       (buffer-file-name
-                                                                        buf))
-                                                                      (string-match
-                                                                       "/opencl"
-                                                                       (shell-command-to-string
-                                                                        "git
-symbolic-ref HEAD"))))) . "cd ~/Contracts/TI/src/c60_iaansi ; ~/Contracts/TI/bin/build.sh c60") ((lambda (buf) (let ((case-fold-search t)) (and (string-match "/\\(src/ansi\\|src/.*?ansi\\)/" (buffer-file-name buf)) (string-match "/merge_4_2" (shell-command-to-string "git symbolic-ref HEAD"))))) . "cd ~/Contracts/TI/src/msp_iaansi ; ~/Contracts/TI/bin/build.sh msp") ((lambda (buf) (string-match "/\\(\\(src\\|Projects\\)/ledger\\)/" (buffer-file-name buf))) . "cd ~/src/ledger ; ~/src/ledger/tools/build.sh debug") ((lambda (buf) (string-match "/emacs/" (buffer-file-name buf))) . "emacs-build release macport opt make") (emacs-lisp-mode emacs-lisp-byte-compile-and-load))))
- '(smex-save-file "~/.emacs.d/data/.smex-items")
+  '(smart-compile-alist (quote (((lambda (buf) (let ((case-fold-search t)) (and (string-match "/ansi/" (buffer-file-name buf)) (string-match "/opencl" (shell-command-to-string "git symbolic-ref HEAD"))))) . "cd ~/Contracts/TI/src/c60_iaansi ; ~/Contracts/TI/bin/build.sh c60") ((lambda (buf) (let ((case-fold-search t)) (and (string-match "/\\(src/ansi\\|src/.*?ansi\\)/" (buffer-file-name buf)) (string-match "/merge_4_2" (shell-command-to-string "git symbolic-ref HEAD"))))) . "cd ~/Contracts/TI/src/msp_iaansi ; ~/Contracts/TI/bin/build.sh msp") ((lambda (buf) (string-match "/\\(\\(src\\|Projects\\)/ledger\\)/" (buffer-file-name buf))) . "cd ~/src/ledger ; ~/src/ledger/tools/build.sh debug") ((lambda (buf) (string-match "/emacs/" (buffer-file-name buf))) . "emacs-build release macport opt make") (emacs-lisp-mode emacs-lisp-byte-compile-and-load) ((lambda (buf) (let ((case-fold-search t)) (string-match "/edg/" (buffer-file-name buf)))) . "cd ~/Products/edg/cree ; jmake && make ARGS=-j$(ncpu) test"))))
  '(sql-sqlite-program "sqlite3")
  '(sr-attributes-display-mask (quote (nil nil t nil nil nil)))
  '(sr-autoload-extensions nil)
