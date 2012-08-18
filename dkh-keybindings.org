@@ -328,3 +328,10 @@ This is part of the [[file:dkh-core.org][E-Wax Starter Kit Instance]].
 (bind-key "C-h e V" 'apropos-value)
 
 #+end_src 
+
+#+begin_src emacs-lisp :tangle no
+
+(bind-key "H-f" 'mac-mouse-turn-on-fullscreen)
+
+
+#+end_src 
