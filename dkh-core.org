@@ -8942,9 +8942,9 @@ needed.
 
 #+begin_src emacs-lisp :tangle no
 
-(autoload 'Lorem-ipsum-insert-paragraphs "lorem-ipsum" "" t)
-(autoload 'Lorem-ipsum-insert-sentences "lorem-ipsum" "" t)
-(autoload 'Lorem-ipsum-insert-list "lorem-ipsum" "" t)
+(autoload 'lorem-ipsum-insert-paragraphs "lorem-ipsum" "" t)
+(autoload 'lorem-ipsum-insert-sentences "lorem-ipsum" "" t)
+(autoload 'lorem-ipsum-insert-list "lorem-ipsum" "" t)
 
 #+end_src
 
