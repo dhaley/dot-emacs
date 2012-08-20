@@ -648,32 +648,10 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
       gnus-sum-thread-tree-leaf-with-other "├─▶ "
       gnus-sum-thread-tree-single-leaf     "└─▶ " ; "╰─►"
       gnus-sum-thread-tree-vertical        "│ "
-;;      gnus-score-over-mark ?\u2191          ; \u2191 \u2600
-;;      gnus-score-below-mark ?\u2193         ; \u2193 \u2602
-;;      gnus-ticked-mark ?\u2691
-;;      gnus-dormant-mark ?\u2690
-;;      gnus-expirable-mark ?\u267b
-;;      gnus-read-mark ?\u2713
-;;      gnus-del-mark ?\u2717
-;;      gnus-killed-mark ?\u2620
-;;      gnus-replied-mark ?\u27f2
-;;      gnus-forwarded-mark ?\u2933
-;;      gnus-cached-mark ?\u260d
-;;      gnus-recent-mark ?\u2605
-;;      gnus-unseen-mark ?\u2729
-;;      gnus-unread-mark ?\u2709
 )
 
 (setq gnus-summary-line-format "%«%U%R %uS %ur %»%(%*%-14,14f   %1«%B%s%»%)
  ")
-
-;;       gnus-summary-line-format (concat "%{|%}"
-;;                                        "%U%R%z"
-;;                                        "%{|%}"
-;;                                        "%(%-18,18f"
-;;                                        "%{|%}"
-;;                                        "%*%{%B%} %s%)"
-;;                                        "\n"))
 
 (setq message-kill-buffer-on-exit t)
 (setq gnus-fetch-old-headers 'some)
