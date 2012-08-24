@@ -144,7 +144,8 @@
  '(erc-notify-list (quote ("ultimateboy" "matu4291" "matt" "kevin" "jo" "laimagaigalas" "crafts" "technomancy" "_schulte_" "linebarg" "sniderc" "alne1147" "kubie" "goldhamm" "kniffin" "kowalews" "orrie" "schaper" "johnw" "sachac" "rgr")))
  '(erc-notifications-icon "~/.emacs.d/icons/irc.png")
  '(erc-nick-notify-urgency "normal")
- '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac")))
+ '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac" "matt"
+                    "kevin" "jo")))
  '(erc-port 6667)
  '(erc-prompt (lambda ()
                    (if erc-network
