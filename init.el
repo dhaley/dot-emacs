@@ -565,6 +565,18 @@
 (bind-key "C-c =" 'count-matches)
 (bind-key "C-c ;" 'comment-or-uncomment-region)
 
+
+(defun wph-here()
+  "Inserts the filename and line number at the current point"
+  (interactive)
+  (insert buffer-file-name)
+  (insert ":")
+  (insert (number-to-string (count-lines (point-min) (point))))
+)
+
+(global-set-key "\C-c\C-f" 'wph-here)
+
+
 ;;;_  . C-c C-?
 
 (defun delete-to-end-of-buffer ()
