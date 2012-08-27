@@ -1104,7 +1104,7 @@
 ;;       bbdb-ignore-some-messages-alist
 ;;       `(("From" . ,(concat "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|"
 ;;                            "gmane\\|ebay\\|amazon\\|tfl\\|trenitalia"))))
-    
+
 
     (defun message-read-from-minibuffer (prompt &optional initial-contents)
       "Read from the minibuffer while providing abbrev expansion."
@@ -1695,9 +1695,9 @@ FORM => (eval FORM)."
 ;; (defun erc-current-nick-matched (match-type &optional arg1 arg2)
 ;;   (when (string= match-type "current-nick")
 ;;     (x-urgency-hint)))
-;; 
+;;
 ;; (add-hook 'erc-text-matched-hook 'erc-current-nick-matched)
-;; 
+;;
 ;; (defun erc-notify-query (string)
 ;;   (let ((parsed (get-text-property 1 'erc-parsed string)))
 ;;     (when parsed
@@ -1707,8 +1707,8 @@ FORM => (eval FORM)."
 ;;                    args
 ;;                    (string= (car args) (erc-current-nick)))
 ;;           (x-urgency-hint))))))
-;; 
-;; 
+;;
+;;
 ;; Taken from http://www.emacswiki.org/JabberEl
 ;; (defun x-urgency-hint (&optional frame arg source)
 ;;   (let* ((wm-hints (append (x-window-property
@@ -1718,9 +1718,9 @@ FORM => (eval FORM)."
 ;;                          (logand flags #x1ffffeff)
 ;;                        (logior flags #x00000100)))
 ;;     (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t)))
-;; 
+;;
 ;; (add-hook 'erc-insert-pre-hook 'erc-notify-query)
-    
+
     ))
 
 ;;;_ , eshell
@@ -1908,7 +1908,7 @@ FORM => (eval FORM)."
 
 ;; (setq message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
 
-    
+
     (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
     (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
     ;;  (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
@@ -2834,6 +2834,7 @@ end tell" account account start duration commodity (if cleared "true" "false")
                                        "~/git/dkh-org/todo.org"
                                        "~/git/dkh-org/refile.org"
                                        "~/git/dkh-org/.org-jira/FIT.org"
+                                       "~/git/dkh-org/.org-jira/CUPRE.org"
                                        )))
 
 
