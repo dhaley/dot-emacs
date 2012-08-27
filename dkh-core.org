@@ -381,8 +381,6 @@ annotate your elisp in the following file:
    (require 'gnus-load)
 
 
-(add-to-list 'load-path "~/git/src/org-jira")
-
 ;;(add-to-list 'load-path (expand-file-name "~/git/src/use-package"))
 
 
@@ -2831,7 +2829,7 @@ That's even better! The variable holiday-local-holidays could be another choice.
 ;; jiralib is not explicitly required, since org-jira will load it.
 
 (setq org-jira-working-dir "~/git/dkh-org/.org-jira")
-(setq org-jira-current-project "FIT")
+(setq org-jira-current-project "CUPRE")
 
 
 
@@ -6432,7 +6430,7 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
 
 ;; ;; regexp matching TeX groups
 ;;       (setq mm-uu-tex-groups-regexp ".*")
-;; 
+;;
 ;;       (eval-after-load "mm-uu"
 ;;         '(progn
 ;;            (add-to-list 'mailcap-mime-extensions '(".org" . "text/org"))
@@ -6442,17 +6440,17 @@ http://www.emacswiki.org/emacs/BbdbCanonicalizeAddresses
 ;;                         '("text/org"
 ;;                           my-display-org-inline
 ;;                           identity))
-;; 
+;;
 ;;            (defun my-display-org-inline (handle)
 ;;              (mm-display-inline-fontify handle 'org-mode))
-;; 
+;;
 ;;            (defun my-mm-org-babel-src-extract ()
 ;;              (mm-make-handle (mm-uu-copy-to-buffer start-point end-point)
 ;;                              '("text/org")
 ;;                              nil nil
 ;;                              (list mm-dissect-disposition
 ;;                                    (cons 'filename "Org Babel source file"))))
-;; 
+;;
 ;;            (add-to-list 'mm-uu-type-alist
 ;;                         '(org-babel-block
 ;;                           "^#\\+begin_"
