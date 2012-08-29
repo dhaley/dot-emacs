@@ -253,12 +253,12 @@
 [submodule "site-lisp/erc-hl-nicks"]
 	path = site-lisp/erc-hl-nicks
 	url = https://github.com/leathekd/erc-hl-nicks
-[submodule "site-lisp/identica-mode"]
-	path = site-lisp/identica-mode
-	url = git://gitorious.org/emacs-identica-mode/emacs-identica-mode.git
 [submodule "site-lisp/erc-track-score"]
 	path = site-lisp/erc-track-score
 	url = git://git.naquadah.org/erc-track-score.git
 [submodule "override/gnus"]
 	path = override/gnus
 	url = http://git.gnus.org/gnus.git
+[submodule "site-lisp/identica-mode"]
+	path = site-lisp/identica-mode
+	url = http://git.savannah.gnu.org/cgit/identica-mode
