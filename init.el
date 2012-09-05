@@ -746,6 +746,25 @@
 (bind-key "C-h e v" 'find-variable)
 (bind-key "C-h e V" 'apropos-value)
 
+
+
+(defun select-text-in-quote ()
+  "Select text between the nearest left and right delimiters.
+Delimiters are paired characters:
+ () [] {} «» ‹› “” 〖〗 【】 「」 『』 （） 〈〉 《》 〔〕 ⦗⦘ 〘〙 ⦅⦆ 〚〛 ⦃⦄
+ For practical purposes, also: \"\", but not single quotes."
+ (interactive)
+ (let (p1)
+   (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
+   (setq p1 (point))
+   (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙⦆〛⦄\"")
+   (set-mark p1)
+   )
+ )
+
+(global-set-key (kbd "H-*") 'select-text-in-quote)
+
+
 (setq package-archives
       '(("original"    . "http://tromey.com/elpa/")
         ("gnu"         . "http://elpa.gnu.org/packages/")
