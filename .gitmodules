@@ -259,3 +259,6 @@
 [submodule "site-lisp/identica-mode"]
 	path = site-lisp/identica-mode
 	url = http://git.savannah.gnu.org/cgit/identica-mode
+[submodule "site-lisp/drupal-ide"]
+	path = site-lisp/drupal-ide
+	url = http://git.drupal.org/project/emacs.git

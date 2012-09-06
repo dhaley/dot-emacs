@@ -1513,6 +1513,18 @@ The output appears in the buffer `*Async Shell Command*'."
     (bind-key "C-. C--" 'emms-player-mplayer-volume-down)
     (bind-key "C-. C-=" 'emms-player-mplayer-volume-up)))
 
+
+
+;;;_ , drupal-mode
+
+(use-package drupal-mode
+  :init
+  (progn
+    (load (concat user-emacs-directory "site-lisp/drupal-ide/drupal/drupal-init.el"))
+))
+
+
+
 ;;;_ , erc
 
 (use-package erc
