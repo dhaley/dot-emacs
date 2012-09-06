@@ -1515,14 +1515,29 @@ The output appears in the buffer `*Async Shell Command*'."
 
 
 
+(use-package conf-mode
+  :mode ("\\.info" . conf-mode))
+
+(use-package php-mode
+  :mode ("\\.php$" . php-mode)
+  :interpreter ("php" . php-mode))
+
+
+(use-package php+-mode
+  :mode ("\\.php$" . php+-mode)
+  :interpreter ("php" . php-mode)
+  init:
+  (progn
+    (php+-mode-setup)
+    (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
+    (setq php-completion-file "~/git/ewax/misc/php-completion-file")))
+
+
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
-  :init
-  (progn
-    (load (concat user-emacs-directory "site-lisp/drupal-ide/drupal/drupal-init.el"))
-))
-
+  :mode ("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode)
+  :interpreter ("drupal" . drupal-mode))
 
 
 ;;;_ , erc
@@ -3816,7 +3831,7 @@ $0"))))
 (org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
 
 
-(org-babel-load-file "~/.emacs.d/dkh-php.org")
+;;(org-babel-load-file "~/.emacs.d/dkh-php.org")
 
 (org-babel-load-file "~/.emacs.d/dkh-org.org")
 

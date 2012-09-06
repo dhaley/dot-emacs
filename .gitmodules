@@ -246,7 +246,7 @@
 	url = https://github.com/echosa/phpplus-mode.git
 [submodule "site-lisp/drupal-mode"]
 	path = site-lisp/drupal-mode
-	url = https://github.com/underhilllabs/drupal-mode.git
+	url = https://github.com/arnested/drupal-mode.git
 [submodule "site-lisp/erc-hl-nicks"]
 	path = site-lisp/erc-hl-nicks
 	url = https://github.com/leathekd/erc-hl-nicks
@@ -262,3 +262,6 @@
 [submodule "site-lisp/drupal-ide"]
 	path = site-lisp/drupal-ide
 	url = http://git.drupal.org/project/emacs.git
+[submodule "site-lisp/php-mode"]
+	path = site-lisp/php-mode
+	url = https://github.com/ejmr/php-mode.git

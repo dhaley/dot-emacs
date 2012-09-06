@@ -230,11 +230,11 @@ you switch to a file or buffer that resides inside that project's directory.
 #+end_src
 
 #+begin_src emacs-lisp 
-
+  
   ;; Start Drupal IDE with `drupal-ide' command:
   (setq drupal-ide-load-path (concat user-emacs-directory "drupal/drupal-init.el"))
   (autoload 'drupal-ide drupal-ide-load-path "Start IDE for PHP & Drupal development" t)
-
+  
 #+end_src 
 
 *** Drush
