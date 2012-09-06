@@ -244,9 +244,6 @@
 [submodule "site-lisp/phpplus-mode"]
 	path = site-lisp/phpplus-mode
 	url = https://github.com/echosa/phpplus-mode.git
-[submodule "site-lisp/drupal-mode"]
-	path = site-lisp/drupal-mode
-	url = https://github.com/arnested/drupal-mode.git
 [submodule "site-lisp/erc-hl-nicks"]
 	path = site-lisp/erc-hl-nicks
 	url = https://github.com/leathekd/erc-hl-nicks
@@ -265,3 +262,12 @@
 [submodule "site-lisp/php-mode"]
 	path = site-lisp/php-mode
 	url = https://github.com/ejmr/php-mode.git
+[submodule "site-lisp/smart-dash"]
+	path = site-lisp/smart-dash
+	url = https://github.com/emacsmirror/smart-dash.git
+[submodule "site-lisp/flymake-phpcs"]
+	path = site-lisp/flymake-phpcs
+	url = https://github.com/illusori/emacs-flymake-phpcs.git
+[submodule "site-lisp/drupal-mode"]
+	path = site-lisp/drupal-mode
+	url = git@github.com:dhaley/drupal-mode.git
