@@ -5917,7 +5917,7 @@ workstation at the same time - so that a merge is required.
 
 Here is the =git-sync= script
 
-#+begin_src sh
+#+begin_src sh 
 #!/bin/sh
 #
 
