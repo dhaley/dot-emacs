@@ -141,7 +141,7 @@
  '(erc-match-mode 1)
  '(erc-modules (quote (notify notifications autojoin button completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track track-score highlight-nicknames)))
  '(erc-nick "dkh")
- '(erc-notify-list (quote ("ultimateboy" "matu4291" "matt" "kevin" "jo" "laimagaigalas" "crafts" "technomancy" "_schulte_" "linebarg" "sniderc" "alne1147" "kubie" "goldhamm" "kniffin" "kowalews" "orrie" "schaper" "johnw" "sachac" "rgr")))
+ '(erc-notify-list (quote ("ultimateboy" "matu4291" "matt" "kevin" "jo" "laimagaigalas" "crafts" "technomancy" "_schulte_" "linebarg" "sniderc" "alne1147" "kubie" "goldhamm" "kniffin" "kowalews" "orrie" "schaper" "johnw" "sachac" "rgr" "qDot")))
  '(erc-notifications-icon "~/.emacs.d/icons/irc.png")
  '(erc-nick-notify-urgency "normal")
  '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac" "matt"

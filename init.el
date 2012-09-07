@@ -379,12 +379,12 @@
        (recursive-edit))))
 
 (bind-key "C-c 0"
-  (recursive-edit-preserving-window-config (delete-window)))
+          (recursive-edit-preserving-window-config (delete-window)))
 (bind-key "C-c 1"
-  (recursive-edit-preserving-window-config
-   (if (one-window-p 'ignore-minibuffer)
-       (error "Current window is the only window in its frame")
-     (delete-other-windows))))
+          (recursive-edit-preserving-window-config
+           (if (one-window-p 'ignore-minibuffer)
+               (error "Current window is the only window in its frame")
+             (delete-other-windows))))
 
 (defun delete-current-line (&optional arg)
   (interactive "p")
@@ -455,10 +455,10 @@
   (set-frame-parameter (selected-frame) 'height emacs-min-height)
   (set-frame-parameter (selected-frame) 'width emacs-min-width)
 
-   (when running-alternate-emacs
-;;     (set-background-color "grey85")
-;;     (set-face-background 'fringe "gray80")
-     )
+  (when running-alternate-emacs
+    ;;     (set-background-color "grey85")
+    ;;     (set-face-background 'fringe "gray80")
+    )
   )
 
 (if window-system
@@ -583,7 +583,7 @@
   (insert buffer-file-name)
   (insert ":")
   (insert (number-to-string (count-lines (point-min) (point))))
-)
+  )
 
 (global-set-key "\C-c\C-f" 'wph-here)
 
@@ -635,10 +635,10 @@
 ;;;_, Toggle between split windows and a single window
 
 (defun my-iswitchb-close()
-"Open iswitchb or, if in minibuffer go to next match. Handy way to cycle through the ring."
-(interactive)
-(if (window-minibuffer-p (selected-window))
-(keyboard-escape-quit)))
+  "Open iswitchb or, if in minibuffer go to next match. Handy way to cycle through the ring."
+  (interactive)
+  (if (window-minibuffer-p (selected-window))
+      (keyboard-escape-quit)))
 
 (defun toggle-windows-split()
   "Switch back and forth between one window and whatever split of windows we might have in the frame. The idea is to maximize the current buffer, while being able to go back to the previous split of windows in the frame simply by calling this command again."
@@ -767,14 +767,14 @@
 Delimiters are paired characters:
  () [] {} «» ‹› “” 〖〗 【】 「」 『』 （） 〈〉 《》 〔〕 ⦗⦘ 〘〙 ⦅⦆ 〚〛 ⦃⦄
  For practical purposes, also: \"\", but not single quotes."
- (interactive)
- (let (p1)
-   (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
-   (setq p1 (point))
-   (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙⦆〛⦄\"")
-   (set-mark p1)
-   )
- )
+  (interactive)
+  (let (p1)
+    (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
+    (setq p1 (point))
+    (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙⦆〛⦄\"")
+    (set-mark p1)
+    )
+  )
 
 (global-set-key (kbd "H-*") 'select-text-in-quote)
 
@@ -792,7 +792,7 @@ Delimiters are paired characters:
 ;;;_ , el-get
 
 (use-package el-get
-;;  :disabled t
+  ;;  :disabled t
   :commands (el-get
              el-get-install
              el-get-update
@@ -821,13 +821,13 @@ Delimiters are paired characters:
 
   :config
   (progn
-   (if (file-exists-p abbrev-file-name)
-       (quietly-read-abbrev-file))
+    (if (file-exists-p abbrev-file-name)
+        (quietly-read-abbrev-file))
 
-   (add-hook 'expand-load-hook
-             (lambda ()
-               (add-hook 'expand-expand-hook 'indent-according-to-mode)
-               (add-hook 'expand-jump-hook 'indent-according-to-mode)))))
+    (add-hook 'expand-load-hook
+              (lambda ()
+                (add-hook 'expand-expand-hook 'indent-according-to-mode)
+                (add-hook 'expand-jump-hook 'indent-according-to-mode)))))
 
 ;;;_ , ace-jump-mode
 
@@ -1136,11 +1136,11 @@ Delimiters are paired characters:
           `(("From" . , (regexp-opt rs-bbdb-ignored-from-list))))
 
 
-;; ; NOTE: there can be only one entry per header (such as To, From)
-;;       ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
-;;       bbdb-ignore-some-messages-alist
-;;       `(("From" . ,(concat "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|"
-;;                            "gmane\\|ebay\\|amazon\\|tfl\\|trenitalia"))))
+    ;; ; NOTE: there can be only one entry per header (such as To, From)
+    ;;       ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
+    ;;       bbdb-ignore-some-messages-alist
+    ;;       `(("From" . ,(concat "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|"
+    ;;                            "gmane\\|ebay\\|amazon\\|tfl\\|trenitalia"))))
 
 
     (defun message-read-from-minibuffer (prompt &optional initial-contents)
@@ -1149,23 +1149,23 @@ Delimiters are paired characters:
     ))
 
 
-;_ , bm
+                                        ;_ , bm
 
- (use-package bm
-   :pre-init
-   (progn
-     (defvar ctl-period-breadcrumb-map)
-     (define-prefix-command 'ctl-period-breadcrumb-map)
-     (bind-key "C-. c" 'ctl-period-breadcrumb-map))
+(use-package bm
+  :pre-init
+  (progn
+    (defvar ctl-period-breadcrumb-map)
+    (define-prefix-command 'ctl-period-breadcrumb-map)
+    (bind-key "C-. c" 'ctl-period-breadcrumb-map))
 
-   :bind (("C-. c b" . bm-last-in-previous-buffer)
-          ("C-. c f" . bm-first-in-next-buffer)
-          ("C-. c g" . bm-previous)
-          ("C-. c l" . bm-show-all)
-          ("C-. c c" . bm-toggle)
-          ("C-. c m" . bm-toggle)
-          ("C-. c n" . bm-next)
-          ("C-. c p" . bm-previous)))
+  :bind (("C-. c b" . bm-last-in-previous-buffer)
+         ("C-. c f" . bm-first-in-next-buffer)
+         ("C-. c g" . bm-previous)
+         ("C-. c l" . bm-show-all)
+         ("C-. c c" . bm-toggle)
+         ("C-. c m" . bm-toggle)
+         ("C-. c n" . bm-next)
+         ("C-. c p" . bm-previous)))
 
 ;;;_ , bookmark
 
@@ -1175,7 +1175,7 @@ Delimiters are paired characters:
 
 
 (use-package bookmark
-;;  :disabled t
+  ;;  :disabled t
   :defer t
   :config
   (progn
@@ -1554,16 +1554,16 @@ The output appears in the buffer `*Async Shell Command*'."
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
-:mode ("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode)
-:interpreter ("drupal" . drupal-mode)
+  :mode ("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode)
+  :interpreter ("drupal" . drupal-mode)
 
-(progn
-(require 'etags)
-(require 'smart-dash)
-;; (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
-(setq flymake-phpcs-show-rule t)
-(defun my-insert-drupal-hook (tagname)
-"Clone the specified function as a new module hook implementation.
+  (progn
+    (require 'etags)
+    (require 'smart-dash)
+    ;; (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
+    (setq flymake-phpcs-show-rule t)
+    (defun my-insert-drupal-hook (tagname)
+      "Clone the specified function as a new module hook implementation.
 
 For Drupal <= 6, you will need to grab the developer documentation
 before generating the TAGS file:
@@ -1576,38 +1576,38 @@ $ ctags -eR --langmap=php:+.module.install.inc.engine --languages=php
 Old etags:
 $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -name '*.inc' -o -name '*.engine' \\) | etags --language=php -
 "
-(interactive (find-tag-interactive "Hook: "))
-(let ((module (file-name-sans-extension
-(file-name-nondirectory (buffer-file-name)))))
-(find-tag (format "^function %s(" tagname) nil t)
-(let ((tmp-buffer (generate-new-buffer "*temp*")))
-(c-mark-function)
-(copy-to-buffer tmp-buffer (point) (mark))
-(kill-buffer) ;; the relevant API file
-(switch-to-buffer tmp-buffer))
-(newline)
-(forward-line -1)
-(insert "/**\n * Implements ")
-    (forward-word)
-    (forward-char) ;; to start of function name
-    (let ((start (point)))
-      (search-forward "(")
-      (backward-char)
-      (let ((funcname (filter-buffer-substring start (point))))
-        (move-beginning-of-line nil)
+      (interactive (find-tag-interactive "Hook: "))
+      (let ((module (file-name-sans-extension
+                     (file-name-nondirectory (buffer-file-name)))))
+        (find-tag (format "^function %s(" tagname) nil t)
+        (let ((tmp-buffer (generate-new-buffer "*temp*")))
+          (c-mark-function)
+          (copy-to-buffer tmp-buffer (point) (mark))
+          (kill-buffer) ;; the relevant API file
+          (switch-to-buffer tmp-buffer))
+        (newline)
+        (forward-line -1)
+        (insert "/**\n * Implements ")
+        (forward-word)
+        (forward-char) ;; to start of function name
+        (let ((start (point)))
+          (search-forward "(")
+          (backward-char)
+          (let ((funcname (filter-buffer-substring start (point))))
+            (move-beginning-of-line nil)
+            (backward-char)
+            (insert funcname)))
+        (insert "().\n */")
+        (search-forward "_")
         (backward-char)
-        (insert funcname)))
-    (insert "().\n */")
-(search-forward "_")
-(backward-char)
-(delete-region (point) (progn (forward-word -1) (point)))
-(insert module)
-(let ((function (filter-buffer-substring (point-min) (point-max))))
-(kill-buffer)
-(insert function))
-(backward-sexp)
-(forward-line)
-(back-to-indentation)))))
+        (delete-region (point) (progn (forward-word -1) (point)))
+        (insert module)
+        (let ((function (filter-buffer-substring (point-min) (point-max))))
+          (kill-buffer)
+          (insert function))
+        (backward-sexp)
+        (forward-line)
+        (back-to-indentation)))))
 
 
 ;;;_ , erc
@@ -1650,13 +1650,327 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     (erc-track-minor-mode 1)
     (erc-track-mode 1)
 
-    (use-package erc-alert)
-    (use-package erc-highlight-nicknames)
-    (use-package erc-nick-notify)
-;;    (use-package erc-patch)
+    (require 'erc-alert)
+    ;; (require 'erc-highlight-nicknames)
+    (require 'erc-nick-notify)
+    (require 'erc-fill)
+    (erc-fill-mode t)
+    (require 'erc-ring)
+    (erc-ring-mode t)
 
-;;    (use-package
+    (require 'erc-match)
+
+    ;; For bitlbee
+    (require 'erc-nicklist)
+
+    (load-library "erc-highlight-nicknames")
+    (add-to-list 'erc-modules 'highlight-nicknames)
+    ;; (add-to-list 'erc-modules 'scrolltobottom)
+    
+    (add-to-list 'erc-modules 'match)
+    (erc-update-modules)
+    
+    (erc-match-enable)
     (erc-match-mode 1)
+
+    (erc-timestamp-mode t)
+
+    (setq erc-timestamp-only-if-changed-flag nil
+          erc-timestamp-format "[%H:%M] "
+          erc-fill-prefix "      "
+          erc-timestamp-mode t
+          erc-max-buffer-size 20000
+          erc-interpret-mirc-color nil
+          erc-insert-timestamp-function 'erc-insert-timestamp-left
+          erc-kill-queries-on-quit nil
+          erc-keywords nil)
+
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;
+    ;; Change fill column on resize
+    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    (make-variable-buffer-local 'erc-fill-column)
+
+     ;; '(erc-fill-column 75)
+
+    (defun qdot/erc-set-fill-columns ()
+      (interactive)
+      (save-excursion
+        (walk-windows
+         (lambda (w)
+           (let ((buffer (window-buffer w)))
+             (set-buffer buffer)
+             (when (eq major-mode 'erc-mode)
+               (message "Window size: %d" (window-width w))
+               (setq erc-fill-column (- (window-width w) 2))))))))
+
+    (setq window-configuration-change-hook (cddr window-configuration-change-hook))
+
+    ;;(add-hook 'window-configuration-change-hook 'qdot/erc-set-fill-columns)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;
+    ;; Query event functionality
+    ;; Todochiku messaging on privmsgs, checks for repeat pages, etc...
+    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    ;; Todochiku notifier for priv messages
+    (defun qdot/text-match-erc-hook (match-type nick msg)
+      "Shows a growl notification, when user's nick was mentioned. If
+the buffer is currently not visible, makes it sticky."
+      (if (featurep 'todochiku)
+          (todochiku-message
+           "ERC Mention"
+           (concat "ERC: name mentioned on: " (buffer-name (current-buffer)))
+           (todochiku-icon 'irc)
+           )))
+    (add-hook 'erc-text-matched-hook 'qdot/text-match-erc-hook)
+
+    (defvar qdot/erc-nopage-nick-list nil 
+      "List of nick regexps that should not be allowed to page.")
+    (setq qdot/erc-nopage-nick-list '("twitter_qdot"))
+
+    (defvar qdot/erc-page-nick-alist nil
+      "Alist of nicks and the last time they tried to trigger a notification")
+
+    (defvar qdot/erc-page-timeout 10
+      "Number of seconds that must elapse between notifications from the same 
+person.")
+
+    (defun qdot/erc-page-allowed (nick &optional delay)
+      "Return non-nil if a notification should be made for NICK.
+If DELAY is specified, it will be the minimum time in seconds
+that can occur between two notifications.  The default is
+`qdot/erc-page-timeout'."
+
+      ;; Check to see if we even want to page about this nick
+      ;; We want to make sure the nick isn't in the list, so negate
+      (when (not (member nick qdot/erc-nopage-nick-list))
+        (unless delay (setq delay qdot/erc-page-timeout))    
+        (let ((cur-time (time-to-seconds (current-time)))
+              (cur-assoc (assoc nick qdot/erc-page-nick-alist))
+              (last-time))
+          (if cur-assoc
+              (progn
+                (setq last-time (cdr cur-assoc))
+                (setcdr cur-assoc cur-time)
+                (> (abs (- cur-time last-time)) delay))
+            (push (cons nick cur-time) qdot/erc-page-nick-alist)
+            t))))
+
+    (defun qdot/erc-page-popup-notification (nick)
+      (when window-system
+        ;; must set default directory, otherwise start-process is unhappy
+        ;; when this is something remote or nonexistent
+        (if (featurep 'todochiku)    
+            (todochiku-message
+             "ERC Mention"
+             (concat "ERC: priv-msg from " nick)
+             (todochiku-icon 'irc)))))
+
+    ;; The hook for figuring out whether or not we should be paged
+    (defun qdot/erc-page-me-PRIVMSG (proc parsed)
+      (let ((nick (car (erc-parse-user (erc-response.sender parsed))))
+            (target (car (erc-response.command-args parsed)))
+            (msg (erc-response.contents parsed)))
+        ;; If we're the target, and we haven't been paged in a while, page
+        (when (and (erc-current-nick-p target)
+                   (not (erc-is-message-ctcp-and-not-action-p msg))
+                   (qdot/erc-page-allowed nick))
+          (qdot/erc-page-popup-notification nick)
+          nil)))
+
+    (add-hook 'erc-server-PRIVMSG-functions 'qdot/erc-page-me-PRIVMSG)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;
+    ;; Privmsg window allocation
+    ;;
+    ;; We create a buffer with a ton of windows pointing to the bitlbee-placeholder
+    ;; buffer. These can then be used to throw query windows into as they're
+    ;; created by IMs or IRC privmsgs, so we don't have to worry about ERC screwing
+    ;; with whatever buffer we're in now.
+    ;;
+    ;; Similarly, whenever we kill a query window, we should have it pop back to
+    ;; the placeholder buffer so it can be reused.
+    ;;
+    ;; We also make the assumption that the privmsg allocation frame is the one
+    ;; with the &bitlbee channel buffer in one of its windows. I just usually
+    ;; assume bitlbee is going to be running anyways, so this seemed ok for my
+    ;; setup.
+    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+    ;; Since we have our own allocator, just have ERC bury the buffers and then
+    ;; we'll take care of them ourselves
+    (setq erc-auto-query 'bury)
+     ;; '(erc-auto-query (quote window-noselect))
+
+
+    (defun qdot/free-query-window-p (window)
+      (let ((r nil))
+        (if (string= "bitlbee-placeholder" (buffer-name (window-buffer window)))
+            (setq r t))
+        r))
+
+    (defun qdot/erc-move-query-to-placeholder (buffer)
+      (let* 
+          ((bitlbee-window (get-buffer-window "&bitlbee" t)))
+        (when bitlbee-window
+          (let*
+              ((bitlbee-window-list (window-list (window-frame bitlbee-window)))
+               (free-window-list (qdot/filter 'qdot/free-query-window-p bitlbee-window-list)))
+            (when (not (memq buffer (mapcar 'window-buffer bitlbee-window-list)))
+              (set-window-buffer (car free-window-list) buffer))))))
+
+    (defun qdot/erc-privmsg-query-allocate (proc parsed)
+      ;; Find the frame holding the bitlbee& buffer. We'll consider that our privmsg window
+      ;; Once we find it, walk the windows until we find an open bitlbee-placeholder
+      ;; Set the window list to that so we can just pick the first window off the top
+      (if (get-buffer-window "&bitlbee" t)
+          (let* 
+              (
+               (nick (car (erc-parse-user (erc-response.sender parsed))))
+               (target (car (erc-response.command-args parsed)))
+               (msg (erc-response.contents parsed))
+               (query  (if (not erc-query-on-unjoined-chan-privmsg)
+                           nick
+                         (if (erc-current-nick-p target)
+                             nick
+                           target))))
+
+            ;;If the buffer doesn't even exist yet, go ahead and run auto-query to make it happen
+            (if (not (erc-get-buffer query proc))
+                (erc-auto-query proc parsed))
+            ;;If we find one, allocate into that, otherwise, commense undefined behavior
+            (when (and (erc-current-nick-p target)
+                       (not (erc-is-message-ctcp-and-not-action-p msg))
+                       (not (get-buffer-window (erc-get-buffer query proc) t)))
+              (qdot/erc-move-query-to-placeholder (erc-get-buffer query proc)))))
+      nil
+      )
+
+    (add-hook 'erc-server-PRIVMSG-functions 'qdot/erc-privmsg-query-allocate)
+
+    (add-hook 'wg-switch-hook 'qdot/bitlbee-reallocate-query-buffers)
+
+    ;; Once we close a query window, return it to being a query placeholder window
+
+    (defun qdot/erc-query-buffer-recycle ()
+      (if (and (erc-query-buffer-p (current-buffer)) (get-buffer "bitlbee-placeholder"))
+          (set-window-buffer (get-buffer-window (current-buffer)) (get-buffer "bitlbee-placeholder")))
+      nil)
+
+    (add-hook 'kill-buffer-hook 'qdot/erc-query-buffer-recycle)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;
+    ;; ZNC IRC Bouncer Setup
+    ;;
+    ;; I use the ZNC IRC bouncer to keep IRC connected, kinda like screen, except
+    ;; far more complicated and only useful for one thing. Yay!
+    ;;
+    ;; ZNC divides up networks to be one per account, so we have to start once ERC
+    ;; instance per network we want to connect to.
+    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    (setq qdot/erc-znc-server-rename-list (list))
+
+    (defun qdot/erc-znc-connect (nick)
+      (interactive "ZNC Nick:")
+      (erc :server qdot/erc-znc-remote-server :port qdot/erc-znc-port :nick nick :full-name nick)
+      )
+
+    (defun qdot/erc-znc-rename-server-buffer ()
+      (interactive)
+      (let ((current-network (caddr (split-string (erc-current-nick) "-"))))
+        (save-excursion
+          (set-buffer (erc-server-buffer))
+          (rename-buffer (concat "znc-" current-network))
+          (message (format "Renamed buffer to %s" (concat "znc-" current-network)))
+          )))
+
+    (defun qdot/erc-znc-initialize (proc parsed)
+      ;; Prepend all ZNC buffers with znc-
+      (if (and (not (string-match "znc-" (buffer-name (erc-server-buffer)))) (string-match "qdot-znc" (erc-current-nick)))
+          (progn
+            (qdot/erc-znc-rename-server-buffer)
+            (erc-server-send (format "PASS %s:%s" (erc-current-nick) qdot/erc-znc-password))))
+      nil)
+
+    (add-hook 'erc-server-NOTICE-functions 'qdot/erc-znc-initialize)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;
+    ;; ZNC variables and utility functions
+    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    (setq qdot/erc-znc-nicks '("qdot-znc-freenode" "qdot-znc-mozilla"))
+    (defvar qdot/erc-znc-password "doesnotmatter")
+    (defvar qdot/erc-znc-remote-server "localhost")
+    (defvar qdot/erc-znc-port 9999)
+
+    (defun qdot/erc-znc-start ()
+      (interactive)
+      (mapcar 'qdot/erc-znc-connect qdot/erc-znc-nicks))
+
+    (defun qdot/bitlbee-connect ()
+      (interactive)
+      (qdot/erc-znc-connect "qdot-znc-bitlbee"))
+
+    (defun qdot/bitlbee-reallocate-query-buffers ()
+      ;; For each already opened query window, reallocate
+      (mapc (lambda (buf) (qdot/erc-move-query-to-placeholder buf)) (qdot/filter 'erc-query-buffer-p (buffer-list))))
+
+    (defun qdot/bitlbee-resume-layout ()
+      (interactive)
+      ;; If we havn't created a placeholder buffer yet, do so now
+      (get-buffer-create "bitlbee-placeholder")
+      (save-excursion
+        ;; Bring up the bitlbee nicklist
+        (set-buffer "&bitlbee")
+        (erc-nicklist))
+      (wg-revert-workgroup (wg-get-workgroup "bitlbee"))
+      ;; (qdot/resume-layout-file "~/.emacs_files/layouts/bitlbee_layout.el")
+      (qdot/bitlbee-reallocate-query-buffers)
+      )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;
+    ;; Kill all ERC windows and connections for the current frame
+    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    ;; Walk all of the server buffers first
+    ;; Close those first, which autodetaches us from channels
+    ;; Then go back through and close everything
+
+    (defun qdot/kill-erc ()
+      (interactive)
+      (mapcar 
+       (lambda (arg) 
+         (if (erc-server-buffer-p arg) 
+             (save-excursion
+               (set-buffer arg)
+               (erc-quit-server "Wheee.")
+               (if (get-buffer-process arg)
+                   (delete-process (get-buffer-process arg)))
+               (kill-buffer arg)
+               ))) (buffer-list)))
+
+    (setq erc-fill-function 'erc-fill-static)
+    (setq erc-fill-static-center 0)
+ ;; '(erc-fill-static-center 12)
+
+    (add-hook 'kill-emacs-hook 'qdot/kill-erc)
+    
     (use-package erc-yank
       :init
       (bind-key "C-y" 'erc-yank erc-mode-map))
@@ -1675,14 +1989,14 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                 (message msg))
             (message (concat "No definition found for " (upcase term)))))))
 
-     (use-package sauron
-       :bind ("C-. s" . sauron-toggle-hide-show)
-       ("C-. R" . sauron-clear))
+    (use-package sauron
+      :bind ("C-. s" . sauron-toggle-hide-show)
+      ("C-. R" . sauron-clear))
 
-     (add-hook 'sauron-event-block-functions
-               (lambda (origin prio msg &optional props)
-                 (or
-                  (string-match "^*** Users" msg)))) ;; filter out IRC spam
+    (add-hook 'sauron-event-block-functions
+              (lambda (origin prio msg &optional props)
+                (or
+                 (string-match "^*** Users" msg)))) ;; filter out IRC spam
 
 
     (defun switch-to-bitlbee ()
@@ -1766,32 +2080,32 @@ FORM => (eval FORM)."
     ;;       '(add-to-list 'erc-button-alist
     ;;                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
 
-;;     (use-package dkh-buttonize)
-;;
-;;     (dolist (button dkh:button-alist)
-;;       (add-to-list 'erc-button-alist
-;;                    (apply (lambda (context-regexp regexp button callback par)
-;;                             `(,regexp
-;;                               ,button
-;;                               (string-match-p ,context-regexp (car erc-default-recipients))
-;;                               ,callback
-;;                               ,par))
-;;                           button)))
-;;
-;;
-;;     (defun erc-button-url-previous ()
-;;       "Go to the previous URL button in this buffer."
-;;       (interactive)
-;;       (let* ((point (point))
-;;              (found (catch 'found
-;;                       (while (setq point (previous-single-property-change point 'erc-callback))
-;;                         (when (eq (get-text-property point 'erc-callback) 'browse-url)
-;;                           (throw 'found point))))))
-;;         (if found
-;;             (goto-char found)
-;;           (error "No previous URL button."))))
-;;
-;;     (define-key erc-mode-map [backtab] 'erc-button-url-previous)
+    ;;     (use-package dkh-buttonize)
+    ;;
+    ;;     (dolist (button dkh:button-alist)
+    ;;       (add-to-list 'erc-button-alist
+    ;;                    (apply (lambda (context-regexp regexp button callback par)
+    ;;                             `(,regexp
+    ;;                               ,button
+    ;;                               (string-match-p ,context-regexp (car erc-default-recipients))
+    ;;                               ,callback
+    ;;                               ,par))
+    ;;                           button)))
+    ;;
+    ;;
+    ;;     (defun erc-button-url-previous ()
+    ;;       "Go to the previous URL button in this buffer."
+    ;;       (interactive)
+    ;;       (let* ((point (point))
+    ;;              (found (catch 'found
+    ;;                       (while (setq point (previous-single-property-change point 'erc-callback))
+    ;;                         (when (eq (get-text-property point 'erc-callback) 'browse-url)
+    ;;                           (throw 'found point))))))
+    ;;         (if found
+    ;;             (goto-char found)
+    ;;           (error "No previous URL button."))))
+    ;;
+    ;;     (define-key erc-mode-map [backtab] 'erc-button-url-previous)
 
     (eval-after-load 'erc
       '(progn
@@ -1812,34 +2126,34 @@ FORM => (eval FORM)."
 ;;; ---------------------------------------------------------------------------
 ;;; ERC notify when matching nick, and queries
 
-;; (defun erc-current-nick-matched (match-type &optional arg1 arg2)
-;;   (when (string= match-type "current-nick")
-;;     (x-urgency-hint)))
-;;
-;; (add-hook 'erc-text-matched-hook 'erc-current-nick-matched)
-;;
-;; (defun erc-notify-query (string)
-;;   (let ((parsed (get-text-property 1 'erc-parsed string)))
-;;     (when parsed
-;;       (let ((command (erc-response.command parsed))
-;;             (args (erc-response.command-args parsed)))
-;;         (when (and (string= command "PRIVMSG")
-;;                    args
-;;                    (string= (car args) (erc-current-nick)))
-;;           (x-urgency-hint))))))
-;;
-;;
-;; Taken from http://www.emacswiki.org/JabberEl
-;; (defun x-urgency-hint (&optional frame arg source)
-;;   (let* ((wm-hints (append (x-window-property
-;;                             "WM_HINTS" frame "WM_HINTS" source nil t) nil))
-;;          (flags (car wm-hints)))
-;;     (setcar wm-hints (if arg
-;;                          (logand flags #x1ffffeff)
-;;                        (logior flags #x00000100)))
-;;     (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t)))
-;;
-;; (add-hook 'erc-insert-pre-hook 'erc-notify-query)
+    ;; (defun erc-current-nick-matched (match-type &optional arg1 arg2)
+    ;;   (when (string= match-type "current-nick")
+    ;;     (x-urgency-hint)))
+    ;;
+    ;; (add-hook 'erc-text-matched-hook 'erc-current-nick-matched)
+    ;;
+    ;; (defun erc-notify-query (string)
+    ;;   (let ((parsed (get-text-property 1 'erc-parsed string)))
+    ;;     (when parsed
+    ;;       (let ((command (erc-response.command parsed))
+    ;;             (args (erc-response.command-args parsed)))
+    ;;         (when (and (string= command "PRIVMSG")
+    ;;                    args
+    ;;                    (string= (car args) (erc-current-nick)))
+    ;;           (x-urgency-hint))))))
+    ;;
+    ;;
+    ;; Taken from http://www.emacswiki.org/JabberEl
+    ;; (defun x-urgency-hint (&optional frame arg source)
+    ;;   (let* ((wm-hints (append (x-window-property
+    ;;                             "WM_HINTS" frame "WM_HINTS" source nil t) nil))
+    ;;          (flags (car wm-hints)))
+    ;;     (setcar wm-hints (if arg
+    ;;                          (logand flags #x1ffffeff)
+    ;;                        (logior flags #x00000100)))
+    ;;     (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t)))
+    ;;
+    ;; (add-hook 'erc-insert-pre-hook 'erc-notify-query)
 
     ))
 
@@ -1999,25 +2313,25 @@ FORM => (eval FORM)."
   :init
   (progn
     (setq
-          gnus-article-save-directory "~/git/gnus/News"
-          gnus-cache-active-file "~/git/gnus/News/cache/active"
-          gnus-cache-directory "~/git/gnus/News/cache"
-          gnus-default-directory "~/git/gnus"
-          gnus-directory "~/git/gnus/News"
-          gnus-dribble-directory "~/git/gnus/"
-          gnus-home-directory "~/git/gnus"
-          gnus-init-file "~/git/.emacs.d/dot-gnus.el"
-          gnus-kill-files-directory "~/git/gnus/.gnuskillfiled"
-          gnus-startup-file "~/git/gnus/.newsrc"
-          gnus-summary-save-parts-last-directory "~/Downloads"
-          mail-default-directory "~/git/gnus/Mail"
-          message-directory "~/git/gnus/Mail"
-          nndraft-current-directory "~/git/gnus/News/drafts/"
-          nndraft-directory "~/git/gnus/News/drafts/"
-          nnmail-message-id-cache-file "~/git/gnus/nnmail_cache"
-          nnml-directory "~/git/gnus/Mail"
-          nntp-marks-directory "~/git/gnus/News/"
-          )
+     gnus-article-save-directory "~/git/gnus/News"
+     gnus-cache-active-file "~/git/gnus/News/cache/active"
+     gnus-cache-directory "~/git/gnus/News/cache"
+     gnus-default-directory "~/git/gnus"
+     gnus-directory "~/git/gnus/News"
+     gnus-dribble-directory "~/git/gnus/"
+     gnus-home-directory "~/git/gnus"
+     gnus-init-file "~/git/.emacs.d/dot-gnus.el"
+     gnus-kill-files-directory "~/git/gnus/.gnuskillfiled"
+     gnus-startup-file "~/git/gnus/.newsrc"
+     gnus-summary-save-parts-last-directory "~/Downloads"
+     mail-default-directory "~/git/gnus/Mail"
+     message-directory "~/git/gnus/Mail"
+     nndraft-current-directory "~/git/gnus/News/drafts/"
+     nndraft-directory "~/git/gnus/News/drafts/"
+     nnmail-message-id-cache-file "~/git/gnus/nnmail_cache"
+     nnml-directory "~/git/gnus/Mail"
+     nntp-marks-directory "~/git/gnus/News/"
+     )
     (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
     (use-package eudc)
@@ -2026,7 +2340,7 @@ FORM => (eval FORM)."
     (use-package bbdb-message)
 
 
-;; (setq message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
+    ;; (setq message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
 
 
     (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
@@ -2040,33 +2354,33 @@ FORM => (eval FORM)."
     (add-hook 'message-mode-hook
               '(lambda () (local-set-key (kbd "C-c M-o") 'org-mime-htmlize))
               'append)
-     (add-hook 'message-mode-hook 'abbrev-mode 'footnote-mode 'turn-on-orgstruct)
+    (add-hook 'message-mode-hook 'abbrev-mode 'footnote-mode 'turn-on-orgstruct)
 
-;;     (use-package dkh-buttonize)
+    ;;     (use-package dkh-buttonize)
 
-;;     (dolist (button dkh:button-alist)
-;;       (add-to-list 'gnus-header-button-alist
-;;                    (apply (lambda (context-regexp regexp button callback par)
-;;                             `("Subject:"
-;;                               ,regexp
-;;                               ,button
-;;                               (string-match-p ,context-regexp gnus-newsgroup-name)
-;;                               ,callback
-;;                               ,par))
-;;                           button))
+    ;;     (dolist (button dkh:button-alist)
+    ;;       (add-to-list 'gnus-header-button-alist
+    ;;                    (apply (lambda (context-regexp regexp button callback par)
+    ;;                             `("Subject:"
+    ;;                               ,regexp
+    ;;                               ,button
+    ;;                               (string-match-p ,context-regexp gnus-newsgroup-name)
+    ;;                               ,callback
+    ;;                               ,par))
+    ;;                           button))
 
-;;       (add-to-list 'gnus-button-alist
-;;                    (apply (lambda (context-regexp regexp button callback par)
-;;                             `(,regexp
-;;                               ,button
-;;                               (string-match-p ,context-regexp gnus-newsgroup-name)
-;;                               ,callback
-;;                               ,par))
-;;                           button)))
+    ;;       (add-to-list 'gnus-button-alist
+    ;;                    (apply (lambda (context-regexp regexp button callback par)
+    ;;                             `(,regexp
+    ;;                               ,button
+    ;;                               (string-match-p ,context-regexp gnus-newsgroup-name)
+    ;;                               ,callback
+    ;;                               ,par))
+    ;;                           button)))
 
-     (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
-     (add-hook 'message-setup-hook 'bbdb-mail-aliases) ; BBDB 3.x
-     ))
+    (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+    (add-hook 'message-setup-hook 'bbdb-mail-aliases) ; BBDB 3.x
+    ))
 
 
 ;;;_ , grep
@@ -2447,7 +2761,7 @@ FORM => (eval FORM)."
                ("(\\(ert-deftest\\)\\>[ 	'(]*\\(setf[ 	]+\\sw+\\|\\sw+\\)?"
                 (1 font-lock-keyword-face)
                 (2 font-lock-function-name-face
-                 nil t)))))
+                   nil t)))))
           lisp-modes)
 
     (defvar slime-mode nil)
@@ -2724,12 +3038,12 @@ FORM => (eval FORM)."
                    (group (and (= 2 num) ?/ (= 2 num) ?/ (= 2 num)
                                space (= 2 num) ?: (= 2 num) space
                                (in "AP") ?M)) (1+ space)
-                   (group (and (= 2 num) ?/ (= 2 num) ?/ (= 2 num)
-                               space (= 2 num) ?: (= 2 num) space
-                               (in "AP") ?M)) (1+ space)
-                   (? (and (group ?*) (1+ space)))
-                   (group (1+ (or digit (in ".hms"))))
-                   (1+ space) (group (1+ nonl)) string-end))))
+                               (group (and (= 2 num) ?/ (= 2 num) ?/ (= 2 num)
+                                           space (= 2 num) ?: (= 2 num) space
+                                           (in "AP") ?M)) (1+ space)
+                                           (? (and (group ?*) (1+ space)))
+                                           (group (1+ (or digit (in ".hms"))))
+                                           (1+ space) (group (1+ nonl)) string-end))))
     (if (string-match regex text)
         (let ((start (match-string 1 text))
               (end (match-string 2 text))
@@ -2804,7 +3118,7 @@ tell application \"Merlin\"
     end tell
   end if
 end tell" account account start duration commodity (if cleared "true" "false")
-          end end))))))
+end end))))))
 
 ;;;_ , mudel
 
@@ -2950,12 +3264,12 @@ end tell" account account start duration commodity (if cleared "true" "false")
 ;;
 ;;  (use-package org-habit)
 
-   (setq org-user-agenda-files (quote (
-                                       "~/git/dkh-org/todo.org"
-                                       "~/git/dkh-org/refile.org"
-                                       "~/git/dkh-org/.org-jira/FIT.org"
-                                       "~/git/dkh-org/.org-jira/CUPRE.org"
-                                       )))
+(setq org-user-agenda-files (quote (
+                                    "~/git/dkh-org/todo.org"
+                                    "~/git/dkh-org/refile.org"
+                                    "~/git/dkh-org/.org-jira/FIT.org"
+                                    "~/git/dkh-org/.org-jira/CUPRE.org"
+                                    )))
 
 
 ;;;_ , paredit
@@ -2997,8 +3311,8 @@ end tell" account account start duration commodity (if cleared "true" "false")
 
 (unless
     (use-package mic-paren
-          :init
-          (paren-activate))
+      :init
+      (paren-activate))
 
   (use-package paren
     :init
@@ -3185,17 +3499,17 @@ end tell" account account start duration commodity (if cleared "true" "false")
   (progn
     (session-initialize)
 
-;;     (defun remove-session-use-package-from-settings ()
-;;       (when (string= (buffer-file-name)
-;;                      (expand-file-name "settings.el"
-;;                                        user-emacs-directory))
-;;         (save-excursion
-;;           (goto-char (point-min))
-;;           (when (re-search-forward "^ '(session-use-package " nil t)
-;;             (delete-region (line-beginning-position)
-;;                            (1+ (line-end-position)))))))
+    ;;     (defun remove-session-use-package-from-settings ()
+    ;;       (when (string= (buffer-file-name)
+    ;;                      (expand-file-name "settings.el"
+    ;;                                        user-emacs-directory))
+    ;;         (save-excursion
+    ;;           (goto-char (point-min))
+    ;;           (when (re-search-forward "^ '(session-use-package " nil t)
+    ;;             (delete-region (line-beginning-position)
+    ;;                            (1+ (line-end-position)))))))
 
-;;    (add-hook 'before-save-hook 'remove-session-use-package-from-settings)
+    ;;    (add-hook 'before-save-hook 'remove-session-use-package-from-settings)
 
     ;; expanded folded secitons as required
     (defun le::maybe-reveal ()
@@ -3338,7 +3652,7 @@ end tell" account account start duration commodity (if cleared "true" "false")
 (use-package smart-compile
   :commands smart-compile
   :bind (
-;;         ("C-c c" . smart-compile)
+         ;;         ("C-c c" . smart-compile)
          ("A-n"   . next-error)
          ("A-p"   . previous-error))
   :init
@@ -3497,7 +3811,7 @@ end tell" account account start duration commodity (if cleared "true" "false")
   (setq vkill-show-all-processes t))
 
 (use-package rgr-web
-;;  :commands
+  ;;  :commands
   :load-path "~/.emacs.d/lisp/"
   :bind (("<f4>" . rgr/browse-url)
          ))
@@ -3729,7 +4043,7 @@ end tell" account account start duration commodity (if cleared "true" "false")
     (bind-key " 7" 'wg-switch-to-index-7 workgroups-preload-map)
     (bind-key " 8" 'wg-switch-to-index-8 workgroups-preload-map)
     (bind-key " 9" 'wg-switch-to-index-9 workgroups-preload-map)
-)
+    )
 
   :config
   (progn
@@ -3833,11 +4147,11 @@ end tell" account account start duration commodity (if cleared "true" "false")
 # --
 $0"))))
 
-(bind-key "C-c y TAB" 'yas/expand)
-(bind-key "C-c y n" 'yas/new-snippet)
-(bind-key "C-c y f" 'yas/find-snippets)
-(bind-key "C-c y r" 'yas/reload-all)
-(bind-key "C-c y v" 'yas/visit-snippet-file)))
+    (bind-key "C-c y TAB" 'yas/expand)
+    (bind-key "C-c y n" 'yas/new-snippet)
+    (bind-key "C-c y f" 'yas/find-snippets)
+    (bind-key "C-c y r" 'yas/reload-all)
+    (bind-key "C-c y v" 'yas/visit-snippet-file)))
 
 ;;;_ , yaoddmuse
 
@@ -3856,7 +4170,7 @@ $0"))))
     (add-hook 'html-mode-hook 'zencoding-mode)
     (add-hook 'html-mode-hook
               #'(lambda ()
-                (bind-key "<return>" 'newline-and-indent html-mode-map))))
+                  (bind-key "<return>" 'newline-and-indent html-mode-map))))
 
   :config
   (progn
@@ -3892,7 +4206,7 @@ $0"))))
 
 (unless running-alternate-emacs
   (org-babel-load-file "~/.emacs.d/dkh-core.org")
-)
+  )
 
 ;;Mo functions
 (org-babel-load-file "~/.emacs.d/dkh-functions.org")
