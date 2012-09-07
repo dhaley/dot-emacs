@@ -1538,7 +1538,12 @@ The output appears in the buffer `*Async Shell Command*'."
 
 (use-package php-mode
   :mode ("\\.php$" . php-mode)
-  :interpreter ("php" . php-mode))
+  :interpreter ("php" . php-mode)
+  init:
+  (progn
+    (add-hook 'php-mode-hook '(lambda ()(c-subword-mode t)))
+))
+
 
 
 (use-package php+-mode
@@ -1548,7 +1553,9 @@ The output appears in the buffer `*Async Shell Command*'."
   (progn
     (php+-mode-setup)
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
-    (setq php-completion-file "~/git/ewax/misc/php-completion-file")))
+    (setq php-completion-file "~/git/ewax/misc/php-completion-file")
+    (add-hook 'php+-mode-hook '(lambda ()(c-subword-mode t)))
+    ))
 
 
 ;;;_ , drupal-mode
@@ -2233,6 +2240,7 @@ FORM => (eval FORM)."
          ("C-x m" . compose-mail))
   :init
   (progn
+    
     (setq
      gnus-article-save-directory "~/git/gnus/News"
      gnus-cache-active-file "~/git/gnus/News/cache/active"
@@ -3969,10 +3977,6 @@ end end))))))
   :config
   (progn
     (workgroups-mode 1)
-
-
-
-    
     (let ((workgroups-file (expand-file-name "workgroups" user-emacs-directory)))
 
       (if running-alternate-emacs
@@ -4029,13 +4033,14 @@ end end))))))
             (wg-filter-buffer-list-by-not-major-mode 'erc-mode (buffer-list))
             
             ;; (setq wg-file "/Users/daha1836/.emacs.d/data-alt/workgroups")
-            ;; (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups"))
+            ;; (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups")
 
+            )
         (if (file-readable-p workgroups-file)
             (wg-load workgroups-file))))
 
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
-    (bind-key "\\" 'toggle-input-method wg-map))))
+    (bind-key "\\" 'toggle-input-method wg-map)))
 
 
 ;;;_ , wrap-region

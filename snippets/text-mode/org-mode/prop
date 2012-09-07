@@ -1,6 +1,6 @@
-#name : Properties Folded
-#contributor : Jonathan Arkell <jonnay@jonnay.net>
+# key: prop
+# name: prop (:PROPERTIES:....:END:)
 # --
- :PROPERTIES:
- :VISIBILITY:folded:
- :END:
+:PROPERTIES:$>
+$0$>
+:END:$>
