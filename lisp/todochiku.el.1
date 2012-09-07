@@ -1,0 +1,394 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>EmacsWiki: todochiku.el</title><link rel="alternate" type="application/wiki" title="Edit this page" href="http://www.emacswiki.org/emacs?action=edit;id=todochiku.el" /><link type="text/css" rel="stylesheet" href="/emacs/wiki.css" /><meta name="robots" content="INDEX,FOLLOW" /><link rel="alternate" type="application/rss+xml" title="EmacsWiki" href="http://www.emacswiki.org/emacs?action=rss" /><link rel="alternate" type="application/rss+xml" title="EmacsWiki: todochiku.el" href="http://www.emacswiki.org/emacs?action=rss;rcidonly=todochiku.el" />
+<link rel="alternate" type="application/rss+xml"
+      title="Emacs Wiki with page content"
+      href="http://www.emacswiki.org/emacs/full.rss" />
+<link rel="alternate" type="application/rss+xml"
+      title="Emacs Wiki with page content and diff"
+      href="http://www.emacswiki.org/emacs/full-diff.rss" />
+<link rel="alternate" type="application/rss+xml"
+      title="Emacs Wiki including minor differences"
+      href="http://www.emacswiki.org/emacs/minor-edits.rss" />
+<link rel="alternate" type="application/rss+xml"
+      title="Changes for todochiku.el only"
+      href="http://www.emacswiki.org/emacs?action=rss;rcidonly=todochiku.el" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body class="http://www.emacswiki.org/emacs"><div class="header"><a class="logo" href="http://www.emacswiki.org/emacs/SiteMap"><img class="logo" src="/emacs_logo.png" alt="[Home]" /></a><span class="gotobar bar"><a class="local" href="http://www.emacswiki.org/emacs/SiteMap">SiteMap</a> <a class="local" href="http://www.emacswiki.org/emacs/Search">Search</a> <a class="local" href="http://www.emacswiki.org/emacs/ElispArea">ElispArea</a> <a class="local" href="http://www.emacswiki.org/emacs/HowTo">HowTo</a> <a class="local" href="http://www.emacswiki.org/emacs/Glossary">Glossary</a> <a class="local" href="http://www.emacswiki.org/emacs/RecentChanges">RecentChanges</a> <a class="local" href="http://www.emacswiki.org/emacs/News">News</a> <a class="local" href="http://www.emacswiki.org/emacs/Problems">Problems</a> <a class="local" href="http://www.emacswiki.org/emacs/Suggestions">Suggestions</a> </span>
+<!-- Google CSE Search Box Begins  -->
+<form class="tiny" action="http://www.google.com/cse" id="searchbox_004774160799092323420:6-ff2s0o6yi"><p>
+<input type="hidden" name="cx" value="004774160799092323420:6-ff2s0o6yi" />
+<input type="text" name="q" size="25" />
+<input type="submit" name="sa" value="Search" />
+</p></form>
+<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_004774160799092323420%3A6-ff2s0o6yi"></script>
+<!-- Google CSE Search Box Ends -->
+<br /><span class="specialdays">Brazil, Independence Day</span><h1><a title="Click to search for references to this page" rel="nofollow" href="http://www.google.com/cse?cx=004774160799092323420:6-ff2s0o6yi&amp;q=%22todochiku.el%22">todochiku.el</a></h1></div><div class="wrapper"><div class="wrapper"><div class="content browse"><p class="download"><a href="http://www.emacswiki.org/emacs/download/todochiku.el">Download</a></p><pre class="code"><span class="linecomment">;;; todochiku.el --- A mode for interfacing with Growl, Snarl, and the like.</span>
+(defconst todochiku-version "<span class="quote">0.0.8</span>")
+<span class="linecomment">;; Version: 0.0.8</span>
+
+<span class="linecomment">;; Copyright (c)2008 Jonathan Arkell. (by)(nc)(sa)  Some rights reserved.</span>
+<span class="linecomment">;; Author: Jonathan Arkell &lt;jonnay@jonnay.net&gt;</span>
+
+<span class="linecomment">;; This file is not part of GNU Emacs.</span>
+
+<span class="linecomment">;; This program is free software; you can redistribute it and/or</span>
+<span class="linecomment">;; modify it under the terms of the GNU General Public License as</span>
+<span class="linecomment">;; published by the Free Software Foundation version 2.</span>
+
+<span class="linecomment">;; This program is distributed in the hope that it will be useful, but</span>
+<span class="linecomment">;; WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="linecomment">;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+<span class="linecomment">;; General Public License for more details.</span>
+
+<span class="linecomment">;; For a copy of the GNU General Public License, search the Internet,</span>
+<span class="linecomment">;; or write to the Free Software Foundation, Inc., 59 Temple Place,</span>
+<span class="linecomment">;; Suite 330, Boston, MA 02111-1307 USA</span>
+
+<span class="linecomment">;;; Commentary:</span>
+<span class="linecomment">;; todochiku is **NOTHING** in japanese.   todoroku "growl" in Japanese.</span>
+
+<span class="linecomment">;;; Commands:</span>
+<span class="linecomment">;;</span>
+<span class="linecomment">;; Below are complete command list:</span>
+<span class="linecomment">;;</span>
+<span class="linecomment">;;  `todochiku-in'</span>
+<span class="linecomment">;;    Send a todochiku message in a set ammount of time. Can take a prefix arg for the number of mins to wait.</span>
+<span class="linecomment">;;</span>
+<span class="linecomment">;;; Customizable Options:</span>
+<span class="linecomment">;;</span>
+<span class="linecomment">;; Below are customizable option list:</span>
+<span class="linecomment">;;</span>
+<span class="linecomment">;;  `todochiku-command'</span>
+<span class="linecomment">;;    Path to command for sending growl-like messages.</span>
+<span class="linecomment">;;    default = (case system-type (windows-nt "C:/Program Files/full phat/Snarl/exrras/sncmd/snarl_command.exe") (darwin "/usr/local/bin/growlnotify") (t "notify-send"))</span>
+<span class="linecomment">;;  `todochiku-message-too'</span>
+<span class="linecomment">;;    Display todochiku as messages as well</span>
+<span class="linecomment">;;    default = nil</span>
+<span class="linecomment">;;  `todochiku-tooltip-too'</span>
+<span class="linecomment">;;    Display todochiku as a tooltip.</span>
+<span class="linecomment">;;    default = nil</span>
+<span class="linecomment">;;  `todochiku-icons-directory'</span>
+<span class="linecomment">;;    Path to the todochiku icons directory.</span>
+<span class="linecomment">;;    default = "~/.emacs-cfg/todochiku-icons"</span>
+<span class="linecomment">;;  `todochiku-timeout'</span>
+<span class="linecomment">;;    Time to display a todochiku notification (not used by all backends)</span>
+<span class="linecomment">;;    default = 10</span>
+<span class="linecomment">;;  `todochiku-icons'</span>
+<span class="linecomment">;;    An alist containing an icon name, and a path to the icon.</span>
+<span class="linecomment">;;    default = (quote ((default . "announcements.png") (alert . "alert.png") (bell . "bell.png") (compile . "binary.png") (irc . "chat.png") ...))</span>
+<span class="linecomment">;;  `todochiku-compile-message'</span>
+<span class="linecomment">;;    Automatically add a hook to send a todochiku on compilation finsih.</span>
+<span class="linecomment">;;    default = (quote t)</span>
+<span class="linecomment">;;  `todochiku-appts'</span>
+<span class="linecomment">;;    Install todochiku as the apt-disp-window-function.</span>
+<span class="linecomment">;;    default = (quote t)</span>
+<span class="linecomment">;;  `todochiku-display-appts-in-window-too'</span>
+<span class="linecomment">;;    Whether or not pings from apt-disp-window should show up in emacs as well as growl.</span>
+<span class="linecomment">;;    default = (quote t)</span>
+
+<span class="linecomment">;; This is more a smaller library package to start with.  Maybe it will grow one day.</span>
+
+<span class="linecomment">;; Installation:</span>
+<span class="linecomment">;; Make sure you have snarl/growl/libnotify installed, and load this file from your .Emacs</span>
+<span class="linecomment">;; i.e. (load-file "~/.emacs-cfg/todochiku.el")</span>
+<span class="linecomment">;;</span>
+<span class="linecomment">;; If you have an external notification program, you can use that. </span>
+<span class="linecomment">;; use customize-group todochiku, and make sure you set the todochiku-command.</span>
+<span class="linecomment">;;</span>
+<span class="linecomment">;; If you do not have an external notification program, there is basic support</span>
+<span class="linecomment">;; for similar notifications using the message window and/or tooltips.</span>
+<span class="linecomment">;; See todochiku-message-too and todochiku-tooltip-too.</span>
+<span class="linecomment">; </span>
+<span class="linecomment">;; For icon support, customize the todochiku-icons-directory variable.  I have</span>
+<span class="linecomment">;; a directory of png icons available at</span>
+<span class="linecomment">;; http://bunny.jonnay.net/todochiku-icons.tar.gz</span>
+<span class="linecomment">;; In the future, the downloading and installing of this directory will be</span>
+<span class="linecomment">;; automagickal.</span>
+
+<span class="linecomment">;; interactive commands: </span>
+<span class="linecomment">;; todochiku-in - do a todochiku.  This is a great way to set up a reminder</span>
+<span class="linecomment">;;                for yourself.</span>
+
+<span class="linecomment">;; elisp:</span>
+<span class="linecomment">;; If you want to send a growl message from elisp, just use the function</span>
+<span class="linecomment">;; todochiku-message</span>
+
+<span class="linecomment">;;; TODO:</span>
+<span class="linecomment">;; - maybe look at advising the message function? that might be super dumb.</span>
+<span class="linecomment">;;   if done, the value of todochiku-message-too NEEDS to be looked at,</span>
+<span class="linecomment">;;   so that an infinite loop doesn't occur.</span>
+<span class="linecomment">;; - Update the icon support.  Automagickally download and install the icons</span>
+<span class="linecomment">;;   with the url package.</span>
+<span class="linecomment">;; - Build better backend support.</span>
+
+<span class="linecomment">;;; CHANGELOG:</span>
+<span class="linecomment">;; V0.0.8 - Fixed broken `todochiku-icons-directory' definition that made it impossible to change through Customize.</span>
+<span class="linecomment">;; V0.0.7b - Added support for sticky messages for libnotify and growl.</span>
+<span class="linecomment">;; V0.0.7  - Added YaOddMuse interface</span>
+<span class="linecomment">;; V0.0.6.1 - Bugfixing fom Jason McBrayer  (thanks!)</span>
+<span class="linecomment">;; V0.0.6 - Added patches from Jason McBrayer for *nix notifications.</span>
+<span class="linecomment">;; V0.0.5 - Added Initial support for emacs only notification</span>
+<span class="linecomment">;;        - Added variables to the customization group.</span>
+<span class="linecomment">;;        - Added some better documentation.</span>
+<span class="linecomment">;; V0.0.4 - Added initial icon support.  Right now it kinds sucks</span>
+<span class="linecomment">;;          Becuase it takes too much configuration.</span>
+<span class="linecomment">;;        - Fixed the comment about todochiku being growl in</span>
+<span class="linecomment">;;          japanese.  Doh.  I coulda sworn the 'ro' was a 'chi'. </span>
+<span class="linecomment">;; v0.0.3 - Added growl.el interface</span>
+<span class="linecomment">;;        - Added rcirc notify when you are mentioned in IRC (from Brian Templetons growl.el)</span>
+<span class="linecomment">;; v0.0.2 - fixed to use growl properly</span>
+<span class="linecomment">;;        - set the debug constent to false (duh)</span>
+<span class="linecomment">;;        - added some system checks around command and arguments</span>
+<span class="linecomment">;;        - </span>
+<span class="linecomment">;; v0.0.1 - first release</span>
+<span class="linecomment">;;</span>
+<span class="linecomment">;;; BUGS:</span>
+<span class="linecomment">;; - For some reason my face isn't working properly</span>
+
+(defconst todochiku-debug nil)
+
+(defgroup todochiku nil
+  "<span class="quote">Todochiku (とどろく), send growl/snarl/libnotify notifications from within emacs.</span>"
+  :group 'external)
+
+(defcustom todochiku-command 
+  (case system-type 
+    (windows-nt "<span class="quote">C:/Program Files/full phat/Snarl/exrras/sncmd/snarl_command.exe</span>")
+    (darwin "<span class="quote">/usr/local/bin/growlnotify</span>")
+    (t "<span class="quote">notify-send</span>"))
+  "<span class="quote">Path to command for sending growl-like messages.
+If you do not have an external notification program, leave this blank.
+For MacOS Growl: /usr/local/bin/growlnotify (a shot in the dark here)
+For Win32 Snarl: C:/Program Files/full phat/Snarl/extras/sncmd/sncmd.exe
+                 or
+                 C:/Program Files/full phat/Snarl/extras/sncmd/snarl_command.exe
+For Unix-like systems libnotify: notify-send (or /usr/bin/notify-send)</span>"
+  :type '(string)
+  :group 'todochiku)
+
+(defcustom todochiku-message-too
+  nil
+  "<span class="quote">Display todochiku as messages as well
+Whether or not to display todochiku-messages as well as send
+to the external notification program.
+
+Has no effect if todochiku-command is nil.</span>"
+  :type 'boolean
+  :group 'todochiku)
+
+(defcustom todochiku-tooltip-too
+  nil
+  "<span class="quote">Display todochiku as a tooltip.
+Whether or not to display todochiku-messages as a tooltip.</span>"
+  :type 'boolean
+  :group 'todochiku)
+
+(defcustom todochiku-icons-directory
+  "<span class="quote">~/.emacs-cfg/todochiku-icons</span>"
+  "<span class="quote">Path to the todochiku icons directory.</span>"
+  :type 'directory
+  :group 'todochiku)
+
+<span class="linecomment">;;*JasonMcBrayer</span>
+(defcustom todochiku-timeout
+  10
+  "<span class="quote">Time to display a todochiku notification (not used by all backends)</span>"
+  :type 'integer
+  :group 'todochiku)
+
+(defcustom todochiku-icons
+  '((default   . "<span class="quote">announcements.png</span>")
+	(alert     . "<span class="quote">alert.png</span>")
+	(bell      . "<span class="quote">bell.png</span>")
+	(compile   . "<span class="quote">binary.png</span>")
+	(irc       . "<span class="quote">chat.png</span>")
+	(check     . "<span class="quote">clean.png</span>")
+	(emacs     . "<span class="quote">emacs_32.png</span>")
+	(star      . "<span class="quote">favorites.png</span>")
+	(social    . "<span class="quote">groupevent.png</span>")
+	(alarm     . "<span class="quote">kalarm.png</span>")
+	(music     . "<span class="quote">kbemusedsrv.png</span>")
+	(mail      . "<span class="quote">kmail.png</span>")
+	(term      . "<span class="quote">terminal.png</span>")
+	(package   . "<span class="quote">zip.png</span>"))
+  "<span class="quote">An alist containing an icon name, and a path to the icon.
+The PNG format seems to be most compatable.  This is done in
+an a-list so that elisp developers have a set of icons that
+they can depend on.</span>"
+  :type '(alist)
+  :group 'todochiku)
+
+(defcustom todochiku-compile-message 't
+  "<span class="quote">Automatically add a hook to send a todochiku on compilation finsih.</span>"
+  :type '(boolean))
+
+(defcustom todochiku-appts 't
+  "<span class="quote">Install todochiku as the apt-disp-window-function.</span>"
+  :type '(boolean)
+  :group 'todochiku)
+
+(defcustom todochiku-display-appts-in-window-too 't
+  "<span class="quote">Whether or not pings from apt-disp-window should show up in emacs as well as growl.
+This is really only useful if you use the appt package (i.e. from planner mode).</span>"
+  :type '(boolean)
+  :group 'todochiku)
+
+(defface todochiku-message-face
+  '((default
+	  :forground "<span class="quote">black</span>"
+	  :background "<span class="quote">white</span>"
+	  :box (:line-width 2 :color "<span class="quote">grey40</span>")))
+  "<span class="quote">This is the text that is displayed in the message window on a notification.</span>"
+  :group 'todochiku)
+
+
+(defun todochiku-message (title message icon &optional sticky)
+  "<span class="quote">Send a message via growl, snarl, etc.
+If you don't wnat to set a title or icon, just use an ampty string \"\"
+as an argument.
+
+`icon' is a path to a PNG image that is displayed with the notification.
+you can use `todochiku-icon' to figure out which icon you want to display.
+
+See the variable `todochiku-icons' for a list of available icons.</span>" 
+  (if todochiku-debug (message "<span class="quote">Sent todochiku message.  Title:%s Message:%30s... Icon:%s Sticky:%s</span>" title message icon sticky))
+  (when (not (string= todochiku-command "<span class="quote"></span>"))
+		(apply 'start-process 
+			   "<span class="quote">todochiku</span>" 
+			   nil 
+			   todochiku-command 
+			   (todochiku-get-arguments title message icon sticky)))
+  (when todochiku-tooltip-too
+		(let ((tooltip-frame-parameters '((name . "<span class="quote">todochiku</span>")
+										  (internal-border-width . 4)
+										  (border-width . 2)
+										  (left . 0)
+										  (top . 0))))
+		  (tooltip-show message)))
+  (when (or (string= todochiku-command "<span class="quote"></span>")
+			todochiku-message-too)
+		(message "<span class="quote">%s</span>" (propertize message 'face 'todochiku-message-face))))
+
+(defun growl (title message)
+  "<span class="quote">Alias for `todochiku-message'.</span>"
+  (todochiku-message title message "<span class="quote"></span>"))
+
+<span class="linecomment">;;*JasonMcBrayer backend</span>
+(defun todochiku-get-arguments (title message icon sticky)
+  "<span class="quote">Gets todochiku arguments.
+This would be better done through a customization probably.</span>"
+  (case system-type
+    ('windows-nt (list "<span class="quote">/M</span>" title message icon))
+    ('darwin (list title (if sticky "<span class="quote">-s</span>" "<span class="quote"></span>") "<span class="quote">-m</span>" message "<span class="quote">--image</span>" icon ))
+    (t (list "<span class="quote">-i</span>" icon "<span class="quote">-t</span>"
+             (if sticky "<span class="quote">0</span>" (int-to-string (* 1000 todochiku-timeout)))
+             title message))))
+
+(defun todochiku-icon (icon)
+  "<span class="quote">Pull out an actual icon from the variable `todochiku-icons'.</span>"
+  (expand-file-name (concat todochiku-icons-directory "<span class="quote">/</span>" (cdr (assoc icon todochiku-icons)))))
+
+(defun todochiku-in (message mins)
+  "<span class="quote">Send a todochiku message in a set ammount of time. Can take a prefix arg for the number of mins to wait.</span>"
+  (interactive "<span class="quote">sMessage: \nNTime to wait: </span>")
+  (run-at-time (* mins 60)
+			   nil
+			   'todochiku-message
+			   "<span class="quote">Todohiku Timer</span>"
+			   message
+			   (todochiku-icon 'bell)))
+
+(defun todochiku-appt-disp-window (min-to-app new-time appt-msg)
+  "<span class="quote">A helper function to interface with appt-disp-window-function.</span>"
+  (todochiku-message (concat "<span class="quote">Appt in </span>" min-to-app)
+					 (concat appt-msg "<span class="quote">\n</span>" min-to-app "<span class="quote"> Mins\n</span>" new-time)
+					 (todochiku-icon 'alarm))
+  (if todochiku-display-appts-in-window-too
+	  (appt-disp-window min-to-app new-time appt-msg)))
+
+(if todochiku-appts
+	(setq appt-disp-window-function 'todochiku-appt-disp-window))
+
+<span class="linecomment">;;* external </span>
+(if todochiku-compile-message
+	(add-hook 'compilation-mode-hook
+			  (lambda ()
+				(add-to-list 'compilation-finish-functions
+							 (lambda (buf finish) (todochiku-message "<span class="quote">Compilation Finished</span>" finish (todochiku-icon 'compile)))))))
+
+<span class="linecomment">;;* external</span>
+(defun growl-rcirc-print-hook (process sender response target text)
+  (when (and (string-match (rcirc-nick process) text)
+             (not (string= (rcirc-nick process) sender))
+             (not (string= (rcirc-server process) sender)))
+		(growl "<span class="quote">You Were Mentioned</span>"
+			   (format "<span class="quote">You were mentioned by %s in %s</span>" sender target))))
+
+(eval-after-load 'rcirc
+				 '(add-hook 'rcirc-print-hooks 'growl-rcirc-print-hook))
+
+
+<span class="linecomment">;;* external</span>
+(defun yaoddmuse-todochiku (msg)
+  "<span class="quote">Hook into yaoddmuses notification system.</span>"
+  (todochiku-message "<span class="quote">YaOddMuse</span>" msg (todochiku-icon 'social)))
+
+(todochiku-message "<span class="quote">Emacs</span>" "<span class="quote">Todochiku (growl for emacs) is ready.</span>" (todochiku-icon 'check))
+
+<span class="linecomment">;; This idea doesn't quite work, and given that message is a C function, it might not be that smart anyway</span>
+<span class="linecomment">;; (defcustom todochiku-on-message nil</span>
+<span class="linecomment">;;   "Wrap advice around the emacs message command to send a todochiku message."</span>
+<span class="linecomment">;;   :type '(boolean))</span>
+
+<span class="linecomment">;; (if todochiku-on-message</span>
+<span class="linecomment">;; 	(defadvice 'message</span>
+<span class="linecomment">;; 	  '(after todochiku-on-message-advice)</span>
+<span class="linecomment">;; 	  (todochiku-message "Emacs Message" (apply 'format args) "")))</span>
+
+<span class="linecomment">;; We basically provide the same thing as growl.el</span>
+(provide 'growl)
+
+(provide 'todochiku)
+<span class="linecomment">;;; todochiku.el ends here</span></span></pre></div><div class="wrapper close"></div></div><div class="wrapper close"></div></div><div class="footer"><hr /><span class="gotobar bar"><a class="local" href="http://www.emacswiki.org/emacs/SiteMap">SiteMap</a> <a class="local" href="http://www.emacswiki.org/emacs/Search">Search</a> <a class="local" href="http://www.emacswiki.org/emacs/ElispArea">ElispArea</a> <a class="local" href="http://www.emacswiki.org/emacs/HowTo">HowTo</a> <a class="local" href="http://www.emacswiki.org/emacs/Glossary">Glossary</a> <a class="local" href="http://www.emacswiki.org/emacs/RecentChanges">RecentChanges</a> <a class="local" href="http://www.emacswiki.org/emacs/News">News</a> <a class="local" href="http://www.emacswiki.org/emacs/Problems">Problems</a> <a class="local" href="http://www.emacswiki.org/emacs/Suggestions">Suggestions</a> </span><span class="translation bar"><br />  <a class="translation new" rel="nofollow" href="http://www.emacswiki.org/emacs?action=translate;id=todochiku.el;missing=de_es_fr_it_ja_ko_pt_ru_se_zh">Add Translation</a></span><span class="edit bar"><br /> <a class="comment local" href="http://www.emacswiki.org/emacs/Comments_on_todochiku.el">Talk</a> <a class="edit" accesskey="e" title="Click to edit this page" rel="nofollow" href="http://www.emacswiki.org/emacs?action=edit;id=todochiku.el">Edit this page</a> <a class="history" rel="nofollow" href="http://www.emacswiki.org/emacs?action=history;id=todochiku.el">View other revisions</a> <a class="admin" rel="nofollow" href="http://www.emacswiki.org/emacs?action=admin;id=todochiku.el">Administration</a></span><!-- test --><span class="time"><br /> Last edited 2012-02-02 20:05 UTC by <a class="author" title="from host217-44-144-238.range217-44.btcentralplus.com" href="http://www.emacswiki.org/emacs/StevePurcell">StevePurcell</a> <a class="diff" rel="nofollow" href="http://www.emacswiki.org/emacs?action=browse;diff=2;id=todochiku.el">(diff)</a></span><div style="float:right; margin-left:1ex;">
+<!-- Creative Commons License -->
+<a href="http://creativecommons.org/licenses/GPL/2.0/"><img alt="CC-GNU GPL" style="border:none" src="/pics/cc-GPL-a.png" /></a>
+<!-- /Creative Commons License -->
+</div>
+
+<!--
+<rdf:RDF xmlns="http://web.resource.org/cc/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<Work rdf:about="">
+   <license rdf:resource="http://creativecommons.org/licenses/GPL/2.0/" />
+  <dc:type rdf:resource="http://purl.org/dc/dcmitype/Software" />
+</Work>
+
+<License rdf:about="http://creativecommons.org/licenses/GPL/2.0/">
+   <permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+   <permits rdf:resource="http://web.resource.org/cc/Distribution" />
+   <requires rdf:resource="http://web.resource.org/cc/Notice" />
+   <permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+   <requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
+   <requires rdf:resource="http://web.resource.org/cc/SourceCode" />
+</License>
+</rdf:RDF>
+-->
+
+<p class="legal">
+This work is licensed to you under version 2 of the
+<a href="http://www.gnu.org/">GNU</a> <a href="/GPL">General Public License</a>.
+Alternatively, you may choose to receive this work under any other
+license that grants the right to use, copy, modify, and/or distribute
+the work, as long as that license imposes the restriction that
+derivative works have to grant the same rights and impose the same
+restriction. For example, you may choose to receive this work under
+the
+<a href="http://www.gnu.org/">GNU</a>
+<a href="/FDL">Free Documentation License</a>, the
+<a href="http://creativecommons.org/">CreativeCommons</a>
+<a href="http://creativecommons.org/licenses/sa/1.0/">ShareAlike</a>
+License, the XEmacs manual license, or
+<a href="/OLD">similar licenses</a>.
+</p>
+</div>
+</body>
+</html>

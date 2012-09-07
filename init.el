@@ -1682,8 +1682,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
           erc-max-buffer-size 20000
           erc-interpret-mirc-color nil
           erc-insert-timestamp-function 'erc-insert-timestamp-left
-          erc-kill-queries-on-quit nil
-          erc-keywords nil)
+          erc-kill-queries-on-quit nil)
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;
@@ -1728,6 +1727,9 @@ the buffer is currently not visible, makes it sticky."
            (concat "ERC: name mentioned on: " (buffer-name (current-buffer)))
            (todochiku-icon 'irc)
            )))
+
+     ;; '(erc-text-matched-hook (quote (erc-log-matches erc-hide-fools my-erc-hook)))
+
     (add-hook 'erc-text-matched-hook 'qdot/text-match-erc-hook)
 
     (defvar qdot/erc-nopage-nick-list nil 
@@ -2059,54 +2061,6 @@ FORM => (eval FORM)."
             (replace-match "<\\1>"))))
     (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
 
-    ;;     ;; thanks to leathekd
-    ;;     (defvar twitter-url-pattern
-    ;;       (concat "\\(https?://\\)\\(?:.*\\)?\\(twitter.com/\\)"
-    ;;               "\\(?:#!\\)?\\([[:alnum:][:punct:]]+\\)")
-    ;;       "Matches regular twitter urls, including those with hashbangs,
-    ;; but not mobile urls.")
-    ;;
-    ;;     (defun browse-mobile-twitter (url)
-    ;;       "When given a twitter url, browse to the mobile version instead"
-    ;;       (string-match twitter-url-pattern url)
-    ;;       (let ((protocol (match-string 1 url))
-    ;;             (u (match-string 2 url))
-    ;;             (path (match-string 3 url)))
-    ;;         (browse-url (format "%smobile.%s%s" protocol u path) t)))
-    ;;
-    ;;     ;; Need to append otherwise the urls will be picked up by
-    ;;     ;; erc-button-url-regexp. Not sure why that is the case.
-    ;;     (eval-after-load 'erc-button
-    ;;       '(add-to-list 'erc-button-alist
-    ;;                     '(twitter-url-pattern 0 t browse-mobile-twitter 0) t))
-
-    ;;     (use-package dkh-buttonize)
-    ;;
-    ;;     (dolist (button dkh:button-alist)
-    ;;       (add-to-list 'erc-button-alist
-    ;;                    (apply (lambda (context-regexp regexp button callback par)
-    ;;                             `(,regexp
-    ;;                               ,button
-    ;;                               (string-match-p ,context-regexp (car erc-default-recipients))
-    ;;                               ,callback
-    ;;                               ,par))
-    ;;                           button)))
-    ;;
-    ;;
-    ;;     (defun erc-button-url-previous ()
-    ;;       "Go to the previous URL button in this buffer."
-    ;;       (interactive)
-    ;;       (let* ((point (point))
-    ;;              (found (catch 'found
-    ;;                       (while (setq point (previous-single-property-change point 'erc-callback))
-    ;;                         (when (eq (get-text-property point 'erc-callback) 'browse-url)
-    ;;                           (throw 'found point))))))
-    ;;         (if found
-    ;;             (goto-char found)
-    ;;           (error "No previous URL button."))))
-    ;;
-    ;;     (define-key erc-mode-map [backtab] 'erc-button-url-previous)
-
     (eval-after-load 'erc
       '(progn
          (when (not (package-installed-p 'erc-hl-nicks))
@@ -2122,39 +2076,6 @@ FORM => (eval FORM)."
          (add-to-list 'erc-modules 'spelling)
          (set-face-foreground 'erc-input-face "dim gray")
          (set-face-foreground 'erc-my-nick-face "blue")))
-
-;;; ---------------------------------------------------------------------------
-;;; ERC notify when matching nick, and queries
-
-    ;; (defun erc-current-nick-matched (match-type &optional arg1 arg2)
-    ;;   (when (string= match-type "current-nick")
-    ;;     (x-urgency-hint)))
-    ;;
-    ;; (add-hook 'erc-text-matched-hook 'erc-current-nick-matched)
-    ;;
-    ;; (defun erc-notify-query (string)
-    ;;   (let ((parsed (get-text-property 1 'erc-parsed string)))
-    ;;     (when parsed
-    ;;       (let ((command (erc-response.command parsed))
-    ;;             (args (erc-response.command-args parsed)))
-    ;;         (when (and (string= command "PRIVMSG")
-    ;;                    args
-    ;;                    (string= (car args) (erc-current-nick)))
-    ;;           (x-urgency-hint))))))
-    ;;
-    ;;
-    ;; Taken from http://www.emacswiki.org/JabberEl
-    ;; (defun x-urgency-hint (&optional frame arg source)
-    ;;   (let* ((wm-hints (append (x-window-property
-    ;;                             "WM_HINTS" frame "WM_HINTS" source nil t) nil))
-    ;;          (flags (car wm-hints)))
-    ;;     (setcar wm-hints (if arg
-    ;;                          (logand flags #x1ffffeff)
-    ;;                        (logior flags #x00000100)))
-    ;;     (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t)))
-    ;;
-    ;; (add-hook 'erc-insert-pre-hook 'erc-notify-query)
-
     ))
 
 ;;;_ , eshell
@@ -4049,18 +3970,72 @@ end end))))))
   (progn
     (workgroups-mode 1)
 
+
+
+    
     (let ((workgroups-file (expand-file-name "workgroups" user-emacs-directory)))
 
       (if running-alternate-emacs
           (progn
-            (setq wg-file "/Users/daha1836/.emacs.d/data-alt/workgroups")
-            (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups"))
+
+            (defun qdot/wg-filter-buffer-list-by-not-major-mode (major-mode buffer-list)
+              "Return only those buffers in BUFFER-LIST in major-mode MAJOR-MODE."
+              (remove-if (lambda (mm) (eq mm major-mode))
+                         buffer-list :key 'wg-buffer-major-mode))
+
+            (defun qdot/wg-filter-buffer-list-by-erc-query (server buffer-list)
+              "Return only those buffers in BUFFER-LIST in major-mode MAJOR-MODE."
+              (remove-if-not (lambda (buf) (erc-query-buffer-p (get-buffer buf)))
+                             buffer-list :key 'buffer-name))
+
+            (defun qdot/wg-buffer-list-filter-not-irc (workgroup buffer-list)
+              "Return only those buffers in BUFFER-LIST in `erc-mode'."
+              (qdot/wg-filter-buffer-list-by-not-major-mode 'erc-mode buffer-list))
+
+            (defun qdot/wg-buffer-list-filter-associated-not-irc (workgroup buffer-list)
+              "Return only those buffers in BUFFER-LIST in `erc-mode'."
+              (qdot/wg-filter-buffer-list-by-not-major-mode 'erc-mode (wg-buffer-list-filter-associated workgroup buffer-list)))
+
+
+            (defun qdot/wg-buffer-list-filter-erc-channel (workgroup buffer-list)
+              "Return only those buffers in BUFFER-LIST in `erc-mode'."
+              (wg-filter-buffer-list-by-regexp "^#"
+                                               (wg-filter-buffer-list-by-major-mode 'erc-mode buffer-list)))
+
+            (defun qdot/wg-buffer-list-filter-erc-query (workgroup buffer-list)
+              "Return only those buffers in BUFFER-LIST in `erc-mode'."
+              (qdot/wg-filter-buffer-list-by-erc-query 'erc-mode buffer-list))
+
+            (add-to-list
+             'wg-buffer-list-filter-definitions
+             '(qdot/erc-query "qdot/erc-query" qdot/wg-buffer-list-filter-erc-query))
+            (add-to-list
+             'wg-buffer-list-filter-definitions
+             '(qdot/erc-irc "qdot/erc-channel" qdot/wg-buffer-list-filter-erc-channel))
+            (add-to-list
+             'wg-buffer-list-filter-definitions
+             '(qdot/not-irc "qdot/not-irc" qdot/wg-buffer-list-filter-not-irc))
+
+            (add-to-list
+             'wg-buffer-list-filter-definitions
+             '(qdot/associated-not-irc "qdot/associated-not-irc" qdot/wg-buffer-list-filter-associated-not-irc))
+
+            (defun qdot/wg-set-buffer-lists ()
+              (wg-set-workgroup-parameter (wg-get-workgroup "work") 'wg-buffer-list-filter-order-alist '((default qdot/associated-not-irc qdot/not-irc all)))
+              (wg-set-workgroup-parameter (wg-get-workgroup "erc") 'wg-buffer-list-filter-order-alist '((default qdot/erc-irc all)))
+              (wg-set-workgroup-parameter (wg-get-workgroup "bitlbee") 'wg-buffer-list-filter-order-alist '((default qdot/erc-query all))))
+
+            (WG-filter-buffer-list-by-major-mode 'erc-mode (buffer-list))
+            (wg-filter-buffer-list-by-not-major-mode 'erc-mode (buffer-list))
+            
+            ;; (setq wg-file "/Users/daha1836/.emacs.d/data-alt/workgroups")
+            ;; (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups"))
 
         (if (file-readable-p workgroups-file)
             (wg-load workgroups-file))))
 
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
-    (bind-key "\\" 'toggle-input-method wg-map)))
+    (bind-key "\\" 'toggle-input-method wg-map))))
 
 
 ;;;_ , wrap-region
