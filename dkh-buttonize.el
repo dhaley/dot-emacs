@@ -5,7 +5,7 @@
   (interactive
    (list (or current-prefix-arg
              (read-number "awesome bug number: #"))))
-  (browse-url
+  (browse-urlug
    (format "http://awesome.naquadah.org/bugs/index.php?do=details&task_id=%s" bug)))
 
 (defun dkh:gnu-browse-bug (bug)

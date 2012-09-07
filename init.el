@@ -1,5 +1,9 @@
 ;;;_. Initialization
 
+;; Set path to .emacs.d
+(setq dotfiles-dir (file-name-directory
+                    (or (buffer-file-name) load-file-name)))
+
 (setq message-log-max 16384)
 
 (defconst emacs-start-time (current-time))
@@ -509,6 +513,9 @@
   :type 'string
   :group 'mail)
 
+
+
+
 (defun insert-user-timestamp ()
   "Insert a quick timestamp using the value of `user-initials'."
   (interactive)
@@ -646,6 +653,13 @@
   (my-iswitchb-close))
 
 (define-key global-map (kbd "C-|") 'toggle-windows-split)
+
+
+;; Functions (load all files in defuns-dir)
+(setq defuns-dir (expand-file-name "defuns" dotfiles-dir))
+(dolist (file (directory-files defuns-dir t "\\w+"))
+  (when (file-regular-p file)
+    (load file)))
 
 
 

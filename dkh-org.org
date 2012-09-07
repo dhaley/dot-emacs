@@ -5125,6 +5125,7 @@ these files in org-mode so I leave this setting turned off.
 
 #+begin_src emacs-lisp :tangle yes
   (setq org-src-preserve-indentation nil)
+ (setq org-edit-src-content-indentation 0)
 #+end_src
 ** Yasnippet
 :PROPERTIES:
