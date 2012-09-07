@@ -1217,7 +1217,11 @@ Delimiters are paired characters:
 ;;;_ , css-mode
 
 (use-package css-mode
-  :mode ("\\.css\\'" . css-mode))
+  :mode ("\\.css$" . css-mode)
+  :interpreter ("css" . css-mode)
+  :init
+  (progn
+    (setq-default css-indent-offset 2)))
 
 ;;;_ , ibuffer
 
@@ -1524,8 +1528,8 @@ The output appears in the buffer `*Async Shell Command*'."
 
 
 (use-package php+-mode
-  :mode ("\\.php$" . php+-mode)
-  :interpreter ("php" . php-mode)
+  :mode ("\\.\\(php\\|inc\\)$" . php+-mode)
+  :interpreter ("php" . php+-mode)
   init:
   (progn
     (php+-mode-setup)
@@ -1540,9 +1544,10 @@ The output appears in the buffer `*Async Shell Command*'."
 :interpreter ("drupal" . drupal-mode)
 
 (progn
-(require 'flymake-phpcs)
 (require 'etags)
 (require 'smart-dash)
+;; (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
+(setq flymake-phpcs-show-rule t)
 (defun my-insert-drupal-hook (tagname)
 "Clone the specified function as a new module hook implementation.
 
