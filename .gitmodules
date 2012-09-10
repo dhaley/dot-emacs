@@ -271,3 +271,9 @@
 [submodule "site-lisp/identica-mode"]
 	path = site-lisp/identica-mode
 	url = https://github.com/emacsmirror/identica-mode.git
+[submodule "site-lisp/emacs-powerline"]
+	path = site-lisp/emacs-powerline
+	url = git://github.com/jonathanchu/emacs-powerline.git
+[submodule "site-lisp/js3-mode"]
+	path = site-lisp/js3-mode
+	url = https://github.com/thomblake/js3-mode.git

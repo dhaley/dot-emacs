@@ -2605,10 +2605,16 @@ FORM => (eval FORM)."
     (autoload 'ipa-load-annotations-into-buffer "ipa")
     (add-hook 'find-file-hook 'ipa-load-annotations-into-buffer)))
 
-;;;_ , js2-mode
+;; ;;;_ , js2-mode
 
-(use-package js2-mode
-  :mode ("\\.js\\'" . js2-mode))
+;; (use-package js2-mode
+;;   :mode ("\\.js\\'" . js2-mode))
+
+;;;_ , js3-mode
+
+(use-package js3-mode
+  :mode ("\\.js\\'" . js3-mode))
+
 
 ;;;_ , ledger
 
@@ -4046,8 +4052,13 @@ end end))))))
         (if (file-readable-p workgroups-file)
             (wg-load workgroups-file))))
 
+    (require 'powerline)
+    ;; (require 'dkh-powerline)
+
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
-    (bind-key "\\" 'toggle-input-method wg-map)))
+    (bind-key "\\" 'toggle-input-method wg-map)
+    )
+  )
 
 
 ;;;_ , wrap-region
@@ -4187,7 +4198,10 @@ $0"))))
   (require 'ls-lisp)
   (setq ls-lisp-use-insert-directory-program nil))
 
-(require 'color-theme)
+
+;;(use-package dkh-powerline)  
+
+
 (require 'color-theme-solarized)
 (load-theme 'solarized-dark t)
 
