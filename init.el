@@ -1292,7 +1292,9 @@ Delimiters are paired characters:
   :interpreter ("css" . css-mode)
   :init
   (progn
-    (setq-default css-indent-offset 2)))
+    (setq-default css-indent-offset 2)
+    (rainbow-mode +1)
+    ))
 
 ;;;_ , ibuffer
 
