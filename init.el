@@ -1779,6 +1779,8 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
      (add-hook 'window-configuration-change-hook 'qdot/erc-set-fill-columns)
 
 
+     
+
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;     ;;
 ;;     ;; Query event functionality
