@@ -40,9 +40,6 @@
 [submodule "override/org-mode"]
 	path = override/org-mode
 	url = https://github.com/jwiegley/org-mode.git
-[submodule "override/tramp"]
-	path = override/tramp
-	url = https://github.com/jwiegley/tramp.git
 [submodule "override/cedet"]
 	path = override/cedet
 	url = https://github.com/emacsmirror/cedet.git
