@@ -903,7 +903,14 @@ Delimiters are paired characters:
       (goto-address-mode)
       (define-key term-raw-map "\C-y" 'my-term-paste))
 
-    (add-hook 'term-mode-hook 'my-term-hook)))
+    (add-hook 'term-mode-hook 'my-term-hook)
+
+                                        ; scroll line by line
+    (progn (setq scroll-step 1)
+           (setq scroll-preserve-screen-position t)
+           (setq scroll-conservatively 9999))
+    
+    ))
 
 
 
@@ -1693,9 +1700,15 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                            (car (auth-source-search :host "asimov.freenode.net"
                                                     :user "dkh"
                                                     :type 'netrc
-                                                    :port 6667))
-                           :secret))))
+                                                    :port 6697))
+                           :secret))
+;;       (erc-tls :server "asimov.freenode.net"
+;;                :port 6697
+;;                :nick "dkh")
+       )
+      
 
+    
     (defun im ()
       (interactive)
       (erc :server "localhost"
@@ -1709,6 +1722,9 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :port 6667))
                        :secret)))))
 
+ (add-hook 'after-init-hook 'im)
+ (add-hook 'after-init-hook 'irc))
+  
   :config
   (progn
     (abbrev-table-put erc-mode-abbrev-table :parents (list text-mode-abbrev-table))
