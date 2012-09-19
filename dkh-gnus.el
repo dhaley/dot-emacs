@@ -543,22 +543,22 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 
 
-(gnus-add-configuration
- '(article
-   (horizontal 1.0
-               (group 0.25)
-               (vertical 1.0
-                         (summary 0.16 point)
-                         (article 1.0)
-                         ("*BBDB*" 6))
-               )))
-
-(add-hook 'gnus-summary-exit-hook
-          (lambda ()
-            (when (every (lambda (buffer) (member buffer (gnus-buffers)))
-                         (mapcar 'window-buffer (window-list)))
-              (delete-other-windows)))
-          t nil)
+; (gnus-add-configuration
+;  '(article
+;    (horizontal 1.0
+;                (group 0.25)
+;                (vertical 1.0
+;                          (summary 0.16 point)
+;                          (article 1.0)
+;                          ("*BBDB*" 6))
+;                )))
+; 
+; (add-hook 'gnus-summary-exit-hook
+;           (lambda ()
+;             (when (every (lambda (buffer) (member buffer (gnus-buffers)))
+;                          (mapcar 'window-buffer (window-list)))
+;               (delete-other-windows)))
+;           t nil)
 
 ;; Set the window title
                                         ;(modify-frame-parameters nil '((title . "Gnus")))

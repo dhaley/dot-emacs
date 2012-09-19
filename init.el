@@ -2365,28 +2365,6 @@ FORM => (eval FORM)."
               'append)
     (add-hook 'message-mode-hook 'abbrev-mode 'footnote-mode 'turn-on-orgstruct)
 
-    ;;     (use-package dkh-buttonize)
-
-    ;;     (dolist (button dkh:button-alist)
-    ;;       (add-to-list 'gnus-header-button-alist
-    ;;                    (apply (lambda (context-regexp regexp button callback par)
-    ;;                             `("Subject:"
-    ;;                               ,regexp
-    ;;                               ,button
-    ;;                               (string-match-p ,context-regexp gnus-newsgroup-name)
-    ;;                               ,callback
-    ;;                               ,par))
-    ;;                           button))
-
-    ;;       (add-to-list 'gnus-button-alist
-    ;;                    (apply (lambda (context-regexp regexp button callback par)
-    ;;                             `(,regexp
-    ;;                               ,button
-    ;;                               (string-match-p ,context-regexp gnus-newsgroup-name)
-    ;;                               ,callback
-    ;;                               ,par))
-    ;;                           button)))
-
     (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
     (add-hook 'message-setup-hook 'bbdb-mail-aliases) ; BBDB 3.x
     ))
