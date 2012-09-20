@@ -274,3 +274,6 @@
 [submodule "site-lisp/powerline"]
 	path = site-lisp/powerline
 	url = https://github.com/milkypostman/powerline.git
+[submodule "lisp/expand-region.el"]
+	path = lisp/expand-region.el
+	url = https://github.com/magnars/expand-region.el.git
