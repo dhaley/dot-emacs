@@ -2024,8 +2024,9 @@ between Sessions”
 
 #+begin_src emacs-lisp 
 
+(add-to-list 'load-path "~/.emacs.d/site-lisp/expand-region.el")
 (require 'expand-region)
-(global-set-key (kbd "H-SPC") 'er/expand-region)
+(global-set-key (kbd "H-M-SPC") 'er/expand-region)
 
 (defun er/add-text-mode-expansions ()
   (make-variable-buffer-local 'er/try-expand-list)
