@@ -39,7 +39,7 @@
         url = git://git.savannah.nongnu.org/bbdb.git
 [submodule "override/org-mode"]
 	path = override/org-mode
-	url = https://github.com/jwiegley/org-mode.git
+        url = git://orgmode.org/org-mode.git
 [submodule "override/cedet"]
 	path = override/cedet
 	url = https://github.com/emacsmirror/cedet.git
@@ -277,3 +277,9 @@
 [submodule "lisp/expand-region.el"]
 	path = lisp/expand-region.el
 	url = https://github.com/magnars/expand-region.el.git
+[submodule "override/multiple-cursors.el"]
+	path = override/multiple-cursors.el
+	url = https://github.com/magnars/multiple-cursors.el.git
+[submodule "site-lisp/multiple-cursors.el"]
+	path = site-lisp/multiple-cursors.el
+	url = https://github.com/magnars/multiple-cursors.el.git
