@@ -277,9 +277,9 @@
 [submodule "lisp/expand-region.el"]
 	path = lisp/expand-region.el
 	url = https://github.com/magnars/expand-region.el.git
-[submodule "override/multiple-cursors.el"]
-	path = override/multiple-cursors.el
-	url = https://github.com/magnars/multiple-cursors.el.git
 [submodule "site-lisp/multiple-cursors.el"]
 	path = site-lisp/multiple-cursors.el
 	url = https://github.com/magnars/multiple-cursors.el.git
+[submodule "site-lisp/mark-multiple"]
+	path = site-lisp/mark-multiple
+	url = https://github.com/magnars/mark-multiple.el.git
