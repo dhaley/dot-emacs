@@ -662,6 +662,23 @@
 (define-key global-map (kbd "C-|") 'toggle-windows-split)
 
 
+
+(defun smart-copy ()
+"Copy word at point, or line if called twice, or region if transient-mark active."
+(interactive)
+(if (eq last-command 'smart-copy)
+(progn (kill-ring-save (line-beginning-position) (line-end-position))
+(message "Line pushed to kill ring"))
+(save-excursion
+(if (not mark-active)
+(progn
+(mark-word)
+(backward-word)
+(message "Word pushed to kill ring")))
+(kill-ring-save (region-beginning) (region-end)))))
+
+(bind-key "M-w" 'smart-copy)
+
 ;; Functions (load all files in defuns-dir)
 (setq defuns-dir (expand-file-name "defuns" dotfiles-dir))
 (dolist (file (directory-files defuns-dir t "\\w+"))
@@ -1627,7 +1644,7 @@ The output appears in the buffer `*Async Shell Command*'."
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
-  :mode ("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode)
+  :mode ("\\.\\(module\\|test\\|install\\|theme\\|\\profile\\)$" . drupal-mode)
   :interpreter ("drupal" . drupal-mode)
 
   (progn
@@ -2664,14 +2681,15 @@ FORM => (eval FORM)."
 ;;;_ , js3-mode
 
 (use-package js3-mode
+  :load-path "~/.emacs.d/site-lisp/js3-mode"
   :mode ("\\.js\\'" . js3-mode)
   :init
   (progn
+    (autoload 'js3-mode "js3" nil t)
     (setq-default js3-basic-offset 2)
 ;;    (setq js2-strict-missing-semi-warning nil)
     )
   )
-
 
 ;;;_ , ledger
 

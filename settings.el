@@ -17,6 +17,7 @@
  '(ac-dwim nil)
  '(ac-ignore-case nil)
  '(ac-use-fuzzy nil)
+ '(abbrev-mode t)
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
  '(align-c++-modes (quote (csharp-mode c++-mode c-mode java-mode groovy-mode)))
  '(align-to-tab-stop nil)
@@ -112,12 +113,12 @@
  '(erc-autojoin-channels-alist '((".*\\.freenode.net" "#drupal-colorado" "#emacs" "#fsf-members" "#erc" "#conkeror" "#org-mode" "#freedombox")))
  '(erc-autojoin-mode t)
  '(erc-autojoin-timing :ident)
- '(erc-fools (quote ("JordiGH")))
+ '(erc-fools (quote ("anxt")))
  '(erc-generate-log-file-name-function (quote erc-generate-log-file-name-short))
  '(erc-header-line-format "%t: %o")
  '(erc-join-buffer 'bury)
  '(erc-hide-list (quote ("JOIN" "NICK" "PART" "QUIT" "MODE")))
- '(erc-ignore-list (quote ("rudybot!.*")))
+ '(erc-ignore-list (quote ("rudybot!.*" "anxt")))
  '(erc-keywords '("\scu\s" "\stor\s" "Damon" "dkh" "dhaley"
    "relation module" "contextual filter" "gmane" "gwene"
    "usenet" "proxy" "privacy" "\ssocks\s"

@@ -274,15 +274,18 @@
 [submodule "site-lisp/powerline"]
 	path = site-lisp/powerline
 	url = https://github.com/milkypostman/powerline.git
-[submodule "lisp/expand-region.el"]
-	path = lisp/expand-region.el
-	url = https://github.com/magnars/expand-region.el.git
-[submodule "site-lisp/multiple-cursors.el"]
-	path = site-lisp/multiple-cursors.el
-	url = https://github.com/magnars/multiple-cursors.el.git
 [submodule "site-lisp/mark-multiple"]
 	path = site-lisp/mark-multiple
 	url = https://github.com/magnars/mark-multiple.el.git
 [submodule "site-lisp/wgrep"]
 	path = site-lisp/wgrep
 	url = https://github.com/mhayashi1120/Emacs-wgrep.git
+[submodule "override/tramp"]
+	path = override/tramp
+	url = https://github.com/emacsmirror/tramp.git
+[submodule "site-lisp/expand-region"]
+	path = site-lisp/expand-region
+	url = https://github.com/magnars/expand-region.el.git
+[submodule "site-lisp/multiple-cursors"]
+	path = site-lisp/multiple-cursors
+	url = https://github.com/magnars/multiple-cursors.el.git

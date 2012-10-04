@@ -69,6 +69,8 @@ This is part of the [[file:dkh-core.org][E-Wax Starter Kit Instance]].
 (global-set-key (kbd "C-x T") 'ido-find-file-in-tag-files)
 (global-set-key (kbd "C-x c") 'eval-region)
 
+(global-set-key (kbd "H-j") 'org-jira-create-issue)
+
 #+end_src 
 
 * windmove

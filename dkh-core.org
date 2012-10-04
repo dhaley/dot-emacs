@@ -5040,7 +5040,7 @@ Fontify code blocks in the text of messages
  "Copy words at point into kill-ring"
   (interactive "P")
   (copy-thing 'backward-word 'forward-word arg)
-  ;;(paste-to-mark arg)
+  ;;(paste-to-mark rag)
 )
 
 ;; (transient-mark-mode 1)
