@@ -5039,7 +5039,7 @@ Fontify code blocks in the text of messages
 (defun copy-word (&optional arg)
  "Copy words at point into kill-ring"
   (interactive "P")
-  (copy-thing 'backward-word 'forward-word arg)
+  (copy-thing 'backward-word 'forward-word rag)
   ;;(paste-to-mark rag)
 )
 
@@ -7911,7 +7911,7 @@ needed.
   (browse-url-url-at-point)
 (thing-at-point 'word)
 ))
-  (if arg
+  (if rag
       (when url (browse-url-default-browser url))
     (if  url (browse-url url) (call-interactively 'browse-url))
     ))

@@ -848,7 +848,19 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
   (gnus-summary-mark-as-read-forward 1)
   )
   
-  
+(defun my-gnus-browse-gwene ()
+  "Start a browser for current gwene article"
+  (interactive)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (eq major-mode 'gnus-article-mode)
+	(gnus-summary-show-article '(4))
+	(switch-to-buffer buf)
+	(goto-char (point-min))
+	(re-search-forward "^Archived-at: <\\(.*\\)>$")
+	(browse-url (match-string 1))
+	(gnus-summary-show-article)))))
+
 ;; from Peter Munster
 
 
