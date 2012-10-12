@@ -3287,6 +3287,7 @@ end end))))))
                                     "~/git/dkh-org/.org-jira/FIT.org"
                                     "~/git/dkh-org/.org-jira/CUPRE.org"
                                     "~/git/dkh-org/.org-jira/CS.org"
+                                    "~/git/dkh-org/.org-jira/FAC.org"
                                     )))
 
 
