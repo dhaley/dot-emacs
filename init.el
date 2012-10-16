@@ -3284,7 +3284,7 @@ end end))))))
 (setq org-user-agenda-files (quote (
                                     "~/git/dkh-org/todo.org"
                                     "~/git/dkh-org/refile.org"
-                                    "~/git/dkh-org/.org-jira/FIT.org"
+;;                                    "~/git/dkh-org/.org-jira/FIT.org"
                                     "~/git/dkh-org/.org-jira/CUPRE.org"
                                     "~/git/dkh-org/.org-jira/CS.org"
                                     "~/git/dkh-org/.org-jira/FAC.org"
