@@ -156,7 +156,7 @@ files.
   (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp")))
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
-(require 'org-install)
+(require 'org)
 ;;
 ;; Standard key bindings
 (global-set-key "\C-cl" 'org-store-link)
