@@ -1750,7 +1750,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     (erc-track-mode 1)
 
     (use-package erc-alert)
-    (use-package erc-highlight-nicknames)
+;;    (use-package erc-highlight-nicknames)
     
     (require 'erc-nick-notify)
     (require 'erc-fill)
@@ -1763,8 +1763,8 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     ;; For bitlbee
     (require 'erc-nicklist)
 
-    (load-library "erc-highlight-nicknames")
-    (add-to-list 'erc-modules 'highlight-nicknames)
+;;    (load-library "erc-highlight-nicknames")
+;;    (add-to-list 'erc-modules 'highlight-nicknames)
     ;; (add-to-list 'erc-modules 'scrolltobottom)
     
     (add-to-list 'erc-modules 'match)
@@ -2167,8 +2167,9 @@ FORM => (eval FORM)."
 
     (eval-after-load 'erc
       '(progn
-         (when (not (package-installed-p 'erc-hl-nicks))
-           (package-install 'erc-hl-nicks))
+;;         (when (not (package-installed-p 'erc-hl-nicks))
+;;           (package-install 'erc-hl-nicks))
+         (add-to-list 'load-path "~/.emacs.d/site-lisp/erc-hl-nicks")
          (require 'erc-notify)
          (require 'erc-spelling)
          (require 'erc-truncate)
