@@ -803,6 +803,78 @@ Delimiters are paired characters:
 (global-set-key (kbd "H-*") 'select-text-in-quote)
 
 
+;; ***********
+;; compilation
+;; ***********
+(defun colorize-compilation-buffer ()
+  (toggle-read-only)
+  (unless (fboundp 'ansi-color-apply-on-region)
+    (require 'ansi-color))
+  (when (fboundp 'ansi-color-apply-on-region)
+    (ansi-color-apply-on-region (point-min) (point-max)))
+  (toggle-read-only))
+
+
+;; **********
+;; re-buidler
+;; **********
+(defun reb-query-replace-this-regxp (replace)
+  "Uses the regexp built with re-builder to query the target buffer.
+This function must be run from within the re-builder buffer, not the target
+buffer.
+
+Argument REPLACE String used to replace the matched strings in the buffer.
+Subexpression references can be used (\1, \2, etc)."
+  (interactive "sReplace with: ")
+  (if (eq major-mode 'reb-mode)
+      (let ((reg (reb-read-regexp)))
+        (select-window reb-target-window)
+        (save-excursion
+          (beginning-of-buffer)
+          (query-replace-regexp reg replace)))
+    (message "Not in a re-builder buffer!")))
+
+;; *************
+;; sudo commands
+;; *************
+(defun sudo-shell-command (command &optional output-buffer error-buffer)
+  (interactive
+   (list
+    (read-shell-command "Shell command: " nil nil
+                        (let ((filename
+                               (cond
+                                (buffer-file-name)
+                                ((eq major-mode 'dired-mode)
+                                 (dired-get-filename nil t)))))
+                          (and filename (file-relative-name filename))))
+    current-prefix-arg
+    shell-command-default-error-buffer))
+  (shell-command
+   (concat "echo " (read-passwd "Password? ") " | sudo -S " command)
+   output-buffer
+   error-buffer))
+
+(defun make-elisp-header ()
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (let ((use-semicolons (looking-at ";"))
+          (count (- (save-excursion (end-of-line) (point)) (point))))
+      (open-line 1)
+      (if use-semicolons
+          (insert ";; " (make-string (- count 3) ?\*))
+        (insert (make-string count ?\*)))
+      (forward-line 2)
+      (beginning-of-line)
+      (open-line 1)
+      (if use-semicolons
+          (insert ";; " (make-string (- count 3) ?\*))
+        (insert (make-string count ?\*))))))
+
+
+
+
+
 (setq package-archives
       '(("original"    . "http://tromey.com/elpa/")
         ("gnu"         . "http://elpa.gnu.org/packages/")
@@ -945,7 +1017,19 @@ Delimiters are paired characters:
     
     (add-hook 'term-mode-hook 'my-term-hook)
 
+    (defun my-term-use-utf8 ()
+  (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
     
+(defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
+  (if (memq (process-status proc) '(signal exit))
+      (let ((buffer (process-buffer proc)))
+        ad-do-it
+        (kill-buffer buffer))
+    ad-do-it))
+
+(defvar my-term-shell "/bin/bash")
+(defadvice ansi-term (before force-bash)
+  (interactive (list my-term-shell)))
 
                                         ; scroll line by line
     (progn (setq scroll-step 1)
@@ -1650,6 +1734,7 @@ The output appears in the buffer `*Async Shell Command*'."
   init:
   (progn
     (add-hook 'php-mode-hook '(lambda ()(c-subword-mode t)))
+    (add-hook 'php-mode-hook '(lambda () (php-electric-mode)))
 ))
 
 
