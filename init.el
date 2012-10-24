@@ -1098,6 +1098,12 @@ Subexpression references can be used (\1, \2, etc)."
 ;;;_ , auto-complete
 
 (use-package auto-complete-config
+  :load-path ("site-lisp/ac/auto-complete"
+              "site-lisp/ac/ac-source-elisp"
+              "site-lisp/ac/ac-source-semantic"
+              "site-lisp/ac/ac-yasnippet"
+              "site-lisp/ac/fuzzy-el"
+              "site-lisp/ac/popup-el")
   :commands auto-complete-mode
   :diminish auto-complete-mode
   :config
@@ -1515,8 +1521,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
         (use-package dired-sort-map)
         (use-package runner)
 
-        (setq dired-use-ls-dired t)
-
         (bind-key "l" 'dired-up-directory dired-mode-map)
 
         (defun my-dired-switch-window ()
@@ -1849,7 +1853,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :port 6667))
                        :secret)))))
 
- (add-hook 'after-init-hook 'im)
+;; (add-hook 'after-init-hook 'im)
  (add-hook 'after-init-hook 'irc))
   
   :config
@@ -1860,7 +1864,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     (erc-track-mode 1)
 
     (use-package erc-alert)
-;;    (use-package erc-highlight-nicknames)
+    (use-package erc-highlight-nicknames)
     
     (require 'erc-nick-notify)
     (require 'erc-fill)
@@ -1873,8 +1877,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     ;; For bitlbee
     (require 'erc-nicklist)
 
-;;    (load-library "erc-highlight-nicknames")
-;;    (add-to-list 'erc-modules 'highlight-nicknames)
+
     ;; (add-to-list 'erc-modules 'scrolltobottom)
     
     (add-to-list 'erc-modules 'match)
@@ -2277,17 +2280,15 @@ FORM => (eval FORM)."
 
     (eval-after-load 'erc
       '(progn
-;;         (when (not (package-installed-p 'erc-hl-nicks))
-;;           (package-install 'erc-hl-nicks))
-         (add-to-list 'load-path "~/.emacs.d/site-lisp/erc-hl-nicks")
+;;       (add-to-list 'load-path "~/.emacs.d/site-lisp/erc-hl-nicks")
+;;       (require 'erc-hl-nicks)
          (require 'erc-notify)
          (require 'erc-spelling)
          (require 'erc-truncate)
-         (require 'erc-hl-nicks)
          (ignore-errors
            ;; DO NOT use the version from marmalade
            (erc-nick-notify-mode t))
-         (add-to-list 'erc-modules 'hl-nicks)
+;;         (add-to-list 'erc-modules 'hl-nicks)
          (add-to-list 'erc-modules 'spelling)
          (set-face-foreground 'erc-input-face "dim gray")
          (set-face-foreground 'erc-my-nick-face "blue")))
@@ -3119,7 +3120,14 @@ FORM => (eval FORM)."
 ;;;_ , magit
 
 (use-package magit
-  :bind ("C-x g" . magit-status)
+  :bind (("C-x g" . magit-status)
+         ("C-x G" . magit-status-with-prefix))
+  :init
+  (defun magit-status-with-prefix ()
+    (interactive)
+    (let ((current-prefix-arg '(4)))
+      (call-interactively 'magit-status)))
+
   :config
   (progn
     (setenv "GIT_PAGER" "")
@@ -3632,9 +3640,7 @@ end end))))))
     (session-initialize)
 
     ;;     (defun remove-session-use-package-from-settings ()
-    ;;       (when (string= (buffer-file-name)
-    ;;                      (expand-file-name "settings.el"
-    ;;                                        user-emacs-directory))
+    ;;  (when (string= (file-name-nondirectory (buffer-file-name)) "settings.el")
     ;;         (save-excursion
     ;;           (goto-char (point-min))
     ;;           (when (re-search-forward "^ '(session-use-package " nil t)
@@ -3695,89 +3701,6 @@ end end))))))
 
 (use-package sh-toggle
   :bind ("C-. C-z" . shell-toggle))
-
-;;;_ , slime
-
-(use-package slime
-  :commands (sbcl slime)
-  :init
-  (add-hook
-   'slime-load-hook
-   #'(lambda ()
-       (slime-setup
-        '(slime-asdf
-          slime-autodoc
-          slime-banner
-          slime-c-p-c
-          slime-editing-commands
-          slime-fancy-inspector
-          slime-fancy
-          slime-fuzzy
-          slime-highlight-edits
-          slime-parse
-          slime-presentation-streams
-          slime-presentations
-          slime-references
-          slime-repl
-          slime-sbcl-exts
-          slime-package-fu
-          slime-fontifying-fu
-          slime-mdot-fu
-          slime-scratch
-          slime-tramp
-          ;; slime-enclosing-context
-          ;; slime-typeout-frame
-          slime-xref-browser))
-
-       (define-key slime-repl-mode-map [(control return)] 'other-window)
-
-       (define-key slime-mode-map [return] 'paredit-newline)
-       (define-key slime-mode-map [(control ?h) ?F] 'info-lookup-symbol)))
-
-  :config
-  (progn
-    (eval-when-compile
-      (defvar slime-repl-mode-map))
-
-
-
-    (setq slime-net-coding-system 'utf-8-unix)
-
-    (setq slime-lisp-implementations
-          '((sbcl
-             ("sbcl" "--core"
-              "/Users/johnw/Library/Lisp/sbcl.core-with-slime-X86-64")
-             :init
-             (lambda (port-file _)
-               (format "(swank:start-server %S)\n" port-file)))
-            (ecl ("ecl" "-load" "/Users/johnw/Library/Lisp/init.lisp"))
-            (clisp ("clisp" "-i" "/Users/johnw/Library/Lisp/lwinit.lisp"))))
-
-    (setq slime-default-lisp 'sbcl)
-    (setq slime-complete-symbol*-fancy t)
-    (setq slime-complete-symbol-function 'slime-fuzzy-complete-symbol)
-
-    (defun sbcl (&optional arg)
-      (interactive "P")
-      (let ((slime-default-lisp (if arg 'sbcl64 'sbcl))
-            (current-prefix-arg nil))
-        (slime)))
-    (defun clisp () (interactive) (let ((slime-default-lisp 'clisp)) (slime)))
-    (defun ecl () (interactive) (let ((slime-default-lisp 'ecl)) (slime)))
-
-    (defun start-slime ()
-      (interactive)
-      (unless (slime-connected-p)
-        (save-excursion (slime))))
-
-    (add-hook 'slime-mode-hook 'start-slime)
-    (add-hook 'slime-load-hook #'(lambda () (require 'slime-fancy)))
-    (add-hook 'inferior-lisp-mode-hook #'(lambda () (inferior-slime-mode t)))
-
-    (use-package hyperspec
-      :init
-      (setq common-lisp-hyperspec-root
-            "/opt/local/share/doc/lisp/HyperSpec-7-0/HyperSpec/"))))
 
 ;;;_ , smart-compile
 
@@ -4296,6 +4219,12 @@ end end))))))
     (setq mode-line-format nil
           fill-column 65)
     (set-window-margins (selected-window) 50 50)))
+
+
+;;;_ , yaml-mode
+
+(use-package yaml-mode
+  :mode ("\\.ya?ml\\'" . yaml-mode))
 
 ;;;_ , yasnippet
 

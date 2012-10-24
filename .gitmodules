@@ -1,12 +1,6 @@
 [submodule "lib/apel"]
 	path = lib/apel
 	url = https://github.com/emacsmirror/apel.git
-[submodule "lib/popup-el"]
-	path = lib/popup-el
-	url = https://github.com/m2ym/popup-el.git
-[submodule "lib/fuzzy-el"]
-	path = lib/fuzzy-el
-	url = https://github.com/auto-complete/fuzzy-el
 [submodule "lib/gh-el"]
 	path = lib/gh-el
 	url = https://github.com/sigma/gh.el.git
@@ -289,3 +283,24 @@
 [submodule "site-lisp/s"]
 	path = site-lisp/s
 	url = https://github.com/magnars/s.el.git
+[submodule "site-lisp/ac/ac-source-elisp"]
+	path = site-lisp/ac/ac-source-elisp
+	url = git://github.com/auto-complete/ac-source-elisp
+[submodule "site-lisp/ac/ac-source-semantic"]
+	path = site-lisp/ac/ac-source-semantic
+	url = git://github.com/auto-complete/ac-source-semantic
+[submodule "site-lisp/ac/ac-yasnippet"]
+	path = site-lisp/ac/ac-yasnippet
+	url = git://github.com/auto-complete/ac-yasnippet
+[submodule "site-lisp/ac/fuzzy-el"]
+	path = site-lisp/ac/fuzzy-el
+	url = git://github.com/auto-complete/fuzzy-el
+[submodule "site-lisp/ac/popup-el"]
+	path = site-lisp/ac/popup-el
+	url = git://github.com/auto-complete/popup-el
+[submodule "site-lisp/yaml-mode"]
+	path = site-lisp/yaml-mode
+	url = https://github.com/yoshiki/yaml-mode.git
+[submodule "site-lisp/org-merge-driver"]
+	path = site-lisp/org-merge-driver
+	url = git://orgmode.org/org-merge-driver.git
