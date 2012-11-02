@@ -970,7 +970,7 @@ Subexpression references can be used (\1, \2, etc)."
 
     (add-hook 'allout-mode-hook 'my-allout-mode-hook)))
 
-+;;;_ , apl-ascii
+;;;_ , apl-ascii
 
 (use-package apl)
 
