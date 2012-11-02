@@ -489,13 +489,11 @@ annotate your elisp in the following file:
         'auctex
         'auto-indent-mode
         'bitlbee
-        'bm
+        'mb
         'bookmark+
         'browse-kill-ring
         'buffer-move
         'color-theme
-        'color-theme-solarized
-;;        'erc-alert
         'etags-select
         'expand-region
         'fill-column-indicator
@@ -1934,18 +1932,6 @@ like the following:
 #+end_src
 
 ** Color functionality
-*** Color themes
-
-**** Long live Solarized
-
-#+begin_src emacs-lisp :tangle no
-
-(require 'color-theme)
-(require 'color-theme-solarized)
-(load-theme 'solarized-dark t)
-;;(setq solarized-termcolors "256")
-
-#+end_src
 
 *** Somewhere over the rainbow
 

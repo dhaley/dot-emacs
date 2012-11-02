@@ -1,5 +1,21 @@
 ;;;_. Initialization
 
+
+;; borrowed from:
+;; https://github.com/purcell/emacs.d/blob/master/init.el
+(defconst *is-a-mac*
+  (eq system-type 'darwin)
+  "Is this running on OS X?")
+(defconst *is-carbon-emacs*
+  (and *is-a-mac* (eq window-system 'mac))
+  "Is this the Carbon port of Emacs?")
+(defconst *is-cocoa-emacs*
+  (and *is-a-mac* (eq window-system 'ns))
+  "Is this the Cocoa version of Emacs?")
+(defconst *is-linux*
+  (eq system-type 'gnu/linux)
+  "Is this running on Linux?")
+
 ;; Set path to .emacs.d
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
@@ -249,8 +265,6 @@
 
 (bind-key "M-s n" 'find-name-dired)
 (bind-key "M-s o" 'occur)
-
-(bind-key "A-M-w" 'copy-code-as-rtf)
 
 ;;;_  . M-C-?
 
@@ -956,6 +970,15 @@ Subexpression references can be used (\1, \2, etc)."
 
     (add-hook 'allout-mode-hook 'my-allout-mode-hook)))
 
++;;;_ , apl-ascii
+
+(use-package apl)
+
+;;;_ , archive-region
+
+(use-package archive-region
+  :commands kill-region-or-archive-region
+  :bind ("C-w" . kill-region-or-archive-region))
 
 (use-package apache-mode
   :mode ("\\(\\.htaccess$\\|\\.conf$\\)" . apache-mode)
@@ -1019,6 +1042,14 @@ Subexpression references can be used (\1, \2, etc)."
 
     (defun my-term-use-utf8 ()
   (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
+
+;; ; ansi-term stuff
+;; ;; force ansi-term to be utf-8 after it launches
+;; (defadvice ansi-term
+;;   (after advise-ansi-term-coding-system)
+;;   (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
+;; (ad-activate 'ansi-term)
+
     
 (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
   (if (memq (process-status proc) '(signal exit))
@@ -1038,6 +1069,14 @@ Subexpression references can be used (\1, \2, etc)."
     
     ))
 
+(use-package ansi-color
+  :config
+  (progn
+    (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+    (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)))
+
+
+
 
 
 ;;;_ , ascii
@@ -1053,12 +1092,6 @@ Subexpression references can be used (\1, \2, etc)."
         (ascii-on)))
 
     (bind-key "C-c e A" 'ascii-toggle)))
-
-;;;_ , archive-region
-
-(use-package archive-region
-  :commands kill-region-or-archive-region
-  :bind ("C-w" . kill-region-or-archive-region))
 
 ;;;_ , auctex
 
@@ -1359,6 +1392,21 @@ Subexpression references can be used (\1, \2, etc)."
 
 (use-package browse-kill-ring+)
 
+;; (use-package browse-kill-ring
+;;   :bind ("M-y" . browse-kill-ring))
+;; 
+;; make hippie expand behave itself
+(setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                         try-expand-dabbrev-all-buffers
+                                         try-expand-dabbrev-from-kill
+                                         try-complete-file-name-partially
+                                         try-complete-file-name
+                                         try-expand-all-abbrevs
+                                         try-expand-list
+                                         try-expand-line
+                                         try-complete-lisp-symbol-partially
+                                         try-complete-lisp-symbol))
+
 ;;;_ , cmake-mode
 
 (use-package cmake-mode
@@ -1417,6 +1465,11 @@ Subexpression references can be used (\1, \2, etc)."
 
     :config
     (use-package moccur-edit)))
+
+;;;_ , copy-code
+
+(use-package copy-code
+  :bind ("A-M-W" . copy-code-as-rtf))
 
 ;;;_ , crosshairs
 
@@ -1733,38 +1786,37 @@ The output appears in the buffer `*Async Shell Command*'."
   :mode ("\\.info" . conf-mode))
 
 (use-package php-mode
-  :mode ("\\.php$" . php-mode)
   :interpreter ("php" . php-mode)
   init:
   (progn
+    (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
     (add-hook 'php-mode-hook '(lambda ()(c-subword-mode t)))
     (add-hook 'php-mode-hook '(lambda () (php-electric-mode)))
 ))
 
 
-
 (use-package php+-mode
-  :mode ("\\.\\(php\\|inc\\)$" . php+-mode)
   :interpreter ("php" . php+-mode)
   init:
   (progn
     (php+-mode-setup)
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
-    (add-hook 'php+-mode-hook '(lambda ()(c-subword-mode t)))
+    (add-hook 'php+-mode-hook '(lambda ()(subword-mode t)))
+    (add-hook 'php+-mode-hook '(lambda () (php-electric-mode)))
     ))
-
 
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
-  :mode ("\\.\\(module\\|test\\|install\\|theme\\|\\profile\\)$" . drupal-mode)
+  :mode ("\\.\\(php\\|inc\\|module\\|test\\|install\\|theme\\|\\profile\\)$" . drupal-mode)
   :interpreter ("drupal" . drupal-mode)
 
   (progn
     (require 'etags)
     (require 'smart-dash)
-    ;; (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
+    (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
+    (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
     (setq flymake-phpcs-show-rule t)
     (defun my-insert-drupal-hook (tagname)
       "Clone the specified function as a new module hook implementation.
@@ -1864,7 +1916,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     (erc-track-mode 1)
 
     (use-package erc-alert)
-    (use-package erc-highlight-nicknames)
+;;    (use-package erc-highlight-nicknames)
     
     (require 'erc-nick-notify)
     (require 'erc-fill)
@@ -2280,15 +2332,14 @@ FORM => (eval FORM)."
 
     (eval-after-load 'erc
       '(progn
-;;       (add-to-list 'load-path "~/.emacs.d/site-lisp/erc-hl-nicks")
-;;       (require 'erc-hl-nicks)
+       (add-to-list 'load-path "~/.emacs.d/site-lisp/erc-hl-nicks")
+       (require 'erc-hl-nicks)
          (require 'erc-notify)
          (require 'erc-spelling)
          (require 'erc-truncate)
          (ignore-errors
            ;; DO NOT use the version from marmalade
            (erc-nick-notify-mode t))
-;;         (add-to-list 'erc-modules 'hl-nicks)
          (add-to-list 'erc-modules 'spelling)
          (set-face-foreground 'erc-input-face "dim gray")
          (set-face-foreground 'erc-my-nick-face "blue")))
@@ -2323,6 +2374,18 @@ FORM => (eval FORM)."
 
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)))
 
+;; eshell
+(eval-after-load 'esh-opt
+  '(progn
+     ;; we need this to override visual commands
+     (require 'em-term)
+     ;; If I try to SSH from an eshell, launch it in ansi-term instead
+     (add-to-list 'eshell-visual-commands "ssh")))
+;; fix ANSI colour issues from test runners etc.
+(add-hook 'eshell-preoutput-filter-functions
+          'ansi-color-filter-apply)
+
+
 (use-package esh-toggle
   :requires eshell
   :bind ("C-x C-z" . eshell-toggle))
@@ -2333,6 +2396,17 @@ FORM => (eval FORM)."
   :disabled t
   :load-path "site-lisp/ess/lisp/"
   :commands R)
+
+;;;_ , fetchmail-mode
+
+(use-package fetchmail-mode
+  :mode (".fetchmailrc$" . fetchmail-mode)
+)
+
+(use-package nf-procmail-mode
+  :mode (".procmailrc$" . nf-procmail-mode)
+)
+
 
 ;;;_ , ldap
 
@@ -2409,6 +2483,12 @@ FORM => (eval FORM)."
       (set-syntax-table emacs-lisp-mode-syntax-table)
       (paredit-mode))))
 
+
+;; expand-region
+(use-package expand-region
+  :bind ("C-c =" . er/expand-region))
+
+
 ;;;_ , fetchmail-mode
 
 (use-package fetchmail-mode
@@ -2422,6 +2502,12 @@ FORM => (eval FORM)."
          ("C-c i k" . ispell-kill-ispell)
          ("C-c i m" . ispell-message)
          ("C-c i r" . ispell-region)))
+
+;; load Flymake cursor
+(use-package flymake
+  :config
+  (progn
+    (use-package flymake-cursor)))
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
@@ -2441,6 +2527,11 @@ FORM => (eval FORM)."
 (use-package gist
   :bind ("C-c G" . gist-region-or-buffer))
 
+; (use-package git-commit-mode
+;   :mode (("COMMIT_EDITMSG" . git-commit-mode)
+;          ("NOTES_EDITMSG" . git-commit-mode)
+;          ("MERGE_MSG" . git-commit-mode)
+;          ("TAG_EDITMSG" . git-commit-mode)))
 
 ;;;_ , gnus
 (use-package dkh-gnus
@@ -2474,6 +2565,7 @@ FORM => (eval FORM)."
     (use-package org-mime)
     (use-package eudc)
     (use-package rgr-web)
+    (require 'bbdb-loaddefs "~/.emacs.d/override/bbdb/lisp/bbdb-loaddefs.el")
     (use-package bbdb-gnus)
     (use-package bbdb-message)
 
@@ -2713,6 +2805,11 @@ FORM => (eval FORM)."
 
     (bind-key "C-x 5 t" 'ido-switch-buffer-tiny-frame)))
 
+
+
+; (use-package iedit
+;   :bind (("C-c ;" . iedit-mode)))
+
 ;;;_ , ielm
 
 (use-package ielm
@@ -2789,6 +2886,11 @@ FORM => (eval FORM)."
 
 ;; (use-package js2-mode
 ;;   :mode ("\\.js\\'" . js2-mode))
+
+
+;; JSON files
+(use-package json-mode
+  :mode ("\\.json\\'" . json-mode))
 
 ;;;_ , js3-mode
 
@@ -3324,6 +3426,13 @@ end end))))))
     (defadvice term-process-pager (after term-process-rebind-keys activate)
       (define-key term-pager-break-map  "\177" 'term-pager-back-page))))
 
+
+;; multiple cursors
+(use-package multiple-cursors
+  :bind (("H-c ." . mc/mark-next-like-this)
+         ("H-c ," . mc/mark-previous-like-this)
+         ("H-c C-l". mc/mark-all-like-this)))
+
 ;;;_ , nf-procmail-mode
 
 (use-package nf-procmail-mode
@@ -3849,6 +3958,19 @@ end end))))))
                 (nth 1 entry)
               5)))))))
 
+;; setup tramp mode
+;; Tramp mode: allow me to SSH to hosts and edit as sudo like:
+;; C-x C-f /sudo:example.com:/etc/something-owned-by-root
+;; from: http://www.gnu.org/software/tramp/#Multi_002dhops
+(use-package tramp
+  :config
+  (progn
+    (setq tramp-default-method "ssh")
+    (add-to-list 'tramp-default-proxies-alist
+                 '(nil "\\`root\\'" "/ssh:%h:"))
+    (add-to-list 'tramp-default-proxies-alist
+                 '((regexp-quote (system-name)) nil nil))))
+
 ;;;_ , vkill
 
 (use-package vkill
@@ -4009,6 +4131,8 @@ end end))))))
              whitespace-mode)
   :init
   (progn
+    (global-whitespace-mode t)
+    (setq whitespace-global-modes '(not erc-mode))
     (hook-into-modes 'whitespace-mode
                      '(prog-mode-hook
                        c-mode-common-hook))
@@ -4060,6 +4184,13 @@ end end))))))
   (progn
     (remove-hook 'find-file-hooks 'whitespace-buffer)
     (remove-hook 'kill-buffer-hook 'whitespace-buffer)))
+
+
+;;;_ , web-mode
+(use-package web-mode
+  :mode ("\\.html\\.erb\\'" . web-mode))
+
+
 
 ;;;_ , winner
 
@@ -4431,8 +4562,44 @@ $0"))))
 ;; ))
 
 
-(require 'color-theme-solarized)
-(load-theme 'solarized-dark t)
+;;(add-to-list 'load-path "~/.emacs.d/site-lisp/solarized-emacs")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
+
+;; customise solarized-dark/light themes
+(defadvice load-theme
+  (before load-theme)
+  (let ((theme-name (ad-get-arg 0)))
+    (when (or (eq theme-name 'solarized-dark)
+              (eq theme-name 'solarized-light))
+      (progn
+        (custom-set-faces
+         '(magit-diff-add ((t (:inherit diff-added :weight normal))))
+         '(magit-diff-del ((t (:inherit diff-removed :weight normal))))
+         '(diff-refine-change ((t (:inherit diff-refine-change :background nil))))
+         '(iedit-occurrence ((t (:inherit lazy-highlight))))
+         '(match ((t (:inherit lazy-highlight :reverse t))))
+         '(erb-face ((t (:background nil))))
+         '(erb-out-delim-face ((t (:inherit erb-exec-delim-face :foreground "#b58900")))))
+        (when (and (display-graphic-p) *is-a-mac*)
+          ;; My Macs have the --srgb flag set
+          (setq solarized-broken-srgb nil))))))
+
+(ad-activate 'load-theme)
+
+(defun bw-toggle-solarized ()
+  "Toggles between solarized light and dark"
+  (interactive)
+  (cond
+   ((custom-theme-enabled-p 'solarized-dark)
+    (progn
+      (disable-theme 'solarized-dark)
+      (enable-theme 'solarized-light)))
+   ((custom-theme-enabled-p 'solarized-light)
+    (progn
+      (disable-theme 'solarized-light)
+      (enable-theme 'solarized-dark)))))
+
+
 
 (unless running-alternate-emacs
   (org-babel-load-file "~/.emacs.d/dkh-core.org")
@@ -4461,6 +4628,49 @@ $0"))))
     (byte-compile-file buffer-file-name)))
 
 (add-hook 'after-save-hook 'byte-compile-current-buffer)
+
+
+;; OS X Specific configuration
+
+;;; Ignore .DS_Store files with ido mode
+(add-to-list 'ido-ignore-files "\\.DS_Store")
+;; # FIXME: this is to ignore Dropbox "Icon" files that seem to be
+;; "Icon", but I can't figure out how to ignore that.
+(add-to-list 'ido-ignore-files "Icon")
+
+;; toggle-input-method
+(setq default-input-method "MacOSX")
+
+;; fix hostname.local stuff
+(setq system-name (car (split-string system-name "\\.")))
+
+;;; Use default Mac OS X browser
+;;(setq browse-url-browser-function 'browse-url-default-macosx-browser)
+
+;; ispell isn't available on OS X, but aspell is via Homebrew
+;;(setq-default ispell-program-name "aspell")
+
+;; Use Solarized-dark on OS X
+;; we load the theme after init because we might have changed some
+;; variables in customize
+(add-hook 'after-init-hook
+          (lambda ()
+            (load-theme 'solarized-dark t)
+            (load-theme 'solarized-light t t)))
+
+;; Even though we may have set the Mac OS X Terminal's Alt key as the
+;; emacs Meta key, we want to be able to insert a '#' using Alt-3 in
+;; emacs as we would in other programs.
+(fset 'insert-pound "#")
+(define-key global-map "\M-3" 'insert-pound)
+
+;; OS X ls doesn't support --dired
+(setq dired-use-ls-dired nil)
+
+(defun offlineimap-get-password (host port)
+      (let* ((netrc (netrc-parse (expand-file-name "~/git/.emacs.d/.autinfo.gpg")))
+             (hostentry (netrc-machine netrc host port port)))
+        (when hostentry (netrc-get hostentry "password"))))
 
 ;; Local Variables:
 ;;   mode: emacs-lisp

@@ -220,6 +220,64 @@ is:
 
     (define-key gnus-group-mode-map [?v ?g] 'gnus-group-get-all-new-news)))
 
+
+(use-package nnir
+  :init
+  (progn
+    (defun activate-gnus ()
+      (unless (get-buffer "*Group*") (gnus)))
+
+    (defun gnus-goto-article (message-id)
+      (activate-gnus)
+      (gnus-summary-read-group "INBOX" 15 t)
+      (let ((nnir-imap-default-search-key "imap")
+            (nnir-ignored-newsgroups
+             (concat "\\(\\(list\\.wg21\\|archive\\)\\.\\|"
+                     "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")))
+        (gnus-summary-refer-article message-id)))
+    (defvar gnus-query-history nil)
+
+    (defun gnus-query (query &optional arg)
+      (interactive
+       (list (read-string (format "IMAP Query %s: "
+                                  (if current-prefix-arg "All" "Mail"))
+                          (format-time-string "SENTSINCE %d-%b-%Y "
+                                              (time-subtract (current-time)
+                                                             (days-to-time 90)))
+                          'gnus-query-history)
+             current-prefix-arg))
+      (activate-gnus)
+      (let ((nnir-imap-default-search-key "imap")
+            (nnir-ignored-newsgroups
+             (if arg
+                 (concat (regexp-opt
+                          '("archive"
+                            "archive.emacs"
+                            "list"
+                            "list.bahai"
+                            "list.boost"
+                            "list.clang"
+                            "list.emacs"
+                            "list.isocpp"
+                            "list.ledger"
+                            "list.llvm"
+                            "list.wg21"
+                            "mail"
+                            "mail.save"
+                            "Drafts"
+                            "Sent Messages"))
+                         "\\'")
+               (concat "\\(\\(list\\|archive\\)\\.\\|"
+                       "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)"))))
+        (gnus-group-make-nnir-group
+         nil `((query    . ,query)
+               (criteria . "")
+               (server   . "nnimap:Local")))))
+
+    (define-key global-map [(alt meta ?f)] 'gnus-query)))
+
+
+
 (use-package rs-gnus-summary
   :init
   (progn

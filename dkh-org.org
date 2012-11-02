@@ -690,7 +690,7 @@ Here is my setup for org-capture
               ("p" "Phone call" entry (file "~/git/org/refile.org")
                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
               ("h" "Habit" entry (file "~/git/org/refile.org")
-               "* NEXT %?\n%U\n%a\nSCHEDULED: %t .+1d/3d\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 #+end_src
 
 Capture mode now handles automatically clocking in and out of a
@@ -1920,17 +1920,17 @@ current org file.
 :END:
 [2012-02-12 Sun 16:11]
 
-When someone wants details of what I've done recently I simple
-generate a log report in the agenda with tasks state changes combined
+When someone wants details of what I've done recently I simple generate a
+log report in the agenda with tasks I've completed and state changes combined
 with a clock report for the appropriate time period.
 
-The following setting shows task state changes in the agenda.
-Combined with the agenda clock report ('R') I can quickly generate all
-of the details required.
+The following setting shows closed tasks and state changes in the
+agenda.  Combined with the agenda clock report ('R') I can quickly
+generate all of the details required.
 
 #+begin_src emacs-lisp :tangle yes
 ;; Agenda log mode items to display (closed and state changes by default)
-(setq org-agenda-log-mode-items (quote (state)))
+(setq org-agenda-log-mode-items (quote (closed state)))
 #+end_src
 
 To generate the report I pull up the agenda for the appropriate time frame
@@ -5366,7 +5366,7 @@ since they are now projects and not tasks.
 #+begin_src emacs-lisp :tangle yes
 (defun bh/mark-next-parent-tasks-todo ()
   "Visit each parent task and change NEXT states to TODO"
-  (let ((mystate (or (and (fboundp 'state)
+  (let ((mystate (or (and (fboundp 'org-state)
                           state)
                      (nth 2 (org-heading-components)))))
     (when (equal mystate "NEXT")
@@ -5449,7 +5449,9 @@ creating documents with spelling errors.
              ;; expands the files in the directories individually
              (org-defkey org-mode-map "\C-c["    'undefined)
              (org-defkey org-mode-map "\C-c]"    'undefined)
-             (org-defkey org-mode-map "\C-c;"    'undefined))
+             (org-defkey org-mode-map "\C-c;"    'undefined)
+             (org-defkey org-mode-map "\C-xnp"   'bh/narrow-to-org-project)
+             (org-defkey org-mode-map "\C-xnu"   'bh/narrow-up-one-org-level))
           'append)
 
 (add-hook 'org-mode-hook
