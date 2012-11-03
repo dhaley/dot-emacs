@@ -81,6 +81,7 @@
         (gnus-group-list-groups gnus-activate-level)
         (setq switch-to-gnus-run t)))))
 
+(add-hook 'gnus-group-mode-hook 'hl-line-mode)
 (add-hook 'gnus-summary-mode-hook 'hl-line-mode)
 
 (defun my-gnus-summary-save-parts (&optional arg)
@@ -138,7 +139,7 @@
 (define-key gnus-summary-mode-map [(meta ?q)] 'gnus-article-fill-long-lines)
 ;;(define-key gnus-summary-mode-map [?$] 'gmail-report-spam)
 (define-key gnus-summary-mode-map [?B delete] 'gnus-summary-delete-article)
-;;(define-key gnus-summary-mode-map [?B backspace] 'my-gnus-trash-article)
+(define-key gnus-summary-mode-map [?B backspace] 'my-gnus-trash-article)
 
 (define-key gnus-article-mode-map [(meta ?q)] 'gnus-article-fill-long-lines)
 
@@ -151,19 +152,8 @@
   :group 'gnus-summary-visual)
 
  (push '((eq mark gnus-expirable-mark) . gnus-summary-expirable-face)
-      gnus-summary-highlight
-)
+      gnus-summary-highlight)
 
-;;(if window-system
-;;    (setq
-;;     gnus-sum-thread-tree-false-root      ""
-;;     gnus-sum-thread-tree-single-indent   ""
-;;     gnus-sum-thread-tree-root            ""
-;;     gnus-sum-thread-tree-vertical        "|"
-;;     gnus-sum-thread-tree-leaf-with-other "+-> "
-;;     gnus-sum-thread-tree-single-leaf     "\\-> "
-;;     gnus-sum-thread-tree-indent          " "
-;;     ))
 
 (defsubst dot-gnus-tos (time)
   "Convert TIME to a floating point number."
@@ -278,6 +268,8 @@ is:
                         (t ":%")))))
           (t "  "))))
 
+(use-package message-x)
+
 (use-package gnus-dired
   :commands gnus-dired-mode
   :init
@@ -294,6 +286,34 @@ is:
       (gnus-group-list-groups 4))
 
     (define-key gnus-group-mode-map [?v ?g] 'gnus-group-get-all-new-news)))
+
+(use-package gnus-demon
+  :init
+  (progn
+    (defun gnus-demon-scan-news-2 ()
+      (when gnus-plugged
+        (let ((win (current-window-configuration))
+              (gnus-read-active-file nil)
+              (gnus-check-new-newsgroups nil)
+              (gnus-verbose 2)
+              (gnus-verbose-backends 5))
+          (unwind-protect
+              (save-window-excursion
+                (when (gnus-alive-p)
+                  (with-current-buffer gnus-group-buffer
+                    (gnus-group-get-new-news gnus-activate-level))))
+            (set-window-configuration win)))))
+
+        ;; (gnus-demon-add-handler 'gnus-demon-scan-news-2 5 2)
+
+    (defun save-gnus-newsrc ()
+      (if (and (fboundp 'gnus-group-exit)
+               (gnus-alive-p))
+          (with-current-buffer (get-buffer "*Group*")
+            (gnus-save-newsrc-file))))
+
+    (gnus-demon-add-handler 'save-gnus-newsrc nil 1)
+    (gnus-demon-add-handler 'gnus-demon-close-connections nil 3)))
 
 
 (use-package nnir
