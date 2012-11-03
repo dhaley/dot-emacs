@@ -3,11 +3,14 @@
 (require 'starttls)
 (require 'nnmairix)
 (require 'message)
+(require 'spam)
+(require 'spam-report)
 (require 'bbdb-gnus)
 
 ;;(gnus-compile)
 (gnus-delay-initialize)
 ;;(bbdb-insinuate-gnus)
+(spam-initialize)
 
 (defvar switch-to-gnus-unplugged nil)
 (defvar switch-to-gnus-run nil)
