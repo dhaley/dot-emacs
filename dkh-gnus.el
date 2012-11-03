@@ -6,11 +6,55 @@
 (require 'spam)
 (require 'spam-report)
 (require 'bbdb-gnus)
+(require 'async)
 
 ;;(gnus-compile)
 (gnus-delay-initialize)
 ;;(bbdb-insinuate-gnus)
 (spam-initialize)
+
+(defvar use-spam-filtering nil)
+
+;; Override definition from spam.el to use async.el
+(defun spam-spamassassin-register-with-sa-learn (articles spam
+                                                          &optional unregister)
+  "Register articles with spamassassin's sa-learn as spam or non-spam."
+  (if (and use-spam-filtering articles)
+      (let ((action (if unregister spam-sa-learn-unregister-switch
+                      (if spam spam-sa-learn-spam-switch
+                        spam-sa-learn-ham-switch)))
+            (summary-buffer-name (buffer-name)))
+        (with-temp-buffer
+          ;; group the articles into mbox format
+          (dolist (article articles)
+            (let (article-string)
+              (with-current-buffer summary-buffer-name
+                (setq article-string (spam-get-article-as-string article)))
+              (when (stringp article-string)
+                ;; mbox separator
+                (insert (concat "From nobody " (current-time-string) "\n"))
+                (insert article-string)
+                (insert "\n"))))
+          ;; call sa-learn on all messages at the same time, and also report
+          ;; them as SPAM to the Internet
+          (async-start
+           `(lambda ()
+              (with-temp-buffer
+                (insert ,(buffer-substring-no-properties
+                          (point-min) (point-max)))
+                (call-process-region (point-min) (point-max)
+                                     ,spam-sa-learn-program
+                                     nil nil nil "--mbox"
+                                     ,@(if spam-sa-learn-rebuild
+                                           (list action)
+                                         (list "--no-rebuild" action)))
+                (if ,spam
+                    (call-process-region (point-min) (point-max)
+                                         ,(executable-find "spamassassin-5.12")
+                                         nil nil nil "--mbox" "-r"))))
+           `(lambda (&optional ignore)
+              (message  "Finished learning messsages as %s"
+                        ,(if spam "spam" "ham"))))))))
 
 (defvar switch-to-gnus-unplugged nil)
 (defvar switch-to-gnus-run nil)
@@ -62,6 +106,34 @@
           (gnus-group-exit)))))
 
 (add-hook 'kill-emacs-hook 'exit-gnus-on-exit)
+
+(defun open-mail-logs ()
+  (interactive)
+  (flet ((switch-in-other-buffer
+          (buf)
+          (when buf
+            (split-window-vertically)
+            (balance-windows)
+            (switch-to-buffer-other-window buf))))
+    (loop initially (delete-other-windows)
+          with first = t
+          for log in (directory-files "~/Maildir/" t "\\.log\\'")
+          for buf = (find-file-noselect log)
+          do (if first
+                 (progn
+                   (switch-to-buffer buf)
+                   (setf first nil))
+               (switch-in-other-buffer buf))
+          (with-current-buffer buf
+            (goto-char (point-max))))))
+
+(defun my-gnus-trash-article (arg)
+  (interactive "P")
+  (if (string-match "\\(drafts\\|queue\\|delayed\\)" gnus-newsgroup-name)
+      (gnus-summary-delete-article arg)
+    (gnus-summary-move-article arg "mail.trash")))
+
+
 
 (define-key gnus-summary-mode-map [(meta ?q)] 'gnus-article-fill-long-lines)
 ;;(define-key gnus-summary-mode-map [?$] 'gmail-report-spam)
