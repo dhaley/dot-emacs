@@ -310,3 +310,6 @@
 [submodule "gnus"]
 	path = gnus
 	url = https://github.com/jwiegley/gnus.git
+[submodule "site-lisp/emacs-drupal-snippets"]
+	path = site-lisp/emacs-drupal-snippets
+	url = https://github.com/eethann/emacs-drupal-snippets.git
