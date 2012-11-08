@@ -1905,8 +1905,9 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :port 6667))
                        :secret)))))
 
-;; (add-hook 'after-init-hook 'im)
- (add-hook 'after-init-hook 'irc))
+ (add-hook 'after-init-hook 'im)
+ (add-hook 'after-init-hook 'irc)
+    )
   
   :config
   (progn
@@ -2542,24 +2543,24 @@ FORM => (eval FORM)."
   (progn
     
     (setq
-     gnus-article-save-directory "~/git/gnus/News"
-     gnus-cache-active-file "~/git/gnus/News/cache/active"
-     gnus-cache-directory "~/git/gnus/News/cache"
-     gnus-default-directory "~/git/gnus"
-     gnus-directory "~/git/gnus/News"
-     gnus-dribble-directory "~/git/gnus/"
+;;     gnus-article-save-directory "~/git/gnus/News"
+;;     gnus-cache-active-file "~/git/gnus/News/cache/active"
+;;     gnus-cache-directory "~/git/gnus/News/cache"
+;;     gnus-default-directory "~/git/gnus"
+;;     gnus-directory "~/git/gnus/News"
+;;     gnus-dribble-directory "~/git/gnus/"
      gnus-home-directory "~/git/gnus"
      gnus-init-file "~/git/.emacs.d/dot-gnus.el"
-     gnus-kill-files-directory "~/git/gnus/.gnuskillfiled"
-     gnus-startup-file "~/git/gnus/.newsrc"
-     gnus-summary-save-parts-last-directory "~/Downloads"
-     mail-default-directory "~/git/gnus/Mail"
+;;     gnus-kill-files-directory "~/git/gnus/.gnuskillfiled"
+;;     gnus-startup-file "~/git/gnus/.newsrc"
+;;     gnus-summary-save-parts-last-directory "~/Downloads"
+;;     mail-default-directory "~/git/gnus/Mail"
      message-directory "~/git/gnus/Mail"
-     nndraft-current-directory "~/git/gnus/News/drafts/"
-     nndraft-directory "~/git/gnus/News/drafts/"
-     nnmail-message-id-cache-file "~/git/gnus/nnmail_cache"
-     nnml-directory "~/git/gnus/Mail"
-     nntp-marks-directory "~/git/gnus/News/"
+     ;; nndraft-current-directory "~/git/gnus/News/drafts/"
+     ;; nndraft-directory "~/git/gnus/News/drafts/"
+     ;; nnmail-message-id-cache-file "~/git/gnus/nnmail_cache"
+;;     nnml-directory "~/git/gnus/Mail"
+;;     nntp-marks-directory "~/git/gnus/News/"
      )
     (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
@@ -2967,6 +2968,9 @@ FORM => (eval FORM)."
 ;;   elint
 ;;   elp
 ;;   ert
+
+
+
 
 (use-package lisp-mode
   ;; :load-path "site-lisp/slime/contrib/"
@@ -3484,6 +3488,39 @@ end end))))))
 ;;
 
 
+
+(setq org-user-agenda-files (quote (
+                                    "~/git/dkh-org/todo.org"
+                                    "~/git/dkh-org/refile.org"
+;;                                    "~/git/dkh-org/.org-jira/FIT.org"
+                                    "~/git/dkh-org/.org-jira/AFROTC.org"
+                                    "~/git/dkh-org/.org-jira/CUPRE.org"
+                                    "~/git/dkh-org/.org-jira/CS.org"
+                                    "~/git/dkh-org/.org-jira/FAC.org"
+                                    "~/git/dkh-org/.org-jira/SUP.org"
+                                    )))
+
+;;(use-package dot-org
+;;  :commands org-agenda-list
+;;  :bind (("M-C"   . jump-to-org-agenda)
+;;         ("M-m"   . org-smart-capture)
+;;         ("M-M"   . org-inline-note)
+;;         ("C-c a" . org-agenda)
+;;         ("C-c S" . org-store-link)
+;;         ("C-c l" . org-insert-link))
+;;  :init
+;;  (progn
+;;    (unless running-alternate-emacs
+;;      (run-with-idle-timer 300 t 'jump-to-org-agenda))
+;;
+;;    (if (string-match "\\.elc\\'" load-file-name)
+;;        (add-hook 'after-init-hook
+;;                  #'(lambda ()
+;;                      (org-agenda-list)
+;;                      (org-fit-agenda-window)
+;;                      (org-resolve-clocks))) t)))
+
+
 ;; (use-package dkh-org
 ;;   :commands org-agenda-list
 ;;   :bind (("M-C"   . jump-to-org-agenda)
@@ -3508,17 +3545,6 @@ end end))))))
 ;;     ))
 ;;
 ;;  (use-package org-habit)
-
-(setq org-user-agenda-files (quote (
-                                    "~/git/dkh-org/todo.org"
-                                    "~/git/dkh-org/refile.org"
-;;                                    "~/git/dkh-org/.org-jira/FIT.org"
-                                    "~/git/dkh-org/.org-jira/AFROTC.org"
-                                    "~/git/dkh-org/.org-jira/CUPRE.org"
-                                    "~/git/dkh-org/.org-jira/CS.org"
-                                    "~/git/dkh-org/.org-jira/FAC.org"
-                                    "~/git/dkh-org/.org-jira/SUP.org"
-                                    )))
 
 
 ;;;_ , paredit
@@ -4603,6 +4629,8 @@ $0"))))
 
 (unless running-alternate-emacs
   (org-babel-load-file "~/.emacs.d/dkh-core.org")
+  ;;;_. Load some private settings
+  (org-babel-load-file "~/git/.emacs.d/dkh-private.org")
   )
 
 ;;Mo functions
@@ -4612,12 +4640,8 @@ $0"))))
 (org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
 
 
-;;(org-babel-load-file "~/.emacs.d/dkh-php.org")
+;;(org-babel-load-file "~/.emacs.d/dkh-org.org")
 
-(org-babel-load-file "~/.emacs.d/dkh-org.org")
-
-;;;_. Load some private settings
-(org-babel-load-file "~/git/.emacs.d/dkh-private.org")
 
 
 (defun byte-compile-current-buffer ()

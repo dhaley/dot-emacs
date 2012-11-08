@@ -716,14 +716,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 ;; Set the window title
                                         ;(modify-frame-parameters nil '((title . "Gnus")))
 
-;; indexing in mail groups supported by dovecot on the server side.
-(require 'nnir)
 
-(define-key gnus-group-mode-map (kbd "<H-f1>") 'gnus-group-make-nnir-group)
-;; (define-key gnus-group-mode-map (kbd "<C-f3>") 'gnus-group-make-nnir-group)
-;;  (define-key gnus-summary-mode-map (kbd "G G") 'command gnus-group-make-nnir-group)
-
-                                        ; (setq nnir-search-engine 'imap)
 
 (defcustom dkh/authinfo-file (expand-file-name(concat user-emacs-directory ".authinfo.gpg"))
   "regexp for searching blogger"
