@@ -3500,51 +3500,71 @@ end end))))))
                                     "~/git/dkh-org/.org-jira/SUP.org"
                                     )))
 
-;;(use-package dot-org
-;;  :commands org-agenda-list
-;;  :bind (("M-C"   . jump-to-org-agenda)
-;;         ("M-m"   . org-smart-capture)
-;;         ("M-M"   . org-inline-note)
-;;         ("C-c a" . org-agenda)
-;;         ("C-c S" . org-store-link)
-;;         ("C-c l" . org-insert-link))
-;;  :init
-;;  (progn
-;;    (unless running-alternate-emacs
-;;      (run-with-idle-timer 300 t 'jump-to-org-agenda))
-;;
-;;    (if (string-match "\\.elc\\'" load-file-name)
-;;        (add-hook 'after-init-hook
-;;                  #'(lambda ()
-;;                      (org-agenda-list)
-;;                      (org-fit-agenda-window)
-;;                      (org-resolve-clocks))) t)))
+(use-package dot-org
+  :commands org-agenda-list
+  :bind (
+         ("M-C"   . jump-to-org-agenda)
+         ("M-m"   . org-smart-capture)
+         ("M-M"   . org-inline-note)
+         ("C-c a" . org-agenda)
+         ("C-c S" . org-store-link)
+         ("C-c l" . org-insert-link)
 
+          ("<f12>" . org-agenda)
+;;          ("<f5>"  . bh/org-todo)
+;;          ("<S-f5>" . bh/widen)
+;;          ("<f7>" . bh/set-truncate-lines)
+;;          ("<f8>" . org-cycle-agenda-files)
+;;          ("<f9> <f9>" . bh/show-org-agenda)
+;;          ("<f9> b" . bbdb)
+;;          ("<f9> c" . calendar)
+;;          ("<f9> f" . boxquote-insert-file)
+;;          ("<f9> g" . gnus)
+;;          ("<f9> h" . bh/hide-other)
+;;          ("<f9> n" . org-narrow-to-subtree)
+;;          ("<f9> W" . widen)
+;;          ("<f9> u" . bh/narrow-up-one-level)
+;; 
+;;          ("<f9> I" . bh/punch-in)
+;;          ("<f9> O" . bh/punch-out)
+;; 
+;;          ("<f9> o" . bh/make-org-scratch)
+;; 
+;;          ("<f9> r" . boxquote-region)
+;;          ("<f9> s" . bh/switch-to-scratch)
+;; 
+;;          ("<f9> t" . bh/insert-inactive-timestamp)
+;;          ("<f9> T" . tabify)
+;;          ("<f9> U" . untabify)
+;; 
+;;          ("<f9> v" . visible-mode)
+;;          ("<f9> SPC" . bh/clock-in-last-task)
+;;          ("C-<f9>" . previous-buffer)
+;;          ("M-<f9>" . org-toggle-inline-images)
+;;          ("C-x n r" . narrow-to-region)
+;;          ("C-<f10>" . next-buffer)
+;;          ("<f11>" . org-clock-goto)
+;;          ("C-<f11>" . org-clock-in)
+;;          ("C-s-<f12>" . bh/save-then-publish)
+;;          ("C-M-r" . org-capture)
+;;          ("C-c r" . org-capture)
+         )
+  :init
+  (progn
+    (unless running-alternate-emacs
+      (run-with-idle-timer 300 t 'jump-to-org-agenda)
+      )
 
-;; (use-package dkh-org
-;;   :commands org-agenda-list
-;;   :bind (("M-C"   . jump-to-org-agenda)
-;;          ("M-m"   . org-smart-capture)
-;;          ("M-M"   . org-inline-note)
-;;          ("C-c a" . org-agenda)
-;;          ("C-c S" . org-store-link)
-;;          ("C-c l" . org-insert-link))
-;;   :init
-;;   (progn
-;;     (unless running-alternate-emacs
-;;       (run-with-idle-timer 300 t 'jump-to-org-agenda))
-;;
-;;     (if (string-match "\\.elc\\'" load-file-name)
-;;         (add-hook 'after-init-hook
-;;                   #'(lambda ()
-;;                       (org-agenda-list)
-;;                       (org-fit-agenda-window)
-;;                       (org-resolve-clocks))) t)
-;;
-;;     (use-package bookmark+)
-;;     ))
-;;
-;;  (use-package org-habit)
+    ;; (if (string-match "\\.elc\\'" load-file-name)
+    ;;     (add-hook 'after-init-hook
+    ;;               #'(lambda ()
+    ;;                   (org-agenda-list)
+    ;;                   (org-fit-agenda-window)
+    ;;                   (org-resolve-clocks))) t)
+    (use-package bookmark+)
+    (use-package org-habit)
+
+    ))
 
 
 ;;;_ , paredit

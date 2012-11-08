@@ -2080,3 +2080,13 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (setq org-agenda-log-mode-items (quote (closed clock state)))
 (setq org-agenda-start-with-log-mode t)
+
+(provide 'dot-org)
+
+;; Local Variables:
+;;   mode: emacs-lisp
+;;   mode: allout
+;;   outline-regexp: "^;;;_\\([,. ]+\\)"
+;; End:
+
+;;; dot-org.el ends here
