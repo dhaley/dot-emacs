@@ -3503,12 +3503,12 @@ end end))))))
 (use-package dot-org
   :commands org-agenda-list
   :bind (
-         ("M-C"   . jump-to-org-agenda)
-         ("M-m"   . org-smart-capture)
-         ("M-M"   . org-inline-note)
-         ("C-c a" . org-agenda)
-         ("C-c S" . org-store-link)
-         ("C-c l" . org-insert-link)
+;;         ("M-C"   . jump-to-org-agenda)
+;;         ("M-m"   . org-smart-capture)
+;;         ("M-M"   . org-inline-note)
+;;         ("C-c a" . org-agenda)
+;;         ("C-c S" . org-store-link)
+;;         ("C-c l" . org-insert-link)
 
           ("<f12>" . org-agenda)
 ;;          ("<f5>"  . bh/org-todo)
