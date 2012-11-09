@@ -319,3 +319,9 @@
 [submodule "override/gnus"]
 	path = override/gnus
 	url = https://github.com/jwiegley/gnus.git
+[submodule "site-lisp/ecukes"]
+	path = site-lisp/ecukes
+	url = https://github.com/rejeep/ecukes.git
+[submodule "site-lisp/carton"]
+	path = site-lisp/carton
+	url = https://github.com/rejeep/carton.git

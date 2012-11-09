@@ -339,8 +339,8 @@
 
 ;; http://www.emacswiki.org/emacs/ElispCookbook
 (defun qdot/filter (condp lst)
-    (delq nil
-          (mapcar (lambda (x) (and (funcall condp x) x)) lst)))
+  (delq nil
+        (mapcar (lambda (x) (and (funcall condp x) x)) lst)))
 
 
 ;;;_  . C-x M-?
@@ -681,18 +681,18 @@
 
 
 (defun smart-copy ()
-"Copy word at point, or line if called twice, or region if transient-mark active."
-(interactive)
-(if (eq last-command 'smart-copy)
-(progn (kill-ring-save (line-beginning-position) (line-end-position))
-(message "Line pushed to kill ring"))
-(save-excursion
-(if (not mark-active)
-(progn
-(mark-word)
-(backward-word)
-(message "Word pushed to kill ring")))
-(kill-ring-save (region-beginning) (region-end)))))
+  "Copy word at point, or line if called twice, or region if transient-mark active."
+  (interactive)
+  (if (eq last-command 'smart-copy)
+      (progn (kill-ring-save (line-beginning-position) (line-end-position))
+             (message "Line pushed to kill ring"))
+    (save-excursion
+      (if (not mark-active)
+          (progn
+            (mark-word)
+            (backward-word)
+            (message "Word pushed to kill ring")))
+      (kill-ring-save (region-beginning) (region-end)))))
 
 (bind-key "M-w" 'smart-copy)
 
@@ -1019,51 +1019,51 @@ Subexpression references can be used (\1, \2, etc)."
     ;;   (define-key term-raw-map "\C-y" 'my-term-paste))
 
     (defun my-term-hook ()
-  (goto-address-mode)
-  (define-key term-raw-map "\C-y" 'my-term-paste)
-  (let ((base03 "#002b36")
-        (base02 "#073642")
-        (base01 "#586e75")
-        (base00 "#657b83")
-        (base0 "#839496")
-        (base1 "#93a1a1")
-        (base2 "#eee8d5")
-        (base3 "#fdf6e3")
-        (yellow "#b58900")
-        (orange "#cb4b16")
-        (red "#dc322f")
-        (magenta "#d33682")
-        (violet "#6c71c4")
-        (blue "#268bd2")
-        (cyan "#2aa198")
-        (green "#859900"))
-    (setq ansi-term-color-vector
-          (vconcat `(unspecified ,base02 ,red ,green ,yellow ,blue ,magenta
-                                 ,cyan ,base2)))))
+      (goto-address-mode)
+      (define-key term-raw-map "\C-y" 'my-term-paste)
+      (let ((base03 "#002b36")
+            (base02 "#073642")
+            (base01 "#586e75")
+            (base00 "#657b83")
+            (base0 "#839496")
+            (base1 "#93a1a1")
+            (base2 "#eee8d5")
+            (base3 "#fdf6e3")
+            (yellow "#b58900")
+            (orange "#cb4b16")
+            (red "#dc322f")
+            (magenta "#d33682")
+            (violet "#6c71c4")
+            (blue "#268bd2")
+            (cyan "#2aa198")
+            (green "#859900"))
+        (setq ansi-term-color-vector
+              (vconcat `(unspecified ,base02 ,red ,green ,yellow ,blue ,magenta
+                                     ,cyan ,base2)))))
     
     (add-hook 'term-mode-hook 'my-term-hook)
 
     (defun my-term-use-utf8 ()
-  (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
+      (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
 
-;; ; ansi-term stuff
-;; ;; force ansi-term to be utf-8 after it launches
-;; (defadvice ansi-term
-;;   (after advise-ansi-term-coding-system)
-;;   (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
-;; (ad-activate 'ansi-term)
+    ;; ; ansi-term stuff
+    ;; ;; force ansi-term to be utf-8 after it launches
+    ;; (defadvice ansi-term
+    ;;   (after advise-ansi-term-coding-system)
+    ;;   (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
+    ;; (ad-activate 'ansi-term)
 
     
-(defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
-  (if (memq (process-status proc) '(signal exit))
-      (let ((buffer (process-buffer proc)))
-        ad-do-it
-        (kill-buffer buffer))
-    ad-do-it))
+    (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
+      (if (memq (process-status proc) '(signal exit))
+          (let ((buffer (process-buffer proc)))
+            ad-do-it
+            (kill-buffer buffer))
+        ad-do-it))
 
-(defvar my-term-shell "/bin/bash")
-(defadvice ansi-term (before force-bash)
-  (interactive (list my-term-shell)))
+    (defvar my-term-shell "/bin/bash")
+    (defadvice ansi-term (before force-bash)
+      (interactive (list my-term-shell)))
 
                                         ; scroll line by line
     (progn (setq scroll-step 1)
@@ -1421,27 +1421,27 @@ Subexpression references can be used (\1, \2, etc)."
 
 (use-package makefile-mode
   :mode ((".make\\'" . makefile-gmake-mode))
-         :config
-         (progn
-           (require 'make-mode)
-           
-           (defconst makefile-nmake-statements
-             `("!IF" "!ELSEIF" "!ELSE" "!ENDIF" "!MESSAGE" "!ERROR" "!INCLUDE" ,@makefile-statements)
-             "List of keywords understood by nmake.")
-           
-           (defconst makefile-nmake-font-lock-keywords
-             (makefile-make-font-lock-keywords
-              makefile-var-use-regex
-              makefile-nmake-statements
-              t))
-           
-           (define-derived-mode makefile-nmake-mode makefile-mode "nMakefile"
-             "An adapted `makefile-mode' that knows about nmake."
-             (setq font-lock-defaults
-                   `(makefile-nmake-font-lock-keywords ,@(cdr font-lock-defaults))))
+  :config
+  (progn
+    (require 'make-mode)
+    
+    (defconst makefile-nmake-statements
+      `("!IF" "!ELSEIF" "!ELSE" "!ENDIF" "!MESSAGE" "!ERROR" "!INCLUDE" ,@makefile-statements)
+      "List of keywords understood by nmake.")
+    
+    (defconst makefile-nmake-font-lock-keywords
+      (makefile-make-font-lock-keywords
+       makefile-var-use-regex
+       makefile-nmake-statements
+       t))
+    
+    (define-derived-mode makefile-nmake-mode makefile-mode "nMakefile"
+      "An adapted `makefile-mode' that knows about nmake."
+      (setq font-lock-defaults
+            `(makefile-nmake-font-lock-keywords ,@(cdr font-lock-defaults))))
 
-           )
-         )
+    )
+  )
 
 
 
@@ -1795,7 +1795,7 @@ The output appears in the buffer `*Async Shell Command*'."
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
     (add-hook 'php-mode-hook '(lambda ()(c-subword-mode t)))
     (add-hook 'php-mode-hook '(lambda () (php-electric-mode)))
-))
+    ))
 
 
 (use-package php+-mode
@@ -1888,10 +1888,10 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                     :type 'netrc
                                                     :port 6697))
                            :secret))
-;;       (erc-tls :server "asimov.freenode.net"
-;;                :port 6697
-;;                :nick "dkh")
-       ))
+               ;;       (erc-tls :server "asimov.freenode.net"
+               ;;                :port 6697
+               ;;                :nick "dkh")
+               ))
     (defun im ()
       (interactive)
       (erc :server "localhost"
@@ -1905,8 +1905,8 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :port 6667))
                        :secret))))
 
-;; (add-hook 'after-init-hook 'im)
-;; (add-hook 'after-init-hook 'irc)
+    ;; (add-hook 'after-init-hook 'im)
+    ;; (add-hook 'after-init-hook 'irc)
     )
   
   :config
@@ -1917,7 +1917,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     (erc-track-mode 1)
 
     (use-package erc-alert)
-;;    (use-package erc-highlight-nicknames)
+    ;;    (use-package erc-highlight-nicknames)
     
     (require 'erc-nick-notify)
     (require 'erc-fill)
@@ -1950,52 +1950,52 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
           erc-insert-timestamp-function 'erc-insert-timestamp-left
           erc-kill-queries-on-quit nil)
 
-;;     (require 'todochiku)
+    ;;     (require 'todochiku)
     
-;;      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;     ;;
-;;     ;; Change fill column on resize
-;;     ;;
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;     ;;
+    ;;     ;; Change fill column on resize
+    ;;     ;;
+    ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-     (make-variable-buffer-local 'erc-fill-column)
+    (make-variable-buffer-local 'erc-fill-column)
 
-;;      (setq erc-fill-column 75)
+    ;;      (setq erc-fill-column 75)
 
-     (defun qdot/erc-set-fill-columns ()
-       (interactive)
-       (save-excursion
-         (walk-windows
-          (lambda (w)
-            (let ((buffer (window-buffer w)))
-              (set-buffer buffer)
-              (when (eq major-mode 'erc-mode)
-                (message "Window size: %d" (window-width w))
-                (setq erc-fill-column (- (window-width w) 2))))))))
+    (defun qdot/erc-set-fill-columns ()
+      (interactive)
+      (save-excursion
+        (walk-windows
+         (lambda (w)
+           (let ((buffer (window-buffer w)))
+             (set-buffer buffer)
+             (when (eq major-mode 'erc-mode)
+               (message "Window size: %d" (window-width w))
+               (setq erc-fill-column (- (window-width w) 2))))))))
 
-     (setq window-configuration-change-hook (cddr window-configuration-change-hook))
+    (setq window-configuration-change-hook (cddr window-configuration-change-hook))
 
-     (add-hook 'window-configuration-change-hook 'qdot/erc-set-fill-columns)
+    (add-hook 'window-configuration-change-hook 'qdot/erc-set-fill-columns)
 
-       (setq erc-fill-static-center 12)
+    (setq erc-fill-static-center 12)
 
-     (use-package erc-yank
-       :init
-       (bind-key "C-y" 'erc-yank erc-mode-map))
+    (use-package erc-yank
+      :init
+      (bind-key "C-y" 'erc-yank erc-mode-map))
 
-     (use-package wtf
-       :commands wtf-is
-       :init
-       (defun erc-cmd-WTF (term &rest ignore)
-         "Look up definition for TERM."
-         (let ((def (wtf-is term)))
-           (if def
-               (let ((msg (concat "{Term} " (upcase term) " is " def)))
-                 (with-temp-buffer
-                   (insert msg)
-                   (kill-ring-save (point-min) (point-max)))
-                 (message msg))
-             (message (concat "No definition found for " (upcase term)))))))
+    (use-package wtf
+      :commands wtf-is
+      :init
+      (defun erc-cmd-WTF (term &rest ignore)
+        "Look up definition for TERM."
+        (let ((def (wtf-is term)))
+          (if def
+              (let ((msg (concat "{Term} " (upcase term) " is " def)))
+                (with-temp-buffer
+                  (insert msg)
+                  (kill-ring-save (point-min) (point-max)))
+                (message msg))
+            (message (concat "No definition found for " (upcase term)))))))
 
     (use-package sauron
       :bind ("C-. s" . sauron-toggle-hide-show)
@@ -2070,7 +2070,7 @@ FORM => (eval FORM)."
     (eval-after-load 'erc
       '(progn
 
-       (require 'erc-hl-nicks)
+         (require 'erc-hl-nicks)
          (require 'erc-notify)
          (require 'erc-spelling)
          (require 'erc-truncate)
@@ -2081,17 +2081,19 @@ FORM => (eval FORM)."
          (set-face-foreground 'erc-input-face "dim gray")
          (set-face-foreground 'erc-my-nick-face "blue"))
       ;; from https://github.com/robru/.emacs.d/blob/master/setup-appearance.el
-      (set-face-attribute 'erc-notice-face nil
-                       :foreground "grey30"
-                       :bold nil)
-      (set-face-attribute 'erc-button nil
-                       :bold nil
-                       :box nil)
+
+      ;; (set-face-attribute 'erc-notice-face nil
+      ;;                     :foreground "grey30"
+      ;;                     :bold nil)
       )
+    ;; (eval-after-load "erc-button"
+    ;;   '(set-face-attribute 'erc-button nil
+    ;;                        :bold nil
+    ;;                        :box nil))
     ))
 
 (use-package erc-hl-nicks
-    :load-path "~/.emacs.d/site-lisp/erc-hl-nicks")
+  :load-path "~/.emacs.d/site-lisp/erc-hl-nicks")
 
 ;;;_ , eshell
 
@@ -2149,11 +2151,11 @@ FORM => (eval FORM)."
 
 (use-package fetchmail-mode
   :mode (".fetchmailrc$" . fetchmail-mode)
-)
+  )
 
 (use-package nf-procmail-mode
   :mode (".procmailrc$" . nf-procmail-mode)
-)
+  )
 
 
 ;;;_ , ldap
@@ -2275,11 +2277,11 @@ FORM => (eval FORM)."
 (use-package gist
   :bind ("C-c G" . gist-region-or-buffer))
 
-; (use-package git-commit-mode
-;   :mode (("COMMIT_EDITMSG" . git-commit-mode)
-;          ("NOTES_EDITMSG" . git-commit-mode)
-;          ("MERGE_MSG" . git-commit-mode)
-;          ("TAG_EDITMSG" . git-commit-mode)))
+                                        ; (use-package git-commit-mode
+                                        ;   :mode (("COMMIT_EDITMSG" . git-commit-mode)
+                                        ;          ("NOTES_EDITMSG" . git-commit-mode)
+                                        ;          ("MERGE_MSG" . git-commit-mode)
+                                        ;          ("TAG_EDITMSG" . git-commit-mode)))
 
 ;;;_ , gnus
 (use-package dkh-gnus
@@ -2290,24 +2292,24 @@ FORM => (eval FORM)."
   (progn
     
     (setq
-;;     gnus-article-save-directory "~/git/gnus/News"
-;;     gnus-cache-active-file "~/git/gnus/News/cache/active"
-;;     gnus-cache-directory "~/git/gnus/News/cache"
-;;     gnus-default-directory "~/git/gnus"
-;;     gnus-directory "~/git/gnus/News"
-;;     gnus-dribble-directory "~/git/gnus/"
+     ;;     gnus-article-save-directory "~/git/gnus/News"
+     ;;     gnus-cache-active-file "~/git/gnus/News/cache/active"
+     ;;     gnus-cache-directory "~/git/gnus/News/cache"
+     ;;     gnus-default-directory "~/git/gnus"
+     ;;     gnus-directory "~/git/gnus/News"
+     ;;     gnus-dribble-directory "~/git/gnus/"
      gnus-home-directory "~/git/gnus"
      gnus-init-file "~/git/.emacs.d/dot-gnus.el"
-;;     gnus-kill-files-directory "~/git/gnus/.gnuskillfiled"
-;;     gnus-startup-file "~/git/gnus/.newsrc"
-;;     gnus-summary-save-parts-last-directory "~/Downloads"
-;;     mail-default-directory "~/git/gnus/Mail"
+     ;;     gnus-kill-files-directory "~/git/gnus/.gnuskillfiled"
+     ;;     gnus-startup-file "~/git/gnus/.newsrc"
+     ;;     gnus-summary-save-parts-last-directory "~/Downloads"
+     ;;     mail-default-directory "~/git/gnus/Mail"
      message-directory "~/git/gnus/Mail"
      ;; nndraft-current-directory "~/git/gnus/News/drafts/"
      ;; nndraft-directory "~/git/gnus/News/drafts/"
      ;; nnmail-message-id-cache-file "~/git/gnus/nnmail_cache"
-;;     nnml-directory "~/git/gnus/Mail"
-;;     nntp-marks-directory "~/git/gnus/News/"
+     ;;     nnml-directory "~/git/gnus/Mail"
+     ;;     nntp-marks-directory "~/git/gnus/News/"
      )
     (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
@@ -2555,8 +2557,8 @@ FORM => (eval FORM)."
 
 
 
-; (use-package iedit
-;   :bind (("C-c ;" . iedit-mode)))
+                                        ; (use-package iedit
+                                        ;   :bind (("C-c ;" . iedit-mode)))
 
 ;;;_ , ielm
 
@@ -2649,7 +2651,7 @@ FORM => (eval FORM)."
   (progn
     (autoload 'js3-mode "js3" nil t)
     (setq-default js3-basic-offset 2)
-;;    (setq js2-strict-missing-semi-warning nil)
+    ;;    (setq js2-strict-missing-semi-warning nil)
     )
   )
 
@@ -3239,7 +3241,7 @@ end end))))))
 (setq org-user-agenda-files (quote (
                                     "~/git/dkh-org/todo.org"
                                     "~/git/dkh-org/refile.org"
-;;                                    "~/git/dkh-org/.org-jira/FIT.org"
+                                    ;;                                    "~/git/dkh-org/.org-jira/FIT.org"
                                     "~/git/dkh-org/.org-jira/AFROTC.org"
                                     "~/git/dkh-org/.org-jira/CUPRE.org"
                                     "~/git/dkh-org/.org-jira/CS.org"
@@ -3250,51 +3252,51 @@ end end))))))
 (use-package dot-org
   :commands org-agenda-list
   :bind (
-;;         ("M-C"   . jump-to-org-agenda)
-;;         ("M-m"   . org-smart-capture)
-;;         ("M-M"   . org-inline-note)
-;;         ("C-c a" . org-agenda)
-;;         ("C-c S" . org-store-link)
-;;         ("C-c l" . org-insert-link)
+         ;;         ("M-C"   . jump-to-org-agenda)
+         ;;         ("M-m"   . org-smart-capture)
+         ;;         ("M-M"   . org-inline-note)
+         ;;         ("C-c a" . org-agenda)
+         ;;         ("C-c S" . org-store-link)
+         ;;         ("C-c l" . org-insert-link)
 
-          ("<f12>" . org-agenda)
-;;          ("<f5>"  . bh/org-todo)
-;;          ("<S-f5>" . bh/widen)
-;;          ("<f7>" . bh/set-truncate-lines)
-;;          ("<f8>" . org-cycle-agenda-files)
-;;          ("<f9> <f9>" . bh/show-org-agenda)
-;;          ("<f9> b" . bbdb)
-;;          ("<f9> c" . calendar)
-;;          ("<f9> f" . boxquote-insert-file)
-;;          ("<f9> g" . gnus)
-;;          ("<f9> h" . bh/hide-other)
-;;          ("<f9> n" . org-narrow-to-subtree)
-;;          ("<f9> W" . widen)
-;;          ("<f9> u" . bh/narrow-up-one-level)
-;; 
-;;          ("<f9> I" . bh/punch-in)
-;;          ("<f9> O" . bh/punch-out)
-;; 
-;;          ("<f9> o" . bh/make-org-scratch)
-;; 
-;;          ("<f9> r" . boxquote-region)
-;;          ("<f9> s" . bh/switch-to-scratch)
-;; 
-;;          ("<f9> t" . bh/insert-inactive-timestamp)
-;;          ("<f9> T" . tabify)
-;;          ("<f9> U" . untabify)
-;; 
-;;          ("<f9> v" . visible-mode)
-;;          ("<f9> SPC" . bh/clock-in-last-task)
-;;          ("C-<f9>" . previous-buffer)
-;;          ("M-<f9>" . org-toggle-inline-images)
-;;          ("C-x n r" . narrow-to-region)
-;;          ("C-<f10>" . next-buffer)
-;;          ("<f11>" . org-clock-goto)
-;;          ("C-<f11>" . org-clock-in)
-;;          ("C-s-<f12>" . bh/save-then-publish)
-;;          ("C-M-r" . org-capture)
-;;          ("C-c r" . org-capture)
+         ("<f12>" . org-agenda)
+         ;;          ("<f5>"  . bh/org-todo)
+         ;;          ("<S-f5>" . bh/widen)
+         ;;          ("<f7>" . bh/set-truncate-lines)
+         ;;          ("<f8>" . org-cycle-agenda-files)
+         ;;          ("<f9> <f9>" . bh/show-org-agenda)
+         ;;          ("<f9> b" . bbdb)
+         ;;          ("<f9> c" . calendar)
+         ;;          ("<f9> f" . boxquote-insert-file)
+         ;;          ("<f9> g" . gnus)
+         ;;          ("<f9> h" . bh/hide-other)
+         ;;          ("<f9> n" . org-narrow-to-subtree)
+         ;;          ("<f9> W" . widen)
+         ;;          ("<f9> u" . bh/narrow-up-one-level)
+         ;; 
+         ;;          ("<f9> I" . bh/punch-in)
+         ;;          ("<f9> O" . bh/punch-out)
+         ;; 
+         ;;          ("<f9> o" . bh/make-org-scratch)
+         ;; 
+         ;;          ("<f9> r" . boxquote-region)
+         ;;          ("<f9> s" . bh/switch-to-scratch)
+         ;; 
+         ;;          ("<f9> t" . bh/insert-inactive-timestamp)
+         ;;          ("<f9> T" . tabify)
+         ;;          ("<f9> U" . untabify)
+         ;; 
+         ;;          ("<f9> v" . visible-mode)
+         ;;          ("<f9> SPC" . bh/clock-in-last-task)
+         ;;          ("C-<f9>" . previous-buffer)
+         ;;          ("M-<f9>" . org-toggle-inline-images)
+         ;;          ("C-x n r" . narrow-to-region)
+         ;;          ("C-<f10>" . next-buffer)
+         ;;          ("<f11>" . org-clock-goto)
+         ;;          ("C-<f11>" . org-clock-in)
+         ;;          ("C-s-<f12>" . bh/save-then-publish)
+         ;;          ("C-M-r" . org-capture)
+         ;;          ("C-c r" . org-capture)
          )
   :init
   (progn
@@ -4032,55 +4034,55 @@ end end))))))
       (if running-alternate-emacs
           (progn
 
-;;            (defun qdot/wg-filter-buffer-list-by-not-major-mode (major-mode buffer-list)
-;;              "Return only those buffers in BUFFER-LIST in major-mode MAJOR-MODE."
-;;              (remove-if (lambda (mm) (eq mm major-mode))
-;;                         buffer-list :key 'wg-buffer-major-mode))
-;;
-;;            (defun qdot/wg-filter-buffer-list-by-erc-query (server buffer-list)
-;;              "Return only those buffers in BUFFER-LIST in major-mode MAJOR-MODE."
-;;              (remove-if-not (lambda (buf) (erc-query-buffer-p (get-buffer buf)))
-;;                             buffer-list :key 'buffer-name))
-;;
-;;            (defun qdot/wg-buffer-list-filter-not-irc (workgroup buffer-list)
-;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
-;;              (qdot/wg-filter-buffer-list-by-not-major-mode 'erc-mode buffer-list))
-;;
-;;            (defun qdot/wg-buffer-list-filter-associated-not-irc (workgroup buffer-list)
-;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
-;;              (qdot/wg-filter-buffer-list-by-not-major-mode 'erc-mode (wg-buffer-list-filter-associated workgroup buffer-list)))
-;;
-;;
-;;            (defun qdot/wg-buffer-list-filter-erc-channel (workgroup buffer-list)
-;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
-;;              (wg-filter-buffer-list-by-regexp "^#"
-;;                                               (wg-filter-buffer-list-by-major-mode 'erc-mode buffer-list)))
-;;
-;;            (defun qdot/wg-buffer-list-filter-erc-query (workgroup buffer-list)
-;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
-;;              (qdot/wg-filter-buffer-list-by-erc-query 'erc-mode buffer-list))
-;;
-;;            (add-to-list
-;;             'wg-buffer-list-filter-definitions
-;;             '(qdot/erc-query "qdot/erc-query" qdot/wg-buffer-list-filter-erc-query))
-;;            (add-to-list
-;;             'wg-buffer-list-filter-definitions
-;;             '(qdot/erc-irc "qdot/erc-channel" qdot/wg-buffer-list-filter-erc-channel))
-;;            (add-to-list
-;;             'wg-buffer-list-filter-definitions
-;;             '(qdot/not-irc "qdot/not-irc" qdot/wg-buffer-list-filter-not-irc))
-;;
-;;            (add-to-list
-;;             'wg-buffer-list-filter-definitions
-;;             '(qdot/associated-not-irc "qdot/associated-not-irc" qdot/wg-buffer-list-filter-associated-not-irc))
-;;
-;;            (defun qdot/wg-set-buffer-lists ()
-;;              (wg-set-workgroup-parameter (wg-get-workgroup "work") 'wg-buffer-list-filter-order-alist '((default qdot/associated-not-irc qdot/not-irc all)))
-;;              (wg-set-workgroup-parameter (wg-get-workgroup "erc") 'wg-buffer-list-filter-order-alist '((default qdot/erc-irc all)))
-;;              (wg-set-workgroup-parameter (wg-get-workgroup "bitlbee") 'wg-buffer-list-filter-order-alist '((default qdot/erc-query all))))
-;;
-;;            (WG-filter-buffer-list-by-major-mode 'erc-mode (buffer-list))
-;;            (wg-filter-buffer-list-by-not-major-mode 'erc-mode (buffer-list))
+            ;;            (defun qdot/wg-filter-buffer-list-by-not-major-mode (major-mode buffer-list)
+            ;;              "Return only those buffers in BUFFER-LIST in major-mode MAJOR-MODE."
+            ;;              (remove-if (lambda (mm) (eq mm major-mode))
+            ;;                         buffer-list :key 'wg-buffer-major-mode))
+            ;;
+            ;;            (defun qdot/wg-filter-buffer-list-by-erc-query (server buffer-list)
+            ;;              "Return only those buffers in BUFFER-LIST in major-mode MAJOR-MODE."
+            ;;              (remove-if-not (lambda (buf) (erc-query-buffer-p (get-buffer buf)))
+            ;;                             buffer-list :key 'buffer-name))
+            ;;
+            ;;            (defun qdot/wg-buffer-list-filter-not-irc (workgroup buffer-list)
+            ;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
+            ;;              (qdot/wg-filter-buffer-list-by-not-major-mode 'erc-mode buffer-list))
+            ;;
+            ;;            (defun qdot/wg-buffer-list-filter-associated-not-irc (workgroup buffer-list)
+            ;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
+            ;;              (qdot/wg-filter-buffer-list-by-not-major-mode 'erc-mode (wg-buffer-list-filter-associated workgroup buffer-list)))
+            ;;
+            ;;
+            ;;            (defun qdot/wg-buffer-list-filter-erc-channel (workgroup buffer-list)
+            ;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
+            ;;              (wg-filter-buffer-list-by-regexp "^#"
+            ;;                                               (wg-filter-buffer-list-by-major-mode 'erc-mode buffer-list)))
+            ;;
+            ;;            (defun qdot/wg-buffer-list-filter-erc-query (workgroup buffer-list)
+            ;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
+            ;;              (qdot/wg-filter-buffer-list-by-erc-query 'erc-mode buffer-list))
+            ;;
+            ;;            (add-to-list
+            ;;             'wg-buffer-list-filter-definitions
+            ;;             '(qdot/erc-query "qdot/erc-query" qdot/wg-buffer-list-filter-erc-query))
+            ;;            (add-to-list
+            ;;             'wg-buffer-list-filter-definitions
+            ;;             '(qdot/erc-irc "qdot/erc-channel" qdot/wg-buffer-list-filter-erc-channel))
+            ;;            (add-to-list
+            ;;             'wg-buffer-list-filter-definitions
+            ;;             '(qdot/not-irc "qdot/not-irc" qdot/wg-buffer-list-filter-not-irc))
+            ;;
+            ;;            (add-to-list
+            ;;             'wg-buffer-list-filter-definitions
+            ;;             '(qdot/associated-not-irc "qdot/associated-not-irc" qdot/wg-buffer-list-filter-associated-not-irc))
+            ;;
+            ;;            (defun qdot/wg-set-buffer-lists ()
+            ;;              (wg-set-workgroup-parameter (wg-get-workgroup "work") 'wg-buffer-list-filter-order-alist '((default qdot/associated-not-irc qdot/not-irc all)))
+            ;;              (wg-set-workgroup-parameter (wg-get-workgroup "erc") 'wg-buffer-list-filter-order-alist '((default qdot/erc-irc all)))
+            ;;              (wg-set-workgroup-parameter (wg-get-workgroup "bitlbee") 'wg-buffer-list-filter-order-alist '((default qdot/erc-query all))))
+            ;;
+            ;;            (WG-filter-buffer-list-by-major-mode 'erc-mode (buffer-list))
+            ;;            (wg-filter-buffer-list-by-not-major-mode 'erc-mode (buffer-list))
             
             (setq wg-file "/Users/daha1836/.emacs.d/data-alt/workgroups")
             (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups")
@@ -4092,7 +4094,7 @@ end end))))))
     (require 'powerline)
     (powerline-default)
 
-;;    (require "~/.emacs.d/lisp/dkh-powerline")
+    ;;    (require "~/.emacs.d/lisp/dkh-powerline")
     (load "~/git/foss/hekt_dotfiles/.emacs.d/inits/21_init.extension.powerline.el")
 
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
@@ -4459,9 +4461,9 @@ $0"))))
 (setq dired-use-ls-dired nil)
 
 (defun offlineimap-get-password (host port)
-      (let* ((netrc (netrc-parse (expand-file-name "~/git/.emacs.d/.autinfo.gpg")))
-             (hostentry (netrc-machine netrc host port port)))
-        (when hostentry (netrc-get hostentry "password"))))
+  (let* ((netrc (netrc-parse (expand-file-name "~/git/.emacs.d/.autinfo.gpg")))
+         (hostentry (netrc-machine netrc host port port)))
+    (when hostentry (netrc-get hostentry "password"))))
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
