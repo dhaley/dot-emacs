@@ -89,6 +89,9 @@
 ;;;_ , Load customization settings
 
 (defvar running-alternate-emacs nil)
+;; (if (string-match (concat "/Applications/\\(MacPorts/\\)?"
+;;                           "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
+;;                   invocation-directory)
 
 (if (string-match (concat "/Applications/\\(Misc/\\)?"
                           "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
