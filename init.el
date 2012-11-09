@@ -2079,7 +2079,15 @@ FORM => (eval FORM)."
            (erc-nick-notify-mode t))
          (add-to-list 'erc-modules 'spelling)
          (set-face-foreground 'erc-input-face "dim gray")
-         (set-face-foreground 'erc-my-nick-face "blue")))
+         (set-face-foreground 'erc-my-nick-face "blue"))
+      ;; from https://github.com/robru/.emacs.d/blob/master/setup-appearance.el
+      (set-face-attribute 'erc-notice-face nil
+                       :foreground "grey30"
+                       :bold nil)
+      (set-face-attribute 'erc-button nil
+                       :bold nil
+                       :box nil)
+      )
     ))
 
 (use-package erc-hl-nicks
@@ -4462,3 +4470,6 @@ $0"))))
 ;; End:
 
 ;;; init.el ends here
+
+;; Allow "y or n" instead of "yes or no"
+(fset 'yes-or-no-p 'y-or-n-p)
