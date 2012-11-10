@@ -2291,41 +2291,22 @@ FORM => (eval FORM)."
   :init
   (progn
     
-    (setq
-     ;;     gnus-article-save-directory "~/git/gnus/News"
-     ;;     gnus-cache-active-file "~/git/gnus/News/cache/active"
-     ;;     gnus-cache-directory "~/git/gnus/News/cache"
-     ;;     gnus-default-directory "~/git/gnus"
-     ;;     gnus-directory "~/git/gnus/News"
-     ;;     gnus-dribble-directory "~/git/gnus/"
+    (setq gnus-init-file "~/git/.emacs.d/dot-gnus.el"
      gnus-home-directory "~/git/gnus"
-     gnus-init-file "~/git/.emacs.d/dot-gnus.el"
-     ;;     gnus-kill-files-directory "~/git/gnus/.gnuskillfiled"
-     ;;     gnus-startup-file "~/git/gnus/.newsrc"
-     ;;     gnus-summary-save-parts-last-directory "~/Downloads"
-     ;;     mail-default-directory "~/git/gnus/Mail"
-     message-directory "~/git/gnus/Mail"
-     ;; nndraft-current-directory "~/git/gnus/News/drafts/"
-     ;; nndraft-directory "~/git/gnus/News/drafts/"
-     ;; nnmail-message-id-cache-file "~/git/gnus/nnmail_cache"
-     ;;     nnml-directory "~/git/gnus/Mail"
-     ;;     nntp-marks-directory "~/git/gnus/News/"
-     )
+     message-directory "~/git/gnus/Mail")
+    
     (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
     (use-package eudc)
     (use-package rgr-web)
-    (require 'bbdb-loaddefs "~/.emacs.d/override/bbdb/lisp/bbdb-loaddefs.el")
+;;    (require 'bbdb-loaddefs "~/.emacs.d/override/bbdb/lisp/bbdb-loaddefs.el")
     (use-package bbdb-gnus)
     (use-package bbdb-message)
 
-
     ;; (setq message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
-
 
     (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
     (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
-    ;;  (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
     (add-hook 'message-mode-hook 'orgtbl-mode 'append)
     (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
     (add-hook 'message-mode-hook

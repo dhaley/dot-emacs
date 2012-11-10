@@ -1,3 +1,6 @@
+;;;_ , Gnus
+
+(load "~/git/.emacs.d/dot-gnus.el")
 
 (require 'gnus)
 (require 'starttls)
@@ -5,13 +8,16 @@
 (require 'message)
 (require 'spam)
 (require 'spam-report)
+
+
 (require 'bbdb-gnus)
 (require 'async)
 
 ;;(gnus-compile)
 (gnus-delay-initialize)
-;;(bbdb-insinuate-gnus)
 (spam-initialize)
+
+
 
 (defvar use-spam-filtering nil)
 
@@ -81,8 +87,46 @@
         (gnus-group-list-groups gnus-activate-level)
         (setq switch-to-gnus-run t)))))
 
+;; (use-package fetchmail-ctl
+;;   :init
+;;   (progn
+;;     (defun maybe-start-fetchmail-and-news ()
+;;       (interactive)
+;;       (when (and (not switch-to-gnus-unplugged)
+;;                  (quickping "mail.messagingengine.com"))
+;;         (do-applescript "tell application \"Notify\" to run")
+;;         (switch-to-fetchmail)))
+
+;;     (add-hook 'gnus-startup-hook 'maybe-start-fetchmail-and-news)
+
+;;     (defadvice shutdown-fetchmail (after stop-mail-after-fetchmail activate)
+;;       (async-start
+;;        (lambda ()
+;;          (call-process (expand-file-name "~/git/gnus/Mail/manage-mail/stop-mail")))
+;;        (lambda (ret)
+;;          (do-applescript "tell application \"Notify\" to quit"))))))
+
+(add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 (add-hook 'gnus-group-mode-hook 'hl-line-mode)
+
 (add-hook 'gnus-summary-mode-hook 'hl-line-mode)
+
+(defun my-message-header-setup-hook ()
+  (message-remove-header "From")
+  (let ((gcc (message-field-value "Gcc")))
+   (when (or (null gcc)
+             (string-match "nnfolder\\+archive:" gcc))
+     (message-remove-header "Gcc")
+     (message-add-header
+      (format "Gcc: %s"
+              (if (string-match "\\`list\\." (or gnus-newsgroup-name ""))
+                  "mail.sent"
+                "INBOX"))))))
+
+(add-hook 'message-header-setup-hook 'my-message-header-setup-hook)
+
+(defadvice gnus-summary-resend-message-edit (after call-my-mhs-hook activate)
+  (my-message-header-setup-hook))
 
 (defun my-gnus-summary-save-parts (&optional arg)
   (interactive "P")
@@ -98,6 +142,15 @@
        (if (quickping "smtp.colorado.edu") t 'always)))
 
 (add-hook 'message-send-hook 'queue-message-if-not-connected)
+
+(defun kick-postfix-if-needed ()
+  (if (and (quickping "mail.messagingengine.com")
+           (= 0 (call-process "/usr/bin/sudo" nil nil nil
+                             "/usr/libexec/postfix/master" "-t")))
+      (start-process "postfix" nil "/usr/bin/sudo"
+                     "/usr/libexec/postfix/master" "-e" "60")))
+
+(add-hook 'message-sent-hook 'kick-postfix-if-needed)
 
 (defun exit-gnus-on-exit ()
   (if (and (fboundp 'gnus-group-exit)
@@ -118,7 +171,7 @@
             (switch-to-buffer-other-window buf))))
     (loop initially (delete-other-windows)
           with first = t
-          for log in (directory-files "~/Maildir/" t "\\.log\\'")
+          for log in (directory-files "~/log/" t "\\.log\\'")
           for buf = (find-file-noselect log)
           do (if first
                  (progn
@@ -134,10 +187,7 @@
       (gnus-summary-delete-article arg)
     (gnus-summary-move-article arg "mail.trash")))
 
-
-
 (define-key gnus-summary-mode-map [(meta ?q)] 'gnus-article-fill-long-lines)
-;;(define-key gnus-summary-mode-map [?$] 'gmail-report-spam)
 (define-key gnus-summary-mode-map [?B delete] 'gnus-summary-delete-article)
 (define-key gnus-summary-mode-map [?B backspace] 'my-gnus-trash-article)
 
@@ -154,6 +204,15 @@
  (push '((eq mark gnus-expirable-mark) . gnus-summary-expirable-face)
       gnus-summary-highlight)
 
+;;(if window-system
+;;    (setq
+;;     gnus-sum-thread-tree-false-root      ""
+;;     gnus-sum-thread-tree-single-indent   ""
+;;     gnus-sum-thread-tree-root            ""
+;;     gnus-sum-thread-tree-vertical        "|"
+;;     gnus-sum-thread-tree-leaf-with-other "+-> "
+;;     gnus-sum-thread-tree-single-leaf     "\\-> "
+;;     gnus-sum-thread-tree-indent          " "))
 
 (defsubst dot-gnus-tos (time)
   "Convert TIME to a floating point number."
@@ -315,7 +374,6 @@ is:
     (gnus-demon-add-handler 'save-gnus-newsrc nil 1)
     (gnus-demon-add-handler 'gnus-demon-close-connections nil 3)))
 
-
 (use-package nnir
   :init
   (progn
@@ -330,6 +388,7 @@ is:
              (concat "\\(\\(list\\.wg21\\|archive\\)\\.\\|"
                      "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")))
         (gnus-summary-refer-article message-id)))
+
     (defvar gnus-query-history nil)
 
     (defun gnus-query (query &optional arg)
@@ -371,7 +430,25 @@ is:
 
     (define-key global-map [(alt meta ?f)] 'gnus-query)))
 
+(use-package gnus-harvest
+  :init
+  (if (featurep 'message-x)
+      (gnus-harvest-install 'message-x)
+    (gnus-harvest-install)))
 
+(use-package gnus-alias
+  :commands (gnus-alias-determine-identity
+             gnus-alias-message-x-completion
+             gnus-alias-select-identity)
+  :init
+  (progn
+    (add-hook 'message-setup-hook 'gnus-alias-determine-identity)
+
+    (if (featurep 'message-x)
+        (add-hook 'message-x-after-completion-functions
+                  'gnus-alias-message-x-completion))
+
+    (define-key message-mode-map "\C-c\C-f\C-p" 'gnus-alias-select-identity)))
 
 (use-package rs-gnus-summary
   :init
@@ -385,7 +462,17 @@ is:
 (use-package supercite
   :commands sc-cite-original
   :init
-  (add-hook 'mail-citation-hook 'sc-cite-original)
+  (progn
+    (add-hook 'mail-citation-hook 'sc-cite-original)
+
+    (defun sc-remove-existing-signature ()
+      (save-excursion
+        (goto-char (region-beginning))
+        (when (re-search-forward message-signature-separator (region-end) t)
+          (delete-region (match-beginning 0) (region-end)))))
+
+    (add-hook 'mail-citation-hook 'sc-remove-existing-signature))
+
   :config
   (defun sc-fill-if-different (&optional prefix)
     "Fill the region bounded by `sc-fill-begin' and point.
