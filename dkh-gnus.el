@@ -90,12 +90,12 @@
 ;; (use-package fetchmail-ctl
 ;;   :init
 ;;   (progn
-;;     (defun maybe-start-fetchmail-and-news ()
-;;       (interactive)
-;;       (when (and (not switch-to-gnus-unplugged)
-;;                  (quickping "mail.messagingengine.com"))
-;;         (do-applescript "tell application \"Notify\" to run")
-;;         (switch-to-fetchmail)))
+    (defun maybe-start-fetchmail-and-news ()
+      (interactive)
+      (when (and (not switch-to-gnus-unplugged)
+                 (quickping "mail.messagingengine.com"))
+        (do-applescript "tell application \"Notify\" to run")
+        (switch-to-fetchmail)))
 
 ;;     (add-hook 'gnus-startup-hook 'maybe-start-fetchmail-and-news)
 
