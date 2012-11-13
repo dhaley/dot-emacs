@@ -1905,8 +1905,8 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :port 6667))
                        :secret))))
 
-    ;; (add-hook 'after-init-hook 'im)
-    ;; (add-hook 'after-init-hook 'irc)
+    (add-hook 'after-init-hook 'im)
+    (add-hook 'after-init-hook 'irc)
     )
   
   :config
