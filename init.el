@@ -2147,11 +2147,6 @@ FORM => (eval FORM)."
   :load-path "site-lisp/ess/lisp/"
   :commands R)
 
-;;;_ , fetchmail-mode
-
-(use-package fetchmail-mode
-  :mode (".fetchmailrc$" . fetchmail-mode)
-  )
 
 (use-package nf-procmail-mode
   :mode (".procmailrc$" . nf-procmail-mode)
@@ -2242,7 +2237,9 @@ FORM => (eval FORM)."
 ;;;_ , fetchmail-mode
 
 (use-package fetchmail-mode
-  :commands fetchmail-mode)
+  :mode (".fetchmailrc$" . fetchmail-mode)
+  :commands fetchmail-mode
+  )
 
 ;;;_ , flyspell
 
