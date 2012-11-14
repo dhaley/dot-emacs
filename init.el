@@ -3266,16 +3266,6 @@ end end))))))
   :init
   (progn
     (org-babel-load-file "~/.emacs.d/dkh-org.org")
-    ;; (unless running-alternate-emacs
-    ;;   ;;      (run-with-idle-timer 300 t 'jump-to-org-agenda)
-    ;;   )
-
-    ;; (if (string-match "\\.elc\\'" load-file-name)
-    ;;     (add-hook 'after-init-hook
-    ;;               #'(lambda ()
-    ;;                   (org-agenda-list)
-    ;;                   (org-fit-agenda-window)
-    ;;                   (org-resolve-clocks))) t)
     (use-package bookmark+)
     (use-package org-habit)
 
