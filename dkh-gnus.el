@@ -1122,6 +1122,28 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 (add-to-list 'message-syntax-checks '(existing-newsgroups . disabled))
 
+;; '(add-to-list 'gnus-buttonized-mime-types "multipart/signed")
+
+;; which email addresses to detect for special highlighting
+(defvar dkh-mails
+  "damon.haley@colorado.edu\\|vinylisl@ssl-mail.com\\|vinylisl+google@ssl-mail.com\\|vinylisland@gmail.com\\|vinylisl@sdf.lonestar.org\\|vinylisl@godsong.org")
+
+(fset 'blow_up_article
+   [S-down ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ S-up])
+
+(define-key gnus-summary-mode-map (kbd "C-c 5") 'blow_up_article)
+
+
+
+;; gnus-art
+;; (setq gnus-sorted-header-list
+;;       '("^From:" "^To:" "^Newsgroups:" "^Cc:" "^Subject:" "^Summary:" "^Keywords:" "^Followup-To:" "^Date:" "^Organization:"))
+
+;; (setq gnus-face-properties-alist
+;;       '((pbm . (:face gnus-x-face :ascent center))
+;;         (png . (:ascent center))))
+
+
 
 (provide 'dkh-gnus)
 
