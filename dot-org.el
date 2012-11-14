@@ -1,5 +1,3 @@
-(org-babel-load-file "~/.emacs.d/dkh-org.org")
-
 (provide 'dot-org)
 
 ;; Local Variables:
