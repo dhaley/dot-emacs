@@ -383,11 +383,12 @@ is:
     (defun gnus-goto-article (message-id)
       (activate-gnus)
       (gnus-summary-read-group "INBOX" 15 t)
-      (let ((nnir-imap-default-search-key "imap")
-            (nnir-ignored-newsgroups
-             (concat "\\(\\(list\\.wg21\\|archive\\)\\.\\|"
-                     "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")))
-        (gnus-summary-refer-article message-id)))
+      (gnus-summary-refer-article message-id))
+      ;; (let ((nnir-imap-default-search-key "imap")
+      ;;       (nnir-ignored-newsgroups
+      ;;        (concat "\\(\\(list\\.wg21\\|archive\\)\\.\\|"
+      ;;                "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")))
+      ;;   (gnus-summary-refer-article message-id)))
 
     (defvar gnus-query-history nil)
 
@@ -405,21 +406,23 @@ is:
             (nnir-ignored-newsgroups
              (if arg
                  (concat (regexp-opt
-                          '("archive"
-                            "archive.emacs"
-                            "list"
-                            "list.bahai"
-                            "list.boost"
-                            "list.clang"
+                          '(
+                            ;; "archive"
+                            ;; "archive.emacs"
+                            ;; "list"
+                            ;; "list.bahai"
+                            ;; "list.boost"
+                            ;; "list.clang"
                             "list.emacs"
-                            "list.isocpp"
-                            "list.ledger"
-                            "list.llvm"
-                            "list.wg21"
-                            "mail"
-                            "mail.save"
-                            "Drafts"
-                            "Sent Messages"))
+                            ;; "list.isocpp"
+                            ;; "list.ledger"
+                            ;; "list.llvm"
+                            ;; "list.wg21"
+                            ;; "mail"
+                            ;; "mail.save"
+                            ;; "Drafts"
+                            "Sent Messages"
+                            ))
                          "\\'")
                (concat "\\(\\(list\\|archive\\)\\.\\|"
                        "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)"))))
