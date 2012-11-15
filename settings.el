@@ -118,21 +118,14 @@
  '(erc-join-buffer 'bury)
  '(erc-hide-list (quote ("JOIN" "NICK" "PART" "QUIT" "MODE")))
  '(erc-ignore-list (quote ("rudybot!.*" "anxt")))
- '(erc-keywords '("\scu\s" "\stor\s" "Damon" "dkh" "dhaley"
-   "relation module" "contextual filter" "gmane" "gwene"
-   "usenet" "proxy" "privacy" "\ssocks\s"
-   "gnus" "workgroups" "wireshark" "chaos tools" "hushmail" 
- "Stallman" "\sog\s" "compiz" "page manager" "super cookie" "[^\.]php"
-   "nxhtml" "nxml" "erc\-keywords" "libnotify" "emacs 24" "org\W?mode"
-   "\sunity\s" "starter\W?kit" "rate module" "conkeror" "jabber"
-   "noscript" "https\-everywhere" "\wfsf\w" "\seff\s" "Log4j" "\sperl\s"
-   "python" "generic-mode" "rainbow-mode" "SQLi" "sql-mode"
-   "references module" "flag module" "org2blog" "nodeone" "Johan Falk"
-   "singularity" "Lanier" "\serc\s" "mdb2" "\spear\s" "html5" "jquery"
-   "naquadah" "mumamo" "el\-get" "zenburn" "solarized" "gunnars"
-   "speedbar" "cedet" "ecb" "hook_menu_alter" "theme engine" "auto complete"
-   "auto completion" "bbdb" "hippy" "\svariant\s" "json" "magit" "w3m"
-   "dired" "bitcoin" "matu4291" "wwng" "ucomm" "crafts" "matt" "jo" "kevin" "cathy"))
+ '(erc-keywords '("\scu\s" "\stor\s" "Damon" "dkh" "dhaley" "relation module"
+                  "gmane" "gwene" "usenet" "proxy" "privacy" "\ssocks\s"
+                  "gnus" "workgroups" "wireshark" "hushmail" "page manager"
+                  "super cookie" "[^\.]php" "nxhtml" "nxml" "erc\-keywords"
+                  "libnotify" "org\W?mode" "starter\W?kit" "rate module"
+                  "conkeror" "noscript" "https\-everywhere" "references
+module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m"
+"matu4291" "wwng" "ucomm" "crafts" "matt" "jo" "kevin" "cathy" "wiegley" "qdot"))
  '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs")
  '(erc-log-write-after-send t)
  '(erc-modules (quote (notify notifications autojoin completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track track-score)))
