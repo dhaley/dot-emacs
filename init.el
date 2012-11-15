@@ -1898,7 +1898,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :port 6667))
                        :secret))))
 
-    (add-hook 'after-init-hook 'im)
+;;    (add-hook 'after-init-hook 'im)
     (add-hook 'after-init-hook 'irc)
     )
   
@@ -2071,9 +2071,11 @@ FORM => (eval FORM)."
            ;; DO NOT use the version from marmalade
            (erc-nick-notify-mode t))
          (add-to-list 'erc-modules 'spelling)
-         (set-face-foreground 'erc-input-face "dim gray")
-         (set-face-foreground 'erc-my-nick-face "blue"))
-      ;; from https://github.com/robru/.emacs.d/blob/master/setup-appearance.el
+         ;; (set-face-foreground 'erc-input-face "dim gray")
+         ;; (set-face-foreground 'erc-my-nick-face "blue")
+         )
+
+         ;; from https://github.com/robru/.emacs.d/blob/master/setup-appearance.el
 
       ;; (set-face-attribute 'erc-notice-face nil
       ;;                     :foreground "grey30"
@@ -3874,6 +3876,7 @@ end end))))))
 ;;;_ , whitespace
 
 (use-package whitespace
+  :if (not running-alternate-emacs)
   :diminish (global-whitespace-mode
              whitespace-mode
              whitespace-newline-mode)
@@ -3882,7 +3885,7 @@ end end))))))
              whitespace-mode)
   :init
   (progn
-    (global-whitespace-mode t)
+    ;; (global-whitespace-mode t)
     (setq whitespace-global-modes '(not erc-mode))
     (hook-into-modes 'whitespace-mode
                      '(prog-mode-hook
@@ -4051,7 +4054,7 @@ end end))))))
     (powerline-default)
 
     ;;    (require "~/.emacs.d/lisp/dkh-powerline")
-    (load "~/git/foss/hekt_dotfiles/.emacs.d/inits/21_init.extension.powerline.el")
+;;    (load "~/git/foss/hekt_dotfiles/.emacs.d/inits/21_init.extension.powerline.el")
 
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
     (bind-key "\\" 'toggle-input-method wg-map)

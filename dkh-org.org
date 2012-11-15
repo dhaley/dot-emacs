@@ -667,8 +667,8 @@ and pick the appropriate capture task.
 Here is my setup for org-capture
 
 #+begin_src emacs-lisp :tangle yes
-(setq org-directory "~/git/org")
-(setq org-default-notes-file "~/git/org/refile.org")
+(setq org-directory "~/git/dkh-org")
+(setq org-default-notes-file "~/git/dkh-org/refile.org")
 
 ;; I use C-M-r to start capture mode
 (global-set-key (kbd "C-M-r") 'org-capture)
@@ -677,19 +677,19 @@ Here is my setup for org-capture
 
 ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, and org-protocol
 (setq org-capture-templates
-      (quote (("t" "todo" entry (file "~/git/org/refile.org")
+      (quote (("t" "todo" entry (file "~/git/dkh-org/refile.org")
                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("r" "respond" entry (file "~/git/org/refile.org")
+              ("r" "respond" entry (file "~/git/dkh-org/refile.org")
                "* TODO Respond to %:from on %:subject\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-              ("n" "note" entry (file "~/git/org/refile.org")
+              ("n" "note" entry (file "~/git/dkh-org/refile.org")
                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("j" "Journal" entry (file+datetree "~/git/org/diary.org")
+              ("j" "Journal" entry (file+datetree "~/git/dkh-org/diary.org")
                "* %?\n%U\n" :clock-in t :clock-resume t)
-              ("w" "org-protocol" entry (file "~/git/org/refile.org")
+              ("w" "org-protocol" entry (file "~/git/dkh-org/refile.org")
                "* TODO Review %c\n%U\n" :immediate-finish t)
-              ("p" "Phone call" entry (file "~/git/org/refile.org")
+              ("p" "Phone call" entry (file "~/git/dkh-org/refile.org")
                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-              ("h" "Habit" entry (file "~/git/org/refile.org")
+              ("h" "Habit" entry (file "~/git/dkh-org/refile.org")
                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 #+end_src
 
@@ -758,7 +758,7 @@ since it's a new task and I get a buffer like this:
 #+begin_src org :exports src
 ,* TODO 
 ,  [2010-08-05 Thu 21:06]
-,  [[file:~/git/org-mode-doc/org-mode.org::*Capture%20Tasks%20is%20all%20about%20being%20FAST][Capture Tasks is all about being FAST]]
+,  [[file:~/git/dkh-org-mode-doc/org-mode.org::*Capture%20Tasks%20is%20all%20about%20being%20FAST][Capture Tasks is all about being FAST]]
 #+end_src
 
 Enter the details of the TODO item and =C-c C-c= to file it away in
@@ -2186,7 +2186,7 @@ followed by the phone-call related lookup functions.
 ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, and org-protocol
 (setq org-capture-templates
       (quote (...
-              ("p" "Phone call" entry (file "~/git/org/refile.org")
+              ("p" "Phone call" entry (file "~/git/dkh-org/refile.org")
                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
               ...)))
 #+end_src
@@ -3122,7 +3122,7 @@ Here's my publishing setup:
               ; Miscellaneous pages for other websites
               ; org are the org-files that generate the content
               ("org-org"
-               :base-directory "~/git/org/"
+               :base-directory "~/git/dkh-org/"
                :publishing-directory "/ssh:www-data@www:~/org"
                :recursive t
                :section-numbers nil
@@ -3140,7 +3140,7 @@ Here's my publishing setup:
               ; org-mode-doc is the top-level project that gets published
               ; This uses the same target directory as the 'doc' project
               ("org-mode-doc-org"
-               :base-directory "~/git/org-mode-doc/"
+               :base-directory "~/git/dkh-org-mode-doc/"
                :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs"
                :recursive t
                :section-numbers nil
@@ -3154,7 +3154,7 @@ Here's my publishing setup:
                :author-info nil
                :creator-info nil)
               ("org-mode-doc-extra"
-               :base-directory "~/git/org-mode-doc/"
+               :base-directory "~/git/dkh-org-mode-doc/"
                :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs"
                :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
                :publishing-function org-publish-attachment
@@ -3776,7 +3776,7 @@ you're not supposed to be working.
 
 #+begin_src emacs-lisp :tangle yes
 (setq org-agenda-include-diary nil)
-(setq org-agenda-diary-file "~/git/org/diary.org")
+(setq org-agenda-diary-file "~/git/dkh-org/diary.org")
 #+end_src
 
 The diary file keeps =date-tree= entries created by the capture mode
@@ -3786,7 +3786,7 @@ want to clock during interruptions.
 I don't use a =~/diary= file anymore.  That is just there as a
 zero-length file to keep Emacs happy.  I use org-mode's diary
 functions instead.  Inserting entries with =i= in the emacs agenda
-creates date entries in the =~/git/org/diary.org= file.
+creates date entries in the =~/git/dkh-org/diary.org= file.
 
 I include holidays from the calendar in my =todo.org= file as follows:
 #+begin_src org :exports src
@@ -4005,7 +4005,7 @@ automagically when the task is marked done.
 Add the following to your =.emacs=
 
 #+begin_src emacs-lisp :tangle no
-(add-to-list 'load-path (expand-file-name "~/git/org-mode/contrib/lisp"))
+(add-to-list 'load-path (expand-file-name "~/git/dkh-org-mode/contrib/lisp"))
 
 (require 'org-checklist)
 #+end_src
@@ -4017,7 +4017,7 @@ Add the following to your =.emacs=
 ;;
 (if (boundp 'org-mode-user-contrib-lisp-path)
     (add-to-list 'load-path org-mode-user-contrib-lisp-path)
-  (add-to-list 'load-path (expand-file-name "~/git/org-mode/contrib/lisp")))
+  (add-to-list 'load-path (expand-file-name "~/git/dkh-org-mode/contrib/lisp")))
 
 (require 'org-checklist)
 #+end_src
@@ -5035,7 +5035,7 @@ up emacs to find the info files from git before the regular (out of
 date) system versions.
 
 #+begin_src emacs-lisp :tangle yes
-(add-to-list 'Info-default-directory-list "~/git/org-mode/doc")
+(add-to-list 'Info-default-directory-list "~/git/dkh-org-mode/doc")
 #+end_src
 ** Prefer future dates or not?
 :PROPERTIES:
