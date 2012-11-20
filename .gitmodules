@@ -325,3 +325,6 @@
 [submodule "site-lisp/carton"]
 	path = site-lisp/carton
 	url = https://github.com/rejeep/carton.git
+[submodule "site-lisp/twittering-mode"]
+	path = site-lisp/twittering-mode
+	url = https://github.com/hayamiz/twittering-mode.git

@@ -3594,6 +3594,27 @@ end end))))))
   :init
   (setq smerge-command-prefix (kbd "C-. C-.")))
 
+;;;;_ , smex
+
+(use-package smex
+  :load-path "smex"
+  :bind ("M-X" . dhl-invoke-smex)
+  :requires ido
+  :config
+  (progn
+    (smex-initialize)
+    (setq smex-save-file "~/.smex")
+    (smex-auto-update)
+
+    (defun dhl-invoke-smex (x)
+      "Invokes smex, if called without a prefix argument,
+smex-major-mode-commands otherwise. Note that this
+prevents using commands with prefix arguments."
+      (interactive "p")
+      (if (= x 1)
+          (smex)
+        (smex-major-mode-commands)))))
+
 ;;;_ , stopwatch
 
 (use-package stopwatch
@@ -3723,6 +3744,34 @@ end end))))))
                  '(nil "\\`root\\'" "/ssh:%h:"))
     (add-to-list 'tramp-default-proxies-alist
                  '((regexp-quote (system-name)) nil nil))))
+
+
+;;;;_ , twittering-mode
+
+(use-package twittering-mode
+  :load-path "twittering-mode"
+  :commands twit
+  :config
+  (progn
+    (setq twittering-icon-mode t
+          twittering-timer-interval 150
+          twittering-number-of-tweets-on-retrieval 100
+          Twittering-use-ssl t
+          twittering-use-master-password nil
+          twittering-scroll-mode t
+          twittering-initial-timeline-spec-string '(":home"
+                                                    ":replies"
+                                                    ":favorites"
+                                                    ":direct_messages"))
+    (twittering-enable-unread-status-notifier)
+
+    (define-keys twittering-mode-map
+      '(("n" twittering-goto-next-status)
+        ("p" twittering-goto-previous-status)
+        ("j" twittering-goto-next-status-of-user)
+        ("k" twittering-goto-previous-status-of-user)))))
+
+
 
 ;;;_ , vkill
 
