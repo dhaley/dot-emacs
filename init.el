@@ -1058,18 +1058,12 @@ Subexpression references can be used (\1, \2, etc)."
         (setq ansi-term-color-vector
               (vconcat `(unspecified ,base02 ,red ,green ,yellow ,blue ,magenta
                                      ,cyan ,base2)))))
-    
-    (add-hook 'term-mode-hook 'my-term-hook)
-
-    (defun my-term-use-utf8 ()
-      (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
-
     ;; ; ansi-term stuff
     ;; ;; force ansi-term to be utf-8 after it launches
-    ;; (defadvice ansi-term
-    ;;   (after advise-ansi-term-coding-system)
-    ;;   (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
-    ;; (ad-activate 'ansi-term)
+    (defadvice ansi-term
+      (after advise-ansi-term-coding-system)
+      (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
+    (ad-activate 'ansi-term)
 
     
     (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
@@ -1095,9 +1089,6 @@ Subexpression references can be used (\1, \2, etc)."
   (progn
     (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
     (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)))
-
-
-
 
 
 ;;;_ , ascii
@@ -2130,6 +2121,20 @@ FORM => (eval FORM)."
         '(progn
            (unintern 'eshell/su)
            (unintern 'eshell/sudo))))
+    ;; https://github.com/anthracite/emacs-config/blob/master/init.el
+     (defun eshell-maybe-bol ()
+      "Moves point behind the eshell prompt, or
+at the beginning of line, if already there."
+      (interactive)
+      (let ((p (point)))
+        (eshell-bol)
+        (when (= p (point))
+          (beginning-of-line))))
+      (defun eshell-clear ()
+      "Clears the eshell buffer."
+      (interactive)
+      (let ((inhibit-read-only t))
+        (erase-buffer)))
 
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)))
 
@@ -3760,6 +3765,7 @@ prevents using commands with prefix arguments."
                  '((regexp-quote (system-name)) nil nil))))
 
 
+;; https://github.com/anthracite/emacs-config/blob/master/init.el
 ;;;;_ , twittering-mode
 
 (use-package twittering-mode
@@ -3948,8 +3954,16 @@ prevents using commands with prefix arguments."
              whitespace-mode)
   :init
   (progn
-    ;; (global-whitespace-mode t)
+    ;; display only tails of lines longer than 80 columns, tabs and
+    ;; trailing whitespaces
+    ;; style information is here: http://www.emacswiki.org/emacs/WhiteSpace
+    (setq whitespace-line-column 80
+          whitespace-style '(face tabs trailing lines-tail))
+
+    (global-whitespace-mode t)
+
     (setq whitespace-global-modes '(not erc-mode))
+
     (hook-into-modes 'whitespace-mode
                      '(prog-mode-hook
                        c-mode-common-hook))
