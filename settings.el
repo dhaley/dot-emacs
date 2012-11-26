@@ -122,15 +122,16 @@
                   "gmane" "gwene" "usenet" "proxy" "privacy" "\ssocks\s"
                   "gnus" "workgroups" "wireshark" "hushmail" "page manager"
                   "super cookie" "[^\.]php" "nxhtml" "nxml" "erc\-keywords"
-                  "libnotify" "org\W?mode" "starter\W?kit" "rate module"
+                  "libnotify" "org\W?mode" "rate module"
                   "conkeror" "noscript" "https\-everywhere" "references
 module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m"
-"matu4291" "wwng" "ucomm" "crafts" "matt" "jo" "kevin" "cathy" "wiegley" "qdot"))
+"matu4291" "crafts" "matt" "jo" "kevin" "cathy" "wiegley" "qdot" "erc\-hl"
+"erc\-highlight" "web\-mode" "flymake"))
  '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs")
  '(erc-log-write-after-send t)
  '(erc-modules (quote (notify notifications autojoin completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track track-score)))
  '(erc-nick "dkh")
- '(erc-notify-list (quote ("ultimateboy" "matu4291" "matt" "kevin" "jo" "laimagaigalas" "crafts" "technomancy" "_schulte_" "linebarg" "sniderc" "alne1147" "kubie" "goldhamm" "kniffin" "kowalews" "orrie" "schaper" "johnw" "sachac" "rgr" "qDot")))
+ '(erc-notify-list (quote ("ultimateboy" "matt" "kevin" "jo" "laimagaigalas" "crafts" "technomancy" "_schulte_" "linebarg" "sniderc" "alne1147" "kubie" "goldhamm" "kniffin" "kowalews" "orrie" "schaper" "johnw" "sachac" "rgr" "qDot")))
  '(erc-notifications-icon "~/.emacs.d/icons/irc.png")
  '(erc-nick-notify-urgency "normal")
  '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac" "matt"

@@ -3242,6 +3242,7 @@ end end))))))
                                     )))
 
 (use-package dot-org
+  :if (not running-alternate-emacs)
   :commands org-agenda-list
   :bind (
          ("C-c l" . org-store-link)
@@ -3945,7 +3946,6 @@ prevents using commands with prefix arguments."
 ;;;_ , whitespace
 
 (use-package whitespace
-  :if (not running-alternate-emacs)
   :diminish (global-whitespace-mode
              whitespace-mode
              whitespace-newline-mode)
