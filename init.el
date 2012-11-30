@@ -266,6 +266,39 @@
 (bind-key "M-g c" 'goto-char)
 (bind-key "M-g l" 'goto-line)
 
+
+(defun delete-current-file (ξno-backup-p)
+  "Delete the file associated with the current buffer.
+Delete the current buffer too.
+
+A backup file is created with filename appended “~”. Existing backup file are overwritten.
+
+if ΞNO-BACKUP-P is non-nil (when called with `universal-argument'), don't create backup.
+
+If no file is associated, just close buffer without prompt for save."
+  (interactive "P")
+  (let (fName)
+    (when (buffer-file-name) ; buffer is associated with a file
+      (setq fName (buffer-file-name))
+      (save-buffer fName)
+      (if ξno-backup-p
+          (progn )
+        (copy-file fName (concat fName "~" ) t)
+        )
+      (delete-file fName)
+      (message "「%s」 deleted." fName)
+      )
+    (kill-buffer (current-buffer))
+    ) )
+
+
+(defun delete-duplicate-lines (beg end)
+  (interactive "r")
+  (let ((lines (split-string (buffer-substring beg end) "\n")))
+    (delete-region beg end)
+    (insert
+     (mapconcat #'identity (delete-dups lines) "\n"))))
+
 (defun delete-indentation-forward ()
   (interactive)
   (delete-indentation t))
@@ -525,6 +558,26 @@
   (interactive)
   (insert (format-time-string "%Y-%m-%d")))
 
+(defun define-keys (mode-map keybindings)
+  "Takes a mode map, and a list of (key function-designator)
+lists. The functions are bound to the keys in the given mode-map.
+Keys are in kbd format."
+  (mapc (lambda (keybinding)
+          (destructuring-bind (key function) keybinding
+            (define-key mode-map (read-kbd-macro key) function)))
+        keybindings))
+
+(defun global-set-keys (keybindings)
+  "Takes a list of (key function-designator) lists.
+The functions are globally bound to the keys. Keys
+are in kbd format."
+  (mapc (lambda (keybinding)
+          (destructuring-bind (key function) keybinding
+            (global-set-key (read-kbd-macro key) function)))
+        keybindings))
+
+
+
 (defcustom user-initials nil
   "*Initials of this user."
   :set
@@ -658,6 +711,19 @@
     (while (< (point) end)
       (unfill-paragraph 1)
       (forward-paragraph))))
+
+  (defun uniquify-region-lines (beg end)
+    "Remove duplicate adjacent lines in region."
+    (interactive "*r")
+    (save-excursion
+      (goto-char beg)
+      (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
+        (replace-match "\\1"))))
+  
+  (defun uniquify-buffer-lines ()
+    "Remove duplicate adjacent lines in the current buffer."
+    (interactive)
+    (uniquify-region-lines (point-min) (point-max)))
 
 
 ;;;_, Toggle between split windows and a single window
@@ -965,6 +1031,13 @@ Subexpression references can be used (\1, \2, etc)."
 (use-package ace-jump-mode
   :bind ("C-. C-s" . ace-jump-mode))
 
+;;;_ , agda
+
+(use-package agda2-mode
+  :mode ("\\.agda\\'" . agda2-mode)
+  :init
+  (use-package agda-input))
+
 ;;;_ , allout
 
 (use-package allout
@@ -990,10 +1063,6 @@ Subexpression references can be used (\1, \2, etc)."
           (unbind-key "C-k" allout-mode-map)))
 
     (add-hook 'allout-mode-hook 'my-allout-mode-hook)))
-
-;;;_ , apl-ascii
-
-(use-package apl)
 
 ;;;_ , archive-region
 
@@ -1149,13 +1218,18 @@ Subexpression references can be used (\1, \2, etc)."
               "site-lisp/ac/ac-yasnippet"
               "site-lisp/ac/fuzzy-el"
               "site-lisp/ac/popup-el")
-  :commands auto-complete-mode
   :diminish auto-complete-mode
+  :init
+  (progn
+    (use-package pos-tip)
+    (ac-config-default))
+
   :config
   (progn
     (ac-set-trigger-key "TAB")
     (setq ac-use-menu-map t)
-
+    
+    (bind-key "A-M-?" 'ac-last-help)
     (unbind-key "C-s" ac-completing-map)))
 
 ;;;_ , autopair
@@ -1472,10 +1546,21 @@ Subexpression references can be used (\1, \2, etc)."
 (use-package copy-code
   :bind ("A-M-W" . copy-code-as-rtf))
 
+;;;_ , coq
+
+;; (if nil
+;;     (use-package coq-mode
+;;       :mode ("\\.v\\'" . coq-mode))
+;;   (use-package proof-site
+;;     :command proofgeneral
+;;     :load-path "site-lisp/proofgeneral/generic/"))
+
+
 ;;;_ , crosshairs
 
 (use-package crosshairs
   :bind ("M-o c" . crosshairs-mode))
+
 
 ;;;_ , css-mode
 
@@ -1488,6 +1573,14 @@ Subexpression references can be used (\1, \2, etc)."
     (setq-default css-indent-offset 2)
     (rainbow-mode +1)
     ))
+
+
+(use-package cursor-chg
+  :init
+  (progn
+    (change-cursor-mode 1)
+    (toggle-cursor-type-when-idle 1)))
+
 
 ;;;_ , ibuffer
 
@@ -1574,9 +1667,12 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
         ;; (use-package dired-async)
         (use-package dired-sort-map)
         (use-package runner)
+        (use-package dired-details-hide
+          :commands dired-details-toggle)
 
         (bind-key "l" 'dired-up-directory dired-mode-map)
-
+        (bind-key "H" 'dired-details-toggle dired-mode-map)
+        
         (defun my-dired-switch-window ()
           (interactive)
           (if (eq major-mode 'sr-mode)
@@ -1874,8 +1970,30 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
   :if running-alternate-emacs
   :init
   (progn
+        (defun setup-irc-environment ()
+      (interactive)
+
+      (set-frame-font
+       "-*-Lucida Grande-normal-normal-normal-*-*-*-*-*-p-0-iso10646-1" nil
+       nil)
+      (set-frame-parameter (selected-frame) 'width 90)
+      (custom-set-faces
+       '(erc-timestamp-face ((t (:foreground "dark violet")))))
+
+      (setq erc-timestamp-only-if-changed-flag nil
+            erc-timestamp-format "%H:%M "
+            erc-fill-prefix "          "
+            erc-fill-column 88
+            erc-insert-timestamp-function 'erc-insert-timestamp-left)
+
+      (set-input-method "Agda")
+      (pabbrev-mode 1))
+
+    (add-hook 'erc-mode-hook 'setup-irc-environment)
+
     (defun irc ()
       (interactive)
+      
       (erc-tls :server "asimov.freenode.net"
                :port 6697
                :nick "dkh"
@@ -2069,7 +2187,6 @@ FORM => (eval FORM)."
       '(progn
 
          (require 'erc-hl-nicks)
-         (require 'erc-notify)
          (require 'erc-spelling)
          (require 'erc-truncate)
          (ignore-errors
@@ -3009,6 +3126,11 @@ at the beginning of line, if already there."
 
     (bind-key "C-x M" 'markdown-preview-file)))
 
+;;;;_ , mark-multiple
+
+(use-package mark-multiple
+  :load-path "mark-multiple")
+
 ;;;_ , merlin
 
 (defun merlin-record-times ()
@@ -3294,6 +3416,12 @@ end end))))))
     ))
 
 
+;;;_ , pabbrev
+
+(use-package pabbrev
+  :commands pabbrev-mode
+  :diminish pabbrev-mode)
+
 ;;;_ , paredit
 
 (use-package paredit
@@ -3301,7 +3429,7 @@ end end))))))
   :diminish paredit-mode
   :config
   (progn
-    (use-package paredit-ext)
+    (use-packsage paredit-ext)
 
     (bind-key "C-M-l" 'paredit-recentre-on-sexp paredit-mode-map)
 
@@ -3427,6 +3555,21 @@ end end))))))
 
 (use-package quickrun
   :bind ("C-c C-r" . quickrun))
+
+
+;;;;_ , rainbow-delimiters
+
+(use-package rainbow-delimiters
+  :load-path "rainbow-delimiters"
+  :commands (rainbow-delimiters-mode))
+
+
+;;;;_ , rainbow-mode
+
+(use-package rainbow-mode
+  :diminish rainbow-mode
+  :load-path "rainbow-mode"
+  :commands (rainbow-mode))
 
 ;;;_ , recentf
 
@@ -3786,11 +3929,12 @@ prevents using commands with prefix arguments."
                                                     ":direct_messages"))
     (twittering-enable-unread-status-notifier)
 
-    (define-keys twittering-mode-map
-      '(("n" twittering-goto-next-status)
-        ("p" twittering-goto-previous-status)
-        ("j" twittering-goto-next-status-of-user)
-        ("k" twittering-goto-previous-status-of-user)))))
+     (define-keys twittering-mode-map
+       '(("n" twittering-goto-next-status)
+         ("p" twittering-goto-previous-status)
+         ("j" twittering-goto-next-status-of-user)
+         ("k" twittering-goto-previous-status-of-user)))
+    ))
 
 
 

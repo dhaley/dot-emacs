@@ -10,7 +10,7 @@
  '(TeX-view-program-list (quote (("Skim" ("osascript" " ~/bin/skim-gotopage.script" " %O" (mode-io-correlate " %(outpage)"))))))
  '(TeX-view-program-selection (quote (((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi") (output-pdf "Skim") (output-html "xdg-open"))))
  '(abbrev-file-name "~/git/.emacs.d/.abbrev_defs")
- '(ac-auto-show-menu nil)
+ '(ac-auto-show-menu 1.0)
  '(ac-auto-start 3)
  '(ac-comphist-file "/Users/daha1836/.emacs.d/data/ac-comphist.dat")
  '(ac-dwim nil)
@@ -109,10 +109,11 @@
  '(emms-source-file-default-directory "/Volumes/Data/Music/iTunes/iTunes Media/")
  '(enable-recursive-minibuffers t)
   '(erc-autoawayo-message "I'm at the cappuccino bar(after %i seconds of idle-time)")
- '(erc-autojoin-channels-alist '((".*\\.freenode.net" "#drupal-colorado" "#emacs" "#fsf-members" "#erc" "#conkeror" "#org-mode" "#freedombox")))
+ '(erc-autojoin-channels-alist '((".*\\.freenode.net" "#drupal-colorado"
+                                  "#emacs-ops" "emacs" "#fsf-members" "#erc" "#conkeror" "#org-mode" "#freedombox")))
  '(erc-autojoin-mode t)
  '(erc-autojoin-timing :ident)
- '(erc-fools (quote ("anxt")))
+ '(erc-fools (quote ("anxt" "JordiGH" "nyc")))
  '(erc-generate-log-file-name-function (quote erc-generate-log-file-name-short))
  '(erc-header-line-format "%t: %o")
  '(erc-join-buffer 'bury)
@@ -124,18 +125,20 @@
                   "super cookie" "[^\.]php" "nxhtml" "nxml" "erc\-keywords"
                   "libnotify" "org\W?mode" "rate module"
                   "conkeror" "noscript" "https\-everywhere" "references
-module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m"
-"matu4291" "crafts" "matt" "jo" "kevin" "cathy" "wiegley" "qdot" "erc\-hl"
-"erc\-highlight" "web\-mode" "flymake"))
+module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc\-hl"
+"erc\-highlight" "web\-mode" "flymake" "Rasa"))
  '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs")
  '(erc-log-write-after-send t)
- '(erc-modules (quote (notify notifications autojoin completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services smiley stamp spelling track track-score)))
+ '(erc-modules (quote (button notify notifications autojoin completion dcc
+                              fill identd irccontrols list log match menu
+                              move-to-prompt netsplit networks noncommands
+                              readonly replace ring scrolltobottom services
+                              smiley stamp spelling track truncate track-score hl-nicks)))
  '(erc-nick "dkh")
- '(erc-notify-list (quote ("ultimateboy" "^matt$" "kevin" "^jo$" "laimagaigalas" "crafts" "technomancy" "_schulte_" "linebarg" "sniderc" "alne1147" "kubie" "goldhamm" "kniffin" "kowalews" "orrie" "schaper" "johnw" "sachac" "rgr" "qDot")))
  '(erc-notifications-icon "~/.emacs.d/icons/irc.png")
  '(erc-nick-notify-urgency "normal")
  '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac" "matt"
-                    "kevin" "jo")))
+                    "kevin" "jo" "cathy" "wiegley" "qdot" "crafts" "miles")))
  '(erc-port 6667)
  '(erc-prompt (lambda ()
                    (if erc-network
@@ -199,6 +202,7 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m"
  '(gc-cons-threshold 3500000)
  '(gdb-find-source-frame t)
  '(gdb-same-frame nil)
+ '(global-auto-complete-mode t)
  '(global-font-lock-mode t nil (font-lock))
  '(read-mail-command 'gnus)
  '(hippie-expand-try-functions-list (quote (yas/hippie-try-expand try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
@@ -243,6 +247,7 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m"
  '(icicle-apropos-cycle-previous-keys (quote ([prior] [(control 112)])))
  '(icicle-incremental-completion nil)
  '(icicle-max-candidates 100)
+ '(icomplete-mode 1)
  '(identica-username "vinylisl")
  '(ido-auto-merge-work-directories-length 0)
  '(ido-cannot-complete-command (quote ido-exit-minibuffer))
@@ -294,6 +299,7 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m"
  '(nxml-slash-auto-complete-flag t)
  '(offlineimap-command "offlineimap -u machineui")
  '(org-src-tab-acts-natively t)
+ '(pabbrev-idle-timer-verbose nil)
  '(package-archives (quote (("gnu" . "http://elpa.gnu.org/packages/") ("ELPA" . "http://tromey.com/elpa/") ("Marmalade" . "http://marmalade-repo.org/packages/"))))
  '(parens-require-spaces t)
  '(pcomplete-compare-entries-function (quote file-newer-than-file-p))
@@ -337,7 +343,10 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m"
  '(phpmd-shell-command "/usr/local/pear/bin/phpmd")
  '(phpunit-shell-command "/usr/local/pear/bin/phpunit")
  '(ping-program-options '("-c" "4"))
- '(pp^L-^L-string "                                                                              ")
+ '(pp^L-^L-string "
+")
+ '(proof-electric-terminator-enable t)
+ '(proof-splash-enable nil)
  '(ps-font-size (quote (8 . 10)))
  '(ps-footer-font-size (quote (12 . 14)))
  '(ps-header-font-size (quote (12 . 14)))
@@ -357,7 +366,7 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m"
  '(same-window-buffer-names (quote ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
  '(sauron-hide-mode-line t)
  '(sauron-watch-patterns erc-keywords)
- '(sauron-watch-nicks erc-notify-list)
+ '(sauron-watch-nicks erc-pals)
  '(save-abbrevs (quote silently))
  '(save-interprogram-paste-before-kill t)
  '(save-kill-file-name "~/.emacs.d/data/kill-ring-saved.el")

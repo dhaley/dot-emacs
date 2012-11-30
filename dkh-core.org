@@ -942,18 +942,6 @@ clean-buffer-list-kill-regexps (quote (".*")))
 
 #+end_src
 
-** Icomplete mode
-
-#+begin_src emacs-lisp :tangle no
-
-(icomplete-mode 1)
-
-(setq sentence-end-double-space nil)
-
-(global-set-key (kbd "RET") 'newline-and-indent)
-
-#+end_src
-
 ** Scrollbars
 
 #+begin_src emacs-lisp :tangle no

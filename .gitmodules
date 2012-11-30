@@ -328,3 +328,9 @@
 [submodule "site-lisp/twittering-mode"]
 	path = site-lisp/twittering-mode
 	url = https://github.com/hayamiz/twittering-mode.git
+[submodule "site-lisp/persistent-soft"]
+	path = site-lisp/persistent-soft
+	url = git://github.com/rolandwalker/persistent-soft.git
+[submodule "site-lisp/proofgeneral"]
+	path = site-lisp/proofgeneral
+	url = https://github.com/emacsmirror/proofgeneral.git
