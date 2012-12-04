@@ -1184,13 +1184,11 @@ Subexpression references can be used (\1, \2, etc)."
 
 (use-package tex-site
   :load-path "site-lisp/auctex/preview/"
-  :defines (latex-help-cmd-alist
-            latex-help-file)
-  ;; jww (2012-06-15): Do I want to use AucTeX for texinfo-mode?
+  :defines (latex-help-cmd-alist latex-help-file)
   :mode ("\\.tex\\'" . latex-mode)
   :config
   (progn
-    (defun latex-help-get-cmd-alist () ;corrected version:
+    (defun latex-help-get-cmd-alist ()  ;corrected version:
       "Scoop up the commands in the index of the latex info manual.
    The values are saved in `latex-help-cmd-alist' for speed."
       ;; mm, does it contain any cached entries
@@ -1209,11 +1207,13 @@ Subexpression references can be used (\1, \2, etc)."
     (use-package latex-mode
       :defer t
       :config
-      (info-lookup-add-help :mode 'latex-mode
-                            :regexp ".*"
-                            :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
-                            :doc-spec '(("(latex2e)Concept Index" )
-                                        ("(latex2e)Command Index"))))))
+      (progn
+        (use-package preview)
+        (info-lookup-add-help :mode 'latex-mode
+                              :regexp ".*"
+                              :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
+                              :doc-spec '(("(latex2e)Concept Index" )
+                                          ("(latex2e)Command Index")))))))
 
 ;;;_ , auto-complete
 
@@ -1551,16 +1551,6 @@ Subexpression references can be used (\1, \2, etc)."
 
 (use-package copy-code
   :bind ("A-M-W" . copy-code-as-rtf))
-
-;;;_ , coq
-
-;; (if nil
-;;     (use-package coq-mode
-;;       :mode ("\\.v\\'" . coq-mode))
-;;   (use-package proof-site
-;;     :command proofgeneral
-;;     :load-path "site-lisp/proofgeneral/generic/"))
-
 
 ;;;_ , crosshairs
 
@@ -2993,7 +2983,8 @@ at the beginning of line, if already there."
       (elisp-slime-nav-mode 1)
 
       (local-set-key (kbd "<return>") 'paredit-newline)
-
+      (add-hook 'after-save-hook 'check-parens nil t)
+      
       (if (memq major-mode
                 '(emacs-lisp-mode inferior-emacs-lisp-mode ielm-mode))
           (progn
@@ -3522,6 +3513,27 @@ end end))))))
 (use-package pp-c-l
   :init
   (hook-into-modes 'pretty-control-l-mode '(prog-mode-hook)))
+
+(use-package proof-site
+  :load-path "site-lisp/proofgeneral/generic/"
+  :config
+  (progn
+    (eval-after-load "coq"
+      '(progn
+         (add-hook 'coq-mode-hook
+                   (lambda ()
+                     (yas/minor-mode 1)
+                     (whitespace-mode 1)
+                     (unicode-tokens-use-shortcuts 0)))
+         (bind-key "M-RET" 'proof-goto-point coq-mode-map)
+         (bind-key "<tab>" 'yas/expand-from-trigger-key coq-mode-map)))
+
+    (defadvice proof-electric-terminator
+      (around insert-newline-after-terminator activate)
+      (save-excursion
+        ad-do-it)
+      (forward-char))))
+
 
 ;;;_ , ps-print
 
