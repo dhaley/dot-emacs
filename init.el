@@ -1081,76 +1081,82 @@ Subexpression references can be used (\1, \2, etc)."
   :defer t
   :init
   (progn
-    ;; set shell-mode colors
-    ;; (setq ansi-color-names-vector
-    ;;       ["#002B36" ; black
-    ;;        "#DC322F" ; red
-    ;;        "#859900" ; green
-    ;;        "#B58900" ; yellow
-    ;;        "#268BD2" ; blue
-    ;;        "#D33682" ; magenta
-    ;;        "#2AA198" ; cyan
-    ;;        "#FDF6E3" ; white
-    ;;        ])
-    ;; (setq ansi-color-map (ansi-color-make-color-map))
 
-    
+    ;; ;; Use variable width font faces in current buffer
+    (defun my-buffer-face-mode-variable ()
+    ;;   "Set font to a variable width (proportional) fonts in current buffer"
+      (interactive)
+      (setq buffer-face-mode-face '(:family "Menlo For Powerline" :height 100))
+      (text-scale-adjust 1)
+       (buffer-face-mode))
+
+    (setq system-uses-terminfo nil)
+    (add-hook 'term-mode-hook
+              '(lambda ()
+                 (linum-mode 0)
+                 (term-set-escape-char ?\C-z)
+                 (term-set-escape-char ?\C-x)
+                 (define-key term-raw-map "\C-c" 'term-interrupt-subjob)
+                 (define-key term-raw-map (kbd "M-x") 'execute-extended-command)
+                 (setq autopair-dont-activate t)
+                 (setq ac-auto-start nil)
+                 (visual-line-mode -1)
+                 ;; (my-buffer-face-mode-variable)
+                 ))
+
     (defun my-term-paste (&optional string)
       (interactive)
       (process-send-string
        (get-buffer-process (current-buffer))
        (if string string (current-kill 0))))
 
-    ;; (defun my-term-hook ()
-    ;;   (goto-address-mode)
-    ;;   (define-key term-raw-map "\C-y" 'my-term-paste))
+    (defun my-term-pasteboard-paste ()
+      (interactive)
+      (process-send-string
+       (get-buffer-process (current-buffer))
+       (ns-get-pasteboard)))
 
-    (defun my-term-hook ()
-      (goto-address-mode)
-      (define-key term-raw-map "\C-y" 'my-term-paste)
-      (let ((base03 "#002b36")
-            (base02 "#073642")
-            (base01 "#586e75")
-            (base00 "#657b83")
-            (base0 "#839496")
-            (base1 "#93a1a1")
-            (base2 "#eee8d5")
-            (base3 "#fdf6e3")
-            (yellow "#b58900")
-            (orange "#cb4b16")
-            (red "#dc322f")
-            (magenta "#d33682")
-            (violet "#6c71c4")
-            (blue "#268bd2")
-            (cyan "#2aa198")
-            (green "#859900"))
-        (setq ansi-term-color-vector
-              (vconcat `(unspecified ,base02 ,red ,green ,yellow ,blue ,magenta
-                                     ,cyan ,base2)))))
-    ;; ; ansi-term stuff
-    ;; ;; force ansi-term to be utf-8 after it launches
-    (defadvice ansi-term
-      (after advise-ansi-term-coding-system)
-      (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
-    (ad-activate 'ansi-term)
+    (add-hook 'term-exec-hook '(lambda ()
+                                 (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)
+                                 (goto-address-mode)
+                                 (define-key term-raw-map (kbd "C-y") 'my-term-paste)
+                                 (define-key term-raw-map (kbd "s-v") 'my-term-pasteboard-paste)
+                                 (let ((base03 "#002b36")
+                                       (base02 "#073642")
+                                       (base01 "#586e75")
+                                       (base00 "#657b83")
+                                       (base0 "#839496")
+                                       (base1 "#93a1a1")
+                                       (base2 "#eee8d5")
+                                       (base3 "#fdf6e3")
+                                       (yellow "#b58900")
+                                       (orange "#cb4b16")
+                                       (red "#dc322f")
+                                       (magenta "#d33682")
+                                       (violet "#6c71c4")
+                                       (blue "#268bd2")
+                                       (cyan "#2aa198")
+                                       (green "#859900"))
+                                   (setq ansi-term-color-vector
+                                         (vconcat `(unspecified ,base02 ,red ,green ,yellow ,blue
+                                                                ,magenta ,cyan ,base2))))))
 
-    
     (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
       (if (memq (process-status proc) '(signal exit))
           (let ((buffer (process-buffer proc)))
             ad-do-it
             (kill-buffer buffer))
         ad-do-it))
+    (ad-activate 'term-sentinel)
 
-    (defvar my-term-shell "/bin/bash")
+    (defvar my-term-shell "/usr/local/bin/zsh")
     (defadvice ansi-term (before force-bash)
       (interactive (list my-term-shell)))
+    (ad-activate 'ansi-term)
 
-                                        ; scroll line by line
-    (progn (setq scroll-step 1)
-           (setq scroll-preserve-screen-position t)
-           (setq scroll-conservatively 9999))
-    
+    (setenv "PATH" (shell-command-to-string "echo $PATH"))
+
+        
     ))
 
 (use-package ansi-color
@@ -2344,6 +2350,31 @@ at the beginning of line, if already there."
         (eval-after-load "post"
           '(define-key post-mode-map (kbd "TAB") 'enz-eudc-expand-inline))))))
 
+
+
+;; (use-package linum-mode
+;;   (progn
+;; (global-linum-mode 1)
+;; (setq linum-format
+;;       (lambda (line)
+;; (propertize
+;; (format
+;; (let
+;; ((w (length (number-to-string (count-lines (point-min)
+;; (point-max))))))
+;; (concat " %" (number-to-string w) "d ")) line) 'face 'linum)))
+
+;; (add-hook 'compilation-mode-hook '(lambda () (linum-mode 0)))
+
+;; ;; Left click to jump to line
+;; (defun line-at-click ()
+;;   (cdr (cdr (mouse-position))))
+
+;; (defun md-goto-linum ()
+;;   (interactive)
+;;   (setq *linum-mdown-line* nil)
+;;   (goto-line (line-at-click)))
+;;     ))
 
 ;;;_ , eval-expr
 

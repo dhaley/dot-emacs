@@ -70,6 +70,7 @@
  '(custom-buffer-done-function (quote kill-buffer))
  '(custom-file "/Users/daha1836/.emacs.d/settings.el")
  '(custom-raised-buttons nil)
+ ;; '(default-frame-alist (quote ((font . "-bitstream-Menlo for Powerline-normal-normal-normal-*-15-*-*-*-*-0-iso10646-1") (cursor-color . "#b247ee"))))
  '(default-frame-alist (quote ((font . "-apple-Courier-medium-normal-normal-*-15-*-*-*-m-0-iso10646-1") (cursor-color . "#b247ee"))))
  '(default-input-method "latin-1-prefix")
  '(default-major-mode (quote text-mode) t)
@@ -129,7 +130,7 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc\-
 "erc\-highlight" "web\-mode" "flymake" "Rasa"))
  '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs")
  '(erc-log-write-after-send t)
- '(erc-modules (quote (button notify notifications autojoin completion dcc
+ '(erc-modules (quote (button notifications autojoin completion dcc
                               fill identd irccontrols list log match menu
                               move-to-prompt netsplit networks noncommands
                               readonly replace ring scrolltobottom services
@@ -138,7 +139,8 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc\-
  '(erc-notifications-icon "~/.emacs.d/icons/irc.png")
  '(erc-nick-notify-urgency "normal")
  '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac" "matt"
-                    "kevin" "jo" "cathy" "wiegley" "qdot" "crafts" "miles")))
+                    "kevin" "jo" "cathy" "wiegley" "qdot" "crafts" "miles"
+                    "matt" "alfredo" "Karin")))
  '(erc-port 6667)
  '(erc-prompt (lambda ()
                    (if erc-network
