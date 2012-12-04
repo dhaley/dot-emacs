@@ -1888,16 +1888,16 @@ The output appears in the buffer `*Async Shell Command*'."
     ))
 
 
-(use-package php+-mode
-  :interpreter ("php" . php+-mode)
-  init:
-  (progn
-    (php+-mode-setup)
-    (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
-    (setq php-completion-file "~/git/ewax/misc/php-completion-file")
-    (add-hook 'php+-mode-hook '(lambda ()(subword-mode t)))
-    (add-hook 'php+-mode-hook '(lambda () (php-electric-mode)))
-    ))
+;; (use-package php+-mode
+;;   :interpreter ("php" . php+-mode)
+;;   init:
+;;   (progn
+;;     (php+-mode-setup)
+;;     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
+;;     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
+;;     (add-hook 'php+-mode-hook '(lambda ()(subword-mode t)))
+;;     (add-hook 'php+-mode-hook '(lambda () (php-electric-mode)))
+;;     ))
 
 ;;;_ , drupal-mode
 

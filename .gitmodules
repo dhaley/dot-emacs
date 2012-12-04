@@ -229,18 +229,12 @@
 [submodule "site-lisp/org-jira"]
 	path = site-lisp/org-jira
 	url = https://github.com/baohaojun/org-jira
-[submodule "site-lisp/phpplus-mode"]
-	path = site-lisp/phpplus-mode
-	url = https://github.com/echosa/phpplus-mode.git
 [submodule "site-lisp/erc-hl-nicks"]
 	path = site-lisp/erc-hl-nicks
 	url = https://github.com/leathekd/erc-hl-nicks
 [submodule "site-lisp/erc-track-score"]
 	path = site-lisp/erc-track-score
 	url = git://git.naquadah.org/erc-track-score.git
-[submodule "site-lisp/drupal-ide"]
-	path = site-lisp/drupal-ide
-	url = http://git.drupal.org/project/emacs.git
 [submodule "site-lisp/php-mode"]
 	path = site-lisp/php-mode
 	url = https://github.com/ejmr/php-mode.git
