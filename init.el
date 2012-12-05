@@ -1882,6 +1882,7 @@ The output appears in the buffer `*Async Shell Command*'."
   :interpreter ("php" . php-mode)
   init:
   (progn
+    (require 'php-extras)
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
     (add-hook 'php-mode-hook '(lambda ()(c-subword-mode t)))
     (add-hook 'php-mode-hook '(lambda () (php-electric-mode)))

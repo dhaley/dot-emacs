@@ -141,7 +141,7 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc\-
  '(erc-nick-notify-urgency "normal")
  '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac" "matt"
                     "kevin" "jo" "cathy" "wiegley" "qdot" "crafts" "miles"
-                    "matt" "alfredo" "Karin")))
+                    "matt" "alfredo" "Karin" "BerntH")))
  '(erc-port 6667)
  '(erc-prompt (lambda ()
                    (if erc-network

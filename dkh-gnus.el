@@ -87,9 +87,9 @@
         (gnus-group-list-groups gnus-activate-level)
         (setq switch-to-gnus-run t)))))
 
-;; (use-package fetchmail-ctl
-;;   :init
-;;   (progn
+(use-package fetchmail-ctl
+  :init
+  (progn
     (defun maybe-start-fetchmail-and-news ()
       (interactive)
       (when (and (not switch-to-gnus-unplugged)
@@ -97,14 +97,14 @@
         (do-applescript "tell application \"Notify\" to run")
         (switch-to-fetchmail)))
 
-;;     (add-hook 'gnus-startup-hook 'maybe-start-fetchmail-and-news)
+    (add-hook 'gnus-startup-hook 'maybe-start-fetchmail-and-news)
 
-;;     (defadvice shutdown-fetchmail (after stop-mail-after-fetchmail activate)
-;;       (async-start
-;;        (lambda ()
-;;          (call-process (expand-file-name "~/git/gnus/Mail/manage-mail/stop-mail")))
-;;        (lambda (ret)
-;;          (do-applescript "tell application \"Notify\" to quit"))))))
+    (defadvice shutdown-fetchmail (after stop-mail-after-fetchmail activate)
+      (async-start
+       (lambda ()
+         (call-process (expand-file-name "~/git/gnus/Mail/manage-mail/stop-mail")))
+       (lambda (ret)
+         (do-applescript "tell application \"Notify\" to quit"))))))
 
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 (add-hook 'gnus-group-mode-hook 'hl-line-mode)
@@ -171,7 +171,7 @@
             (switch-to-buffer-other-window buf))))
     (loop initially (delete-other-windows)
           with first = t
-          for log in (directory-files "~/log/" t "\\.log\\'")
+          for log in (directory-files "~/Messages/" t "\\.log\\'")
           for buf = (find-file-noselect log)
           do (if first
                  (progn
