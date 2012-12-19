@@ -143,7 +143,8 @@
       ;; (switch-in-other-buffer fetchmail-spam-buf)
       ;; (switch-in-other-buffer fetchnews-buf)
       (select-window (get-buffer-window cur-buf))
-      (balance-windows))))
+      (balance-windows))
+    ))
 
 (add-hook 'gnus-after-exiting-gnus-hook 'shutdown-fetchmail)
 

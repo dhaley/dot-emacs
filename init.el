@@ -1663,7 +1663,7 @@ Subexpression references can be used (\1, \2, etc)."
   :init
   (progn
     (setq-default css-indent-offset 2)
-    (rainbow-mode +1)
+    ;; (rainbow-mode +1)
     ))
 
 
@@ -4376,9 +4376,9 @@ prevents using commands with prefix arguments."
   :init
   (progn
     (defun web-mode-hook () "Hooks for Web mode."
-      (setq web-mode-markup-indent-offset 2)
-      (setq web-mode-css-indent-offset 2)
-      (setq web-mode-code-indent-offset 2)
+      ;; (setq web-mode-markup-indent-offset 2)
+      ;; (setq web-mode-css-indent-offset 2)
+      ;; (setq web-mode-code-indent-offset 2)
       ;; (set-face-attribute 'web-mode-css-rule-face nil :foreground "Pink3")
       ;;       Available faces:
       ;; web-mode-doctype-face, web-mode-html-tag-face, web-mode-html-attr-name-face, web-mode-html-attr-value-face
@@ -4387,18 +4387,16 @@ prevents using commands with prefix arguments."
       ;; web-mode-variable-name-face, web-mode-function-name-face, web-mode-constant-face, web-mode-type-face, web-mode-keyword-face
       ;; web-mode-folded-face
       ;; (define-key web-mode-map (kbd "C-n") 'web-mode-match-tag)
-      (add-to-list 'web-mode-snippets '("mydiv" "<div>" "</div>"))
+      ;; (add-to-list 'web-mode-snippets '("mydiv" "<div>" "</div>"))
       ;; (setq web-mode-disable-autocompletion t)
       ;; (setq web-mode-disable-css-colorization t)
       ;;       (setq web-mode-extra-php-constants '("constant1" "constant2")) Also available : web-mode-extra-php-keywords, web-mode-extra-js-keywords, web-mode-extra-jsp-keywords, web-mode-extra-asp-keywords
       ;; (Note: do not put this line in the hook)
 
-
-
       )
-    (add-hook 'web-mode-hook 'web-mode-hook)
-    (add-hook 'local-write-file-hooks (lambda () (delete-trailing-whitespace) nil))
-    (local-set-key (kbd "RET") 'newline-and-indent)
+    ;; (add-hook 'web-mode-hook 'web-mode-hook)
+    ;; (add-hook 'local-write-file-hooks (lambda () (delete-trailing-whitespace) nil))
+    ;; (local-set-key (kbd "RET") 'newline-and-indent)
   ;; :mode ("\\.\\(php\\|tpl\\|\\.html\\.erb\\)$" . web-mode)
   ;; :interpreter ("web" . web-mode)
   ))

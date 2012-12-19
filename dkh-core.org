@@ -510,7 +510,6 @@ annotate your elisp in the following file:
 ;;        'org-outlook
         'pastebin
         'rainbow-delimiters
-        'rainbow-mode
         'rotate-text
         'sauron
         'session
@@ -1884,8 +1883,6 @@ like the following:
 
 #+begin_src emacs-lisp :tangle no
 
-(require 'rainbow-mode)
-(rainbow-mode t)
 (setq rainbow-x-colors t)
 (require 'rainbow-delimiters)
 
@@ -5240,11 +5237,6 @@ ICQ, therefore i quickly hacked up this one:
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-
-(add-hook 'css-mode-hook 'rainbow-mode)
-
-#+end_src
 
 ** debbugs
 
