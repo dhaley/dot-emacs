@@ -334,3 +334,15 @@
 [submodule "site-lisp/php-extras"]
 	path = site-lisp/php-extras
 	url = https://github.com/arnested/php-extras.git
+[submodule "site-lisp/rainbow-delimiters"]
+	path = site-lisp/rainbow-delimiters
+	url = https://github.com/jlr/rainbow-delimiters.git
+[submodule "site-lisp/web-mode"]
+	path = site-lisp/web-mode
+	url = https://github.com/fxbois/web-mode.git
+[submodule "site-lisp/emacs-iedit"]
+	path = site-lisp/emacs-iedit
+	url = https://github.com/eproxus/emacs-iedit.git
+[submodule "site-lisp/redshank"]
+	path = site-lisp/redshank
+	url = https://github.com/emacsmirror/redshank.git

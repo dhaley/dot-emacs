@@ -146,9 +146,9 @@
 (defun kick-postfix-if-needed ()
   (if (and (quickping "mail.messagingengine.com")
            (= 0 (call-process "/usr/bin/sudo" nil nil nil
-                             "/usr/libexec/postfix/master" "-t")))
+                             "/opt/local/libexec/postfix/master" "-t")))
       (start-process "postfix" nil "/usr/bin/sudo"
-                     "/usr/libexec/postfix/master" "-e" "60")))
+                     "/opt/local/libexec/postfix/master" "-e" "60")))
 
 (add-hook 'message-sent-hook 'kick-postfix-if-needed)
 

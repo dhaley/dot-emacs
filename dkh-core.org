@@ -442,7 +442,6 @@ annotate your elisp in the following file:
    erc-nick-notify
    face-list
    fliptext
-;;   gnus-alias
    gnus-harvest
    grep+
    ipa
@@ -898,34 +897,6 @@ annotate your elisp in the following file:
 
 #+begin_src emacs-lisp :tangle no
 
-(add-to-list 'same-window-buffer-names "*Help*")
-(add-to-list 'same-window-buffer-names "*Apropos*")
-(add-to-list 'same-window-buffer-names "*Summary*")
- (add-to-list 'same-window-buffer-names "*Backtrace*")
-
-
-
-;; Define buffers that should appear in the same window.
-(add-to-list 'same-window-buffer-names "*Buffer List*")
-(add-to-list 'same-window-buffer-names "*Colors*")
-(add-to-list 'same-window-buffer-names "*Command History*")
-(add-to-list 'same-window-buffer-names "*Diff*")
-(add-to-list 'same-window-buffer-names "*Proced*")
-(add-to-list 'same-window-buffer-names "*vc-dir*")
-(add-to-list 'same-window-buffer-names "*SQL*")
-(add-to-list 'same-window-buffer-names "scratch.org")
-
-
-(setq same-window-regexps '(
-                          "\*grep\*"
-))
-
-(add-to-list 'same-window-regexps "\\*compilation\\*\\(\\|<[0-9]+>\\)")
-(add-to-list 'same-window-regexps "\\*Help\\*\\(\\|<[0-9]+>\\)")
-
-(add-to-list 'same-window-regexps "\\*Shell Command Output\\*\\(\\|<[0-9]+>\\)")
-
-(add-to-list 'same-window-regexps "\\*dictem.*")
 
 #+end_src
 
@@ -1209,18 +1180,6 @@ established Emacs alternatives instead.
 
 #+end_src
 
-** Save place
-[2012-06-26 Tue 14:12]
-
-If you wish your place in any file to always be automatically saved,
-simply put this in your `~/.emacs' file:
-
-#+begin_src emacs-lisp :tangle no
-
-(setq-default save-place t)
-(require 'saveplace)
-
-#+end_src
 
 ** Faces
 #+begin_src emacs-lisp :tangle no
@@ -3370,6 +3329,12 @@ A list of the form (FRAME-CONFIGURATION POSITION)
 (defalias 'acm 'auto-complete-mode)
 
 (defalias 'eu 'eudc-query-form)
+
+(defalias 'list-matching-lines 'occur)
+(defalias 'delete-matching-lines 'flush-lines)
+(defalias 'delete-non-matching-lines 'keep-lines)
+
+
 #+end_src
 
 * Documentation

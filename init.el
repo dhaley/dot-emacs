@@ -171,6 +171,73 @@
 (put 'set-goal-column  'disabled nil)
 (put 'upcase-region    'disabled nil)   ; Let upcasing work
 
+;;Hiding and replacing modeline strings with clean-mode-line
+
+(defvar mode-line-cleaner-alist
+  `((auto-complete-mode . " α")
+    (yas/minor-mode . " υ")
+    (paredit-mode . " π")
+    (eldoc-mode . "")
+    (abbrev-mode . "")
+    ;; Major modes
+    (lisp-interaction-mode . "λ")
+    (hi-lock-mode . "")
+    (python-mode . "Py")
+    (emacs-lisp-mode . "EL")
+    (nxhtml-mode . "nx"))
+  "Alist for `clean-mode-line'.
+ 
+When you add a new element to the alist, keep in mind that you
+must pass the correct minor/major mode symbol and a string you
+want to use in the modeline *in lieu of* the original.")
+ 
+ 
+(defun clean-mode-line ()
+  (interactive)
+  (loop for cleaner in mode-line-cleaner-alist
+        do (let* ((mode (car cleaner))
+                 (mode-str (cdr cleaner))
+                 (old-mode-str (cdr (assq mode minor-mode-alist))))
+             (when old-mode-str
+                 (setcar old-mode-str mode-str))
+               ;; major mode
+             (when (eq mode major-mode)
+               (setq mode-name mode-str)))))
+ 
+ 
+(add-hook 'after-change-major-mode-hook 'clean-mode-line)
+ 
+;;; alias the new `flymake-report-status-slim' to
+;;; `flymake-report-status'
+(defalias 'flymake-report-status 'flymake-report-status-slim)
+(defun flymake-report-status-slim (e-w &optional status)
+  "Show \"slim\" flymake status in mode line."
+  (when e-w
+    (setq flymake-mode-line-e-w e-w))
+  (when status
+    (setq flymake-mode-line-status status))
+  (let* ((mode-line " Φ"))
+    (when (> (length flymake-mode-line-e-w) 0)
+      (setq mode-line (concat mode-line ":" flymake-mode-line-e-w)))
+    (setq mode-line (concat mode-line flymake-mode-line-status))
+    (setq flymake-mode-line mode-line)
+    (force-mode-line-update)))
+
+;; Working with Coding Systems and Unicode in Emacs
+
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+;; backwards compatibility as default-buffer-file-coding-system
+;; is deprecated in 23.2.
+(if (boundp 'buffer-file-coding-system)
+    (setq-default buffer-file-coding-system 'utf-8)
+  (setq default-buffer-file-coding-system 'utf-8))
+ 
+;; Treat clipboard input as UTF-8 string first; compound text next, etc.
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
 ;;;_. Keybindings
 
 ;; Main keymaps for personal bindings are:
@@ -335,6 +402,19 @@ If no file is associated, just close buffer without prompt for save."
 (define-key key-translation-map (kbd "A-TAB") (kbd "C-TAB"))
 
 ;;;_ , ctl-x-map
+
+
+(defun youngfrog/copy-rectangle-to-kill-ring (start end)
+"Saves a rectangle to the normal kill ring. Not suitable for yank-rectangle."
+(interactive "r")
+(let ((lines (extract-rectangle start end)))
+(with-temp-buffer
+(while lines ;; insert-rectangle, but without the unneeded stuff
+;; (most importantly no push-mark)
+(insert-for-yank (car lines))
+(insert "\n")
+(setq lines (cdr lines)))
+(kill-ring-save (point-min) (point-max)))))
 
 ;;;_  . C-x ?
 
@@ -719,7 +799,7 @@ are in kbd format."
       (goto-char beg)
       (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
         (replace-match "\\1"))))
-  
+
   (defun uniquify-buffer-lines ()
     "Remove duplicate adjacent lines in the current buffer."
     (interactive)
@@ -749,6 +829,12 @@ are in kbd format."
 (define-key global-map (kbd "C-|") 'toggle-windows-split)
 
 
+;; (defun shrink-window-to-region ()
+;;   (interactive)
+;;   (let
+;;       ((window-lines (count-lines (window-start) (window-end)))
+;;        (region-lines (count-lines (region-beginning) (region-end))))
+;;     (shrink-window (- window-lines region-lines))))
 
 (defun smart-copy ()
   "Copy word at point, or line if called twice, or region if transient-mark active."
@@ -1091,6 +1177,8 @@ Subexpression references can be used (\1, \2, etc)."
        (buffer-face-mode))
 
     (setq system-uses-terminfo nil)
+    ;; When you use this code, note that dabbrev-completion is C-x /, and yanking is C-y.
+
     (add-hook 'term-mode-hook
               '(lambda ()
                  (linum-mode 0)
@@ -1098,11 +1186,19 @@ Subexpression references can be used (\1, \2, etc)."
                  (term-set-escape-char ?\C-x)
                  (define-key term-raw-map "\C-c" 'term-interrupt-subjob)
                  (define-key term-raw-map (kbd "M-x") 'execute-extended-command)
+                 (define-key term-raw-escape-map "/"
+                   (lambda ()
+                     (interactive)
+                     (let ((beg (point)))
+                       (dabbrev-expand nil)
+                       (kill-region beg (point)))
+                     (term-send-raw-string (substring-no-properties (current-kill 0)))))
                  (setq autopair-dont-activate t)
                  (setq ac-auto-start nil)
                  (visual-line-mode -1)
                  ;; (my-buffer-face-mode-variable)
                  ))
+
 
     (defun my-term-paste (&optional string)
       (interactive)
@@ -1156,7 +1252,7 @@ Subexpression references can be used (\1, \2, etc)."
 
     (setenv "PATH" (shell-command-to-string "echo $PATH"))
 
-        
+
     ))
 
 (use-package ansi-color
@@ -1234,7 +1330,7 @@ Subexpression references can be used (\1, \2, etc)."
   (progn
     (ac-set-trigger-key "TAB")
     (setq ac-use-menu-map t)
-    
+
     (bind-key "A-M-?" 'ac-last-help)
     (unbind-key "C-s" ac-completing-map)))
 
@@ -1486,7 +1582,7 @@ Subexpression references can be used (\1, \2, etc)."
 
 ;; (use-package browse-kill-ring
 ;;   :bind ("M-y" . browse-kill-ring))
-;; 
+;;
 ;; make hippie expand behave itself
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev
                                          try-expand-dabbrev-all-buffers
@@ -1513,17 +1609,17 @@ Subexpression references can be used (\1, \2, etc)."
   :config
   (progn
     (require 'make-mode)
-    
+
     (defconst makefile-nmake-statements
       `("!IF" "!ELSEIF" "!ELSE" "!ENDIF" "!MESSAGE" "!ERROR" "!INCLUDE" ,@makefile-statements)
       "List of keywords understood by nmake.")
-    
+
     (defconst makefile-nmake-font-lock-keywords
       (makefile-make-font-lock-keywords
        makefile-var-use-regex
        makefile-nmake-statements
        t))
-    
+
     (define-derived-mode makefile-nmake-mode makefile-mode "nMakefile"
       "An adapted `makefile-mode' that knows about nmake."
       (setq font-lock-defaults
@@ -1668,12 +1764,25 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
         (bind-key "l" 'dired-up-directory dired-mode-map)
         (bind-key "H" 'dired-details-toggle dired-mode-map)
-        
+
         (defun my-dired-switch-window ()
           (interactive)
           (if (eq major-mode 'sr-mode)
               (call-interactively #'sr-change-window)
             (call-interactively #'other-window)))
+
+        ;;http://puntoblogspot.blogspot.com/2010/06/kill-buffers-illustrated-emacs.html
+        (defun kill-all-dired-buffers()
+          "Kill all dired buffers."
+          (interactive)
+          (save-excursion
+            (let((count 0))
+              (dolist(buffer (buffer-list))
+                (set-buffer buffer)
+                (when (equal major-mode 'dired-mode)
+                  (setq count (1+ count))
+                  (kill-buffer buffer)))
+              (message "Killed %i dired buffer(s)." count ))))
 
         (bind-key "<tab>" 'my-dired-switch-window dired-mode-map)
 
@@ -1960,6 +2069,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
         (back-to-indentation)))))
 
 
+
 ;;;_ , erc
 
 (use-package erc
@@ -1990,7 +2100,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
 
     (defun irc ()
       (interactive)
-      
+
       (erc-tls :server "asimov.freenode.net"
                :port 6697
                :nick "dkh"
@@ -2021,7 +2131,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     (add-hook 'after-init-hook 'im)
     (add-hook 'after-init-hook 'irc)
     )
-  
+
   :config
   (progn
     (abbrev-table-put erc-mode-abbrev-table :parents (list text-mode-abbrev-table))
@@ -2031,7 +2141,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
 
     (use-package erc-alert)
     ;;    (use-package erc-highlight-nicknames)
-    
+
     (require 'erc-nick-notify)
     (require 'erc-fill)
     (erc-fill-mode t)
@@ -2045,10 +2155,10 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
 
 
     ;; (add-to-list 'erc-modules 'scrolltobottom)
-    
+
     (add-to-list 'erc-modules 'match)
     (erc-update-modules)
-    
+
     (erc-match-enable)
     (erc-match-mode 1)
 
@@ -2064,7 +2174,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
           erc-kill-queries-on-quit nil)
 
     ;;     (require 'todochiku)
-    
+
     ;;      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;     ;;
     ;;     ;; Change fill column on resize
@@ -2440,11 +2550,11 @@ at the beginning of line, if already there."
          ("C-x m" . compose-mail))
   :init
   (progn
-    
+
     (setq gnus-init-file "~/git/.emacs.d/dot-gnus.el"
      gnus-home-directory "~/git/gnus"
      message-directory "~/git/gnus/Mail")
-    
+
     (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
     (use-package eudc)
@@ -2688,8 +2798,30 @@ at the beginning of line, if already there."
 
 
 
-                                        ; (use-package iedit
-                                        ;   :bind (("C-c ;" . iedit-mode)))
+(use-package iedit
+  :bind ("C-c ;" . iedit-mode)
+  :config
+  (progn
+    (defun iedit-dwim (arg)
+      "Starts iedit but uses \\[narrow-to-defun] to limit its scope."
+      (interactive "P")
+      (if arg
+          (iedit-mode)
+        (save-excursion
+          (save-restriction
+            (widen)
+            ;; this function determines the scope of `iedit-start'.
+            (narrow-to-defun)
+            (if iedit-mode
+                (iedit-done)
+              ;; `current-word' can of course be replaced by other
+              ;; functions.
+              (iedit-start (current-word)))))))
+
+    )
+  )
+
+(global-set-key (kbd "C-;") 'iedit-dwim)
 
 ;;;_ , ielm
 
@@ -2980,12 +3112,16 @@ at the beginning of line, if already there."
 
       (auto-fill-mode 1)
       (paredit-mode 1)
+
+        (require 'redshank-loader
+           "~/.emacs.d/site-lisp/redshank/redshank-loader")
+
       (redshank-mode 1)
       (elisp-slime-nav-mode 1)
 
       (local-set-key (kbd "<return>") 'paredit-newline)
       (add-hook 'after-save-hook 'check-parens nil t)
-      
+
       (if (memq major-mode
                 '(emacs-lisp-mode inferior-emacs-lisp-mode ielm-mode))
           (progn
@@ -2999,6 +3135,7 @@ at the beginning of line, if already there."
 
       (yas/minor-mode 1))
 
+    
     (hook-into-modes #'my-lisp-mode-hook lisp-mode-hooks)))
 
 ;;;_ , log4j-mode
@@ -3147,7 +3284,22 @@ at the beginning of line, if already there."
        (format "open -a /Applications/Marked.app %s"
                (shell-quote-argument (buffer-file-name)))))
 
-    (bind-key "C-x M" 'markdown-preview-file)))
+    (bind-key "C-x M" 'markdown-preview-file)
+    (setq markdown-imenu-generic-expression
+          '(("title"  "^\\(.*\\)[\n]=+$" 1)
+            ("h2-"    "^\\(.*\\)[\n]-+$" 1)
+            ("h1"   "^# \\(.*\\)$" 1)
+            ("h2"   "^## \\(.*\\)$" 1)
+            ("h3"   "^### \\(.*\\)$" 1)
+            ("h4"   "^#### \\(.*\\)$" 1)
+            ("h5"   "^##### \\(.*\\)$" 1)
+            ("h6"   "^###### \\(.*\\)$" 1)
+            ("fn"   "^\\[\\^\\(.*\\)\\]" 1)
+            ))
+
+    (add-hook 'markdown-mode-hook
+              (lambda ()
+                (setq imenu-generic-expression markdown-imenu-generic-expression)))))
 
 ;;;;_ , mark-multiple
 
@@ -3405,19 +3557,19 @@ end end))))))
          ("<f9> n" . org-narrow-to-subtree)
          ("<f9> W" . widen)
          ("<f9> u" . bh/narrow-up-one-level)
-         
+
          ("<f9> I" . bh/punch-in)
          ("<f9> O" . bh/punch-out)
-         
+
          ("<f9> o" . bh/make-org-scratch)
-         
+
          ("<f9> r" . boxquote-region)
          ("<f9> s" . bh/switch-to-scratch)
-         
+
          ("<f9> t" . bh/insert-inactive-timestamp)
          ("<f9> T" . tabify)
 ;;         ("<f9> U" . untabify)
-         
+
          ("<f9> v" . visible-mode)
          ("<f9> SPC" . bh/clock-in-last-task)
          ("C-<f9>" . previous-buffer)
@@ -3452,7 +3604,7 @@ end end))))))
   :diminish paredit-mode
   :config
   (progn
-    (use-packsage paredit-ext)
+    (use-package paredit-ext)
 
     (bind-key "C-M-l" 'paredit-recentre-on-sexp paredit-mode-map)
 
@@ -3685,6 +3837,18 @@ end end))))))
       (bind-key "<tab>" 'yas/expand-from-trigger-key ruby-mode-map))
 
     (add-hook 'ruby-mode-hook 'my-ruby-mode-hook)))
+
+
+;;(require 'saveplace)
+
+;; Saveplace
+;; - places cursor in the last place you edited file
+(use-package saveplace
+  :config
+  (progn
+    (setq-default save-place t)
+    ;; Keep places in the load path
+    (setq save-place-file (expand-file-name ".places" user-emacs-directory))))
 
 ;;;_ , selectkey
 
@@ -4206,8 +4370,38 @@ prevents using commands with prefix arguments."
 
 
 ;;;_ , web-mode
+
 (use-package web-mode
-  :mode ("\\.html\\.erb\\'" . web-mode))
+  :mode ("\\.tpl\\.php$" . web-mode)
+  :init
+  (progn
+    (defun web-mode-hook () "Hooks for Web mode."
+      (setq web-mode-markup-indent-offset 2)
+      (setq web-mode-css-indent-offset 2)
+      (setq web-mode-code-indent-offset 2)
+      ;; (set-face-attribute 'web-mode-css-rule-face nil :foreground "Pink3")
+      ;;       Available faces:
+      ;; web-mode-doctype-face, web-mode-html-tag-face, web-mode-html-attr-name-face, web-mode-html-attr-value-face
+      ;; web-mode-css-rule-face, web-mode-css-prop-face, web-mode-css-pseudo-class-face, web-mode-css-at-rule-face
+      ;; web-mode-preprocessor-face, web-mode-string-face, web-mode-comment-face
+      ;; web-mode-variable-name-face, web-mode-function-name-face, web-mode-constant-face, web-mode-type-face, web-mode-keyword-face
+      ;; web-mode-folded-face
+      ;; (define-key web-mode-map (kbd "C-n") 'web-mode-match-tag)
+      (add-to-list 'web-mode-snippets '("mydiv" "<div>" "</div>"))
+      ;; (setq web-mode-disable-autocompletion t)
+      ;; (setq web-mode-disable-css-colorization t)
+      ;;       (setq web-mode-extra-php-constants '("constant1" "constant2")) Also available : web-mode-extra-php-keywords, web-mode-extra-js-keywords, web-mode-extra-jsp-keywords, web-mode-extra-asp-keywords
+      ;; (Note: do not put this line in the hook)
+
+
+
+      )
+    (add-hook 'web-mode-hook 'web-mode-hook)
+    (add-hook 'local-write-file-hooks (lambda () (delete-trailing-whitespace) nil))
+    (local-set-key (kbd "RET") 'newline-and-indent)
+  ;; :mode ("\\.\\(php\\|tpl\\|\\.html\\.erb\\)$" . web-mode)
+  ;; :interpreter ("web" . web-mode)
+  ))
 
 
 
@@ -4307,7 +4501,7 @@ prevents using commands with prefix arguments."
             ;;
             ;;            (WG-filter-buffer-list-by-major-mode 'erc-mode (buffer-list))
             ;;            (wg-filter-buffer-list-by-not-major-mode 'erc-mode (buffer-list))
-            
+
             (setq wg-file "/Users/daha1836/.emacs.d/data-alt/workgroups")
             (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups")
 
@@ -4528,13 +4722,13 @@ $0"))))
 ;; (defconst fontcolor1 "#FDF6E3")
 ;; (defconst fontcolor2 "#EEE8D5")
 
-;; (defvar arrow-right-1 (create-image (arrow-right-xpm color1 color2) 
+;; (defvar arrow-right-1 (create-image (arrow-right-xpm color1 color2)
 ;;                                     'xpm t :ascent 'center))
-;; (defvar arrow-right-2 (create-image (arrow-right-xpm color2 "None") 
+;; (defvar arrow-right-2 (create-image (arrow-right-xpm color2 "None")
 ;;                                     'xpm t :ascent 'center))
-;; (defvar arrow-left-1  (create-image (arrow-left-xpm color2 color3) 
+;; (defvar arrow-left-1  (create-image (arrow-left-xpm color2 color3)
 ;;                                     'xpm t :ascent 'center))
-;; (defvar arrow-left-2  (create-image (arrow-left-xpm "None" color2) 
+;; (defvar arrow-left-2  (create-image (arrow-left-xpm "None" color2)
 ;;                                     'xpm t :ascent 'center))
 
 ;; (setq-default mode-line-format
@@ -4545,8 +4739,8 @@ $0"))))
 
 ;;         ;; Justify right by filling with spaces to right fringe - 16
 ;;         ;; (16 should be computed rahter than hardcoded)
-;;         '(:eval (propertize " " 
-;;                             'display 
+;;         '(:eval (propertize " "
+;;                             'display
 ;;                             '((space :align-to (- right-fringe 17)))))
 
 ;;         '(:eval (concat (propertize " " 'display arrow-left-2)

@@ -111,8 +111,7 @@
  '(emms-source-file-default-directory "/Volumes/Data/Music/iTunes/iTunes Media/")
  '(enable-recursive-minibuffers t)
   '(erc-autoawayo-message "I'm at the cappuccino bar(after %i seconds of idle-time)")
- '(erc-autojoin-channels-alist '((".*\\.freenode.net" "#drupal-colorado"
-                                  "#emacs-ops" "emacs" "#fsf-members" "#erc" "#conkeror" "#org-mode" "#freedombox")))
+ '(erc-autojoin-channels-alist '((".*\\.freenode.net" "#drupal-colorado" "emacs" "#fsf-members" "#erc" "#conkeror" "#org-mode" "#freedombox")))
  '(erc-autojoin-mode t)
  '(erc-autojoin-timing :ident)
  '(erc-fools (quote ("anxt" "JordiGH" "nyc")))
@@ -121,15 +120,15 @@
  '(erc-join-buffer 'bury)
  '(erc-hide-list (quote ("JOIN" "NICK" "PART" "QUIT" "MODE")))
  '(erc-ignore-list (quote ("rudybot!.*" "anxt")))
- '(erc-keywords '("\scu\s" "\stor\s" "Damon" "dkh" "dhaley" "relation module"
+ '(erc-keywords '("\scu\s" "\stor\s" "Damon" "dkh" "dhaley" "matt" "relation module"
                   "gmane" "gwene" "usenet" "proxy" "privacy" "\ssocks\s"
                   "gnus" "workgroups" "wireshark" "hushmail" "page manager"
                   "super cookie" "[^\.]php" "nxhtml" "nxml" "erc\-keywords"
                   "libnotify" "org\W?mode" "rate module"
                   "conkeror" "noscript" "https\-everywhere" "references
 module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc\-hl"
-"erc\-highlight" "web\-mode" "flymake" "Rasa"))
- '(erc-log-channels-directory "~/git/.emacs.d/.erc/logs")
+"erc\-highlight" "web\-mode" "flymake" "Rasa" "dkh"))
+ '(erc-log-channels-directory "~/Messages/.erc/logs")
  '(erc-log-write-after-send t)
  '(erc-modules (quote (button notifications autojoin completion dcc
                               fill identd irccontrols list log match menu
@@ -206,6 +205,7 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc\-
  '(gdb-find-source-frame t)
  '(gdb-same-frame nil)
  '(global-auto-complete-mode t)
+ '(global-rainbow-delimiters-mode)
  '(global-font-lock-mode t nil (font-lock))
  '(read-mail-command 'gnus)
  '(hippie-expand-try-functions-list (quote (yas/hippie-try-expand try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
@@ -367,7 +367,8 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc\-
  '(regex-tool-backend (quote perl))
  '(runner-init-file "~/.emacs.d/runner-conf.el")
   '(safe-local-variable-values (quote ((eval require (quote edg)) (eval ignore-errors (require (quote edg))) (after-save-hook my-byte-recompile-file) (after-save-hook git-commit-changes) (org-refer-by-number-id . "1C72AB51-33C2-4FF8-9367-2B494D125027"))))
- '(same-window-buffer-names (quote ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
+ '(same-window-buffer-names (quote ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*" "*Apropos*" "*Summary*" "*Backtrace*" "*Buffer List*" "*Colors*" "*Command History*" "*Diff*" "*Proced*" "*vc-dir*" "*SQL*" "scratch.org")))
+ '(same-window-regexps '("\\*vc\\-.+\\*" "\\*magit\\-.+\\*" "\*grep\*" "\\*compilation\\*\\(\\|<[0-9]+>\\)" "\\*Help\\*\\(\\|<[0-9]+>\\)" "\\*Shell Command Output\\*\\(\\|<[0-9]+>\\)" "\\*dictem.*"))
  '(sauron-hide-mode-line t)
  '(sauron-watch-patterns erc-keywords)
  '(sauron-watch-nicks erc-pals)
@@ -408,9 +409,9 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc\-
  '(term-bind-key-alist (quote (("C-c C-c" . term-interrupt-subjob) ("C-b" . my-term-send-raw-at-prompt) ("C-f" . my-term-send-raw-at-prompt) ("C-a" . my-term-send-raw-at-prompt) ("C-e" . my-term-send-raw-at-prompt) ("C-p" . previous-line) ("C-n" . next-line) ("C-s" . isearch-forward) ("C-r" . isearch-backward) ("C-m" . term-send-raw) ("M-f" . term-send-forward-word) ("M-b" . term-send-backward-word) ("M->" . my-term-end-of-buffer) ("M-o" . term-send-backspace) ("M-p" . term-send-up) ("M-n" . term-send-down) ("M-d" . term-send-forward-kill-word) ("M-DEL" . term-send-backward-kill-word) ("M-r" . term-send-reverse-search-history) ("M-," . term-send-input) ("M-." . comint-dynamic-complete) ("C-y" . term-paste))))
  '(term-buffer-maximum-size 0)
  '(term-scroll-show-maximum-output t)
-  '(term-scroll-to-bottom-on-output t)
+ '(term-scroll-to-bottom-on-output t)
  '(text-mode-hook (quote (turn-on-auto-fill (lambda nil (ignore-errors (diminish (quote auto-fill-function)))))))
- '( todochiku-icons-directory (expand-file-name (concat dotfiles-dir "todochiku-icons/")))
+ '(todochiku-icons-directory (expand-file-name (concat dotfiles-dir "todochiku-icons/")))
  '(todochiku-icons (quote ((alarm . "alarm.png") (mail . "mail.png") (irc . "irc.png"))))
  '(tool-bar-mode nil)
  '(tramp-auto-save-directory "~/.emacs.d/backups")
@@ -457,3 +458,24 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc\-
  '(yas/triggers-in-field t)
  '(yas/wrap-around-region t)
  '(zencoding-preview-default nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(completions-common-part ((t (:inherit default :foreground "red"))))
+ '(diredp-compressed-file-suffix ((t (:foreground "#7b68ee"))))
+ '(diredp-ignored-file-name ((t (:foreground "#aaaaaa"))))
+
+ '(rainbow-delimiters-depth-1-face ((t (:foreground "blue"))))
+ '(rainbow-delimiters-depth-2-face ((t (:foreground "blue"))))
+ '(rainbow-delimiters-depth-3-face ((t (:foreground "#8b7500"))))
+ '(rainbow-delimiters-depth-4-face ((t (:foreground "#8b7500"))))
+ '(rainbow-delimiters-depth-5-face ((t (:foreground "#8b7500"))))
+ '(rainbow-delimiters-depth-6-face ((t (:foreground "#8b7500"))))
+ '(rainbow-delimiters-depth-7-face ((t (:foreground "#8b7500"))))
+ '(rainbow-delimiters-depth-8-face ((t (:foreground "#8b7500"))))
+ '(rainbow-delimiters-depth-9-face ((t (:foreground "#8b7500"))))
+ '(rainbow-delimiters-unmatched-face ((t (:foreground "red"))))
+
+ '(show-paren-match ((((class color) (background light)) (:background "azure2")))))
