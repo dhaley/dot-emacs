@@ -73,16 +73,6 @@ This is part of the [[file:dkh-core.org][E-Wax Starter Kit Instance]].
 
 #+end_src 
 
-* windmove
-
-#+begin_src emacs-lisp 
-
-(global-set-key (kbd "H-'") 'windmove-right)
-(global-set-key (kbd "H-/") 'windmove-down)
-(global-set-key (kbd "H-;") 'windmove-left)
-(global-set-key (kbd "H-[") 'windmove-up)
-
-#+end_src 
 
 
 * devel

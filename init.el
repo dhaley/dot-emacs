@@ -4312,13 +4312,34 @@ prevents using commands with prefix arguments."
     (setq whitespace-line-column 80
           whitespace-style '(face tabs trailing lines-tail))
 
-    (global-whitespace-mode t)
+        (add-hook 'prog-mode-hook 'enable-whitespace-mode)
 
-    (setq whitespace-global-modes '(not erc-mode))
+    (setq modes-where-I-want-whitespace-mode-to-be-enabled
+          '(ruby-mode-hook
+            ;; javascript-mode-hook
+            ;; js-mode-hook
+            ;; css-mode-hook
+            sass-mode-hook
+            yaml-mode-hook
+            emacs-lisp-mode-hook
+            ;; nxhtml-mode-hook
+            ))
 
-    (hook-into-modes 'whitespace-mode
-                     '(prog-mode-hook
-                       c-mode-common-hook))
+    (mapc (lambda (mode-hook)
+            (add-hook mode-hook 'enable-whitespace-mode))
+          modes-where-I-want-whitespace-mode-to-be-enabled)
+    
+    (defun enable-whitespace-mode ()
+      (whitespace-mode 1)
+    )
+    
+    ;; ;; (global-whitespace-mode t)
+    ;; ;; (setq whitespace-global-modes '(not dired-mode tar-mode))
+    ;; (setq whitespace-global-modes '(not erc-mode web-mode))
+
+    ;; (hook-into-modes 'whitespace-mode
+    ;;                  '(prog-mode-hook
+    ;;                    c-mode-common-hook))
 
     (defun normalize-file ()
       (interactive)
@@ -4402,6 +4423,37 @@ prevents using commands with prefix arguments."
   ))
 
 
+
+;;;_ , windmove
+
+
+
+(setq windmove-wrap-around t)
+(windmove-default-keybindings)	      ; Move between frames with Shift+arrow
+; windmove shows a stacktrace when there is nothing to move to
+
+(defmacro maser/swallow-errors (name f-with-error)
+  `(defun ,name ()
+  (interactive)
+  (condition-case err
+       (,f-with-error)
+     (error
+      (message "%s" (error-message-string err))))))
+
+(maser/swallow-errors windmove-down-without-errors windmove-down)
+(maser/swallow-errors windmove-up-without-errors windmove-up)
+(maser/swallow-errors windmove-right-without-errors windmove-right)
+(maser/swallow-errors windmove-left-without-errors windmove-left)
+
+;; (global-set-key (kbd "M-N") 'windmove-down-without-errors)
+;; (global-set-key (kbd "M-P") 'windmove-up-without-errors)
+;; (global-set-key (kbd "M-F") 'windmove-right-without-errors)
+;; (global-set-key (kbd "M-B") 'windmove-left-without-errors) 
+
+(global-set-key (kbd "H-'") 'windmove-right-without-errors)
+(global-set-key (kbd "H-/") 'windmove-down-without-errors)
+(global-set-key (kbd "H-;") 'windmove-left-without-errors)
+(global-set-key (kbd "H-[") 'windmove-up-without-errors)
 
 ;;;_ , winner
 

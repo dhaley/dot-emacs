@@ -1334,14 +1334,6 @@ Switch window the cowabunga, dude! way
 
 #+end_src
 
-*** Windmove
-
-#+begin_src emacs-lisp :tangle no
-
-(setq windmove-wrap-around t)
-(windmove-default-keybindings)	      ; Move between frames with Shift+arrow
-
-#+end_src
 *** Window Number Mode
 
 #+begin_src emacs-lisp
@@ -7600,26 +7592,6 @@ file:
 
 #+end_src
 
-** Whitespace
-
-#+begin_src emacs-lisp :tangle no
-
-(require 'whitespace)
-(global-set-key (kbd "C-c w") 'whitespace-mode)
-(global-set-key (kbd "C-c W") 'whitespace-toggle-options)
-(setq whitespace-line-column 80
-      whitespace-style '(tabs trailing lines-tail))
-(set-face-attribute 'whitespace-line nil
-                    :background "red1"
-                    :foreground "yellow"
-                    :weight 'bold)
-
-;; face for Tabs
-(set-face-attribute 'whitespace-tab nil
-                    :background "red1"
-                    :foreground "yellow"
-                    :weight 'bold)
-#+end_src
 
 ** Programming languages
 
@@ -7964,22 +7936,6 @@ indentation uses spaces instead.
 
 #+end_src
 
-** Whitespace mode
-
-As usual Prelude comes with a lot of whitespace handling magic
-pre-enabled (similar to the last tweets). whitespace-mode ftw :-)
-
-#+begin_src emacs-lisp :tangle no
-
-(setq whitespace-action '(auto-cleanup)) (whitespace-mode) ;; automatically clean up bad whitespace
-
-(setq whitespace-style '(trailing space-before-tab indentation empty space-after-tab)) ;; only show bad whitespace
-
-(setq whitespace-style '(face trailing lines-tail) whitespace-line-column 80)
-
-;; handy too: ;; highlight long lines tails
-
-#+end_src
 
 ** Semantic
 #+begin_src emacs-lisp :tangle no
