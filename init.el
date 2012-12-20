@@ -3584,9 +3584,11 @@ end end))))))
          )
   :init
   (progn
-    (org-babel-load-file "~/.emacs.d/dkh-org.org")
-    (use-package bookmark+)
-    (use-package org-habit)
+     (require 'yasnippet)
+     (require 'org)
+     (org-babel-load-file "~/.emacs.d/dkh-org.org")
+     (use-package bookmark+)
+     (use-package org-habit)
 
     ))
 
