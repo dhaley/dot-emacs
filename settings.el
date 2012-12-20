@@ -227,8 +227,6 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc-h
  '(ledger-post-use-ido t)
  '(line-number-mode t)
  '(linum-format (lambda (line) (propertize (format (concat "%" (number-to-string (length (number-to-string (line-number-at-pos (point-max))))) "d ") line) (quote face) (quote linum))) t)
- '(mac-command-modifier (quote hyper))
- '(mac-option-modifier (quote meta))
  '(mac-pass-command-to-system nil)
  '(mac-pass-control-to-system nil)
  '(mac-wheel-button-is-mouse-2 nil)
