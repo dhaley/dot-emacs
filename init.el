@@ -4640,7 +4640,7 @@ prevents using commands with prefix arguments."
   :config
   (progn
     (yas/initialize)
-    (yas/load-directory (expand-file-name "snippets/" user-emacs-directory))
+    ;; (yas/load-directory (expand-file-name "snippets/" user-emacs-directory))
 
     (bind-key "<tab>" 'yas/next-field-or-maybe-expand yas/keymap)
 
