@@ -332,7 +332,6 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc-h
  '(session-initialize (quote (session places keys)))
  '(session-registers (quote (t (0 . 127))))
  '(session-save-file "~/.emacs.d/data/session")
- '(session-use-package t nil (session))
  '(show-paren-delay 0)
  '(slime-kill-without-query-p t)
  '(slime-repl-history-file "~/.emacs.d/data/slime-history.eld")
