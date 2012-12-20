@@ -96,9 +96,9 @@
 ;; (if (string-match (concat "/Applications/\\(MacPorts/\\)?"
 ;;                           "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
 ;;                   invocation-directory)
-
+;; \\([A-Za-z]+\\)
 (if (string-match (concat "/Applications/\\(Misc/\\)?"
-                          "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
+                          "Emacs.app\\([A-Za-z]+\\)/Contents/MacOS/")
                   invocation-directory)
 
     (let ((settings (with-temp-buffer

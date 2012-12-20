@@ -1,0 +1,41 @@
+;;; Automatically generated on Mon Jul 23 19:32:48 2012
+;;; Invoked by daha1836@UCOMM-WEB-L-010.local using 24.1.1
+(setq-default kill-ring '("31ed88d Merge pull request #21 from CuBoulder/FIT-64" "OK, I'm just testing" "(remove-hook 'erc-text-matched-hook 'my-erc-hook)" "GROWING HEART
+Unicode: U+1F497 (U+D83D U+DC97), UTF-8: F0 9F 92 97" "💗
+GROWING HEART
+Unicode: U+1F497 (U+D83D U+DC97), UTF-8: F0 9F 92 97" "http://tx0.org/41o" "crafts: " "* NEXT Learn exactly what use-package does
+SCHEDULED: <2012-07-22 Sun>
+[2012-07-22 Sun 22:55]
+[[file:~/.emacs.d/init.el::(setq%20output%20(format%20\"(info%20\\\"(%25s)%25s\\\")%20<--%20hit%20C-x%20C-e%20to%20evaluate\"][file:~/.emacs.d/init.el::(setq output (format \"(info \\\"(%s)%s\\\") <-- hit C-x C-e to evaluate\"]]
+" "crafts: matu4291" #("          gnus-ignored-newsgroups \"^to\\\\.\\\\|^[0-9. ]+\\\\(\\\\|$\\\\)\\\\|^[\\”]\\”[#’()]\")
+" 0 82 (charset mac-roman))))
+(setq-default session-file-alist '(("~/git/dkh-org/refile.org" 1 nil 1 nil nil nil (overwrite-mode)) ("~/.emacs.d/org-clock-save.el" 148 nil 1 nil nil 148 (overwrite-mode))))
+(setq-default file-name-history '("~/.emacs.d/init.el" "~/.emacs.d/lisp/todochiku.el" "~/.emacs.d/lisp/" "~/.emacs.d/org-clock-save.el" "~/git/.emacs.d/.diary" "~/git/dkh-org/.org-jira/FIT.org" "~/git/dkh-org/todo.org" "~/git/dkh-org/refile.org"))
+(setq-default search-ring '("sticky" "growl" "shares ag" "growlnotify" "alert" "aler" "erc-al"))
+(setq-default buffer-name-history '("#wwng" "&bitlbee" "#ucomm" "init.el" "todochiku.el" "README.txt" "#org-mode" "#freedombox" "#conkeror" "#emacs"))
+(setq-default command-history '((irc) (im) (color-theme-solarized (quote dark)) (switch-to-buffer "#wwng") (erc-match-enable) (switch-to-buffer "&bitlbee") (switch-to-buffer "#ucomm") (describe-variable (quote erc-text-matched-hook)) (string-rectangle (region-beginning) (region-end) ";;") (describe-variable (quote growlnotify-command)) (kill-buffer "init.el") (kill-buffer "todochiku.el") (eb) (byte-compile-file "~/.emacs.d/lisp/todochiku.el" nil) (kill-buffer "README.txt") (switch-to-buffer "#org-mode") (switch-to-buffer "#freedombox") (switch-to-buffer "#conkeror") (switch-to-buffer "#emacs")))
+(setq-default extended-command-history '("irc"))
+(setq-default hi-lock-face-history '("hi-yellow" "hi-pink" "hi-green" "hi-blue" "hi-black-b" "hi-blue-b" "hi-red-b" "hi-green-b" "hi-black-hb"))
+(setq-default ido-buffer-history '("#wwng" "&bitlbee" "#ucomm" "init.el" "todochiku.el" "README.txt" "#org-mode" "#freedombox" "#conkeror" "#emacs"))
+(setq-default minibuffer-history '("irc" "im" "dark" "color-theme-solarized" "erc-match-enable" "erc-text-matched-hook" "growlnotify-command" "eb" "byte-compile-file" "package-install" "solarized-col"))
+(setq-default occur-collect-regexp-history '("\\1"))
+(setq-default smex-history '(im color-theme-solarized irc erc-match-enable eb byte-compile-file package-install))
+(setq-default string-rectangle-history '(";;"))
+(set-register 65 '(file . "~/git/.emacs.d/.eshell/alias"))
+(set-register 67 '(file . "~/git/cu/centers.org"))
+(set-register 69 '(file . "~/git/cu/eac.org"))
+(set-register 73 '(file . "~/git//org/igp.org"))
+(set-register 79 '(file . "~/.emacs.d/dkh-org.org"))
+(set-register 80 '(file . "~/git/.emacs.d/dkh-private.org"))
+(set-register 82 '(file-query "~/git/.emacs.d/.secret/.passwd.gpg" 3490))
+(set-register 97 '(file . "~/git/.emacs.d/.abbrev_defs"))
+(set-register 98 '(file . "~/.emacs.d/dkh-keybindings.org"))
+(set-register 99 '(file . "~/git/cu/cu.org"))
+(set-register 101 '(file . "~/git/.emacs.d/dkh-el-get.org"))
+(set-register 102 '(file . "~/git/cu/features.org"))
+(set-register 103 '(file . "~/git/.emacs.d/dkh-gnus.el"))
+(set-register 105 '(file . "~/.emacs.d/init.el"))
+(set-register 111 '(file . "~/.emacs.d/dkh-org.org"))
+(set-register 116 '(file . "~/git/dkh-org/todo.org"))
+(set-register 117 '(file . "~/git/cu/grant_contest.org"))
+(set-register 118 '(file . "~/.emacs.d/dkh-core.org"))
