@@ -2162,8 +2162,8 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :port 6667))
                        :secret))))
 
-    ;; (add-hook 'after-init-hook 'im)
-    ;; (add-hook 'after-init-hook 'irc)
+    (add-hook 'after-init-hook 'im)
+    (add-hook 'after-init-hook 'irc)
     )
 
   :config
@@ -4904,10 +4904,10 @@ $0"))))
   (org-babel-load-file "~/.emacs.d/dkh-core.org")
   ;;;_. Load some private settings
   (org-babel-load-file "~/git/.emacs.d/dkh-private.org")
+  ;; Mo keybindings
+  (org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
   )
 
-;; Mo keybindings
-(org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
 
 
 
