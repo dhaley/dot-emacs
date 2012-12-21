@@ -4860,8 +4860,6 @@ $0"))))
 
 ;; ))
 
-
-;;(add-to-list 'load-path "~/.emacs.d/site-lisp/solarized-emacs")
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
 
 ;; customise solarized-dark/light themes
@@ -4897,7 +4895,6 @@ $0"))))
     (progn
       (disable-theme 'solarized-light)
       (enable-theme 'solarized-dark)))))
-
 
 
 (unless running-alternate-emacs
