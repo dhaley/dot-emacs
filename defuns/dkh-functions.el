@@ -1,15 +1,8 @@
-* For development
-
-#+begin_src emacs-lisp 
 
 (defun git-fit ()
 (interactive)
 (magit-status 
 (getenv "FIT_REPO")))
-
-#+end_src 
-
-#+begin_src emacs-lisp 
 
 (defun dkh-eshell-macs ()
   (interactive)
@@ -22,10 +15,6 @@
               (eshell t)
               ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
               (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*")))))))
-
-#+end_src               
-
-#+begin_src emacs-lisp 
 
 (defun visit-ansi-term ()
   (interactive)
@@ -42,12 +31,6 @@
               ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
               (rename-buffer  (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))))))
 
-#+end_src 
-
-* convenience
-
-#+begin_src emacs-lisp 
-
 (defun grab-email-my ()
   "Grab the next email in the buffer
   First posted by François Fleuret <francois.fleuret@inria.fr>..
@@ -56,5 +39,3 @@ improved by many.."
   (re-search-forward "[^ \t\n]+@[^ \t\n]+")
   (copy-region-as-kill (match-beginning 0) (match-end 0))
   )
-
-#+end_src 
