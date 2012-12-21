@@ -4684,14 +4684,6 @@ Based on `ffap'."
 (defun quickping (host)
   (= 0 (call-process "/sbin/ping" nil nil nil "-c1" "-W50" "-q" host)))
 
-(defun collapse-or-expand ()
-  (interactive)
-  (if (> (length (window-list)) 1)
-      (delete-other-windows)
-    (bury-buffer)))
-
-(bind-key "C-H-z" 'collapse-or-expand)
-
 (defun align-code (beg end &optional arg)
   (interactive "rP")
   (if (null arg)
