@@ -1,5 +1,4 @@
 ;;;_ , Gnus
-
 (load "~/git/.emacs.d/dot-gnus.el")
 
 (require 'gnus)
@@ -383,12 +382,11 @@ is:
     (defun gnus-goto-article (message-id)
       (activate-gnus)
       (gnus-summary-read-group "INBOX" 15 t)
-      (gnus-summary-refer-article message-id))
-      ;; (let ((nnir-imap-default-search-key "imap")
-      ;;       (nnir-ignored-newsgroups
-      ;;        (concat "\\(\\(list\\.wg21\\|archive\\)\\.\\|"
-      ;;                "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")))
-      ;;   (gnus-summary-refer-article message-id)))
+      (let ((nnir-imap-default-search-key "imap")
+            (nnir-ignored-newsgroups
+             (concat "\\(\\(list\\.wg21\\|archive\\)\\.\\|"
+                     "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")))
+        (gnus-summary-refer-article message-id)))
 
     (defvar gnus-query-history nil)
 
@@ -432,6 +430,7 @@ is:
                (server   . "nnimap:Local")))))
 
     (define-key global-map [(alt meta ?f)] 'gnus-query)))
+
 
 (use-package gnus-harvest
   :init
