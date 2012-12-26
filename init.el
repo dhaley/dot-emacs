@@ -367,6 +367,17 @@ want to use in the modeline *in lieu of* the original.")
 (bind-key "M-g c" 'goto-char)
 (bind-key "M-g l" 'goto-line)
 
+(global-set-key (vector 'remap 'goto-line) 'goto-line-with-feedback)
+
+(defun goto-line-with-feedback ()
+  "Show line numbers temporarily, while prompting for the line number input"
+  (interactive)
+  (unwind-protect
+      (progn
+        (linum-mode 1)
+        (goto-line (read-number "Goto line: ")))
+    (linum-mode -1)))
+
 
 (defun delete-current-file (ξno-backup-p)
   "Delete the file associated with the current buffer.
@@ -1787,6 +1798,9 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
   :defer t
   :config
   (progn
+    ;; Also auto refresh dired, but be quiet about it
+    (setq global-auto-revert-non-file-buffers t)
+    (setq auto-revert-verbose nil)
     (defun dired-package-initialize ()
       (unless (featurep 'runner)
         (use-package dired-x)
@@ -3286,6 +3300,22 @@ at the beginning of line, if already there."
     (let ((current-prefix-arg '(4)))
       (call-interactively 'magit-status)))
 
+  ;; full screen magit-status
+
+  (defadvice magit-status (around magit-fullscreen activate)
+    (window-configuration-to-register :magit-fullscreen)
+    ad-do-it
+    (delete-other-windows))
+
+  (defun magit-quit-session ()
+    "Restores the previous window configuration and kills the magit buffer"
+    (interactive)
+    (kill-buffer)
+    (jump-to-register :magit-fullscreen))
+
+  (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
+
+
   :config
   (progn
     (setenv "GIT_PAGER" "")
@@ -4330,6 +4360,39 @@ prevents using commands with prefix arguments."
 
 (use-package wcount-mode
   :commands wcount)
+
+;;_ , webjump
+
+(use-package webjump
+  :bind ("C-x g" . webjump)
+  :config
+  (progn
+    ;; Add Urban Dictionary to webjump
+    (eval-after-load "webjump"
+      '(add-to-list 'webjump-sites
+                    '("Urban Dictionary" .
+                      [simple-query
+                       "www.urbandictionary.com"
+                       "http://www.urbandictionary.com/define.php?term="
+                       ""])))
+
+    ;; (global-set-key [H-f2] 'webjump)
+    ;; (setq webjump-sites
+    ;;       (append '(
+    ;;                 ("Java API" .
+    ;;                  [simple-query "www.google.com" "http://www.google.com/search?hl=en&as_sitesearch=http://java.sun.com/javase/6/docs/api/&q=" ""])
+    ;;                 ("Stack Overflow" . "www.stackoverlow.com")
+    ;;                 ("Pop's Site"   . "www.joebob-and-son.com/")
+
+    ;;                 )
+    ;;               webjump-sample-sites))
+
+    ;; (setq
+    ;;  w3m-session-file "~/.emacs.d/.w3m-session"
+    ;;  )
+
+    )
+)
 
 ;;;_ , whitespace
 

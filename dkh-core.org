@@ -7081,22 +7081,6 @@ or before point."
 (global-set-key "\C-xm" 'browse-url-at-point)
 (global-set-key (kbd "<f4>") 'rgr/browse-url)
 
-(require 'webjump)
-
-(global-set-key [H-f2] 'webjump)
-(setq webjump-sites
-(append '(
-("Java API" .
-[simple-query "www.google.com" "http://www.google.com/search?hl=en&as_sitesearch=http://java.sun.com/javase/6/docs/api/&q=" ""])
-("Stack Overflow" . "www.stackoverlow.com")
-("Pop's Site"   . "www.joebob-and-son.com/")
-
-)
-      webjump-sample-sites))
-
-(setq
-           w3m-session-file "~/.emacs.d/.w3m-session"
-)
 
  (defun w3m-add-keys ()
    (define-key w3m-mode-map "S" 'w3m-session-save)
