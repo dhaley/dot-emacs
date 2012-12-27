@@ -1146,6 +1146,68 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 ;;         (png . (:ascent center))))
 
 
+;; text/calendar attachments
+
+(add-to-list 'mm-inlined-types "text/calendar")
+(add-to-list 'mm-automatic-display "text/calendar")
+(add-to-list 'mm-inline-media-tests '("text/calendar" mm-inline-text-calendar identity))
+
+(require 'icalendar)
+(require 'boxquote)
+
+(defun mm-inline-text-calendar (handle)
+  (let ((text ""))
+    (with-temp-buffer
+      (mm-insert-part handle)
+      (save-window-excursion
+        (setq info (mapcar (lambda (s) (mm-decode-string s "utf-8"))
+                           (format-text-calendar-for-display (icalendar--read-element nil nil))))))
+    (let ((start (point)))
+      (mm-insert-inline handle "\n")
+      (mm-insert-inline handle (car info))
+      (mm-insert-inline handle "\n")
+      (goto-char start)
+      (when (search-forward "DESCRIPTION " nil t)
+        (replace-match "" nil t)
+        (beginning-of-line)
+        (fill-region (point) (point-max)))
+      (boxquote-region start (point-max)))
+    (boxquote-title (car (cdr info)))
+    (mm-insert-inline handle "\n")))
+
+(defun format-text-calendar-for-display (element)
+  "Format a text/calendar element parsed by icalendar--read-element into text"
+  (let ((fields '(LOCATION ORGANIZER DESCRIPTION))
+        (fieldformat "%-11s %s\n")
+        (content "")
+        (first-date "")
+        (last-date "")
+        (title ""))
+    (dolist (event (icalendar--all-events element))
+      (let* ((zone-map (icalendar--convert-all-timezones element))
+             (dtstart-zone (icalendar--find-time-zone (icalendar--get-event-property-attributes event 'DTSTART) zone-map))
+             (dtstart (icalendar--decode-isodatetime (icalendar--get-event-property event 'DTSTART) nil dtstart-zone))
+             (dtend-zone (icalendar--find-time-zone (icalendar--get-event-property-attributes event 'DTEND) zone-map))
+             (dtend   (icalendar--decode-isodatetime (icalendar--get-event-property event 'DTEND) nil dtend-zone))
+             (datestring (concat (icalendar--datetime-to-iso-date dtstart "-") " "
+                                 (icalendar--datetime-to-colontime dtstart) "-"
+                                 (icalendar--datetime-to-colontime dtend))))
+        (when (string-equal first-date "")
+          (setq first-date datestring))
+        (setq last-date datestring)
+        (dolist (field fields)
+          (let ((propertyvalue (mapconcat (lambda (property)
+                                            (icalendar--convert-string-for-import property)
+                                            (replace-regexp-in-string "\\\\n" "\n"
+                                                                      (replace-regexp-in-string "^MAILTO:" "" property)))
+                                          (icalendar--get-event-properties event field) " ")))
+            (when (not (string-equal propertyvalue ""))
+              (setq content (concat content (format fieldformat field (replace-regexp-in-string "\\\\ " "" propertyvalue)))))))))
+    (setq content (replace-regexp-in-string "\n\n$" "" content))
+    (setq title (if (string-equal first-date last-date) first-date (concat first-date " ... " last-date)))
+    (list content title)))
+
+
 
 (provide 'dkh-gnus)
 
