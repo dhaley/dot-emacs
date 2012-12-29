@@ -2970,8 +2970,43 @@ at the beginning of line, if already there."
 
 ;; ;;;_ , js2-mode
 
-;; (use-package js2-mode
-;;   :mode ("\\.js\\'" . js2-mode))
+;;;;_ , javascript
+
+(use-package js2-mode
+  :load-path "js2-mode"
+  :mode ("\\.js$" . js2-mode)
+  :config
+  (progn
+    (setq js2-pretty-multiline-declarations t)
+    (use-package js2-refactor ;; js2-refactor-mode
+      :load-path "js2-refactor"
+      :requires mark-multiple)
+
+    (add-hook 'js2-mode-hook
+              (lambda ()
+                ;; (paredit-mode 1)
+                (slime-js-minor-mode 1)
+                (local-set-key (kbd "<return>") 'newline-and-indent))
+              t)))
+
+;; js2-hightlight-vars-mode
+;; see http://mihai.bazon.net/projects/editing-javascript-with-emacs-js2-mode/js2-highlight-vars-mode
+;; M-n js2-highlight-vars-next
+;; M-p js2-highlight-vars-prev
+;; M-r js2-highlight-vars-rename
+(use-package js2-highlight-vars
+  :requires js2-mode
+  :commands (js2-highlight-vars-mode)
+  :init (add-hook 'js2-mode-hook 'js2-highlight-vars-mode t))
+
+
+;;;;_ , nodejs-mode
+
+(use-package nodejs-mode
+  :disabled t
+  :load-path "nodejs-mode"
+  :commands (nodejs))
+
 
 
 ;; JSON files
@@ -2980,16 +3015,16 @@ at the beginning of line, if already there."
 
 ;;;_ , js3-mode
 
-(use-package js3-mode
-  :load-path "~/.emacs.d/site-lisp/js3-mode"
-  :mode ("\\.js\\'" . js3-mode)
-  :init
-  (progn
-    (autoload 'js3-mode "js3" nil t)
-    (setq-default js3-basic-offset 2)
-    ;;    (setq js2-strict-missing-semi-warning nil)
-    )
-  )
+;; (use-package js3-mode
+;;   :load-path "~/.emacs.d/site-lisp/js3-mode"
+;;   :mode ("\\.js\\'" . js3-mode)
+;;   :init
+;;   (progn
+;;     (autoload 'js3-mode "js3" nil t)
+;;     (setq-default js3-basic-offset 2)
+;;     ;;    (setq js2-strict-missing-semi-warning nil)
+;;     )
+;;   )
 
 ;;;_ , ledger
 
