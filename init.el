@@ -1718,17 +1718,18 @@ Subexpression references can be used (\1, \2, etc)."
 
 
 ;;;_ , css-mode
-
-
 (use-package css-mode
   :mode ("\\.css$" . css-mode)
-  :interpreter ("css" . css-mode)
-  :init
+  :config
   (progn
-    (setq-default css-indent-offset 2)
-    (rainbow-mode +1)
-    ))
-
+    (setq css-indent-offset 2
+          cssm-indent-level '2)
+    (define-keys css-mode-map
+      '(("<return>" newline-and-indent)))
+    (add-hook 'css-mode-hook
+              (lambda ()
+                ;; (paredit-mode 1)
+                (rainbow-mode 1)))))
 
 (use-package cursor-chg
   :init
