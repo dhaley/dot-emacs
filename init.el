@@ -3933,7 +3933,7 @@ end end))))))
   (progn
     (setq-default save-place t)
     ;; Keep places in the load path
-    (setq save-place-file (expand-file-name ".places" user-emacs-directory))))
+    (setq save-place-file "~/Documents/places")))
 
 ;;;_ , selectkey
 
@@ -4034,9 +4034,7 @@ end end))))))
     (add-hook 'shell-mode-hook
               (lambda ()
                 (define-key shell-mode-map
-                  (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)))
-)
-  
+                  (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)))))
 ;;;_ , smart-compile
 
 (use-package smart-compile
