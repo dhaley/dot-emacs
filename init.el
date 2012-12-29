@@ -20,6 +20,24 @@
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
 
+
+
+;; setting paths for OS X (macports)
+(when (eq system-type 'darwin)
+  (setenv "PATH"
+          (concat
+           "/opt/local/bin" ":"
+           "/opt/local/sbin" ":"
+           (getenv "PATH")))
+  (setq exec-path
+        '("/opt/local/bin"
+          "/opt/local/sbin"
+          "/usr/bin"
+          "/bin"
+          "/usr/sbin"
+          "/sbin"
+          "/usr/X11/bin")))
+
 (setq message-log-max 16384)
 
 (defconst emacs-start-time (current-time))
@@ -1774,6 +1792,13 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
       (not (and (or (eq last-command 'my-iflipb-next-buffer)
                     (eq last-command 'my-iflipb-previous-buffer))
                 my-iflipb-ing-internal)))))
+
+
+
+;;;;_ , dash.el
+
+(use-package dash
+  :load-path "dash.el")
 
 ;;;_ , debbugs
 
@@ -3947,6 +3972,28 @@ end end))))))
     (selectkey-define-select-key shell "s" "\\*shell" (shell))
     (selectkey-define-select-key multi-term "t" "\\*terminal" (multi-term-next))
     (selectkey-define-select-key eshell "z" "\\*eshell" (eshell))))
+
+
+;;;;_ , smex
+
+(use-package smex
+  :load-path "smex"
+  :bind ("M-X" . dhl-invoke-smex)
+  :requires ido
+  :config
+  (progn
+    (smex-initialize)
+    (setq smex-save-file "~/.smex")
+    (smex-auto-update)
+
+    (defun dhl-invoke-smex (x)
+      "Invokes smex, if called without a prefix argument,
+smex-major-mode-commands otherwise. Note that this
+prevents using commands with prefix arguments."
+      (interactive "p")
+      (if (= x 1)
+          (smex)
+        (smex-major-mode-commands)))))
 
 ;;;_ , session
 
