@@ -4283,6 +4283,8 @@ prevents using commands with prefix arguments."
   (progn
     (setq w3m-command "/opt/local/bin/w3m")
 
+    (setq w3m-session-file "~/Documents/w3m-session")
+
     (setq w3m-coding-system 'utf-8
           w3m-file-coding-system 'utf-8
           w3m-file-name-coding-system 'utf-8
@@ -4421,10 +4423,7 @@ prevents using commands with prefix arguments."
     ;;                 )
     ;;               webjump-sample-sites))
 
-    ;; (setq
-    ;;  w3m-session-file "~/.emacs.d/.w3m-session"
-    ;;  )
-
+ 
     )
 )
 
