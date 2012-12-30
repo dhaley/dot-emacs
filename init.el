@@ -4379,6 +4379,32 @@ prevents using commands with prefix arguments."
 
     (autoload 'w3m-session-crash-recovery-remove "w3m-session")
 
+    (defvar ivan-w3m-facebook-user
+      "user@facebook.com"
+      "Facebook user name.")
+
+    (defvar ivan-w3m-facebook-password
+      "secret"
+      "Facebook password.")
+
+    (defalias 'fb 'ivan-w3m-open-facebook)
+
+    (defun ivan-w3m-open-facebook ()
+      "Open Facebook."
+      (interactive)
+      (setq w3m-async-exec nil)
+      (w3m-goto-url "http://m.facebook.com?l=en_US")
+      (goto-char (point-min))
+      (ivan-w3m-fill-entry
+       "Email" ivan-w3m-facebook-user 'ivan-w3m-fill-text)
+      (ivan-w3m-fill-entry
+       "Password" ivan-w3m-facebook-password 'ivan-w3m-fill-password)
+      (search-forward "Log In")
+      (left-char 1)
+      (setq w3m-async-exec t)
+      (widget-button-press (point)))
+
+    
     (defun show-browser ()
       (interactive)
       (let ((w3m-buf
