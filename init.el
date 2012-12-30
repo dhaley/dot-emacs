@@ -314,6 +314,14 @@ want to use in the modeline *in lieu of* the original.")
 
 ;;;_ , global-map
 
+;;;_  . H-?
+
+(global-set-key (kbd "<H-down>") 'shrink-window)
+(global-set-key (kbd "<H-left>") 'shrink-window-horizontally)
+(global-set-key (kbd "<H-right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "<H-up>") 'enlarge-window)
+
+
 ;;;_  . C-?
 
 (defvar ctl-period-map)
@@ -329,6 +337,10 @@ want to use in the modeline *in lieu of* the original.")
     (bury-buffer)))
 
 (bind-key "C-z" 'collapse-or-expand)
+
+(bind-key "C-x C-m" 'execute-extended-command)
+(bind-key "C-c C-m" 'execute-extended-command)
+
 
 ;;;_  . M-?
 
@@ -1618,13 +1630,8 @@ Subexpression references can be used (\1, \2, etc)."
 
 ;;;_ , bookmark
 
-;;(require 'bookmark+)
-
-;;(use-package bookmark+)
-
-
 (use-package bookmark
-  ;;  :disabled t
+  :bind ("C-c j" . bookmark-jump)
   :defer t
   :config
   (progn
@@ -3731,9 +3738,7 @@ end end))))))
      (require 'yasnippet)
      (require 'org)
      (org-babel-load-file "~/.emacs.d/dkh-org.org")
-     (use-package bookmark+)
      (use-package org-habit)
-
     ))
 
 
