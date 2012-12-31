@@ -321,7 +321,8 @@ improved by many.."
 
 (bind-key "C-x C-m" 'execute-extended-command)
 (bind-key "C-c C-m" 'execute-extended-command)
-
+(bind-key "C-x C-r" 'rename-current-buffer-file)
+(bind-key "C-x C-k" 'delete-current-buffer-file)
 
 ;;;_  . M-?
 
@@ -2070,6 +2071,9 @@ The output appears in the buffer `*Async Shell Command*'."
   (progn
     (require 'php-extras)
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
+
+    ;;(setq php-completion-file "~/git/ewax/misc/php-completion-file")
+
     (add-hook 'php-mode-hook '(lambda ()(c-subword-mode t)))
     (add-hook 'php-mode-hook '(lambda () (php-electric-mode)))
     ))
