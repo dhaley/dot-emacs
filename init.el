@@ -1334,7 +1334,7 @@ Subexpression references can be used (\1, \2, etc)."
                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
                   (rename-buffer  (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))))))
 
-    (bind-key "C-8 a" 'visit-ansi-term)
+;;    (bind-key "C-8 a" 'visit-ansi-term)
     ))
 
 (use-package ansi-color
@@ -2465,7 +2465,7 @@ at the beginning of line, if already there."
 
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
 
-    (bind-key "C-8 e" 'dkh-eshell-macs)
+;;    (bind-key "C-8 e" 'dkh-eshell-macs)
     ))
 
 ;; eshell
