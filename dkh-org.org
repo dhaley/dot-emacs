@@ -2259,23 +2259,23 @@ doing my weekly review on Tuesday since Monday was a holiday.
 
 #+begin_src org :exports src
 ,* NEXT Weekly Review [0/6]
-, SCHEDULED: <2009-05-18 Mon ++1w> 
-, LOGBOOK:...
-, PROPERTIES:...
+ SCHEDULED: <2009-05-18 Mon ++1w> 
+ LOGBOOK:...
+ PROPERTIES:...
 
 , What to review:
 
-,  - [ ] Check follow-up folder
-,  - [ ] Review weekly agenda =F12 a w //=
-,  - [ ] Check clocking data for past week =v c=
-,  - [ ] Review clock report for past week =R=
-,    - Check where we spent time (too much or too little) and rectify this week
-,  - [ ] Look at entire agenda for today  =F12 SPC=
-,  - [ ] Review projects =F12 SPC //= and =V= repeatedly to view each project
+  - [ ] Check follow-up folder
+  - [ ] Review weekly agenda =F12 a w //=
+  - [ ] Check clocking data for past week =v c=
+  - [ ] Review clock report for past week =R=
+    - Check where we spent time (too much or too little) and rectify this week
+  - [ ] Look at entire agenda for today  =F12 SPC=
+  - [ ] Review projects =F12 SPC //= and =V= repeatedly to view each project
 
-,  - start work
-,    - daily agenda first - knock off items
-,    - then work on NEXT tasks
+  - start work
+    - daily agenda first - knock off items
+    - then work on NEXT tasks
 #+end_src
 The first item [ ] Check follow-up folder makes me pull out the paper
 file I dump stuff into all week long - things I need to take care of
@@ -2765,7 +2765,7 @@ graphics.
 The source for a ditaa graphic looks like this in org-mode:
 #+begin_src org :exports src
 ,#+begin_src ditaa :file some_filename.png :cmdline -r -s 0.8
-,  <context of ditaa source goes here>
+  <context of ditaa source goes here>
 ,#+end_src
 #+end_src
 Here's an example without the =#+begin_src= and =#+end_src= lines.
@@ -2810,7 +2810,7 @@ Graphviz is another great tool for creating graphics in your documents.
 The source for a graphviz graphic looks like this in org-mode:
 #+begin_src org :exports src
 ,#+begin_src dot :file some_filename.png :cmdline -Kdot -Tpng
-,  <context of graphviz source goes here>
+  <context of graphviz source goes here>
 ,#+end_src
 #+end_src
 
@@ -2872,7 +2872,7 @@ todo state change diagrams in this document are created with PlantUML.
 The source for a PlantUML graphic looks like this in org-mode:
 #+begin_src org :exports src
 ,#+begin_src plantuml :file somefile.png
-,  <context of PlantUML source goes here>
+  <context of PlantUML source goes here>
 ,#+end_src
 #+end_src
 *** Sequence Diagram
@@ -3794,14 +3794,14 @@ I include holidays from the calendar in my =todo.org= file as follows:
 #+begin_src org :exports src
 ,#+FILETAGS: PERSONAL
 ,* Appointments
-,PROPERTIES:
-,CATEGORY: Appt
-,ARCHIVE:  %s_archive::* Appointments
-,END:      
+PROPERTIES:
+CATEGORY: Appt
+ARCHIVE:  %s_archive::* Appointments
+END:      
 ,** Holidays
-,PROPERTIES:
-,Category: Holiday
-,END:
+PROPERTIES:
+Category: Holiday
+END:
 ,%%(org-calendar-holiday)
 ,** Some other Appointment
 ,   ...
@@ -4029,15 +4029,15 @@ like this
 
 #+begin_src org :exports src
 ,* TODO Invoicing and Archive Tasks [0/7]
-,   DEADLINE: <2009-07-01 Wed +1m -0d> 
-,PROPERTIES:
-,RESET_CHECK_BOXES: t
-,END:
+   DEADLINE: <2009-07-01 Wed +1m -0d> 
+PROPERTIES:
+RESET_CHECK_BOXES: t
+END:
 
-,   - [ ] Do task 1
-,   - [ ] Do task 2
-,   ...
-,   - [ ] Do task 7
+   - [ ] Do task 1
+   - [ ] Do task 2
+   ...
+   - [ ] Do task 7
 #+end_src
 ** Backups
 :PROPERTIES:
@@ -4100,11 +4100,11 @@ property on the repeated tasks as follows:
 
 #+begin_src org :exports src
 ,* TODO New Repeating Task
-,  SCHEDULED: <2009-06-16 Tue +1w>
-,PROPERTIES:
-,NOBLOCKING: t
-,END:
-,...
+  SCHEDULED: <2009-06-16 Tue +1w>
+PROPERTIES:
+NOBLOCKING: t
+END:
+...
 ,** TODO Subtask  
 #+end_src
 
@@ -4116,9 +4116,9 @@ a property =ORDERED= that enforces this for subtasks.
 
 #+begin_src org :exports src
 ,* TODO Some Task
-,PROPERTY:
-,ORDERED: t
-,END:
+PROPERTY:
+ORDERED: t
+END:
 ,** TODO Step 1
 ,** TODO Step 2
 ,** TODO Step 3  
@@ -4306,10 +4306,10 @@ attachment directory.
 
 #+begin_src org :exports src
 ,* Attachments                                                        :ATTACH:
-,PROPERTIES:
-,Attachments: x.sql
-,ID:       f1d38e9a-ff70-4cc4-ab50-e8b58b2aaa7b
-,END:  
+PROPERTIES:
+Attachments: x.sql
+ID:       f1d38e9a-ff70-4cc4-ab50-e8b58b2aaa7b
+END:  
 #+end_src
 
 The attached file is saved in
@@ -4356,7 +4356,7 @@ date as follows:
 
 #+begin_src org :exports src
 ,* TODO Pay Wages
-,  DEADLINE: <2009-07-01 Wed +1m -0d>   
+  DEADLINE: <2009-07-01 Wed +1m -0d>   
 #+end_src
 
 This example repeats monthly and shows up in the agenda on the day it
@@ -4490,11 +4490,11 @@ To this end I have a task
 
 #+begin_src org :exports src
 ,* NEXT Document my use of org-mode
-,LOGBOOK:...
-,PROPERTIES:
-,CLOCK_MODELINE_TOTAL: today
-,Effort:   1:00
-,END:  
+LOGBOOK:...
+PROPERTIES:
+CLOCK_MODELINE_TOTAL: today
+Effort:   1:00
+END:  
 #+end_src
 
 The task has an estimated effort of 1 hour and when I clock in the
@@ -4549,11 +4549,11 @@ value setting and a special =SCHEDULED= date entry like this:
 
 #+begin_src org :exports src
 ,* TODO Update Org Mode Doc
-,   SCHEDULED: <2009-11-21 Sat .+7d/30d>
-,   [2009-11-14 Sat 11:45]
-,PROPERTIES:
-,STYLE: habit
-,END:  
+   SCHEDULED: <2009-11-21 Sat .+7d/30d>
+   [2009-11-14 Sat 11:45]
+PROPERTIES:
+STYLE: habit
+END:  
 #+end_src
 
 This marks the task as a habit and separates it from the regular task
@@ -4622,10 +4622,10 @@ My habit tasks look as follows - and I tend to have one in every org
 file that can have habits defined
 #+begin_src org :exports src
 ,* Habits
-,PROPERTIES:
-,LOGGING:  DONE(!)
-,ARCHIVE:  %s_archive::* Habits
-,END:  
+PROPERTIES:
+LOGGING:  DONE(!)
+ARCHIVE:  %s_archive::* Habits
+END:  
 #+end_src
 ** Auto revert mode
 :PROPERTIES:
@@ -4876,7 +4876,7 @@ and it inserts an inactive timestamp like this
 
 #+begin_src org :exports src
 ,* <point here>
-,  [2009-11-22 Sun 18:45]  
+  [2009-11-22 Sun 18:45]  
 #+end_src
 
 This keeps an automatic record of when tasks are created which I find very useful.
@@ -4949,44 +4949,44 @@ style.
 
 #+begin_src org :exports src
 ,* TODO Sample Meeting
-,  - Attendees
-,    - [ ] Joe
-,    - [X] Larry
-,    - [X] Mary
-,    - [X] Fred
-,  - Joe is on vacation this week
-,  - Status Updates
-,    + Larry
-,      - did this
-,      - and that
-,      - TODO: Needs to follow up on this
-,    + Mary
-,      - got a promotion for her recent efforts
-,    + Fred
-,      - completed all his tasks 2 days early
-,      - needs more work
-,      - DONE: everything  
+  - Attendees
+    - [ ] Joe
+    - [X] Larry
+    - [X] Mary
+    - [X] Fred
+  - Joe is on vacation this week
+  - Status Updates
+    + Larry
+      - did this
+      - and that
+      - TODO: Needs to follow up on this
+    + Mary
+      - got a promotion for her recent efforts
+    + Fred
+      - completed all his tasks 2 days early
+      - needs more work
+      - DONE: everything  
 #+end_src
 
 #+begin_src org :exports src
 ,* TODO Sample Meeting
-,   - Attendees
-,     - [ ] Joe
-,     - [X] Larry
-,     - [X] Mary
-,     - [X] Fred
-,   - Joe is on vacation this week
-,   - Status Updates
-,     + Larry
-,       - did this
-,       - and that
-,>>>>>>>> TODO: Needs to follow up on this
-,     + Mary
-,       - got a promotion for her recent efforts
-,     + Fred
-,       - completed all his tasks 2 days early
-,       - needs more work
-,>>>>>>>> DONE: everything  
+   - Attendees
+     - [ ] Joe
+     - [X] Larry
+     - [X] Mary
+     - [X] Fred
+   - Joe is on vacation this week
+   - Status Updates
+     + Larry
+       - did this
+       - and that
+>>>>>>>> TODO: Needs to follow up on this
+     + Mary
+       - got a promotion for her recent efforts
+     + Fred
+       - completed all his tasks 2 days early
+       - needs more work
+>>>>>>>> DONE: everything  
 #+end_src
 
 Here is the formatting function.  Just highlight the region for the
@@ -5403,8 +5403,8 @@ the list _before_ we archive anything.
 The following setting adds alphabetical lists like
 
 #+begin_src org :exports src
-,a. item one
-,b. item two
+a. item one
+b. item two
 #+end_src
 
 #+begin_src emacs-lisp :tangle yes
@@ -5650,9 +5650,9 @@ Here is the definition for the =begin= snippet:
 org-mode Yasnippet: ~/.emacs.d/plugins/yasnippet/snippets/text-mode/org-mode/begin
 :  #name : #+begin_...#+end_
 :  # --
-: , #+begin_$1 $2
+:  #+begin_$1 $2
 :  $0
-: , #+end_$1
+:  #+end_$1
 
 I used this to create =#+begin_*= blocks like 
 - =#+begin_example=
@@ -5838,22 +5838,22 @@ produced by ditaa during export)
 #+begin_example 
 core
 core.*
-,*.html
-,*~
+*.html
+*~
 .#*
 \#*\#
-,*.txt
-,*.tex
-,*.aux
-,*.dvi
-,*.log
-,*.out
-,*.ics
-,*.pdf
-,*.xml
-,*.org-source
-,*.png
-,*.toc
+*.txt
+*.tex
+*.aux
+*.dvi
+*.log
+*.out
+*.ics
+*.pdf
+*.xml
+*.org-source
+*.png
+*.toc
 #+end_example
 ** Git - Edit files with confidence
 :PROPERTIES:
