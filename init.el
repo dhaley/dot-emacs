@@ -2649,14 +2649,14 @@ at the beginning of line, if already there."
                                         ;          ("TAG_EDITMSG" . git-commit-mode)))
 
 ;;;_ , gnus
-(use-package dkh-gnus
+(use-package dot-gnus
   :if (not running-alternate-emacs)
   :bind (("M-G"   . switch-to-gnus)
          ("C-x m" . compose-mail))
   :init
   (progn
-
-    (setq gnus-init-file "~/.emacs.d/dot-gnus.el"
+    (setq gnus-init-file (expand-file-name "dot-gnus" user-emacs-directory)
+    ;; (setq gnus-init-file "~/.emacs.d/dot-gnus.el"
      gnus-home-directory "~/git/gnus"
      message-directory "~/git/gnus/Mail")
 
