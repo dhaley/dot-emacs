@@ -14,7 +14,7 @@
  '(gnus-agent-synchronize-flags t)
  '(gnus-alias-default-identity "CU")
  '(gnus-alias-identity-alist (quote (("CU" "" "\"Damon Haley\"
-<damon.haley@colorado.edu>" "University of Colorado" (("X-URL" . "http://dashboard.colorado.edu")) "" "~/git/.emacs.d/sig/cu.sig") ("VI" "" "\"Damon Haley\" <dkh@member.fsf.org>" "Vinyl Island Univeristy" nil "" "~/git/.emacs.d/sig/vi.sig") ("Haley" "" "\"Damon K. Haley\" <dhaley@warpmail.net>" "Haley's Comet" nil "" "~/git/.emacs.d/sig/haley.sig") ("LSD" "" "vinylisl@sdf.lonestar.org" "Peace Love & Understanding" (("X-URL" . "http://vinylisl.netlsd.com")) "" "~/git/.emacs.d/sig/lsd.sig"))))
+<damon.haley@colorado.edu>" "University of Colorado" (("X-URL" . "http://dashboard.colorado.edu")) "" "~/git/.emacs.d/sig/cu.sig") ("VI" "" "\"Damon Haley\" <dkh@member.fsf.org>" "Vinyl Island University" nil "" "~/git/.emacs.d/sig/vi.sig") ("Haley" "" "\"Damon K. Haley\" <dhaley@warpmail.net>" "Haley's Comet" nil "" "~/git/.emacs.d/sig/haley.sig") ("LSD" "" "vinylisl@sdf.lonestar.org" "Peace Love & Understanding" (("X-URL" . "http://vinylisl.netlsd.com")) "" "~/git/.emacs.d/sig/lsd.sig"))))
 '(gnus-alias-identity-rules (quote (
 ("Emacs Mailing Lists" ("To" "emacs" current) "VI")
 ("Emacs Newsgroups" ("Newsgroups" "emacs" current) "VI")
@@ -46,7 +46,6 @@
  '(gnus-ignored-mime-types (quote ("application/x-pkcs7-signature" "application/ms-tnef" "text/x-vcard")))
  '(gnus-interactive-exit (quote quiet))
  '(gnus-large-newsgroup 4000)
- ;;'(gnus-local-domain "boostpro.com") ;;This variable is obsolete since Emacs 24.1.
  '(gnus-mailing-list-groups "\\`\\(list\\|wg21\\)\\.")
  '(gnus-mark-unpicked-articles-as-read t)
  '(gnus-message-archive-group (quote ((format-time-string "sent.%Y"))))
