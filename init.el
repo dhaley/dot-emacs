@@ -21,6 +21,8 @@
                     (or (buffer-file-name) load-file-name)))
 
 
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 
 ;; setting paths for OS X (macports)
 (when (eq system-type 'darwin)
@@ -49,8 +51,8 @@
 
 
 
- ;; '(mac-command-modifier (quote hyper))
- ;; '(mac-option-modifier (quote meta))
+;; '(mac-command-modifier (quote hyper))
+;; '(mac-option-modifier (quote meta))
 ;; Keybonds
 
 (global-set-key [(hyper a)] 'mark-whole-buffer)
@@ -59,7 +61,7 @@
 (global-set-key [(hyper s)] 'save-buffer)
 (global-set-key [(hyper l)] 'goto-line)
 (global-set-key [(hyper w)]
-(lambda () (interactive) (delete-window)))
+                (lambda () (interactive) (delete-window)))
 ;; (global-set-key [(hyper z)] 'undo)
 
 
@@ -213,11 +215,11 @@ want to use in the modeline *in lieu of* the original.")
   (interactive)
   (loop for cleaner in mode-line-cleaner-alist
         do (let* ((mode (car cleaner))
-                 (mode-str (cdr cleaner))
-                 (old-mode-str (cdr (assq mode minor-mode-alist))))
+                  (mode-str (cdr cleaner))
+                  (old-mode-str (cdr (assq mode minor-mode-alist))))
              (when old-mode-str
-                 (setcar old-mode-str mode-str))
-               ;; major mode
+               (setcar old-mode-str mode-str))
+             ;; major mode
              (when (eq mode major-mode)
                (setq mode-name mode-str)))))
 
@@ -280,6 +282,38 @@ want to use in the modeline *in lieu of* the original.")
 ;;;_ , global-map
 
 ;;;_  . H-?
+
+
+(defun sacha/search-word-backward ()
+  "Find the previous occurrence of the current word."
+  (interactive)
+  (let ((cur (point)))
+    (skip-syntax-backward "w_")
+    (goto-char
+     (if (re-search-backward (concat "\\_<" (current-word) "\\_>") nil t)
+         (match-beginning 0)
+       cur))))
+
+(defun sacha/search-word-forward ()
+  "Find the next occurrence of the current word."
+  (interactive)
+  (let ((cur (point)))
+    (skip-syntax-forward "w_")
+    (goto-char
+     (if (re-search-forward (concat "\\_<" (current-word) "\\_>") nil t)
+         (match-beginning 0)
+       cur))))
+
+(defadvice search-for-keyword (around sacha activate)
+  "Match in a case-insensitive way."
+  (let ((case-fold-search t))
+    ad-do-it))
+
+(bind-key "C-H-r" 'sacha/search-word-backward)
+(bind-key "C-H-s" 'sacha/search-word-forward)
+
+
+
 (bind-key "H-i" 'ispell-word)
 (bind-key "H-e" 'grab-email-my)
 (bind-key "H-r" 'winner-redo) ;; C-c <right>
@@ -473,16 +507,16 @@ If no file is associated, just close buffer without prompt for save."
 
 
 (defun youngfrog/copy-rectangle-to-kill-ring (start end)
-"Saves a rectangle to the normal kill ring. Not suitable for yank-rectangle."
-(interactive "r")
-(let ((lines (extract-rectangle start end)))
-(with-temp-buffer
-(while lines ;; insert-rectangle, but without the unneeded stuff
-;; (most importantly no push-mark)
-(insert-for-yank (car lines))
-(insert "\n")
-(setq lines (cdr lines)))
-(kill-ring-save (point-min) (point-max)))))
+  "Saves a rectangle to the normal kill ring. Not suitable for yank-rectangle."
+  (interactive "r")
+  (let ((lines (extract-rectangle start end)))
+    (with-temp-buffer
+      (while lines ;; insert-rectangle, but without the unneeded stuff
+        ;; (most importantly no push-mark)
+        (insert-for-yank (car lines))
+        (insert "\n")
+        (setq lines (cdr lines)))
+      (kill-ring-save (point-min) (point-max)))))
 
 ;;;_  . C-x ?
 
@@ -860,18 +894,18 @@ are in kbd format."
       (unfill-paragraph 1)
       (forward-paragraph))))
 
-  (defun uniquify-region-lines (beg end)
-    "Remove duplicate adjacent lines in region."
-    (interactive "*r")
-    (save-excursion
-      (goto-char beg)
-      (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
-        (replace-match "\\1"))))
+(defun uniquify-region-lines (beg end)
+  "Remove duplicate adjacent lines in region."
+  (interactive "*r")
+  (save-excursion
+    (goto-char beg)
+    (while (re-search-forward "^\\(.*\n\\)\\1+" end t)
+      (replace-match "\\1"))))
 
-  (defun uniquify-buffer-lines ()
-    "Remove duplicate adjacent lines in the current buffer."
-    (interactive)
-    (uniquify-region-lines (point-min) (point-max)))
+(defun uniquify-buffer-lines ()
+  "Remove duplicate adjacent lines in the current buffer."
+  (interactive)
+  (uniquify-region-lines (point-min) (point-max)))
 
 
 ;;;_, Toggle between split windows and a single window
@@ -1238,11 +1272,11 @@ Subexpression references can be used (\1, \2, etc)."
 
     ;; ;; Use variable width font faces in current buffer
     (defun my-buffer-face-mode-variable ()
-    ;;   "Set font to a variable width (proportional) fonts in current buffer"
+      ;;   "Set font to a variable width (proportional) fonts in current buffer"
       (interactive)
       (setq buffer-face-mode-face '(:family "Menlo For Powerline" :height 100))
       (text-scale-adjust 1)
-       (buffer-face-mode))
+      (buffer-face-mode))
 
     (setq system-uses-terminfo nil)
     ;; When you use this code, note that dabbrev-completion is C-x /, and yanking is C-y.
@@ -2168,7 +2202,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
   :if running-alternate-emacs
   :init
   (progn
-        (defun setup-irc-environment ()
+    (defun setup-irc-environment ()
       (interactive)
 
       (set-frame-font
@@ -2395,7 +2429,7 @@ FORM => (eval FORM)."
          ;; (set-face-foreground 'erc-my-nick-face "blue")
          )
 
-         ;; from https://github.com/robru/.emacs.d/blob/master/setup-appearance.el
+      ;; from https://github.com/robru/.emacs.d/blob/master/setup-appearance.el
 
       ;; (set-face-attribute 'erc-notice-face nil
       ;;                     :foreground "grey30"
@@ -2437,7 +2471,7 @@ FORM => (eval FORM)."
            (unintern 'eshell/su)
            (unintern 'eshell/sudo))))
     ;; https://github.com/anthracite/emacs-config/blob/master/init.el
-     (defun eshell-maybe-bol ()
+    (defun eshell-maybe-bol ()
       "Moves point behind the eshell prompt, or
 at the beginning of line, if already there."
       (interactive)
@@ -2445,23 +2479,23 @@ at the beginning of line, if already there."
         (eshell-bol)
         (when (= p (point))
           (beginning-of-line))))
-      (defun eshell-clear ()
+    (defun eshell-clear ()
       "Clears the eshell buffer."
       (interactive)
       (let ((inhibit-read-only t))
         (erase-buffer)))
 
-      (defun dkh-eshell-macs ()
-        (interactive)
-        "Creates a tool config shell and switches to it. If a buffer with name already exists, we simply switch to it."
-        (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*"))))
-          (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
-                 (switch-to-buffer buffer-of-name))
-                ( t
-                  (progn
-                    (eshell t)
+    (defun dkh-eshell-macs ()
+      (interactive)
+      "Creates a tool config shell and switches to it. If a buffer with name already exists, we simply switch to it."
+      (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*"))))
+        (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
+               (switch-to-buffer buffer-of-name))
+              ( t
+                (progn
+                  (eshell t)
                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
-                    (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*")))))))
+                  (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*")))))))
 
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
 
@@ -2505,6 +2539,8 @@ at the beginning of line, if already there."
     (setq ldap-host-parameters-alist '(("directory.colorado.edu" base "dc=colorado,dc=edu")))))
 
 ;;;_ , eudc
+
+(defalias 'eu 'eudc-query-form)
 
 (use-package eudc
   :if (not running-alternate-emacs)
@@ -2554,7 +2590,9 @@ at the beginning of line, if already there."
         (eval-after-load "sendmail"
           '(define-key mail-mode-map (kbd "TAB") 'enz-eudc-expand-inline))
         (eval-after-load "post"
-          '(define-key post-mode-map (kbd "TAB") 'enz-eudc-expand-inline))))))
+          '(define-key post-mode-map (kbd "TAB") 'enz-eudc-expand-inline))))
+
+    ))
 
 
 
@@ -2596,10 +2634,24 @@ at the beginning of line, if already there."
       (set-syntax-table emacs-lisp-mode-syntax-table)
       (paredit-mode))))
 
-
+;; (add-to-list 'load-path "~/.emacs.d/site-lisp/expand-region.el")
 ;; expand-region
 (use-package expand-region
-  :bind ("C-c =" . er/expand-region))
+  :bind (("C-c =" . er/expand-region)
+         ("H-M-SPC" . er/expand-region))
+  :config
+  (progn
+    (defun er/add-text-mode-expansions ()
+      (make-variable-buffer-local 'er/try-expand-list)
+      (setq er/try-expand-list (append
+                                er/try-expand-list
+                                '(mark-paragraph
+                                  mark-page))))
+    
+    (add-hook 'text-mode-hook 'er/add-text-mode-expansions)
+    ))
+
+
 
 
 ;;;_ , fetchmail-mode
@@ -2656,9 +2708,9 @@ at the beginning of line, if already there."
   :init
   (progn
     (setq gnus-init-file (expand-file-name "dot-gnus" user-emacs-directory)
-    ;; (setq gnus-init-file "~/.emacs.d/dot-gnus.el"
-     gnus-home-directory "~/git/gnus"
-     message-directory "~/git/gnus/Mail")
+          ;; (setq gnus-init-file "~/.emacs.d/dot-gnus.el"
+          gnus-home-directory "~/git/gnus"
+          message-directory "~/git/gnus/Mail")
 
     (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
@@ -3121,7 +3173,12 @@ at the beginning of line, if already there."
 ;;   ert
 
 
-
+                                        ; elisp
+(defalias 'eb 'eval-buffer)
+(defalias 'er 'eval-region)
+(defalias 'ed 'eval-defun)
+(defalias 'ele 'eval-last-sexp)
+(defalias 'eis 'elisp-index-search)
 
 (use-package lisp-mode
   ;; :load-path "site-lisp/slime/contrib/"
@@ -3252,8 +3309,8 @@ at the beginning of line, if already there."
       (auto-fill-mode 1)
       (paredit-mode 1)
 
-        (require 'redshank-loader
-           "~/.emacs.d/site-lisp/redshank/redshank-loader")
+      (require 'redshank-loader
+               "~/.emacs.d/site-lisp/redshank/redshank-loader")
 
       (redshank-mode 1)
       (elisp-slime-nav-mode 1)
@@ -3742,7 +3799,7 @@ end end))))))
 
          ("<f9> t" . bh/insert-inactive-timestamp)
          ("<f9> T" . tabify)
-;;         ("<f9> U" . untabify)
+         ;;         ("<f9> U" . untabify)
 
          ("<f9> v" . visible-mode)
          ("<f9> SPC" . bh/clock-in-last-task)
@@ -3758,12 +3815,137 @@ end end))))))
          )
   :init
   (progn
-     (require 'yasnippet)
-     (require 'org)
-     (org-babel-load-file "~/.emacs.d/dkh-org.org")
-     (use-package org-habit)
+    (require 'yasnippet)
+    (require 'org)
+    (require 'org-habit) ;; added by dkh
+    (org-babel-load-file "~/.emacs.d/dkh-org.org")
+    (define-key org-mode-map (kbd "C-c k") 'org-cut-subtree)
 
-     (global-set-key (kbd "H-j") 'org-jira-create-issue)
+    (setq org-export-with-section-numbers nil)
+    (setq org-html-include-timestamps nil)
+
+    (defun sacha/org-export-subtree-as-html-fragment ()
+      (interactive)
+      (org-export-region-as-html
+       (org-back-to-heading)
+       (org-end-of-subtree)
+       t))
+
+    ;; (setq org-link-abbrev-alist
+    ;;   '(("google" . "http://www.google.com/search?q=")
+    ;;     ("gmap" . "http://maps.google.com/maps?q=%s")
+    ;;     ("blog" . "http://sachachua.com/blog/p/")))
+
+    ;; (org-babel-do-load-languages
+    ;;     'org-babel-load-languages '((python . t) (R . t) (perl . t)))
+
+    ))
+
+
+(use-package org-latex
+  :config
+  (progn
+    (require 'org-latex)
+    (unless (boundp 'org-export-latex-classes)
+      (setq org-export-latex-classes nil))
+    (add-to-list 'org-export-latex-classes
+                 '("article"
+                   "\\documentclass{article}"
+                   ("\\section{%s}" . "\\section*{%s}")))
+
+    (add-to-list 'org-export-latex-classes
+                 '("article"
+                   "\\documentclass{article}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+    (add-to-list 'org-export-latex-classes
+                 `("book"
+                   "\\documentclass{book}"
+                   ("\\part{%s}" . "\\part*{%s}")
+                   ("\\chapter{%s}" . "\\chapter*{%s}")
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+                 )
+
+    (add-to-list 'org-export-latex-classes
+                 '("org-article"
+                   "\\documentclass{org-article}
+         [NO-DEFAULT-PACKAGES]
+         [PACKAGES]
+         [EXTRA]"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+    (add-to-list 'org-export-latex-classes
+                 '("koma-article"
+                   "\\documentclass{scrartcl}
+             [NO-DEFAULT-PACKAGES]
+             [EXTRA]"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+    (setq org-export-latex-listings 'minted)
+    (setq org-export-latex-custom-lang-environments
+          '(
+            (emacs-lisp "common-lispcode")
+            ))
+    (setq org-export-latex-minted-options
+          '(("frame" "lines")
+            ("fontsize" "\\scriptsize")
+            ("linenos" "")))
+    (setq org-latex-to-pdf-process
+          '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+            "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+            "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+    (setq org-export-latex-listings 'listings)
+    (setq org-export-latex-custom-lang-environments
+          '((emacs-lisp "common-lispcode")))
+    (setq org-export-latex-listings-options
+          '(("frame" "lines")
+            ("basicstyle" "\\footnotesize")
+            ("numbers" "left")
+            ("numberstyle" "\\tiny")))
+    (setq org-latex-to-pdf-process
+          '("pdflatex -interaction nonstopmode -output-directory %o %f"
+            "pdflatex -interaction nonstopmode -output-directory %o %f"
+            "pdflatex -interaction nonstopmode -output-directory %o %f"))
+    (org-add-link-type
+     "latex" nil
+     (lambda (path desc format)
+       (cond
+        ((eq format 'html)
+         (format "<span class=\"%s\">%s</span>" path desc))
+        ((eq format 'latex)
+         (format "\\%s{%s}" path desc)))))
+    ))
+
+(use-package org-jira
+  :load-path ("~/.emacs.d/elpa/jira-0.3.3"
+              "~/.emacs.d/site-lisp/org-jira")
+  :commands (org-jira-create-issue org-jira-create-issue)
+  :bind ("H-j" . org-jira-create-issue)
+  :init
+  (progn
+    
+    (require 'jira)
+    (setq jira-url "https://cuboulder.atlassian.net//rpc/xmlrpc")
+    (require 'org-jira)
+    (setq jiralib-url "https://cuboulder.atlassian.net")
+    ;; jiralib is not explicitly required, since org-jira will load it.
+    (setq org-jira-working-dir "~/git/dkh-org/.org-jira")
+    (setq org-jira-current-project "CUPRE")
     ))
 
 
@@ -4138,6 +4320,14 @@ prevents using commands with prefix arguments."
   :config
   (progn
 
+    ;; by Ellen Taylor, 2012-07-20
+    ;; (defadvice shell (around always-new-shell)
+    ;;   "Always start a new shell."
+    ;;   (let ((buffer (generate-new-buffer-name "*shell*"))) ad-do-it))
+
+    ;; (ad-activate 'shell)
+
+    
     (defun comint-delchar-or-eof-or-kill-buffer (arg)
       (interactive "p")
       (if (null (get-buffer-process (current-buffer)))
@@ -4350,11 +4540,11 @@ prevents using commands with prefix arguments."
                                                     ":direct_messages"))
     (twittering-enable-unread-status-notifier)
 
-     (define-keys twittering-mode-map
-       '(("n" twittering-goto-next-status)
-         ("p" twittering-goto-previous-status)
-         ("j" twittering-goto-next-status-of-user)
-         ("k" twittering-goto-previous-status-of-user)))
+    (define-keys twittering-mode-map
+      '(("n" twittering-goto-next-status)
+        ("p" twittering-goto-previous-status)
+        ("j" twittering-goto-next-status-of-user)
+        ("k" twittering-goto-previous-status-of-user)))
     ))
 
 
@@ -4543,12 +4733,12 @@ prevents using commands with prefix arguments."
   :config
   (progn
     (setq webjump-sites (append '(                    ("Java API" .
-                                                             [simple-query "www.google.com" "http://www.google.com/search?hl=en&as_sitesearch=http://java.sun.com/javase/6/docs/api/&q=" ""])
-                                                            ("Stack Overflow" . "www.stackoverlow.com")
-                                                            ("Pop's Site"   . "www.joebob-and-son.com/")
+                                                       [simple-query "www.google.com" "http://www.google.com/search?hl=en&as_sitesearch=http://java.sun.com/javase/6/docs/api/&q=" ""])
+                                                      ("Stack Overflow" . "www.stackoverlow.com")
+                                                      ("Pop's Site"   . "www.joebob-and-son.com/")
 
-                                                            )
-                                      webjump-sample-sites))
+                                                      )
+                                webjump-sample-sites))
     ;; Add Urban Dictionary to webjump
     (eval-after-load "webjump"
       '(add-to-list 'webjump-sites
@@ -4575,7 +4765,7 @@ prevents using commands with prefix arguments."
     (setq whitespace-line-column 80
           whitespace-style '(face tabs trailing lines-tail))
 
-        (add-hook 'prog-mode-hook 'enable-whitespace-mode)
+    (add-hook 'prog-mode-hook 'enable-whitespace-mode)
 
     (setq modes-where-I-want-whitespace-mode-to-be-enabled
           '(ruby-mode-hook
@@ -4594,7 +4784,7 @@ prevents using commands with prefix arguments."
 
     (defun enable-whitespace-mode ()
       (whitespace-mode 1)
-    )
+      )
 
     ;; ;; (global-whitespace-mode t)
     ;; ;; (setq whitespace-global-modes '(not dired-mode tar-mode))
@@ -4681,9 +4871,9 @@ prevents using commands with prefix arguments."
     ;; (add-hook 'web-mode-hook 'web-mode-hook)
     ;; (add-hook 'local-write-file-hooks (lambda () (delete-trailing-whitespace) nil))
     ;; (local-set-key (kbd "RET") 'newline-and-indent)
-  ;; :mode ("\\.\\(php\\|tpl\\|\\.html\\.erb\\)$" . web-mode)
-  ;; :interpreter ("web" . web-mode)
-  ))
+    ;; :mode ("\\.\\(php\\|tpl\\|\\.html\\.erb\\)$" . web-mode)
+    ;; :interpreter ("web" . web-mode)
+    ))
 
 
 
@@ -4693,15 +4883,15 @@ prevents using commands with prefix arguments."
 
 (setq windmove-wrap-around t)
 (windmove-default-keybindings)	      ; Move between frames with Shift+arrow
-; windmove shows a stacktrace when there is nothing to move to
+                                        ; windmove shows a stacktrace when there is nothing to move to
 
 (defmacro maser/swallow-errors (name f-with-error)
   `(defun ,name ()
-  (interactive)
-  (condition-case err
-       (,f-with-error)
-     (error
-      (message "%s" (error-message-string err))))))
+     (interactive)
+     (condition-case err
+         (,f-with-error)
+       (error
+        (message "%s" (error-message-string err))))))
 
 (maser/swallow-errors windmove-down-without-errors windmove-down)
 (maser/swallow-errors windmove-up-without-errors windmove-up)
@@ -4831,7 +5021,7 @@ prevents using commands with prefix arguments."
     (powerline-default)
 
     ;;    (require "~/.emacs.d/lisp/dkh-powerline")
-;;    (load "~/git/foss/hekt_dotfiles/.emacs.d/inits/21_init.extension.powerline.el")
+    ;;    (load "~/git/foss/hekt_dotfiles/.emacs.d/inits/21_init.extension.powerline.el")
 
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
     (bind-key "\\" 'toggle-input-method wg-map)
@@ -5093,6 +5283,8 @@ $0"))))
 ;; ))
 
 
+;;(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
+
 (use-package color-theme-solarized
   :load-path "~/.emacs.d/site-lisp/solarized-emacs"
   :commands (color-theme-solarized-dark
@@ -5103,21 +5295,20 @@ $0"))))
 
     
     (defun bw-toggle-solarized ()
-  "Toggles between solarized light and dark"
-  (interactive)
-  (cond
-   ((custom-theme-enabled-p 'solarized-dark)
-    (progn
-      (disable-theme 'solarized-dark)
-      (enable-theme 'solarized-light)))
-   ((custom-theme-enabled-p 'solarized-light)
-    (progn
-      (disable-theme 'solarized-light)
-      (enable-theme 'solarized-dark)))))
+      "Toggles between solarized light and dark"
+      (interactive)
+      (cond
+       ((custom-theme-enabled-p 'solarized-dark)
+        (progn
+          (disable-theme 'solarized-dark)
+          (enable-theme 'solarized-light)))
+       ((custom-theme-enabled-p 'solarized-light)
+        (progn
+          (disable-theme 'solarized-light)
+          (enable-theme 'solarized-dark)))))
     )
   )
 
-;; (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
 
 
 (defadvice load-theme
@@ -5125,25 +5316,47 @@ $0"))))
   (let ((theme-name (ad-get-arg 0)))
     (when (or (eq theme-name 'solarized-dark)
               (eq theme-name 'solarized-light))
-      (progn
-        (custom-set-faces
-         '(magit-diff-add ((t (:inherit diff-added :weight normal))))
-         '(magit-diff-del ((t (:inherit diff-removed :weight normal))))
-         '(diff-refine-change ((t (:inherit diff-refine-change :background nil))))
-         '(iedit-occurrence ((t (:inherit lazy-highlight))))
-         '(match ((t (:inherit lazy-highlight :reverse t))))
-         '(erb-face ((t (:background nil))))
-         '(erb-out-delim-face ((t (:inherit erb-exec-delim-face :foreground "#b58900")))))
-        (when (and (display-graphic-p) *is-a-mac*)
-          ;; My Macs have the --srgb flag set
-          (setq solarized-broken-srgb nil))))))
+      ;; (progn
+      ;;   (custom-set-faces
+      ;;    '(magit-diff-add ((t (:inherit diff-added :weight normal))))
+      ;;    '(magit-diff-del ((t (:inherit diff-removed :weight normal))))
+      ;;    '(diff-refine-change ((t (:inherit diff-refine-change :background nil))))
+      ;;    '(iedit-occurrence ((t (:inherit lazy-highlight))))
+      ;;    '(match ((t (:inherit lazy-highlight :reverse t))))
+      ;;    '(erb-face ((t (:background nil))))
+      ;;    '(erb-out-delim-face ((t (:inherit erb-exec-delim-face :foreground "#b58900")))))
+      ;;   (when (and (display-graphic-p) *is-a-mac*)
+      ;;     ;; My Macs have the --srgb flag set
+      ;;     (setq solarized-broken-srgb nil)))
+      )))
 
-(ad-activate 'load-theme)
+;; (ad-activate 'load-theme)
+
+
+(blink-cursor-mode 1)
+
+(defvar blink-cursor-colors (list  "#92c48f" "#6785c5" "#be369c" "#d9ca65")
+  "On each blink the cursor will cycle to the next color in this list.")
+
+(setq blink-cursor-count 0)
+
+(defun blink-cursor-timer-function ()
+  "Cyberpunk variant of timer `blink-cursor-timer'. OVERWRITES original version in `frame.el'.
+
+This one changes the cursor color on each blink. Define colors in `blink-cursor-colors'."
+  (when (not (internal-show-cursor-p))
+    (when (>= blink-cursor-count (length blink-cursor-colors))
+      (setq blink-cursor-count 0))
+    (set-cursor-color (nth blink-cursor-count blink-cursor-colors))
+    (setq blink-cursor-count (+ 1 blink-cursor-count))
+    )
+  (internal-show-cursor nil (not (internal-show-cursor-p)))
+  )
 
 
 
 (unless running-alternate-emacs
-  (org-babel-load-file "~/.emacs.d/dkh-core.org")
+  ;; (org-babel-load-file "~/.emacs.d/dkh-core.org")
   ;;;_. Load some private settings
   (org-babel-load-file "~/git/.emacs.d/dkh-private.org")
   )
@@ -5211,6 +5424,23 @@ $0"))))
  )
 
 
+(defalias 'list-matching-lines 'occur)
+(defalias 'delete-matching-lines 'flush-lines)
+(defalias 'delete-non-matching-lines 'keep-lines)
+
+;; Allow "y or n" instead of "yes or no"
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(require 'switch-window)
+
+(require 'window-number)
+(window-number-mode)
+(window-number-meta-mode)
+
+(require 'buffer-move)
+
+
+
 ;; Local Variables:
 ;;   mode: emacs-lisp
 ;;   mode: allout
@@ -5219,5 +5449,3 @@ $0"))))
 
 ;;; init.el ends here
 
-;; Allow "y or n" instead of "yes or no"
-(fset 'yes-or-no-p 'y-or-n-p)

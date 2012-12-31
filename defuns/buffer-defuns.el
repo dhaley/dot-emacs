@@ -6,13 +6,13 @@
   "create a new scratch buffer to work in. (could be *scratch* - *scratchX*)"
   (interactive)
   (let ((n 0)
-        bufname)
+	bufname)
     (while (progn
-             (setq bufname (concat "*scratch"
-                                   (if (= n 0) "" (int-to-string n))
-                                   "*"))
-             (setq n (1+ n))
-             (get-buffer bufname)))
+	     (setq bufname (concat "*scratch"
+				   (if (= n 0) "" (int-to-string n))
+				   "*"))
+	     (setq n (1+ n))
+	     (get-buffer bufname)))
     (switch-to-buffer (get-buffer-create bufname))
     (emacs-lisp-mode)
     ))
@@ -25,40 +25,40 @@ Symbols matching the text at point are put first in the completion list."
   (interactive)
   (imenu--make-index-alist)
   (let ((name-and-pos '())
-        (symbol-names '()))
+	(symbol-names '()))
     (flet ((addsymbols (symbol-list)
-                       (when (listp symbol-list)
-                         (dolist (symbol symbol-list)
-                           (let ((name nil) (position nil))
-                             (cond
-                              ((and (listp symbol) (imenu--subalist-p symbol))
-                               (addsymbols symbol))
+		       (when (listp symbol-list)
+			 (dolist (symbol symbol-list)
+			   (let ((name nil) (position nil))
+			     (cond
+			      ((and (listp symbol) (imenu--subalist-p symbol))
+			       (addsymbols symbol))
 
-                              ((listp symbol)
-                               (setq name (car symbol))
-                               (setq position (cdr symbol)))
+			      ((listp symbol)
+			       (setq name (car symbol))
+			       (setq position (cdr symbol)))
 
-                              ((stringp symbol)
-                               (setq name symbol)
-                               (setq position (get-text-property 1 'org-imenu-marker symbol))))
+			      ((stringp symbol)
+			       (setq name symbol)
+			       (setq position (get-text-property 1 'org-imenu-marker symbol))))
 
-                             (unless (or (null position) (null name))
-                               (add-to-list 'symbol-names name)
-                               (add-to-list 'name-and-pos (cons name position))))))))
+			     (unless (or (null position) (null name))
+			       (add-to-list 'symbol-names name)
+			       (add-to-list 'name-and-pos (cons name position))))))))
       (addsymbols imenu--index-alist))
     ;; If there are matching symbols at point, put them at the beginning of `symbol-names'.
     (let ((symbol-at-point (thing-at-point 'symbol)))
       (when symbol-at-point
-        (let* ((regexp (concat (regexp-quote symbol-at-point) "$"))
-               (matching-symbols (delq nil (mapcar (lambda (symbol)
-                                                     (if (string-match regexp symbol) symbol))
-                                                   symbol-names))))
-          (when matching-symbols
-            (sort matching-symbols (lambda (a b) (> (length a) (length b))))
-            (mapc (lambda (symbol) (setq symbol-names (cons symbol (delete symbol symbol-names))))
-                  matching-symbols)))))
+	(let* ((regexp (concat (regexp-quote symbol-at-point) "$"))
+	       (matching-symbols (delq nil (mapcar (lambda (symbol)
+						     (if (string-match regexp symbol) symbol))
+						   symbol-names))))
+	  (when matching-symbols
+	    (sort matching-symbols (lambda (a b) (> (length a) (length b))))
+	    (mapc (lambda (symbol) (setq symbol-names (cons symbol (delete symbol symbol-names))))
+		  matching-symbols)))))
     (let* ((selected-symbol (ido-completing-read "Symbol? " symbol-names))
-           (position (cdr (assoc selected-symbol name-and-pos))))
+	   (position (cdr (assoc selected-symbol name-and-pos))))
       (push-mark (point))
       (goto-char position))))
 
@@ -119,7 +119,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 (defun file-name-with-one-directory (file-name)
   (concat (cadr (reverse (split-string file-name "/"))) "/"
-          (file-name-nondirectory file-name)))
+	  (file-name-nondirectory file-name)))
 
 (defun recentf--file-cons (file-name)
   (cons (file-name-with-one-directory file-name) file-name))
@@ -128,6 +128,128 @@ Including indent-buffer, which should not be called automatically on save."
   "Find a recent file using ido."
   (interactive)
   (let* ((recent-files (mapcar 'recentf--file-cons recentf-list))
-         (files (mapcar 'car recent-files))
-         (file (completing-read "Choose recent file: " files)))
+	 (files (mapcar 'car recent-files))
+	 (file (completing-read "Choose recent file: " files)))
     (find-file (cdr (assoc file recent-files)))))
+
+
+;; added from dkh-core
+
+(defun my-swap-windows ()
+  "If you have 2 windows, it swaps them."
+  (interactive)
+  (cond ((not (= (count-windows) 2))
+	 (message "You need exactly 2 windows to do this."))
+	(t
+	 (let* ((w1 (first (window-list)))
+		(w2 (second (window-list)))
+		(b1 (window-buffer w1))
+		(b2 (window-buffer w2))
+		(s1 (window-start w1))
+		(s2 (window-start w2)))
+	   (set-window-buffer w1 b2)
+	   (set-window-buffer w2 b1)
+	   (set-window-start w1 s2)
+	   (set-window-start w2 s1)))))
+
+(defun my-toggle-window-split ()
+  "Vertical split shows more of each line, horizontal split shows
+more lines. This code toggles between them. It only works for
+frames with exactly two windows."
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+	     (next-win-buffer (window-buffer (next-window)))
+	     (this-win-edges (window-edges (selected-window)))
+	     (next-win-edges (window-edges (next-window)))
+	     (this-win-2nd (not (and (<= (car this-win-edges)
+					 (car next-win-edges))
+				     (<= (cadr this-win-edges)
+					 (cadr next-win-edges)))))
+	     (splitter
+	      (if (= (car this-win-edges)
+		     (car (window-edges (next-window))))
+		  'split-window-horizontally
+		'split-window-vertically)))
+	(delete-other-windows)
+	(let ((first-win (selected-window)))
+	  (funcall splitter)
+	  (if this-win-2nd (other-window 1))
+	  (set-window-buffer (selected-window) this-win-buffer)
+	  (set-window-buffer (next-window) next-win-buffer)
+	  (select-window first-win)
+	  (if this-win-2nd (other-window 1))))))
+
+;; I want to be able to conmute between a split and a single window (sort of "C-x 1" for the one on focus)
+(defun toggle-windows-split()
+"Switch back and forth between one window and whatever split of windows we might have in the frame. The idea is to maximize the current buffer, while being able to go back to the previous split of windows in the frame simply by calling this command again."
+  (interactive)
+(if (not(window-minibuffer-p (selected-window)))
+(progn
+(if (< 1 (count-windows))
+(progn
+(window-configuration-to-register ?u)
+(delete-other-windows))
+(jump-to-register ?u))))
+;;(my-iswitchb-close)
+)
+
+(defun split-window-switch-buffer () (interactive)
+  "Split current window and display the two last buffers used."
+  (split-window)
+  (switch-to-buffer (other-buffer (current-buffer)))
+  )
+
+(defun hsplit-window-switch-buffer () (interactive)
+  "Split current window horizontally and display the two last buffers used."
+  (split-window-horizontally)
+  (switch-to-buffer (other-buffer (current-buffer)))
+  )
+
+
+(setq swapping-buffer nil)
+(setq swapping-window nil)
+
+(defun swap-buffers-in-windows ()
+  "Swap buffers between two windows"
+  (interactive)
+  (if (and swapping-window
+           swapping-buffer)
+      (let ((this-buffer (current-buffer))
+            (this-window (selected-window)))
+        (if (and (window-live-p swapping-window)
+                 (buffer-live-p swapping-buffer))
+            (progn (switch-to-buffer swapping-buffer)
+                   (select-window swapping-window)
+                   (switch-to-buffer this-buffer)
+                   (select-window this-window)
+                   (message "Swapped buffers."))
+          (message "Old buffer/window killed.  Aborting."))
+        (setq swapping-buffer nil)
+        (setq swapping-window nil))
+    (progn
+      (setq swapping-buffer (current-buffer))
+      (setq swapping-window (selected-window))
+      (message "Buffer and window marked for swapping."))))
+
+(defun rotate-windows ()
+ "Rotate your windows" (interactive) (cond ((not (> (count-windows) 1)) (message "You can't rotate a single window!"))
+(t
+ (setq i 1)
+ (setq numWindows (count-windows))
+ (while  (< i numWindows)
+   (let* (
+          (w1 (elt (window-list) i))
+          (w2 (elt (window-list) (+ (% i numWindows) 1)))
+
+          (b1 (window-buffer w1))
+          (b2 (window-buffer w2))
+
+          (s1 (window-start w1))
+          (s2 (window-start w2))
+          )
+     (set-window-buffer w1  b2)
+     (set-window-buffer w2 b1)
+     (set-window-start w1 s2)
+     (set-window-start w2 s1)
+     (setq i (1+ i)))))))
