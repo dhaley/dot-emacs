@@ -148,7 +148,7 @@
 (if (string-match (concat "/Applications/\\(Misc/\\)?"
                           "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
                   invocation-directory)
-    
+
 
     (let ((settings (with-temp-buffer
                       (insert-file-contents
@@ -203,12 +203,12 @@
     (emacs-lisp-mode . "EL")
     (nxhtml-mode . "nx"))
   "Alist for `clean-mode-line'.
- 
+
 When you add a new element to the alist, keep in mind that you
 must pass the correct minor/major mode symbol and a string you
 want to use in the modeline *in lieu of* the original.")
- 
- 
+
+
 (defun clean-mode-line ()
   (interactive)
   (loop for cleaner in mode-line-cleaner-alist
@@ -220,10 +220,10 @@ want to use in the modeline *in lieu of* the original.")
                ;; major mode
              (when (eq mode major-mode)
                (setq mode-name mode-str)))))
- 
- 
+
+
 (add-hook 'after-change-major-mode-hook 'clean-mode-line)
- 
+
 ;;; alias the new `flymake-report-status-slim' to
 ;;; `flymake-report-status'
 (defalias 'flymake-report-status 'flymake-report-status-slim)
@@ -251,7 +251,7 @@ want to use in the modeline *in lieu of* the original.")
 (if (boundp 'buffer-file-coding-system)
     (setq-default buffer-file-coding-system 'utf-8)
   (setq default-buffer-file-coding-system 'utf-8))
- 
+
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
@@ -1328,13 +1328,12 @@ Subexpression references can be used (\1, \2, etc)."
             )
         (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
                (switch-to-buffer buffer-of-name))
-              ( t 
+              ( t
                 (progn
                   (ansi-term term-cmd)
                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
                   (rename-buffer  (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))))))
 
-;;    (bind-key "C-8 a" 'visit-ansi-term)
     ))
 
 (use-package ansi-color
@@ -2457,7 +2456,7 @@ at the beginning of line, if already there."
         (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*"))))
           (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
                  (switch-to-buffer buffer-of-name))
-                ( t 
+                ( t
                   (progn
                     (eshell t)
                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
@@ -2465,7 +2464,6 @@ at the beginning of line, if already there."
 
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
 
-;;    (bind-key "C-8 e" 'dkh-eshell-macs)
     ))
 
 ;; eshell
@@ -2666,7 +2664,7 @@ at the beginning of line, if already there."
     (use-package eudc)
     (use-package rgr-web)
 ;;    (require 'bbdb-loaddefs "~/.emacs.d/override/bbdb/lisp/bbdb-loaddefs.el")
-    (use-package bbdb-gnus)
+    ;; (use-package bbdb-gnus)
     (use-package bbdb-message)
 
     ;; (setq message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
@@ -2685,6 +2683,10 @@ at the beginning of line, if already there."
 
     (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
     (add-hook 'message-setup-hook 'bbdb-mail-aliases) ; BBDB 3.x
+
+        ;;(define-key gnus-article-mode-map (kbd "M-w") 'org-w3m-copy-for-org-mode)
+    ;;    (define-key gnus-article-mode-map (kbd "C-c C-x M-w") 'org-w3m-copy-for-org-mode)
+
     ))
 
 
@@ -3146,7 +3148,7 @@ at the beginning of line, if already there."
                     (compose-region (match-beginning 1)
                                     (match-end 1) ?λ))))
                ("(\\|)" . 'esk-paren-face)
-               ("(\\(ert-deftest\\)\\>[ 	'(]*\\(setf[ 	]+\\sw+\\|\\sw+\\)?"
+               ("(\\(ert-deftest\\)\\>[         '(]*\\(setf[    ]+\\sw+\\|\\sw+\\)?"
                 (1 font-lock-keyword-face)
                 (2 font-lock-function-name-face
                    nil t)))))
@@ -3276,7 +3278,7 @@ at the beginning of line, if already there."
 
       (yas/minor-mode 1))
 
-    
+
     (hook-into-modes #'my-lisp-mode-hook lisp-mode-hooks)))
 
 ;;;_ , log4j-mode
@@ -3409,7 +3411,7 @@ at the beginning of line, if already there."
   (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
 
   ;; Actual changes lost in a sea of whitespace diffs?
-  
+
   (defun magit-toggle-whitespace ()
     (interactive)
     (if (member "-w" magit-diff-options)
@@ -4436,7 +4438,7 @@ prevents using commands with prefix arguments."
       (setq w3m-async-exec t)
       (widget-button-press (point)))
 
-    
+
     (defun show-browser ()
       (interactive)
       (let ((w3m-buf
@@ -4541,9 +4543,16 @@ prevents using commands with prefix arguments."
 ;;_ , webjump
 
 (use-package webjump
-  :bind ("C-x g" . webjump)
+  :commands webjump
   :config
   (progn
+    (setq webjump-sites (append '(                    ("Java API" .
+                                                             [simple-query "www.google.com" "http://www.google.com/search?hl=en&as_sitesearch=http://java.sun.com/javase/6/docs/api/&q=" ""])
+                                                            ("Stack Overflow" . "www.stackoverlow.com")
+                                                            ("Pop's Site"   . "www.joebob-and-son.com/")
+
+                                                            )
+                                      webjump-sample-sites))
     ;; Add Urban Dictionary to webjump
     (eval-after-load "webjump"
       '(add-to-list 'webjump-sites
@@ -4551,22 +4560,7 @@ prevents using commands with prefix arguments."
                       [simple-query
                        "www.urbandictionary.com"
                        "http://www.urbandictionary.com/define.php?term="
-                       ""])))
-
-    ;; (global-set-key [H-f2] 'webjump)
-    ;; (setq webjump-sites
-    ;;       (append '(
-    ;;                 ("Java API" .
-    ;;                  [simple-query "www.google.com" "http://www.google.com/search?hl=en&as_sitesearch=http://java.sun.com/javase/6/docs/api/&q=" ""])
-    ;;                 ("Stack Overflow" . "www.stackoverlow.com")
-    ;;                 ("Pop's Site"   . "www.joebob-and-son.com/")
-
-    ;;                 )
-    ;;               webjump-sample-sites))
-
- 
-    )
-)
+                       ""])))))
 
 ;;;_ , whitespace
 
@@ -4601,11 +4595,11 @@ prevents using commands with prefix arguments."
     (mapc (lambda (mode-hook)
             (add-hook mode-hook 'enable-whitespace-mode))
           modes-where-I-want-whitespace-mode-to-be-enabled)
-    
+
     (defun enable-whitespace-mode ()
       (whitespace-mode 1)
     )
-    
+
     ;; ;; (global-whitespace-mode t)
     ;; ;; (setq whitespace-global-modes '(not dired-mode tar-mode))
     ;; (setq whitespace-global-modes '(not erc-mode web-mode))
@@ -4721,7 +4715,7 @@ prevents using commands with prefix arguments."
 ;; (global-set-key (kbd "M-N") 'windmove-down-without-errors)
 ;; (global-set-key (kbd "M-P") 'windmove-up-without-errors)
 ;; (global-set-key (kbd "M-F") 'windmove-right-without-errors)
-;; (global-set-key (kbd "M-B") 'windmove-left-without-errors) 
+;; (global-set-key (kbd "M-B") 'windmove-left-without-errors)
 
 (global-set-key (kbd "H-'") 'windmove-right-without-errors)
 (global-set-key (kbd "H-/") 'windmove-down-without-errors)
@@ -4765,6 +4759,11 @@ prevents using commands with prefix arguments."
     (bind-key " 7" 'wg-switch-to-index-7 workgroups-preload-map)
     (bind-key " 8" 'wg-switch-to-index-8 workgroups-preload-map)
     (bind-key " 9" 'wg-switch-to-index-9 workgroups-preload-map)
+
+    (bind-key "C-8 e" 'dkh-eshell-macs)
+
+    (bind-key "C-8 a" 'visit-ansi-term)
+
     )
 
   :config

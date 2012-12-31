@@ -6879,12 +6879,6 @@ needed.
 #+end_src
 
 *** For Gnus
-#+begin_src emacs-lisp
-
-;;(define-key gnus-article-mode-map (kbd "M-w") 'org-w3m-copy-for-org-mode)
-(define-key gnus-article-mode-map (kbd "C-c C-x M-w") 'org-w3m-copy-for-org-mode)
-
-#+end_src
 
 
 
