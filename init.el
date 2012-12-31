@@ -319,6 +319,16 @@ improved by many.."
 
 (bind-key "C-z" 'collapse-or-expand)
 
+
+;; http://www.masteringemacs.org/articles/2011/03/16/removing-blank-lines-buffer/
+(defun flush-blank-lines (start end)
+  (interactive "r")
+  (flush-lines "^\\s-*$" start end nil))
+
+(defun collapse-blank-lines (start end)
+  (interactive "r")
+  (replace-regexp "^\n\\{2,\\}" "\n" nil start end))
+
 (bind-key "C-x C-m" 'execute-extended-command)
 (bind-key "C-c C-m" 'execute-extended-command)
 (bind-key "C-x C-r" 'rename-current-buffer-file)
