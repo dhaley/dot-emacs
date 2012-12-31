@@ -145,9 +145,6 @@
 ;;;_ , Load customization settings
 
 (defvar running-alternate-emacs nil)
-;; (if (string-match (concat "/Applications/\\(MacPorts/\\)?"
-;;                           "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
-;;                   invocation-directory)
 (if (string-match (concat "/Applications/\\(Misc/\\)?"
                           "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
                   invocation-directory)
@@ -180,38 +177,6 @@
   (load (expand-file-name "settings" user-emacs-directory)))
 
 (defvar running-alternate-emacs nil)
-
-;; (if (string-match (concat "/Applications/\\(MacPorts\\)?"
-;;                           "/Emacs.app/Contents/MacOS/")
-;;                   invocation-directory)
-
-;;     (let ((settings (with-temp-buffer
-;;                       (insert-file-contents
-;;                        (expand-file-name "settings.el" user-emacs-directory))
-;;                       (goto-char (point-min))
-;;                       (read (current-buffer))))
-;;           (suffix (downcase (match-string 1 invocation-directory))))
-
-;;       (setq running-alternate-emacs t
-;;             user-data-directory
-;;             (replace-regexp-in-string "/data/" (format "/data-%s/" suffix)
-;;                                       user-data-directory))
-
-;;       (let* ((regexp "/\\.emacs\\.d/data/")
-;;              (replace (format "/.emacs.d/data-%s/" suffix)))
-;;         (dolist (setting settings)
-;;           (let ((value (and (listp setting)
-;;                             (nth 1 (nth 1 setting)))))
-;;             (if (and (stringp value)
-;;                      (string-match regexp value))
-;;                 (setcar (nthcdr 1 (nth 1 setting))
-;;                         (replace-regexp-in-string regexp replace value)))))
-
-;;         (eval settings)))
-
-;;   (load (expand-file-name "settings" user-emacs-directory))
-
-;;   )
 
 ;;;_ , Enable disabled commands
 
@@ -315,11 +280,27 @@ want to use in the modeline *in lieu of* the original.")
 ;;;_ , global-map
 
 ;;;_  . H-?
+(bind-key "H-i" 'ispell-word)
+(bind-key "H-e" 'grab-email-my)
+(bind-key "H-r" 'winner-redo) ;; C-c <right>
+(bind-key "H-z" 'winner-undo) ;; C-c <left>
+(bind-key "H-\\" 'my-toggle-window-split)
+(bind-key "H-|" 'my-swap-windows)
+(bind-key "<H-down>" 'shrink-window)
+(bind-key "<H-left>" 'shrink-window-horizontally)
+(bind-key "<H-right>" 'enlarge-window-horizontally)
+(bind-key "<H-up>" 'enlarge-window)
 
-(global-set-key (kbd "<H-down>") 'shrink-window)
-(global-set-key (kbd "<H-left>") 'shrink-window-horizontally)
-(global-set-key (kbd "<H-right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "<H-up>") 'enlarge-window)
+(defun grab-email-my ()
+  "Grab the next email in the buffer
+  First posted by François Fleuret <francois.fleuret@inria.fr>..
+improved by many.."
+  (interactive)
+  (re-search-forward "[^ \t\n]+@[^ \t\n]+")
+  (copy-region-as-kill (match-beginning 0) (match-end 0))
+  )
+
+
 
 
 ;;;_  . C-?
@@ -1327,7 +1308,22 @@ Subexpression references can be used (\1, \2, etc)."
 
     (setenv "PATH" (shell-command-to-string "echo $PATH"))
 
+    (defun visit-ansi-term ()
+      (interactive)
+      "Creates an ansi-term and switches to it. If a buffer with name already exists, we simply switch to it."
+      (let ((buffer-of-name (get-buffer (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))
+            ;;        (default-directory "/home/www")
+            (term-cmd "/bin/zsh")
+            )
+        (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
+               (switch-to-buffer buffer-of-name))
+              ( t 
+                (progn
+                  (ansi-term term-cmd)
+                                        ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
+                  (rename-buffer  (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))))))
 
+    (bind-key "C-8 a" 'visit-ansi-term)
     ))
 
 (use-package ansi-color
@@ -2441,7 +2437,22 @@ at the beginning of line, if already there."
       (let ((inhibit-read-only t))
         (erase-buffer)))
 
-    (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)))
+      (defun dkh-eshell-macs ()
+        (interactive)
+        "Creates a tool config shell and switches to it. If a buffer with name already exists, we simply switch to it."
+        (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*"))))
+          (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
+                 (switch-to-buffer buffer-of-name))
+                ( t 
+                  (progn
+                    (eshell t)
+                                        ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
+                    (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*")))))))
+
+    (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
+
+    (bind-key "C-8 e" 'dkh-eshell-macs)
+    ))
 
 ;; eshell
 (eval-after-load 'esh-opt
@@ -3739,6 +3750,8 @@ end end))))))
      (require 'org)
      (org-babel-load-file "~/.emacs.d/dkh-org.org")
      (use-package org-habit)
+
+     (global-set-key (kbd "H-j") 'org-jira-create-issue)
     ))
 
 
@@ -5111,8 +5124,6 @@ $0"))))
   (org-babel-load-file "~/.emacs.d/dkh-core.org")
   ;;;_. Load some private settings
   (org-babel-load-file "~/git/.emacs.d/dkh-private.org")
-  ;; Mo keybindings
-  (org-babel-load-file "~/.emacs.d/dkh-keybindings.org")
   )
 
 
