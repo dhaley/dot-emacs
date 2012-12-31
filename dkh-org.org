@@ -324,14 +324,14 @@ are set up like this:
 
 #+begin_src org :exports src
 ,* Health and Recreation
-,PROPERTIES:
-,CATEGORY: Health
-,END:
+PROPERTIES:
+CATEGORY: Health
+END:
 ,  ...
 ,* House Maintenance
-,PROPERTIES:
-,CATEGORY: House
-,END:      
+PROPERTIES:
+CATEGORY: House
+END:      
 #+end_src
 ** Key bindings
 :PROPERTIES:
@@ -707,9 +707,9 @@ like this:
 
 #+begin_src org :exports src
 ,* TODO New Capture Task
-,  LOGBOOK:
-,  END:
-,  [2010-05-08 Sat 13:53]
+  LOGBOOK:
+  END:
+  [2010-05-08 Sat 13:53]
 #+end_src
 I have the following setup to remove these empty =LOGBOOK= drawers if
 they occur.
@@ -757,8 +757,8 @@ since it's a new task and I get a buffer like this:
 
 #+begin_src org :exports src
 ,* TODO 
-,  [2010-08-05 Thu 21:06]
-,  [[file:~/git/dkh-org-mode-doc/org-mode.org::*Capture%20Tasks%20is%20all%20about%20being%20FAST][Capture Tasks is all about being FAST]]
+  [2010-08-05 Thu 21:06]
+  [[file:~/git/dkh-org-mode-doc/org-mode.org::*Capture%20Tasks%20is%20all%20about%20being%20FAST][Capture Tasks is all about being FAST]]
 #+end_src
 
 Enter the details of the TODO item and =C-c C-c= to file it away in
@@ -1262,11 +1262,11 @@ My org files look like this:
 ,...
 ,* Tasks
 ,** Organization
-,PROPERTIES:
-,CLOCK_MODELINE_TOTAL: today
-,ID:       eb155a82-92b2-4f25-a3c6-0304591af2f9
-,END:
-,...
+PROPERTIES:
+CLOCK_MODELINE_TOTAL: today
+ID:       eb155a82-92b2-4f25-a3c6-0304591af2f9
+END:
+...
 #+end_src
 
 If I am working on some task, then I simply clock in on the task.
@@ -1879,16 +1879,16 @@ clocked time to date.
 #+begin_src org :exports src
 ,Original Estimate
 ,#+BEGIN: columnview :hlines 1 :id local
-,| Task                        | Estimated Effort | CLOCKSUM |
-,|-----------------------------+------------------+----------|
-,| ** TODO Project to estimate |             5:40 |          |
-,| *** TODO Step 1             |             0:10 |          |
-,| *** TODO Step 2             |             0:10 |          |
-,| *** TODO Step 3             |             5:10 |          |
-,| **** TODO Step 3.1          |             2:00 |          |
-,| **** TODO Step 3.2          |             3:00 |          |
-,| **** TODO Step 3.3          |             0:10 |          |
-,| *** TODO Step 4             |             0:10 |          |
+| Task                        | Estimated Effort | CLOCKSUM |
+|-----------------------------+------------------+----------|
+| ** TODO Project to estimate |             5:40 |          |
+| *** TODO Step 1             |             0:10 |          |
+| *** TODO Step 2             |             0:10 |          |
+| *** TODO Step 3             |             5:10 |          |
+| **** TODO Step 3.1          |             2:00 |          |
+| **** TODO Step 3.2          |             3:00 |          |
+| **** TODO Step 3.3          |             0:10 |          |
+| *** TODO Step 4             |             0:10 |          |
 ,#+END:
 #+end_src
 I normally delete the =#+BEGIN:= and =#+END:= lines from the original
