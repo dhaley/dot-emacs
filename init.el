@@ -2656,7 +2656,7 @@ at the beginning of line, if already there."
   :init
   (progn
 
-    (setq gnus-init-file "~/git/.emacs.d/dot-gnus.el"
+    (setq gnus-init-file "~/.emacs.d/dot-gnus.el"
      gnus-home-directory "~/git/gnus"
      message-directory "~/git/gnus/Mail")
 
@@ -2664,8 +2664,6 @@ at the beginning of line, if already there."
     (use-package org-mime)
     (use-package eudc)
     (use-package rgr-web)
-;;    (require 'bbdb-loaddefs "~/.emacs.d/override/bbdb/lisp/bbdb-loaddefs.el")
-    ;; (use-package bbdb-message)
 
     ;; (setq message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
 

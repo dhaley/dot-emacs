@@ -667,11 +667,6 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 
 
-;; Unbind this key; it's annoying!
-;; (define-key gnus-summary-mode-map "o" (lambda () (interactive)))
-;; (setq gnus-article-banner-alist '((iphone . "\\(^Sent from my iPhone$\\)")))
-
-
 (setq
  epa-file-cache-passphrase-for-symmetric-encryption t
  user-full-name "Damon Haley"
@@ -689,17 +684,6 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
                           "X-Operating-System: Debian GNU/Linux\n"
                           )
  gnus-treat-display-smileys t
- ;; How gnus gets address from the from header.
- ;; gnus-extract-address-components 'mail-extract-address-components
- 
- ;; Buttonize the different parts, please
- ;; gnus-buttonized-mime-types  '("multipart/alternative" "multipart/signed"  "multipart/encrypted")
-
-
- ;; But keep buttons for multiple parts
- ;; gnus-inhibit-mime-unbuttonizing t
- ;; gnus-article-skip-boring t
- ;; gnus-expert-user t
  )
 
 (eval-after-load "gnus-art"
@@ -715,23 +699,23 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
      ))
 
 
-;; (defun message-check-news-syntax ()
-;;   "Check the syntax of the message and prompt the user to be sure he wants to send."
-;;   (and
-;;    (save-excursion
-;;      (save-restriction
-;;        (widen)
-;;        (and
-;;         ;; We narrow to the headers and check them first.
-;;         (save-excursion
-;;           (save-restriction
-;;             (message-narrow-to-headers)
-;;             (message-check-news-header-syntax)))
-;;         ;; Check the body.
-;;         (message-check-news-body-syntax))))
-;;                                         ; sm: this last line is my addition
-;;    (y-or-n-p "Post the message? ")
-;;    ))
+(defun message-check-news-syntax ()
+  "Check the syntax of the message and prompt the user to be sure he wants to send."
+  (and
+   (save-excursion
+     (save-restriction
+       (widen)
+       (and
+        ;; We narrow to the headers and check them first.
+        (save-excursion
+          (save-restriction
+            (message-narrow-to-headers)
+            (message-check-news-header-syntax)))
+        ;; Check the body.
+        (message-check-news-body-syntax))))
+                                        ; sm: this last line is my addition
+   (y-or-n-p "Post the message? ")
+   ))
 
 ;; (defvar my-message-attachment-regexp
 ;;   "attach\\|\Wfiles?\W\\|enclose\\|\Wdraft\\|\Wversion")
@@ -751,13 +735,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 (define-key gnus-article-mode-map (kbd "<deletechar>") 'gnus-article-goto-prev-page)
 
 
-
-
-
 (setq gnus-picon-style 'right)
-
-
-
 (setq gnus-treat-from-picon 'head)
 (setq gnus-treat-display-x-face 'head)
 
@@ -817,12 +795,6 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 (add-hook 'gnus-summary-mode-hook 'my-alter-summary-map)
 (add-hook 'gnus-article-mode-hook 'my-alter-article-map)
 
-
-;; (add-to-list 'message-syntax-checks '(existing-newsgroups . disabled))
-
-;; which email addresses to detect for special highlighting
-;; (defvar dkh-mails
-;;   "damon.haley@colorado.edu\\|vinylisl@ssl-mail.com\\|vinylisl+google@ssl-mail.com\\|vinylisland@gmail.com\\|vinylisl@sdf.lonestar.org\\|vinylisl@godsong.org")
 
 (fset 'blow_up_article
    [S-down ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ S-up])
