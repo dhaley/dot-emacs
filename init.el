@@ -5092,9 +5092,34 @@ $0"))))
 
 ;; ))
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
 
-;; customise solarized-dark/light themes
+(use-package color-theme-solarized
+  :load-path "~/.emacs.d/site-lisp/solarized-emacs"
+  :commands (color-theme-solarized-dark
+             color-theme-solarized-light)
+  :init
+  (progn
+    ;; customise solarized-dark/light themes
+
+    
+    (defun bw-toggle-solarized ()
+  "Toggles between solarized light and dark"
+  (interactive)
+  (cond
+   ((custom-theme-enabled-p 'solarized-dark)
+    (progn
+      (disable-theme 'solarized-dark)
+      (enable-theme 'solarized-light)))
+   ((custom-theme-enabled-p 'solarized-light)
+    (progn
+      (disable-theme 'solarized-light)
+      (enable-theme 'solarized-dark)))))
+    )
+  )
+
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
+
+
 (defadvice load-theme
   (before load-theme)
   (let ((theme-name (ad-get-arg 0)))
@@ -5115,18 +5140,6 @@ $0"))))
 
 (ad-activate 'load-theme)
 
-(defun bw-toggle-solarized ()
-  "Toggles between solarized light and dark"
-  (interactive)
-  (cond
-   ((custom-theme-enabled-p 'solarized-dark)
-    (progn
-      (disable-theme 'solarized-dark)
-      (enable-theme 'solarized-light)))
-   ((custom-theme-enabled-p 'solarized-light)
-    (progn
-      (disable-theme 'solarized-light)
-      (enable-theme 'solarized-dark)))))
 
 
 (unless running-alternate-emacs
