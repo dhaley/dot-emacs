@@ -650,27 +650,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 
 
-
-(setq
- epa-file-cache-passphrase-for-symmetric-encryption t
- user-full-name "Damon Haley"
- user-mail-address "damon.haley@colorado.edu"
- )
-
-
- (setq
- ;;
- ;; Personal headers
- ;;
- message-default-headers (concat
-                          "X-Face: \"'PJ-yb+fYF0]%?,#==_(s>`~Hw_iwG![Cc+Sq$k>S|QbU)>?}Y51$4)\\9OEt:NL.@kZIqy <UnVZ*!XnGGV:iDO$YDhK7i~$.fs%r^0LJdztkb\\6=DI6by:GdO>.L<,Nd[nsMwrN3b]os1UqBw\n"
-                          "X-Accept-Language: en-us\n"
-                          "X-Operating-System: Debian GNU/Linux\n"
-                          )
- gnus-treat-display-smileys t
- )
-
-(eval-after-load "gnus-art"
+ (eval-after-load "gnus-art"
   '(progn
      (setq gnus-visible-headers
          (concat (format
@@ -701,28 +681,22 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
    (y-or-n-p "Post the message? ")
    ))
 
-;; (defvar my-message-attachment-regexp
-;;   "attach\\|\Wfiles?\W\\|enclose\\|\Wdraft\\|\Wversion")
-;; (defun check-mail ()
-;;   "ask for confirmation before sending a mail. Scan for possible attachment"
-;;   (save-excursion
-;;     (message-goto-body)
-;;     (let ((warning ""))
-;;       (when (and (search-forward-regexp my-message-attachment-regexp nil t nil)
-;;                  (not (search-forward "<#part" nil t nil)))
-;;         (setq warning "No attachment.\n"))
-;;       (goto-char (point-min))
-;;       (unless (message-y-or-n-p (concat warning "Send the message ? ") nil nil)
-;;         (error "Message not sent")))))
-;; (add-hook 'message-send-hook 'check-mail)
+(defvar my-message-attachment-regexp
+  "attach\\|\Wfiles?\W\\|enclose\\|\Wdraft\\|\Wversion")
+(defun check-mail ()
+  "ask for confirmation before sending a mail. Scan for possible attachment"
+  (save-excursion
+    (message-goto-body)
+    (let ((warning ""))
+      (when (and (search-forward-regexp my-message-attachment-regexp nil t nil)
+                 (not (search-forward "<#part" nil t nil)))
+        (setq warning "No attachment.\n"))
+      (goto-char (point-min))
+      (unless (message-y-or-n-p (concat warning "Send the message ? ") nil nil)
+        (error "Message not sent")))))
+(add-hook 'message-send-hook 'check-mail)
 
 (define-key gnus-article-mode-map (kbd "<deletechar>") 'gnus-article-goto-prev-page)
-
-
-(setq gnus-picon-style 'right)
-(setq gnus-treat-from-picon 'head)
-(setq gnus-treat-display-x-face 'head)
-
 
 
 (defun gnus-goto-last-link ()

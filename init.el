@@ -5191,6 +5191,13 @@ $0"))))
          (hostentry (netrc-machine netrc host port port)))
     (when hostentry (netrc-get hostentry "password"))))
 
+(setq
+ epa-file-cache-passphrase-for-symmetric-encryption t
+ user-full-name "Damon Haley"
+ user-mail-address "damon.haley@colorado.edu"
+ )
+
+
 ;; Local Variables:
 ;;   mode: emacs-lisp
 ;;   mode: allout

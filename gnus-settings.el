@@ -54,6 +54,8 @@
  '(gnus-no-groups-message "No Gnus for Daemon.")
  '(gnus-novice-user nil)
  '(gnus-permanently-visible-groups "INBOX")
+ '(gnus-picon-style 'right)
+ '(gnus-treat-display-x-face 'head)
  '(gnus-read-active-file nil)
  '(gnus-read-newsrc-file nil)
  '(gnus-refer-article-method (quote (current (nnir "nnimap:Local") (nntp "Gmane" (nntp-address "news.gmane.org")) )))
@@ -117,6 +119,11 @@
  '(message-directory "~/git/gnus/Mail/")
  '(message-fill-column 78)
  '(message-interactive t)
+ '(message-default-headers (concat
+                          "X-Face: \"'PJ-yb+fYF0]%?,#==_(s>`~Hw_iwG![Cc+Sq$k>S|QbU)>?}Y51$4)\\9OEt:NL.@kZIqy <UnVZ*!XnGGV:iDO$YDhK7i~$.fs%r^0LJdztkb\\6=DI6by:GdO>.L<,Nd[nsMwrN3b]os1UqBw\n"
+                          "X-Accept-Language: en-us\n"
+                          "X-Operating-System: Debian GNU/Linux\n"
+                          ))
  '(message-mail-alias-type nil)
  '(message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
@@ -155,9 +162,10 @@
  '(spam-sa-learn-program "/opt/local/bin/sa-learn-5.12")
  '(spam-use-regex-headers t)
  '(spam-use-spamassassin t)
- '(gnus-treat-from-picon nil)
+ '(gnus-treat-from-picon 'head)
  '(gnus-treat-newsgroups-picon nil)
  '(gnus-treat-mail-picon nil)
+ '(gnus-treat-display-smileys t)
  '(gnus-treat-from-gravatar 'head)
  '(gnus-treat-mail-gravatar 'head)
  '(gnus-treat-body-boundary nil)    ; No body/header separator
