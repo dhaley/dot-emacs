@@ -290,6 +290,7 @@ want to use in the modeline *in lieu of* the original.")
 (bind-key "<H-left>" 'shrink-window-horizontally)
 (bind-key "<H-right>" 'enlarge-window-horizontally)
 (bind-key "<H-up>" 'enlarge-window)
+(bind-key "<H-backspace>" 'scroll-down-command)
 
 (defun grab-email-my ()
   "Grab the next email in the buffer
@@ -2683,8 +2684,6 @@ at the beginning of line, if already there."
     (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
     (add-hook 'message-setup-hook 'bbdb-mail-aliases) ; BBDB 3.x
 
-        ;;(define-key gnus-article-mode-map (kbd "M-w") 'org-w3m-copy-for-org-mode)
-    ;;    (define-key gnus-article-mode-map (kbd "C-c C-x M-w") 'org-w3m-copy-for-org-mode)
 
     ))
 

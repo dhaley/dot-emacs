@@ -192,6 +192,11 @@
 
 (define-key gnus-article-mode-map [(meta ?q)] 'gnus-article-fill-long-lines)
 
+;;(define-key gnus-article-mode-map (kbd "M-w") 'org-w3m-copy-for-org-mode)
+(define-key gnus-article-mode-map (kbd "C-c C-x M-w") 'org-w3m-copy-for-org-mode)
+
+
+
 (defface gnus-summary-expirable-face
   '((((class color) (background dark))
      (:foreground "grey50" :italic t :strike-through t))
@@ -563,150 +568,20 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
     (define-key gnus-article-mode-map [(control ?c) (control ?o)]
       'gnus-article-browse-urls)))
 
+;; (defun gnus-group-read-group-no-prompt ()
+;;   "Read news in this newsgroup and don't prompt.
+;;                                 Use the value of `gnus-large-newsgroup'."
+;;   (interactive)
+;;   (gnus-group-read-group gnus-large-newsgroup))
 
-(global-set-key (kbd "C-x m") 'compose-mail)
-
-(add-hook 'message-sent-hook 'gnus-score-followup-article)
-(add-hook 'message-sent-hook 'gnus-score-followup-thread)
-
-
-
-(defun my-gnus ()
-  "Start a new Gnus, or locate the existing buffer *Group*."
-  (interactive)
-  (if (buffer-live-p    (get-buffer "*Group*"))
-      (switch-to-buffer (get-buffer "*Group*"))
-    (gnus)))
-
-
-(copy-face 'default 'my-gnus-face)
-(copy-face 'my-gnus-face 'my-subject-face)
-
-(copy-face 'my-gnus-face 'my-group-face)
-(set-face-attribute 'my-group-face nil :inherit 'my-gnus-face)
-
-(copy-face 'my-group-face 'my-group-face-unread)
-(set-face-attribute 'my-group-face-unread nil :inherit 'my-group-face)
-
-(copy-face 'my-group-face 'my-group-server-face)
-(copy-face 'my-group-server-face 'my-group-server-face-unread)
-(set-face-attribute 'my-group-server-face-unread nil :inherit 'my-group-server-face)
-
-(copy-face 'my-group-face 'my-unread-count-face)
-(copy-face 'my-unread-count-face 'my-unread-count-face-unread)
-(set-face-attribute 'my-unread-count-face-unread nil :inherit 'my-unread-count-face)
-
-(copy-face 'my-group-face 'my-inbox-icon-face)
-(copy-face 'my-inbox-icon-face 'my-inbox-icon-face-unread)
-(set-face-attribute 'my-inbox-icon-face-unread nil :inherit 'my-inbox-icon-face)
-
-(copy-face 'my-gnus-face 'my-topic-empty-face)
-(copy-face 'my-gnus-face 'my-topic-face)
-
-
-;; (require 'gnushush)
-
-;;           (require 'miniedit)
-
-(defun dkh/unread-face (f)
-  (intern (if (> (string-to-number gnus-tmp-number-of-unread) 0) (concat f "-unread") f)))
-
-;; this corresponds to a topic line format of "%n %A"
-(defun gnus-user-format-function-topic-line (dummy)
-  (let ((topic-face (if (zerop total-number-of-articles)
-                        'my-topic-empty-face
-                      'my-topic-face)))
-    (propertize
-     (format "%s %d" name total-number-of-articles)
-     'face topic-face)))
-
-(defun gnus-user-format-function-s (header)
-  (propertize (mail-header-subject header) 'face 'my-subject-face 'gnus-face t))
-
-;; dkh commented out all this stuff
-(defun gnus-user-format-function-g (headers) ;; gnus-group-line-format use %ug to call this func! e.g  "%M%S%p%P%(%-40,40ug%)%-5uy %ud\n"
-  split full group protocol-server:group into three parts.
-  (message "format function g for group %s" gnus-tmp-group)
-  (string-match "\\(^.*\\)\\+\\(.*\\):\\(.*\\)" gnus-tmp-group)
-  map the first two letters of the server name to a more friendly and cuddly display name
-  (let*  ((match-ok (match-string 2 gnus-tmp-group))
-          (server-key (if (null match-ok) nil (upcase(substring match-ok 0 2)))))
-    (if (zerop (length server-key))
-        gnus-tmp-group
-      ;; construct new group format line with a small envelope taking the place of any INBOX
-      (concat
-       (propertize
-        (format "%-8s" (cdr (assoc server-key dkh/server-name-maps)))
-        'face (dkh/unread-face "my-group-server-face") 'face (dkh/unread-face (concat "my-group-server-face-" server-key)) 'gnus-face t)
-       " - "
-       (if (or (string-match "mail.misc" (match-string 3 gnus-tmp-group) )(string-match "INBOX" (match-string 3 gnus-tmp-group) ))
-           (propertize "\x2709" 'face (dkh/unread-face "my-inbox-icon-face") 'gnus-face t)
-         (propertize (match-string 3 gnus-tmp-group) 'face (dkh/unread-face "my-group-face") 'gnus-face t) )))))
-
-
-(defun gnus-user-format-function-j (headers)
-  ;; prefix each post depending on whether to, cc or Bcc to
-  (let ((to (gnus-extra-header 'To headers)))
-    (if (string-match dkh-mails to)
-        (if (string-match "," to) "~" "»")
-      (if (or (string-match dkh-mails
-                            (gnus-extra-header 'Cc headers))
-              (string-match dkh-mails
-                            (gnus-extra-header 'BCc headers)))
-          "~"
-        " "))))
-
-(defun gnus-user-format-function-y (headers)
-  "return string representation for unread articles"
-  (concat
-   (propertize  (if (= (string-to-number  gnus-tmp-number-of-unread) 0) "" "\x2709") 'face (dkh/unread-face "my-inbox-icon-face") 'gnus-face t)
-   (propertize  (if (= (string-to-number  gnus-tmp-number-of-unread) 0) ""
-                  (concat "   (" gnus-tmp-number-of-unread ")")) 'face (dkh/unread-face "my-unread-count-face") 'gnus-face t)))
-
-
-
-(setq  gnus-user-date-format-alist
-       ;; Format the date so we can see today/tomorrow quickly.
-       ;; See http://emacs.wordpress.com/category/gnus/ for the original.
-       '(
-         ((gnus-seconds-today) . "Today, %H:%M")
-         ((+ 86400 (gnus-seconds-today)) . "Yesterday, %H:%M")
-         (604800 . "%A %H:%M") ;;that's one week
-         ((gnus-seconds-month) . "%A %d")
-         ((gnus-seconds-year) . "%B %d")
-         (t . "%B %d '%y"))) ;;this one is used when no other does match
-
-
-(defun gnus-group-read-group-no-prompt ()
-  "Read news in this newsgroup and don't prompt.
-                                Use the value of `gnus-large-newsgroup'."
-  (interactive)
-  (gnus-group-read-group gnus-large-newsgroup))
-
-(defun gnus-article-sort-by-chars (h1 h2)
-  "Sort articles by size."
-  (< (mail-header-chars h1)
-     (mail-header-chars h2)))
-
-;;             (add-to-list 'message-syntax-checks '(existing-newsgroups . disabled))
-
-
-
-
-
-
-
-;;F6 killfiles a poster, F7 ignores a thread
-;;   (define-key gnus-summary-mode-map (kbd "<f6>") "LA")
-;;   (define-key gnus-summary-mode-map (kbd "<f7>") 'gnus-summary-kill-thread)
-(define-key gnus-summary-mode-map (kbd "<deletechar>") (lambda ()(interactive)(gnus-summary-delete-article)(next-line)))
 
 ;; some comfort keys to scroll article in other window when in summary window
-(define-key gnus-summary-mode-map [(meta up)] (lambda() (interactive) (scroll-other-window -1)))
-(define-key gnus-summary-mode-map [(meta down)] (lambda() (interactive) (scroll-other-window 1)))
+(define-key gnus-summary-mode-map [(up)] (lambda() (interactive) (scroll-other-window -1)))
+(define-key gnus-summary-mode-map [(down)] (lambda() (interactive) (scroll-other-window 1)))
+
 ;; thread navigation
-(define-key gnus-summary-mode-map [(control down)] 'gnus-summary-next-thread)
-(define-key gnus-summary-mode-map [(control up)] 'gnus-summary-prev-thread)
+;; (define-key gnus-summary-mode-map [(control down)] 'gnus-summary-next-thread)
+;; (define-key gnus-summary-mode-map [(control up)] 'gnus-summary-prev-thread)
 
 
 (define-key gnus-summary-mode-map (kbd ">") 'gnus-summary-show-thread)
@@ -715,7 +590,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 ;; some trickery to show the newsread people are using and colour code depending on type
 ;; in this case highlight users of any outlook type dross :-;
-(setq  gnus-header-face-alist nil)
+
 (add-to-list
  'gnus-header-face-alist
  (list (concat
@@ -732,7 +607,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
         ":.*Outlook.*")
        nil 'gnus-emphasis-highlight-words))
 
-;; And show any real men who use Gnus!
+;; ;; And show any real men who use Gnus!
 (add-to-list
  'gnus-header-face-alist
  (list (concat
@@ -741,48 +616,8 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
         ":.*Gnus.*")
        nil 'gnus-server-opened))
 
-;; Format RSS feed titles nicely
-(add-hook 'gnus-summary-mode-hook
-          (lambda ()
-            (if (string-match "^nnrss:.*" gnus-newsgroup-name)
-                (progn
-                  (make-local-variable 'gnus-show-threads)
-                  (make-local-variable 'gnus-article-sort-functions)
-                  (make-local-variable 'gnus-use-adaptive-scoring)
-                  (make-local-variable 'gnus-use-scoring)
-                  (make-local-variable 'gnus-score-find-score-files-function)
-                  (setq gnus-show-threads nil)
-                  (setq gnus-article-sort-functions 'gnus-article-sort-by-date)
-                  (setq gnus-use-adaptive-scoring nil)
-                  (setq gnus-use-scoring t)
-                  ;;                  (setq gnus-score-find-score-files-function 'gnus-score-find-single)
-                  ))))
 
-
-(add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
-
-(defun gnus-user-format-function-d (headers)
-  (let ((time (gnus-group-timestamp gnus-tmp-group)))
-    (if time
-        (format-time-string "%b %d  %H:%M" time)
-      ""
-      )
-    )
-  )
-
-(define-key mode-specific-map [?m] (lambda()(interactive) (gnus-agent-toggle-plugged t)(gnus 1)))
-
-
-
-
-
-(setq gnus-suppress-duplicates t
-      gnus-save-duplicate-list t
-      gnus-duplicate-list-length 100000)
-
-(remove-hook 'gnus-article-prepare-hook 'bbdb-mua-display-sender)
-
-
+;; (remove-hook 'gnus-article-prepare-hook 'bbdb-mua-display-sender)
 
 
 ; (gnus-add-configuration
@@ -802,62 +637,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 ;               (delete-other-windows)))
 ;           t nil)
 
-;; Set the window title
-                                        ;(modify-frame-parameters nil '((title . "Gnus")))
 
-
-
-(defcustom dkh/authinfo-file (expand-file-name(concat user-emacs-directory ".authinfo.gpg"))
-  "regexp for searching blogger"
-  :group 'dkh/gnus
-  :type 'string)
-
-(global-set-key (kbd "C-c x") '(lambda()(interactive)(save-buffers-kill-emacs)))
-;; Mark gcc'ed (archive) as read:
-
-;; put everything in ~/.emacs.d
-(setq
-;; gnus-init-file "~/git/.emacs.d/dkh-gnus.el"
- message-signatrue-directory "~/git/.emacs.d/sig/"
- )
-
-;; (require 'info)
-  (if (featurep 'xemacs)
-      (add-to-list 'Info-directory-list "~/.emacs.d/el-get/nognus/texi/")
-    (add-to-list 'Info-default-directory-list "~/.emacs.d/el-get/nognus/texi/"))
-
-(defcustom gnus-summary-save-parts-exclude-article nil
-          "If non-nil don't save article along with attachments."
-          :group 'gnus-article-mime
-          :type 'boolean)
-
-        (defun gnus-summary-save-parts-1 (type dir handle reverse)
-          (if (stringp (car handle))
-(mapcar (lambda (h) (gnus-summary-save-parts-1 type dir h reverse))
-    (cdr handle))
-            (when (if reverse
-                  (not (string-match type (mm-handle-media-type handle)))
-                (string-match type (mm-handle-media-type handle)))
-              (let* ((name (or
-                            (mm-handle-filename handle)
-                            (unless gnus-summary-save-parts-exclude-article
-                              (format "%s.%d.%d" gnus-newsgroup-name
-                                      (cdr gnus-article-current)
-                                      gnus-summary-save-parts-counter))))
-                     (file (when name
-                             (expand-file-name
-                              (gnus-map-function
-                               mm-file-name-rewrite-functions
-                               (file-name-nondirectory
-                                name))
-                              dir))))
-                (when file
-                  (incf gnus-summary-save-parts-counter)
-                  (unless (file-exists-p file)
-                    (mm-save-part-to-file handle file)))))))
-
-(setq message-cite-prefix-regexp
-"\\([ ]*[-_.#[:word:]]+>+\\|[ ]*[]>|}]\\)+")
 
 (setq
       gnus-summary-to-prefix "→"
@@ -885,21 +665,11 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
       gnus-sum-thread-tree-vertical        "│ "
 )
 
-(setq gnus-summary-line-format "%«%U%R %uS %ur %»%(%*%-14,14f   %1«%B%s%»%)
- ")
-
-(setq message-kill-buffer-on-exit t)
-(setq gnus-fetch-old-headers 'some)
-
 
 
 ;; Unbind this key; it's annoying!
-(define-key gnus-summary-mode-map "o" (lambda () (interactive)))
-(setq gnus-article-banner-alist '((iphone . "\\(^Sent from my iPhone$\\)")))
-
-(setq gnus-novice-user nil)
-
-
+;; (define-key gnus-summary-mode-map "o" (lambda () (interactive)))
+;; (setq gnus-article-banner-alist '((iphone . "\\(^Sent from my iPhone$\\)")))
 
 
 (setq
@@ -910,7 +680,6 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 
  (setq
-;;  display-time-mail-file "/var/mail/vinylisland"
  ;;
  ;; Personal headers
  ;;
@@ -921,125 +690,69 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
                           )
  gnus-treat-display-smileys t
  ;; How gnus gets address from the from header.
- gnus-extract-address-components 'mail-extract-address-components
+ ;; gnus-extract-address-components 'mail-extract-address-components
+ 
  ;; Buttonize the different parts, please
- gnus-buttonized-mime-types  '("multipart/alternative" "multipart/signed"  "multipart/encrypted")
+ ;; gnus-buttonized-mime-types  '("multipart/alternative" "multipart/signed"  "multipart/encrypted")
+
+
  ;; But keep buttons for multiple parts
- gnus-inhibit-mime-unbuttonizing t
- gnus-article-skip-boring t
- gnus-expert-user t
-
- gnus-indent-thread-level 1
- gnus-build-sparse-threads nil
-
- gnus-use-nocem t
- gnus-use-full-window nil     ;; do not destroy other windows
-
+ ;; gnus-inhibit-mime-unbuttonizing t
+ ;; gnus-article-skip-boring t
+ ;; gnus-expert-user t
  )
 
+(eval-after-load "gnus-art"
+  '(progn
+     (setq gnus-visible-headers
+         (concat (format
+                  "^\\(%s\\):"
+                  (regexp-opt '("User-Agent" "X-Mailer" "X-Newsreader"
+                                "X-Spam-Level" "List-Id" "X-Report-Spam"
+                                "Archived-At" "Comments")))
+                 "\\|" gnus-visible-headers))
+     (add-to-list 'gnus-picon-databases "/usr/share/picons")
+     ))
 
 
-(setq
- gnus-no-groups-message "No Gnus for Daemon."
+;; (defun message-check-news-syntax ()
+;;   "Check the syntax of the message and prompt the user to be sure he wants to send."
+;;   (and
+;;    (save-excursion
+;;      (save-restriction
+;;        (widen)
+;;        (and
+;;         ;; We narrow to the headers and check them first.
+;;         (save-excursion
+;;           (save-restriction
+;;             (message-narrow-to-headers)
+;;             (message-check-news-header-syntax)))
+;;         ;; Check the body.
+;;         (message-check-news-body-syntax))))
+;;                                         ; sm: this last line is my addition
+;;    (y-or-n-p "Post the message? ")
+;;    ))
 
- mail-imenu-generic-expression '(("Subject"  "^Subject: *\\(.*\\)" 1)
-                                 ("Cc"     "^C[Cc]: *\\(.*\\)" 1)
-                                 ("To"     "^To: *\\(.*\\)" 1)
-                                 ("From"  "^From: *\\(.*\\)" 1))
- ;; whether gnus bothers with faces. It should!
-
- message-forward-ignored-headers "^Content-Transfer-Encoding:\\|^X-Gnus:\\|^To:\\|^Cc:\\|^From"
- message-make-forward-subject-function (quote message-forward-subject-fwd)
- gnus-visual t
-)
-
-;;       gnus-permanently-visible-groups "\\.*"
-;; all mails should be always displayed in the mailbox
-
-(setq
- gnus-visible-headers (quote ("^From:" "^Newsgroups:" "^Subject:" "^Date:" "^Followup-To:" "^Reply-To:" "^Organization:" "^Summary:" "^Keywords:" "^To:" "^[BGF]?Cc:" "^Posted-To:" "^Mail-Copies-To:" "^Mail-Followup-To:" "^Apparently-To:" "^Gnus-Warning:" "^Resent-From:" "^X-Sent:" "^User-Agent:"))
-
- ;; from http://nijino.homelinux.net/emacs/.gnus.el
- gnus-signature-limit 8.0
-
-
- )
-
-(setq
- gnushush-sender-header (quote none)
- gnushush-user-agent-header (quote none)
-
-
-
- )
-
-(setq
-
-                                        ;      when replying we dont want to include peoples signatures.
- message-cite-function 'message-cite-original-without-signature
- ;;       message-required-news-headers (remove' Message-ID message-required-news-headers)
- ;;       message-required-mail-headers (remove' Message-ID message-required-mail-headers)
- ;; Use emacs-w3m to render html mails and display images
- gnus-mime-display-multipart-related-as-mixed t
-
- mm-inline-large-images t
-
-
- mm-external-terminal-program (quote urxvt)
-
- w3m-w3mkey-binding 'info
- w3m-safe-url-regexp nil
-
- )
-
-
-
-
-
-;; ---------------------------------------------------------------------
-
-(defun message-check-news-syntax ()
-  "Check the syntax of the message and prompt the user to be sure he wants to send."
-  (and
-   (save-excursion
-     (save-restriction
-       (widen)
-       (and
-        ;; We narrow to the headers and check them first.
-        (save-excursion
-          (save-restriction
-            (message-narrow-to-headers)
-            (message-check-news-header-syntax)))
-        ;; Check the body.
-        (message-check-news-body-syntax))))
-                                        ; sm: this last line is my addition
-   (y-or-n-p "Post the message? ")
-   ))
-
-(defvar my-message-attachment-regexp
-  "attach\\|\Wfiles?\W\\|enclose\\|\Wdraft\\|\Wversion")
-(defun check-mail ()
-  "ask for confirmation before sending a mail. Scan for possible attachment"
-  (save-excursion
-    (message-goto-body)
-    (let ((warning ""))
-      (when (and (search-forward-regexp my-message-attachment-regexp nil t nil)
-                 (not (search-forward "<#part" nil t nil)))
-        (setq warning "No attachment.\n"))
-      (goto-char (point-min))
-      (unless (message-y-or-n-p (concat warning "Send the message ? ") nil nil)
-        (error "Message not sent")))))
-(add-hook 'message-send-hook 'check-mail)
+;; (defvar my-message-attachment-regexp
+;;   "attach\\|\Wfiles?\W\\|enclose\\|\Wdraft\\|\Wversion")
+;; (defun check-mail ()
+;;   "ask for confirmation before sending a mail. Scan for possible attachment"
+;;   (save-excursion
+;;     (message-goto-body)
+;;     (let ((warning ""))
+;;       (when (and (search-forward-regexp my-message-attachment-regexp nil t nil)
+;;                  (not (search-forward "<#part" nil t nil)))
+;;         (setq warning "No attachment.\n"))
+;;       (goto-char (point-min))
+;;       (unless (message-y-or-n-p (concat warning "Send the message ? ") nil nil)
+;;         (error "Message not sent")))))
+;; (add-hook 'message-send-hook 'check-mail)
 
 (define-key gnus-article-mode-map (kbd "<deletechar>") 'gnus-article-goto-prev-page)
 
 
 
 
-(eval-after-load 'gnus-art
-  '(progn
-     (add-to-list 'gnus-picon-databases "/usr/share/picons")
-     ))
 
 (setq gnus-picon-style 'right)
 
@@ -1086,8 +799,8 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
   (local-set-key (kbd "<f4>") '(lambda () (interactive)
                                  (gnus-goto-last-link)
                                  ))
-    (local-set-key (kbd "z") '(lambda () (interactive)
-                                   (gnus-summary-mark-as-read-forward)))
+    ;; (local-set-key (kbd "z") '(lambda () (interactive)
+    ;;                                (gnus-summary-mark-as-read-forward)))
   (local-set-key ":" 'bbdb-mua-display-records)
   (local-set-key "d" [?M ?M ?e ?e down]))
 
@@ -1105,28 +818,17 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 (add-hook 'gnus-article-mode-hook 'my-alter-article-map)
 
 
-(add-to-list 'message-syntax-checks '(existing-newsgroups . disabled))
-
-;; '(add-to-list 'gnus-buttonized-mime-types "multipart/signed")
+;; (add-to-list 'message-syntax-checks '(existing-newsgroups . disabled))
 
 ;; which email addresses to detect for special highlighting
-(defvar dkh-mails
-  "damon.haley@colorado.edu\\|vinylisl@ssl-mail.com\\|vinylisl+google@ssl-mail.com\\|vinylisland@gmail.com\\|vinylisl@sdf.lonestar.org\\|vinylisl@godsong.org")
+;; (defvar dkh-mails
+;;   "damon.haley@colorado.edu\\|vinylisl@ssl-mail.com\\|vinylisl+google@ssl-mail.com\\|vinylisland@gmail.com\\|vinylisl@sdf.lonestar.org\\|vinylisl@godsong.org")
 
 (fset 'blow_up_article
    [S-down ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ S-up])
 
 (define-key gnus-summary-mode-map (kbd "C-c 5") 'blow_up_article)
 
-
-
-;; gnus-art
-;; (setq gnus-sorted-header-list
-;;       '("^From:" "^To:" "^Newsgroups:" "^Cc:" "^Subject:" "^Summary:" "^Keywords:" "^Followup-To:" "^Date:" "^Organization:"))
-
-;; (setq gnus-face-properties-alist
-;;       '((pbm . (:face gnus-x-face :ascent center))
-;;         (png . (:ascent center))))
 
 
 ;; text/calendar attachments
