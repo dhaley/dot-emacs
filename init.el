@@ -5283,15 +5283,15 @@ $0"))))
 ;; ))
 
 
-;;(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
 
-(use-package color-theme-solarized
-  :load-path "~/.emacs.d/site-lisp/solarized-emacs"
-  :commands (color-theme-solarized-dark
-             color-theme-solarized-light)
-  :init
-  (progn
-    ;; customise solarized-dark/light themes
+;; (use-package color-theme-solarized
+;;   :load-path "~/.emacs.d/site-lisp/solarized-emacs"
+;;   :commands (color-theme-solarized-dark
+;;              color-theme-solarized-light)
+;;   :init
+;;   (progn
+;;     ;; customise solarized-dark/light themes
 
     
     (defun bw-toggle-solarized ()
@@ -5306,8 +5306,8 @@ $0"))))
         (progn
           (disable-theme 'solarized-light)
           (enable-theme 'solarized-dark)))))
-    )
-  )
+  ;;   )
+  ;; )
 
 
 
@@ -5330,7 +5330,7 @@ $0"))))
       ;;     (setq solarized-broken-srgb nil)))
       )))
 
-;; (ad-activate 'load-theme)
+(ad-activate 'load-theme)
 
 
 (blink-cursor-mode 1)
@@ -5427,6 +5427,8 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 (defalias 'list-matching-lines 'occur)
 (defalias 'delete-matching-lines 'flush-lines)
 (defalias 'delete-non-matching-lines 'keep-lines)
+
+(defalias 'td 'toggle-debug-on-error)
 
 ;; Allow "y or n" instead of "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
