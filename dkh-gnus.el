@@ -7,9 +7,9 @@
 (require 'message)
 (require 'spam)
 (require 'spam-report)
-
-
+(require 'bbdb)
 (require 'bbdb-gnus)
+(require 'bbdb-message)
 (require 'async)
 
 ;;(gnus-compile)
@@ -651,7 +651,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
         (if (string-match "," to) "~" "»")
       (if (or (string-match dkh-mails
                             (gnus-extra-header 'Cc headers))
-              (string-match dkh-mails                                        
+              (string-match dkh-mails
                             (gnus-extra-header 'BCc headers)))
           "~"
         " "))))
@@ -794,7 +794,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 ;                          (article 1.0)
 ;                          ("*BBDB*" 6))
 ;                )))
-; 
+;
 ; (add-hook 'gnus-summary-exit-hook
 ;           (lambda ()
 ;             (when (every (lambda (buffer) (member buffer (gnus-buffers)))
@@ -826,34 +826,34 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
       (add-to-list 'Info-directory-list "~/.emacs.d/el-get/nognus/texi/")
     (add-to-list 'Info-default-directory-list "~/.emacs.d/el-get/nognus/texi/"))
 
-(defcustom gnus-summary-save-parts-exclude-article nil                                                                                                                                                                     
-          "If non-nil don't save article along with attachments."                                                                                                                                                                  
-          :group 'gnus-article-mime                                                                                                                                                                                                
-          :type 'boolean)                                                                                                                                                                                                          
-                                                                                                                                                                                                                                   
-        (defun gnus-summary-save-parts-1 (type dir handle reverse)                                                                                                                                                                 
-          (if (stringp (car handle))                                                                                                                                                                                               
-(mapcar (lambda (h) (gnus-summary-save-parts-1 type dir h reverse))                                                                                                                                                  
-    (cdr handle))                                                                                                                                                                                                    
-            (when (if reverse                                                                                                                                                                                                      
-                  (not (string-match type (mm-handle-media-type handle)))                                                                                                                                                          
-                (string-match type (mm-handle-media-type handle)))                                                                                                                                                                 
-              (let* ((name (or                                                                                                                                                                                                     
-                            (mm-handle-filename handle)                                                                                                                                                                            
-                            (unless gnus-summary-save-parts-exclude-article                                                                                                                                                        
-                              (format "%s.%d.%d" gnus-newsgroup-name                                                                                                                                                               
-                                      (cdr gnus-article-current)                                                                                                                                                                   
-                                      gnus-summary-save-parts-counter))))                                                                                                                                                          
-                     (file (when name                                                                                                                                                                                              
-                             (expand-file-name                                                                                                                                                                                     
-                              (gnus-map-function                                                                                                                                                                                   
-                               mm-file-name-rewrite-functions                                                                                                                                                                      
-                               (file-name-nondirectory                                                                                                                                                                             
-                                name))                                                                                                                                                                                             
-                              dir))))                                                                                                                                                                                              
-                (when file                                                                                                                                                                                                         
-                  (incf gnus-summary-save-parts-counter)                                                                                                                                                                           
-                  (unless (file-exists-p file)                                                                                                                                                                                     
+(defcustom gnus-summary-save-parts-exclude-article nil
+          "If non-nil don't save article along with attachments."
+          :group 'gnus-article-mime
+          :type 'boolean)
+
+        (defun gnus-summary-save-parts-1 (type dir handle reverse)
+          (if (stringp (car handle))
+(mapcar (lambda (h) (gnus-summary-save-parts-1 type dir h reverse))
+    (cdr handle))
+            (when (if reverse
+                  (not (string-match type (mm-handle-media-type handle)))
+                (string-match type (mm-handle-media-type handle)))
+              (let* ((name (or
+                            (mm-handle-filename handle)
+                            (unless gnus-summary-save-parts-exclude-article
+                              (format "%s.%d.%d" gnus-newsgroup-name
+                                      (cdr gnus-article-current)
+                                      gnus-summary-save-parts-counter))))
+                     (file (when name
+                             (expand-file-name
+                              (gnus-map-function
+                               mm-file-name-rewrite-functions
+                               (file-name-nondirectory
+                                name))
+                              dir))))
+                (when file
+                  (incf gnus-summary-save-parts-counter)
+                  (unless (file-exists-p file)
                     (mm-save-part-to-file handle file)))))))
 
 (setq message-cite-prefix-regexp
@@ -941,13 +941,13 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 (setq
  gnus-no-groups-message "No Gnus for Daemon."
- 
+
  mail-imenu-generic-expression '(("Subject"  "^Subject: *\\(.*\\)" 1)
                                  ("Cc"     "^C[Cc]: *\\(.*\\)" 1)
                                  ("To"     "^To: *\\(.*\\)" 1)
                                  ("From"  "^From: *\\(.*\\)" 1))
  ;; whether gnus bothers with faces. It should!
-  
+
  message-forward-ignored-headers "^Content-Transfer-Encoding:\\|^X-Gnus:\\|^To:\\|^Cc:\\|^From"
  message-make-forward-subject-function (quote message-forward-subject-fwd)
  gnus-visual t
@@ -956,39 +956,22 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 ;;       gnus-permanently-visible-groups "\\.*"
 ;; all mails should be always displayed in the mailbox
 
-(setq 
+(setq
  gnus-visible-headers (quote ("^From:" "^Newsgroups:" "^Subject:" "^Date:" "^Followup-To:" "^Reply-To:" "^Organization:" "^Summary:" "^Keywords:" "^To:" "^[BGF]?Cc:" "^Posted-To:" "^Mail-Copies-To:" "^Mail-Followup-To:" "^Apparently-To:" "^Gnus-Warning:" "^Resent-From:" "^X-Sent:" "^User-Agent:"))
 
  ;; from http://nijino.homelinux.net/emacs/.gnus.el
  gnus-signature-limit 8.0
 
- 
+
  )
 
 (setq
  gnushush-sender-header (quote none)
  gnushush-user-agent-header (quote none)
 
- 
- 
+
+
  )
-
-;; From pop sources
-(setq nnmail-split-methods 'nnmail-split-fancy)
-
-;; (info "gnus")
-;; See (info "(gnus) Splitting in IMAP"), and search for `fancy'
-;; there.  The variable is nnimap-split-rule for me.
-
-(setq nnimap-split-methods 'nnmail-split-fancy)
-
-(setq nnmail-split-abbrev-alist
-      '((any . "from\\|to\\|cc\\|sender\\|apparently-to\\|resent-from\\|resent-to\\|resent-cc")
-        (mail . "mailer-daemon\\|postmaster\\|uucp")
-        (to . "to\\|cc\\|apparently-to\\|resent-to\\|resent-cc")
-        (from . "from\\|sender\\|resent-from")
-        (daemon-errors . "Cron daemon\\|mailer-daemon")
-        (list . "list-id\\|x-mailing-list\\|to\\|cc\\|sender")))
 
 (setq
 
@@ -1000,13 +983,13 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
  gnus-mime-display-multipart-related-as-mixed t
 
  mm-inline-large-images t
- 
+
 
  mm-external-terminal-program (quote urxvt)
 
  w3m-w3mkey-binding 'info
  w3m-safe-url-regexp nil
- 
+
  )
 
 
@@ -1082,7 +1065,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
   (gnus-article-show-summary)
   (gnus-summary-mark-as-read-forward 1)
   )
-  
+
 (defun my-gnus-browse-gwene ()
   "Start a browser for current gwene article"
   (interactive)

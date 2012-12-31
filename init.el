@@ -2664,8 +2664,7 @@ at the beginning of line, if already there."
     (use-package eudc)
     (use-package rgr-web)
 ;;    (require 'bbdb-loaddefs "~/.emacs.d/override/bbdb/lisp/bbdb-loaddefs.el")
-    ;; (use-package bbdb-gnus)
-    (use-package bbdb-message)
+    ;; (use-package bbdb-message)
 
     ;; (setq message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
 

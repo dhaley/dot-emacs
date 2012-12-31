@@ -307,9 +307,6 @@
 [submodule "site-lisp/solarized-emacs"]
 	path = site-lisp/solarized-emacs
 	url = https://github.com/bbatsov/solarized-emacs.git
-[submodule "override/gnus"]
-	path = override/gnus
-	url = https://github.com/jwiegley/gnus.git
 [submodule "site-lisp/ecukes"]
 	path = site-lisp/ecukes
 	url = https://github.com/rejeep/ecukes.git
@@ -352,3 +349,6 @@
 [submodule "site-lisp/nodejs-mode"]
 	path = site-lisp/nodejs-mode
 	url = https://github.com/emacsmirror/nodejs-mode.git
+[submodule "override/gnus"]
+	path = override/gnus
+	url = https://github.com/jwiegley/gnus.git
