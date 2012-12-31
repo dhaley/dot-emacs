@@ -5441,6 +5441,10 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 (require 'buffer-move)
 
+(bind-key "<C-S-up>"     'buf-move-up)
+(bind-key "<C-S-down>"   'buf-move-down)
+(bind-key "<C-S-left>"   'buf-move-left)
+(bind-key "<C-S-right>"  'buf-move-right)
 
 
 ;; Local Variables:
