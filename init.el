@@ -3841,6 +3841,8 @@ end end))))))
     ;; (org-babel-do-load-languages
     ;;     'org-babel-load-languages '((python . t) (R . t) (perl . t)))
 
+    ;; (bind-key "C-c 1"  (lambda () (interactive) (switch-to-buffer-other-window "*Org Agenda*")))
+    (bind-key "C-c 1"  (lambda () (interactive) (switch-to-buffer "*Org Agenda*")))
     ))
 
 
