@@ -4236,15 +4236,15 @@ end end))))))
   (progn
     (session-initialize)
 
-    ;;     (defun remove-session-use-package-from-settings ()
-    ;;  (when (string= (file-name-nondirectory (buffer-file-name)) "settings.el")
-    ;;         (save-excursion
-    ;;           (goto-char (point-min))
-    ;;           (when (re-search-forward "^ '(session-use-package " nil t)
-    ;;             (delete-region (line-beginning-position)
-    ;;                            (1+ (line-end-position)))))))
+        (defun remove-session-use-package-from-settings ()
+     (when (string= (file-name-nondirectory (buffer-file-name)) "settings.el")
+            (save-excursion
+              (goto-char (point-min))
+              (when (re-search-forward "^ '(session-use-package " nil t)
+                (delete-region (line-beginning-position)
+                               (1+ (line-end-position)))))))
 
-    ;;    (add-hook 'before-save-hook 'remove-session-use-package-from-settings)
+       (add-hook 'before-save-hook 'remove-session-use-package-from-settings)
 
     ;; expanded folded secitons as required
     (defun le::maybe-reveal ()
@@ -5369,14 +5369,6 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;; Use Solarized-dark on OS X
 ;; we load the theme after init because we might have changed some
 ;; variables in customize
-
-(add-hook 'after-init-hook
-          (lambda ()
-            (load-theme 'deeper-blue) t)
-;;             (load-theme 'solarized-dark t)
-;;             (load-theme 'solarized-light t t)
-)
-
 
 (if running-alternate-emacs
       (progn
