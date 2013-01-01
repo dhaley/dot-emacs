@@ -42,6 +42,11 @@
 
 (setq message-log-max 16384)
 
+(setenv "E" "~/.emacs.d")
+(setenv "O" "~/git/dkh-org")
+(setenv "S" "~/git/src")
+(setenv "D" "~/data")
+
 (defconst emacs-start-time (current-time))
 
 (unless noninteractive
@@ -312,6 +317,20 @@ want to use in the modeline *in lieu of* the original.")
 (bind-key "C-H-r" 'sacha/search-word-backward)
 (bind-key "C-H-s" 'sacha/search-word-forward)
 
+(defun double-quote ()
+(interactive)
+(if (use-region-p)
+(save-excursion
+(let ((beginning (region-beginning))
+(end (+ (region-end) 1)))
+(goto-char beginning)
+(insert "“")
+(goto-char end)
+(insert "”")))
+(insert "“”")
+(backward-char)))
+
+(bind-key "C-c \"" 'double-quote)
 
 
 (bind-key "H-i" 'ispell-word)
@@ -1609,33 +1628,31 @@ Subexpression references can be used (\1, \2, etc)."
           bbdb-message-all-addresses                t
           bbdb-mua-update-interactive-p             '(create . query))
     (setq rs-bbdb-ignored-from-list '(
+                                      "-confirm"
+                                      "-request@kgnu.org"
                                       "@public.gmane.org"
+                                      "DAEMON"
+                                      "MAILER-DAEMON"
+                                      "bozo@dev.null.invalid"
+                                      "confirm-nomail"
+                                      "daemon"
+                                      "damon.haley"
+                                      "dhaley"
+                                      "do-not-reply"
+                                      "emacs-orgmode-confirm"
+                                      "facebookmail"
+                                      "gnulist"
+                                      "lists.math.uh.edu"
+                                      "mailman-owner"
+                                      "no.?reply"
+                                      "noreply"
                                       "post <at> gwene.org"
                                       "post@gwene.org"
-                                      "bozo@dev.null.invalid"
-                                      "no.?reply"
-                                      "DAEMON"
-                                      "daemon"
-                                      "facebookmail"
-                                      "twitter"
-                                      "do-not-reply"
-                                      "lists.math.uh.edu"
-                                      "emacs-orgmode-confirm"
-                                      "-confirm"
-                                      "gnulist"
                                       "privacy-noreply"
-                                      "-request@kgnu.org"
-                                      "confirm-nomail"
-                                      "noreply"
-                                      "webappsec-return"
+                                      "twitter"
                                       "vinylisl"
-                                      "MAILER-DAEMON"
-                                      "noreply"
-                                      "mailman-owner"
-                                      "vinylisl"
-                                      "dhaley"
-                                      "damon.haley"
-                                      ))
+                                      "webappsec-return"))
+
     (setq bbdb-ignore-message-alist
           `(("From" . , (regexp-opt rs-bbdb-ignored-from-list))))
 
@@ -3820,6 +3837,7 @@ end end))))))
     (require 'yasnippet)
     (require 'org)
     (require 'org-habit) ;; added by dkh
+    (require 'org-drill)
     (org-babel-load-file "~/.emacs.d/dkh-org.org")
     (define-key org-mode-map (kbd "C-c k") 'org-cut-subtree)
 
@@ -5106,7 +5124,15 @@ $0"))))
     (bind-key "C-c y n" 'yas/new-snippet)
     (bind-key "C-c y f" 'yas/find-snippets)
     (bind-key "C-c y r" 'yas/reload-all)
-    (bind-key "C-c y v" 'yas/visit-snippet-file)))
+    (bind-key "C-c y v" 'yas/visit-snippet-file)
+
+
+    (yas/define-snippets 'text-mode
+                         '(("email" "damon.haley@colorado.edu" "(user's email)" nil nil nil nil nil)
+                           ("phone" "303-492-1236" "(phone numer)" nil nil nil nil nil)
+                           ("thanks" "Thanks. Let me know if you have any questions or concerns" "(salutation)" nil nil nil nil nil)
+                           ("time" "`(current-time-string)`" "(current time)" nil nil nil nil nil))
+                         'nil)))
 
 ;;;_ , yaoddmuse
 
