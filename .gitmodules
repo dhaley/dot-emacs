@@ -352,3 +352,6 @@
 [submodule "override/gnus"]
 	path = override/gnus
 	url = https://github.com/jwiegley/gnus.git
+[submodule "site-lisp/eshell-manual"]
+	path = site-lisp/eshell-manual
+	url = https://github.com/nicferrier/eshell-manual.git
