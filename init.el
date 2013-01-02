@@ -4096,6 +4096,7 @@ end end))))))
     (require 'org)
     (require 'org-habit) ;; added by dkh
     (require 'org-drill)
+    ;; (org-babel-tangle "~/.emacs.d/dkh-org.org")
     (org-babel-load-file "~/.emacs.d/dkh-org.org")
     (define-key org-mode-map (kbd "C-c k") 'org-cut-subtree)
 

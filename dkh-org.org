@@ -693,7 +693,7 @@ Here is my setup for org-capture
                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 #+end_src
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp  :tangle yes
 
 (add-to-list 'org-capture-templates
              `
@@ -6123,11 +6123,11 @@ time {
 exit $retval
 #+end_src
 * DKH export
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 
 (setq
 
- org-publish-timestamp-directory "~/git/dkh-org/.org-timestamps/"
+;; org-publish-timestamp-directory "~/git/dkh-org/.org-timestamps/"
 ;; org-publish-write-cache-file "~/git/dkh-org/.org-timestamps/inherit-org-info-js.cache"
 ;; org-publish-use-timestamps-flag nil
 ;; org-export-html-with-timestamp t
