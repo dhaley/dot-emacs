@@ -2395,27 +2395,6 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 #+end_src
 
-** Line numbers
-
-#+begin_src emacs-lisp :tangle no
-
-(setq linum-mode-inhibit-modes-list '(eshell-mode
-                                      shell-mode
-                                      erc-mode
-                                      jabber-roster-mode
-                                      jabber-chat-mode
-                                      gnus-group-mode
-                                      gnus-summary-mode
-                                      gnus-article-mode))
-
-(defadvice linum-on (around linum-on-inhibit-for-modes)
-  "Stop the load of linum-mode for some major modes."
-    (unless (member major-mode linum-mode-inhibit-modes-list)
-      ad-do-it))
-
-(ad-activate 'linum-on)
-
-#+end_src
 
 ** Rotate text
 
@@ -2754,130 +2733,6 @@ That's even better! The variable holiday-local-holidays could be another choice.
 ** Ibuffer
 
 #+begin_src emacs-lisp :tangle no
-
-(setq ibuffer-saved-filter-groups
-      (quote
-       (("default"
-         ("ssh"
-          (or
-           (name . "\\*tramp")
-           (name . "^\\*debug tramp")
-           ))
-
-         ("emacs"
-          (or
-           (mode . occur-mode)
-           (mode . bookmark-bmenu-mode)
-           (mode . help-mode)
-           (name . "^\\*scratch\\*$")
-           (name . "^\\*Messages\\*$")
-
-           (name . "^\\*Compile-Log\\*$")
-           (name . "^\\*Backtrace\\*$")
-           (name . "^\\*info\\*$")
-           (name . "^\\*Occur\\*$")
-           (name . "^\\*grep\\*$")
-           (name . "^\\*Process List\\*$")
-           (name . "^\\*gud\\*$")
-           (name . "^\\*compilation\\*$")
-           (name . "^\\*Kill Ring\\*$")
-           ))
-         ("agenda" (or (name . "^\\*Calendar\\*$")
-                       (name . "^\\*Org Agenda")
-                       (name . "^\\*scratch\\* (org)$")
-                       (filename . "git\\/dkh\-org")
-                       (mode . muse-mode)
-                       ))
-         ("blog" (or
-                       (filename . "git\\/blog")
-                       (filename . "git\\/netlsd")
-                       ))
-
-         ("cu agenda" (or (filename . "git\\/cu")))
-         ("latex" (or (mode . latex-mode)
-                      (mode . LaTeX-mode)
-                      (mode . bibtex-mode)
-                      (mode . reftex-mode)))
-         ("irc"
-          (or
-           (name . "^\\*Sauron\\*$")
-           (mode . garak-mode)
-           (name . "^\\*Garak\\*$")
-           (mode . erc-mode)
-           (mode . twittering-mode)
-  (name . "^\\*scratch\\* (irc)$")
-         ))
-         ("jabber"
-          (or
-          (name . "^\\*-jabber.*")
-           (name . "\\*fsm-debug\\*")
-          (name . "^\\*scratch\\* (jabber)$")
-        ))
-         ("test"
-          (or
-           (name . "test")
-           (filename . "user\\@localhost:/home/www/htdocs")
-           ))
-         ("devel"
-          (or
-           (name . "^\\*eshell\\-devel\\-drupal\\*$")
-           (name . "devel")
-           (filename . "localhost:/home/www")
-           (filename . "localhost:/home/user")
-           ))
-
-         ("stage"
-          (or
-           (name . "stage")
-           (name . "staging")
-           (filename . "host-staging.domain.com")
-           (name . "\\*ansi\\-term\\-stage\\*")
-           ))
-         ("prod"
-          (or
-           (name . "prod")
-           (filename . "host-prod.domain.com")
-           ))
-         ("IGP Project Trunk"
-          (filename . "igp_reporting_trunk"))
-         ("competitions" (or
-                          (filename . "competitions")
-                          (filename . "apache2\/competitions")
-                          ))
-         ("templates"
-          (filename . "templates_trunk"))
-         ("gnus" (or
-                  (mode . message-mode)
-                  (mode . bbdb-mode)
-                  (mode . mail-mode)
-                  (mode . gnus-group-mode)
-                  (mode . gnus-summary-mode)
-                  (mode . gnus-article-mode)
-                  (mode . gnus-server-mode)
-                  (name . "^\\.bbdb$")
-                  (name . "^\\.newsrc-dribble")
-                  (name . "^\\*gnus trace\\*$")
-                  (name . "^\\*scratch\\* (gnus)$")
-                  ))
-         ("tool config" (or (mode . emacs-lisp-mode)
-                            (filename . "\\.emacs\\.d")
-                            (filename . "git\\/vinylisland")
-                            (name . "^\\.conkerorrc$")
-                            (filename . "org-mode-doc")
-                            ))
-
-         ("w3m" (or
-                 (mode . w3m-mode)
-               ;;  (name . "\\(w3m\\)$")
-                  (name . "w3m")
-                 ))
-         ("documentation" (or (mode . Info-mode)
-                              (mode . apropos-mode)
-                              (mode . woman-mode)
-                              (mode . help-mode)
-                              (mode . Man-mode)))
-         ("Magit" (name . "\*magit"))
-         ))))
 
 (setq ibuffer-never-show-predicates
       (list
@@ -3245,7 +3100,6 @@ A list of the form (FRAME-CONFIGURATION POSITION)
 
 (defalias 'tc 'dkh/toggle-chrome)
 (defalias 'll 'load-library)  ;; dynamic, instead of require
-(defalias 'es 'eshell)
 (defalias 'r 'list-registers)
 (defalias 'ev 'eval-buffer)
 (defalias 'td 'toggle-debug-on-error)
@@ -3456,150 +3310,6 @@ start a new shell.
 #+end_src
 
 
-*** Eshell
-
-#+begin_src emacs-lisp :tangle no
-
-(setq eshell-aliases-file "~/git/.emacs.d/eshell/alias")
-
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-
-(setq eshell-directory-name "~/git/.emacs.d/eshell/")
-
-;;       (starter-kit-load "eshell")
-
-;;This makes Eshell’s ‘ls’ file names RET-able. Yay!
-  (eval-after-load "em-ls"
-    '(progn
-       (defun ted-eshell-ls-find-file-at-point (point)
-         "RET on Eshell's `ls' output to open files."
-         (interactive "d")
-         (find-file (buffer-substring-no-properties
-                     (previous-single-property-change point 'help-echo)
-                     (next-single-property-change point 'help-echo))))
-
-       (defun pat-eshell-ls-find-file-at-mouse-click (event)
-         "Middle click on Eshell's `ls' output to open files.
-   From Patrick Anderson via the wiki."
-         (interactive "e")
-         (ted-eshell-ls-find-file-at-point (posn-point (event-end event))))
-
-       (let ((map (make-sparse-keymap)))
-         (define-key map (kbd "RET")      'ted-eshell-ls-find-file-at-point)
-         (define-key map (kbd "<return>") 'ted-eshell-ls-find-file-at-point)
-         (define-key map (kbd "<mouse-2>") 'pat-eshell-ls-find-file-at-mouse-click)
-         (defvar ted-eshell-ls-keymap map))
-
-       (defadvice eshell-ls-decorated-name (after ted-electrify-ls activate)
-         "Eshell's `ls' now lets you click or RET on file names to open them."
-         (add-text-properties 0 (length ad-return-value)
-                              (list 'help-echo "RET, mouse-2: visit this file"
-                                    'mouse-face 'highlight
-                                    'keymap ted-eshell-ls-keymap)
-                              ad-return-value)
-         ad-return-value)))
-
-  (defun ted-eshell-ls-find-file ()
-          (interactive)
-    (let ((fname (buffer-substring-no-properties
-              (previous-single-property-change (point) 'help-echo)
-              (next-single-property-change (point) 'help-echo))))
-            ;; Remove any leading whitespace, including newline that might
-            ;; be fetched by buffer-substring-no-properties
-      (setq fname (replace-regexp-in-string "^[ \t\n]*" "" fname))
-            ;; Same for trailing whitespace and newline
-      (setq fname (replace-regexp-in-string "[ \t\n]*$" "" fname))
-      (cond
-       ((equal "" fname)
-        (message "No file name found at point"))
-       (fname
-        (find-file fname)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;Here is a cool function by MilanZamazal? that brings lots of Debian commands together. Note how options are defined and documented using eshell-eval-using-options.
-
-    (defun eshell/deb (&rest args)
-      (eshell-eval-using-options
-       "deb" args
-       '((?f "find" t find "list available packages matching a pattern")
-         (?i "installed" t installed "list installed debs matching a pattern")
-         (?l "list-files" t list-files "list files of a package")
-         (?s "show" t show "show an available package")
-         (?v "version" t version "show the version of an installed package")
-         (?w "where" t where "find the package containing the given file")
-         (nil "help" nil nil "show this usage information")
-         :show-usage)
-       (eshell-do-eval
-        (eshell-parse-command
-         (cond
-          (find
-           (format "apt-cache search %s" find))
-          (installed
-           (format "dlocate -l %s | grep '^.i'" installed))
-          (list-files
-           (format "dlocate -L %s | sort" list-files))
-          (show
-           (format "apt-cache show %s" show))
-          (version
-           (format "dlocate -s %s | egrep '^(Package|Status|Version):'" version))
-          (where
-           (format "dlocate %s" where))))
-        t)))
-
-;; aliases
-
-(defalias 'open 'find-file)
-(defalias 'openo 'find-file-other-window)
-
-(defun eshell/emacs (file)
-          (find-file file))
-
-
-
-
-  (require 'em-smart)
-  (setq eshell-where-to-jump 'begin)
-  (setq eshell-review-quick-commands nil)
-  (setq eshell-smart-space-goes-to-end t)
-
-(defvar explicit-su-file-name "/bin/su")
-(defvar explicit-su-args '("-"))
-
-(defun su (&optional buffer)
-  (interactive
-   (list
-    (and current-prefix-arg
-     (prog1
-         (read-buffer "SU buffer: "
-              (generate-new-buffer-name "*su*"))
-       (if (file-remote-p default-directory)
-       ;; It must be possible to declare a local default-directory.
-       (setq default-directory
-             (expand-file-name
-          (read-file-name
-           "Default directory: " default-directory default-directory
-           t nil 'file-directory-p))))))))
-  (setq buffer (get-buffer-create (or buffer "*su*")))
-  ;; Pop to buffer, so that the buffer's window will be correctly set
-  ;; when we call comint (so that comint sets the COLUMNS env var properly).
-  (pop-to-buffer buffer)
-  (unless (comint-check-proc buffer)
-    (let* ((prog explicit-su-file-name)
-       (name (file-name-nondirectory prog))
-       (startfile (concat "~/.emacs_" name))
-       (xargs-name (intern-soft (concat "explicit-" name "-args"))))
-  (apply 'make-comint-in-buffer "su" buffer prog
-         (if (file-exists-p startfile) startfile)
-         (if (and xargs-name (boundp xargs-name))
-         (symbol-value xargs-name)
-       '("-i")))
-  (shell-mode)))
-  buffer)
-
-#+end_src
 
 *** AnsiTerm
 
@@ -4506,31 +4216,6 @@ expands it. Else indents the current line. Acts as normal in minibuffer."
          (hippie-expand nil))
         (t (indent-for-tab-command))))
 
-(defun dkh-shell-with-name (name)
-  (interactive "sName: ")
-  "Creates a shell with name given by the first argument, and switches to it. If a buffer with name already exists, we simply switch to it."
-  (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))
-       (localdir name))
-    (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
-           (switch-to-buffer buffer-of-name))
-          ( t
-            (progn
-              (eshell)
-              ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
-              (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))))))
-
-
-(defun dkh-eshell-macs ()
-  (interactive)
-  "Creates a tool config shell and switches to it. If a buffer with name already exists, we simply switch to it."
-  (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*"))))
-    (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
-           (switch-to-buffer buffer-of-name))
-          ( t
-            (progn
-              (eshell t)
-              ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
-              (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*")))))))
 
 (message (concat "0 " (buffer-name) "... Done"))
 
@@ -5641,41 +5326,6 @@ ICQ, therefore i quickly hacked up this one:
 
     (bind-key "C-. C--" 'emms-player-mplayer-volume-down)
     (bind-key "C-. C-=" 'emms-player-mplayer-volume-up)))
-
-#+end_src
-
-** eshell
-
-#+begin_src emacs-lisp :tangle no
-
-(use-package eshell
-  :defer t
-  :init
-  (progn
-    (defun eshell-initialize ()
-      (defun eshell-spawn-external-command (beg end)
-        "Parse and expand any history references in current input."
-        (save-excursion
-          (goto-char end)
-          (when (looking-back "&!" beg)
-            (delete-region (match-beginning 0) (match-end 0))
-            (goto-char beg)
-            (insert "spawn "))))
-
-      (add-hook 'eshell-expand-input-functions 'eshell-spawn-external-command)
-
-      (defun ss (server)
-        (interactive "sServer: ")
-        (call-process "spawn" nil nil nil "ss" server))
-
-      (eval-after-load "em-unix"
-        '(unintern 'eshell/rm)))
-
-    (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)))
-
-(use-package esh-toggle
-  :requires eshell
-  :bind ("C-x C-z" . eshell-toggle))
 
 #+end_src
 

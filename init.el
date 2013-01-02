@@ -2500,7 +2500,6 @@ FORM => (eval FORM)."
   :defer t
   :init
   (progn
-    (setq eshell-history-size 1024)
     (setq eshell-prompt-regexp "^[^#$]*[#$] ")
 
     (load "em-hist")           ; So the history vars are defined
@@ -2610,8 +2609,156 @@ at the beginning of line, if already there."
                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
                   (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*")))))))
 
+
+    (defun dkh-shell-with-name (name)
+      (interactive "sName: ")
+      "Creates a shell with name given by the first argument, and switches to it. If a buffer with name already exists, we simply switch to it."
+      (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))
+            (localdir name))
+        (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
+               (switch-to-buffer buffer-of-name))
+              ( t
+                (progn
+                  (eshell)
+                                        ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
+                  (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))))))
+
+    
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
 
+
+
+;;This makes Eshell’s ‘ls’ file names RET-able. Yay!
+;;   (eval-after-load "em-ls"
+;;     '(progn
+;;        (defun ted-eshell-ls-find-file-at-point (point)
+;;          "RET on Eshell's `ls' output to open files."
+;;          (interactive "d")
+;;          (find-file (buffer-substring-no-properties
+;;                      (previous-single-property-change point 'help-echo)
+;;                      (next-single-property-change point 'help-echo))))
+
+;;        (defun pat-eshell-ls-find-file-at-mouse-click (event)
+;;          "Middle click on Eshell's `ls' output to open files.
+;;    From Patrick Anderson via the wiki."
+;;          (interactive "e")
+;;          (ted-eshell-ls-find-file-at-point (posn-point (event-end event))))
+
+;;        (let ((map (make-sparse-keymap)))
+;;          (define-key map (kbd "RET")      'ted-eshell-ls-find-file-at-point)
+;;          (define-key map (kbd "<return>") 'ted-eshell-ls-find-file-at-point)
+;;          (define-key map (kbd "<mouse-2>") 'pat-eshell-ls-find-file-at-mouse-click)
+;;          (defvar ted-eshell-ls-keymap map))
+
+;;        (defadvice eshell-ls-decorated-name (after ted-electrify-ls activate)
+;;          "Eshell's `ls' now lets you click or RET on file names to open them."
+;;          (add-text-properties 0 (length ad-return-value)
+;;                               (list 'help-echo "RET, mouse-2: visit this file"
+;;                                     'mouse-face 'highlight
+;;                                     'keymap ted-eshell-ls-keymap)
+;;                               ad-return-value)
+;;          ad-return-value)))
+
+;;   (defun ted-eshell-ls-find-file ()
+;;           (interactive)
+;;     (let ((fname (buffer-substring-no-properties
+;;               (previous-single-property-change (point) 'help-echo)
+;;               (next-single-property-change (point) 'help-echo))))
+;;             ;; Remove any leading whitespace, including newline that might
+;;             ;; be fetched by buffer-substring-no-properties
+;;       (setq fname (replace-regexp-in-string "^[ \t\n]*" "" fname))
+;;             ;; Same for trailing whitespace and newline
+;;       (setq fname (replace-regexp-in-string "[ \t\n]*$" "" fname))
+;;       (cond
+;;        ((equal "" fname)
+;;         (message "No file name found at point"))
+;;        (fname
+;;         (find-file fname)))))
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; ;;Here is a cool function by MilanZamazal? that brings lots of Debian commands together. Note how options are defined and documented using eshell-eval-using-options.
+
+;;     (defun eshell/deb (&rest rags)
+;;       (eshell-eval-using-options
+;;        "deb" args
+;;        '((?f "find" t find "list available packages matching a pattern")
+;;          (?i "installed" t installed "list installed debs matching a pattern")
+;;          (?l "list-files" t list-files "list files of a package")
+;;          (?s "show" t show "show an available package")
+;;          (?v "version" t version "show the version of an installed package")
+;;          (?w "where" t where "find the package containing the given file")
+;;          (nil "help" nil nil "show this usage information")
+;;          :show-usage)
+;;        (eshell-do-eval
+;;         (eshell-parse-command
+;;          (cond
+;;           (find
+;;            (format "apt-cache search %s" find))
+;;           (installed
+;;            (format "dlocate -l %s | grep '^.i'" installed))
+;;           (list-files
+;;            (format "dlocate -L %s | sort" list-files))
+;;           (show
+;;            (format "apt-cache show %s" show))
+;;           (version
+;;            (format "dlocate -s %s | egrep '^(Package|Status|Version):'" version))
+;;           (where
+;;            (format "dlocate %s" where))))
+;;         t)))
+
+;; ;; aliases
+
+;; (defalias 'open 'find-file)
+;; (defalias 'openo 'find-file-other-window)
+
+;; (defun eshell/emacs (file)
+;;           (find-file file))
+
+
+
+
+;;   (require 'em-smart)
+;;   (setq eshell-where-to-jump 'begin)
+;;   (setq eshell-review-quick-commands nil)
+;;   (setq eshell-smart-space-goes-to-end t)
+
+;; (defvar explicit-su-file-name "/bin/su")
+;; (defvar explicit-su-args '("-"))
+
+;; (defun su (&optional buffer)
+;;   (interactive
+;;    (list
+;;     (and current-prefix-arg
+;;      (prog1
+;;          (read-buffer "SU buffer: "
+;;               (generate-new-buffer-name "*su*"))
+;;        (if (file-remote-p default-directory)
+;;        ;; It must be possible to declare a local default-directory.
+;;        (setq default-directory
+;;              (expand-file-name
+;;           (read-file-name
+;;            "Default directory: " default-directory default-directory
+;;            t nil 'file-directory-p))))))))
+;;   (setq buffer (get-buffer-create (or buffer "*su*")))
+;;   ;; Pop to buffer, so that the buffer's window will be correctly set
+;;   ;; when we call comint (so that comint sets the COLUMNS env var properly).
+;;   (pop-to-buffer buffer)
+;;   (unless (comint-check-proc buffer)
+;;     (let* ((prog explicit-su-file-name)
+;;        (name (file-name-nondirectory prog))
+;;        (startfile (concat "~/.emacs_" name))
+;;        (xargs-name (intern-soft (concat "explicit-" name "-args"))))
+;;   (apply 'make-comint-in-buffer "su" buffer prog
+;;          (if (file-exists-p startfile) startfile)
+;;          (if (and xargs-name (boundp xargs-name))
+;;          (symbol-value xargs-name)
+;;        '("-i")))
+;;   (shell-mode)))
+;;   buffer)
+
+
+    
     ))
 
 ;; eshell
@@ -2731,6 +2878,23 @@ at the beginning of line, if already there."
 ;;   (interactive)
 ;;   (setq *linum-mdown-line* nil)
 ;;   (goto-line (line-at-click)))
+
+;; (setq linum-mode-inhibit-modes-list '(eshell-mode
+;;                                       shell-mode
+;;                                       erc-mode
+;;                                       jabber-roster-mode
+;;                                       jabber-chat-mode
+;;                                       gnus-group-mode
+;;                                       gnus-summary-mode
+;;                                       gnus-article-mode))
+
+;; (defadvice linum-on (around linum-on-inhibit-for-modes)
+;;   "Stop the load of linum-mode for some major modes."
+;;     (unless (member major-mode linum-mode-inhibit-modes-list)
+;;       ad-do-it))
+
+;; (ad-activate 'linum-on)
+
 ;;     ))
 
 ;;;_ , eval-expr
