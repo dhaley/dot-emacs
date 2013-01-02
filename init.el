@@ -25,20 +25,49 @@
 
 
 ;; setting paths for OS X (macports)
-(when (eq system-type 'darwin)
-  (setenv "PATH"
-          (concat
-           "/opt/local/bin" ":"
-           "/opt/local/sbin" ":"
-           (getenv "PATH")))
-  (setq exec-path
-        '("/opt/local/bin"
-          "/opt/local/sbin"
-          "/usr/bin"
-          "/bin"
-          "/usr/sbin"
-          "/sbin"
-          "/usr/X11/bin")))
+;; (when (eq system-type 'darwin)
+;;   (setenv "PATH"
+;;           (concat
+;;            "/opt/local/bin" ":"
+;;            "/opt/local/sbin" ":"
+;;            (getenv "PATH")))
+;;   (setq exec-path
+;;         '("/opt/local/bin"
+;;           "/opt/local/sbin"
+;;           "/usr/bin"
+;;           "/bin"
+;;           "/usr/sbin"
+;;           "/sbin"
+;;           "/usr/X11/bin")))
+
+
+;; If you find that Emacs on OSX fails to pick up the same $PATH setting
+;; that you get in command line shells, instead defaulting to an
+;; impoverished default that doesn’t include (for instance) anything
+;; installed via MacPorts:
+
+
+(add-hook 'after-init-hook
+          #'(lambda ()
+              (setenv "PATH"
+                      (with-temp-buffer
+                        (call-process "/bin/bash"
+                                      nil (list (current-buffer) nil) nil
+                                      "-l" "-c" "printf %s \"$PATH\"")
+                        (buffer-string)))))
+
+ ;; Fix ls problems
+
+;; (when (eq system-type 'darwin)
+;;   (require 'ls-lisp)
+;;   (setq ls-lisp-use-insert-directory-program nil))
+
+;; Screen bugs
+
+;; (setq default-frame-alist
+;;       '((top . 0) (left . 20)
+;;         (width . 100) (height . 48)
+;;         ))
 
 (setq message-log-max 16384)
 
@@ -1446,7 +1475,9 @@ Subexpression references can be used (\1, \2, etc)."
                               :regexp ".*"
                               :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
                               :doc-spec '(("(latex2e)Concept Index" )
-                                          ("(latex2e)Command Index")))))))
+                                          ("(latex2e)Command Index"))))))
+;; (org-babel-load-file "~/git/foss/emacs-starter-kit-social-sciences/starter-kit-latex.org")
+  )
 
 ;;;_ , auto-complete
 
@@ -4678,6 +4709,31 @@ prevents using commands with prefix arguments."
     (bind-key "A-M-w" 'wikipedia-query))
 
   :config
+;; (eval-after-load "w3m"
+;;   '(progn
+;;      (setq w3m-add-user-agent nil
+;;            w3m-default-display-inline-images t
+;;            w3m-default-save-directory "~/.emacs.d/.w3m"
+;;            w3m-favicon-use-cache-file t
+;;            w3m-key-binding (quote info)
+;;            w3m-profile-directory "~/.emacs.d/.w3m"
+;;            w3m-resize-images t
+;;            w3m-cookie-accept-bad-cookies t
+;;            w3m-use-cookies nil
+;;            w3m-key-binding (quote info)
+;;            w3m-display-inline-image t
+;; 	       ;; added my DKH
+;; 	       w3m-home-page "http://www.emacswiki.org/"
+;;            w3m-command-arguments
+;;            (nconc w3m-command-arguments
+
+;;                   '("-o" "http_proxy=http://192.168.0.5:8118"))
+;;            w3m-no-proxy-domains '("colorado.edu"
+;;            "competitions.colorado.edu" "neighbor.com" "jobsatcu.com"
+;;            "identi.ca" "vinylisland.org" "dhaley.org")
+;;            )))
+
+  
   (let (proxy-host proxy-port)
     (with-temp-buffer
       (shell-command "scutil --proxy" (current-buffer))
@@ -5417,6 +5473,8 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 ;; OS X ls doesn't support --dired
 (setq dired-use-ls-dired nil)
+
+;; (setenv "GPG_AGENT_INFO" "~/.gnupg/S.gpg-agent")
 
 (defun offlineimap-get-password (host port)
   (let* ((netrc (netrc-parse (expand-file-name "~/git/.emacs.d/.autinfo.gpg")))
