@@ -40,7 +40,7 @@ in the future.
 :PROPERTIES:
 :CUSTOM_ID: License
 :END:
-[2011-11-19 Sat 21:53] 
+[2011-11-19 Sat 21:53]
 
 #+begin_example
 Copyright (C)  2012  Bernt Hansen.
@@ -48,12 +48,12 @@ Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
 or any later version published by the Free Software Foundation;
 with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-  
+
 Code in this document is free software: you can redistribute it
 and/or modify it under the terms of the GNU General Public
 License as published by the Free Software Foundation, either
 version 3 of the License, or (at your option) any later version.
-  
+
 This code is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -113,7 +113,7 @@ cd ~/git
 git clone git://orgmode.org/org-mode.git
 #+end_src
 
-To update and get new commits from the org-mode developers you can use 
+To update and get new commits from the org-mode developers you can use
 #+begin_src sh
 cd ~/git/org-mode
 git pull
@@ -174,8 +174,8 @@ want org-mode to work.
 :CUSTOM_ID: OrgFiles
 :END:
 
-Tasks are separated into logical groupings or projects.  
-Use separate org files for large task groupings and 
+Tasks are separated into logical groupings or projects.
+Use separate org files for large task groupings and
 subdirectories for collections of files for multiple
 projects that belong together.
 
@@ -331,7 +331,7 @@ END:
 ,* House Maintenance
 PROPERTIES:
 CATEGORY: House
-END:      
+END:
 #+end_src
 ** Key bindings
 :PROPERTIES:
@@ -551,8 +551,8 @@ so the project is not on the stuck projects list.
 :END:
 
 Telephone calls are special.  They are created in a done state by a capture task.
-The time of the call is recorded for as long as the capture task is active.  If I need 
-to look up other details and want to close the capture task early I can just 
+The time of the call is recorded for as long as the capture task is active.  If I need
+to look up other details and want to close the capture task early I can just
 =C-c C-c= to close the capture task (stopping the clock) and then =f9 SPC= to resume
 the clock in the phone call while I do other things.
 #+begin_src plantuml :file phone_states.png :cache yes
@@ -573,7 +573,7 @@ Fast todo selection allows changing from any task todo state to any
 other state directly by selecting the appropriate key from the fast
 todo selection key menu.  This is a great feature!
 
-#+begin_src emacs-lisp :tangle yes 
+#+begin_src emacs-lisp :tangle yes
 (setq org-use-fast-todo-selection t)
 #+end_src
 
@@ -613,7 +613,7 @@ The triggers break down to the following rules:
 
 The tags are used to filter tasks in the agenda views conveniently.
 
-#+begin_src emacs-lisp :tangle yes 
+#+begin_src emacs-lisp :tangle yes
 (setq org-todo-state-tags-triggers
       (quote (("CANCELLED" ("CANCELLED" . t))
               ("WAITING" ("WAITING" . t))
@@ -722,14 +722,14 @@ Here is my setup for org-capture
              `
              ("s" "secure" entry (file+datetree+prompt "~/git/dkh-org/secure.org.gpg")
               "* %(format-time-string \"%H:%M\") %^{Entry} %^G\n%i%?"))
- 
 
-#+end_src 
+
+#+end_src
 
 Capture mode now handles automatically clocking in and out of a
 capture task.  This all works out of the box now without special hooks.
 When I start a capture mode task the task is clocked in as specified
-by =:clock-in t= and when the task is filed with =C-c C-c= the clock 
+by =:clock-in t= and when the task is filed with =C-c C-c= the clock
 resumes on the original clocking task.
 
 The quick clocking in and out of capture mode tasks (often it takes
@@ -789,7 +789,7 @@ So what do I do?  Hit =C-M-r= to start capture mode and select =t=
 since it's a new task and I get a buffer like this:
 
 #+begin_src org :exports src
-,* TODO 
+,* TODO
   [2010-08-05 Thu 21:06]
   [[file:~/git/dkh-org-mode-doc/org-mode.org::*Capture%20Tasks%20is%20all%20about%20being%20FAST][Capture Tasks is all about being FAST]]
 #+end_src
@@ -824,7 +824,7 @@ the day.  I like to keep my refile task list empty.
 To refile tasks in org you need to tell it where you want to refile things.
 
 In my setup I let any file in =org-agenda-files= and the current file
-contribute to the list of valid refile targets.  
+contribute to the list of valid refile targets.
 
 I've recently moved to using IDO to complete targets directly.  I find
 this to be faster than my previous complete in steps setup.  At first
@@ -1054,7 +1054,7 @@ don't want to spend time waiting for it to be generated.
                 (org-tags-match-list-sublevels nil))))))
 #+end_src
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 (add-to-list 'org-agenda-custom-commands
              `("b" "Agenda"
@@ -1066,7 +1066,7 @@ don't want to spend time waiting for it to be generated.
                 (org-agenda-remove-tags t)
                 (org-agenda-sorting-strategy '(category-up todo-state-up time-up)))
                ("~/git/dkh-org/agendas/agenda.pdf")))
-#+end_src 
+#+end_src
 
 My block agenda view looks like this when not narrowed to a project.
 This shows top-level projects and =NEXT= tasks but hides the project details since
@@ -1244,7 +1244,7 @@ the description above.
 (setq org-agenda-auto-exclude-function 'bh/org-auto-exclude-function)
 #+end_src
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 (defun bh/org-auto-exclude-function (tag)
   "Automatic task exclusion in the agenda with / RET"
@@ -1257,7 +1257,7 @@ the description above.
          t))
        (concat "-" tag)))
 
-#+end_src 
+#+end_src
 
 This lets me filter tasks with just =/ RET= on the agenda which removes tasks I'm not
 supposed to be working on now from the list of returned results.
@@ -1307,8 +1307,8 @@ My clocking setup basically works like this:
 - Continue clocking whatever tasks you work on
 - Punch out (stop the clock)
 
-I'm free to change the default task multiple times during the day but 
-with the clock moving up the project tree on clock out I no longer 
+I'm free to change the default task multiple times during the day but
+with the clock moving up the project tree on clock out I no longer
 need to do this.  I simply have a single task that gets clocked in
 when I punch-in.
 
@@ -1558,7 +1558,7 @@ A prefix arg forces clock in of the default task."
 
 When I start or continue working on a task I clock it in with any of the following:
 
-  - =C-c C-x C-i= 
+  - =C-c C-x C-i=
   - =I= in the agenda
   - =I= speed key on the first character of the heading line
   - =f9 I= while on the task in the agenda
@@ -1601,7 +1601,7 @@ Consider the following scenario:
 - You complete =Task B= (Document my use of org-mode)
 - Now you want to go back to =Task A= (Organization) again to continue
 
-This is easy to deal with.  
+This is easy to deal with.
 
 1. Clock in =Task A=, work on it
 2. Go to =Task B= (or create a new task) and clock it in
@@ -1651,8 +1651,8 @@ convenient to refile the tasks saves time in the long run.
 
 If it's a one-shot uninteresting task (like a coffee break) I create
 a capture journal entry for it that goes to the diary.org date tree.
-If it's a task that actually needs to be tracked and marked done, and 
-applied to some project then I create a capture task instead which files it in 
+If it's a task that actually needs to be tracked and marked done, and
+applied to some project then I create a capture task instead which files it in
 refile.org.
 ** Finding tasks to clock in
 :PROPERTIES:
@@ -1668,7 +1668,7 @@ To find a task to work on I use one of the following options
   =SCHEDULED= or =DEADLINE= items that need to be done soon
 - Pick something off the =NEXT= tasks agenda view
   Work on some unfinished task to move to completion
-- Pick something off the other task list 
+- Pick something off the other task list
 - Use an agenda view with filtering to pick something to work on
 
 Punching in on the task you select will restrict the agenda view to that project
@@ -1715,7 +1715,7 @@ total for the clock line which is a nice convenience.
 
 I always check that I haven't created task overlaps when fixing time
 clock entries by viewing them with log mode on in the agenda.  There
-is a new view in the agenda for this -- just hit =v c= in the daily 
+is a new view in the agenda for this -- just hit =v c= in the daily
 agenda and clock gaps and overlaps are identified.
 
 I want my clock entries to be as accurate as possible.
@@ -1736,7 +1736,7 @@ The following setting shows 1 minute clocking gaps.
 I spend time on an open source project called BZFlag.  During work for releases
 I want to clock the time I spend testing the new BZFlag client.  I have a key
 binding in my window manager that runs a script which starts the clock on my
-testing task, runs the BZFlag client, and on exit resumes the clock on the 
+testing task, runs the BZFlag client, and on exit resumes the clock on the
 previous clocking task.
 
 The testing task has an ID property of
@@ -2002,7 +2002,7 @@ report at the end.
 
 Then it's simply a matter of exporting the resulting agenda in some useful format
 to provide to other people.  =C-x C-w /tmp/agenda.html RET= exports to HTML
-and =C-x C-w /tmp/agenda.txt RET= exports to plain text.  Other formats are 
+and =C-x C-w /tmp/agenda.txt RET= exports to plain text.  Other formats are
 available but I use these two the most.
 
 Combining this export with tag filters and =C-u R= can limit the
@@ -2098,7 +2098,7 @@ be at the farm to make the call.
 (setq org-agenda-tags-todo-honor-ignore-options t)
 #+end_src
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 (setq org-tag-alist (quote ((:startgroup)
                             ("@errand" . ?e)
@@ -2120,7 +2120,7 @@ be at the farm to make the call.
                             ("CANCELLED" . ?c)
                             ("FLAGGED" . ??))))
 
-#+end_src 
+#+end_src
 ** Filetags
 :PROPERTIES:
 :CUSTOM_ID: FileTags
@@ -2245,7 +2245,7 @@ be created for the caller I can do that and replace the caller details
 with =f9-p= anytime that is convenient for me.  I found that
 automatically calling the bbdb lookup function would interrupt my
 workflow during the call in cases where the information about the
-caller was not readily available.  Sometimes I want to make notes first 
+caller was not readily available.  Sometimes I want to make notes first
 and get the caller details later during the call.
 
 The phone call capture template starts the clock as soon as the phone
@@ -2313,7 +2313,7 @@ followed by the phone-call related lookup functions.
                                     (concat " - " company)))))
                        (rec)
                        (t "NameOfCaller")))
-    (insert caller)))  
+    (insert caller)))
 #+end_src
 * GTD stuff
 :PROPERTIES:
@@ -2328,7 +2328,7 @@ outlined in What do I work on next?
 :CUSTOM_ID: GTDWeeklyReview
 :END:
 
-The first day of the week (usually Monday) I do my weekly review. 
+The first day of the week (usually Monday) I do my weekly review.
 I keep a list like this one to remind me what needs to be done.
 
 To keep the agenda fast I set
@@ -2345,7 +2345,7 @@ doing my weekly review on Tuesday since Monday was a holiday.
 
 #+begin_src org :exports src
 ,* NEXT Weekly Review [0/6]
- SCHEDULED: <2009-05-18 Mon ++1w> 
+ SCHEDULED: <2009-05-18 Mon ++1w>
  LOGBOOK:...
  PROPERTIES:...
 
@@ -2756,7 +2756,7 @@ Org-mode can export to a variety of publishing formats including (but not limite
 
 - ASCII
   (plain text - but not the original org-mode file)
-- HTML 
+- HTML
 - LaTeX
 - Docbook
   which enables getting to lots of other formats like ODF, XML, etc
@@ -2827,7 +2827,7 @@ with =C-c C-x C-v=
 I disable startup with inline images because when I access my
 org-files from an SSH session without X this breaks (say from my
 Android phone) it fails when trying to display the images on a non-X
-session.  It's much more important for me to be able to access my 
+session.  It's much more important for me to be able to access my
 org files from my Android phone remotely than it is to see images on
 startup.
 
@@ -2857,13 +2857,13 @@ The source for a ditaa graphic looks like this in org-mode:
 Here's an example without the =#+begin_src= and =#+end_src= lines.
 
 #+begin_src ditaa :file communication.png :cmdline -r -s 0.8 :exports both :cache yes
-    +-----------+        +---------+  
-    |    PLC    |        |         |                
-    |  Network  +<------>+   PLC   +<---=---------+ 
-    |    cRED   |        |  c707   |              | 
-    +-----------+        +----+----+              | 
-                              ^                   | 
-                              |                   | 
+    +-----------+        +---------+
+    |    PLC    |        |         |
+    |  Network  +<------>+   PLC   +<---=---------+
+    |    cRED   |        |  c707   |              |
+    +-----------+        +----+----+              |
+                              ^                   |
+                              |                   |
                               |  +----------------|-----------------+
                               |  |                |                 |
                               v  v                v                 v
@@ -2873,14 +2873,14 @@ Here's an example without the =#+begin_src= and =#+end_src= lines.
       |   c707   |       |  Memory  |      |   c707    |      | Server    |      |    |      |    |
       +--+----+--+       |{d} cGRE  |      +------+----+      |   c707    |      +----+      +----+
          ^    ^          +----------+             ^           +-------+---+
-         |    |                                   |                        
-         |    +--------=--------------------------+                    
-         v                                                             
-+--------+--------+                                                         
-|                 |                                                         
-| Millwide System |            -------- Data ---------                      
-| cBLU            |            --=----- Signals ---=--                      
-+-----------------+                                                         
+         |    |                                   |
+         |    +--------=--------------------------+
+         v
++--------+--------+
+|                 |
+| Millwide System |            -------- Data ---------
+| cBLU            |            --=----- Signals ---=--
++-----------------+
 #+end_src
 
 #+results[57642756cd4e509e2a4f67c40a5147ecb935933e]:
@@ -3420,10 +3420,10 @@ with org-mode so that it Works-For-Me(tm).
 :CUSTOM_ID: AbbrevMode
 :END:
 [2011-09-26 Mon 05:44]
-I use skeletons with abbrev-mode to quickly add preconfigured blocks to my 
+I use skeletons with abbrev-mode to quickly add preconfigured blocks to my
 Emacs edit buffers.
 
-I have blocks for creating: 
+I have blocks for creating:
 
   - generic blocks in org-mode
   - plantuml blocks in org-mode
@@ -3883,7 +3883,7 @@ I include holidays from the calendar in my =todo.org= file as follows:
 PROPERTIES:
 CATEGORY: Appt
 ARCHIVE:  %s_archive::* Appointments
-END:      
+END:
 ,** Holidays
 PROPERTIES:
 Category: Holiday
@@ -3920,7 +3920,7 @@ I do need it.
 :CUSTOM_ID: AgendaViewTweaks
 :END:
 
-The following agenda customizations control 
+The following agenda customizations control
 - display of repeating tasks
 - display of empty dates on the agenda
 - task sort order
@@ -4069,7 +4069,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 [2011-12-20 Tue 23:52]
 
 I change the =q= key in the agenda so instead of killing the agenda buffer
-it merely buries it to the end of the buffer list.  This allows me to 
+it merely buries it to the end of the buffer list.  This allows me to
 pull it back up quickly with the =q= speed key or =f9 f9= and regenerate
 the results with =g=.
 
@@ -4110,12 +4110,12 @@ Add the following to your =.emacs=
 (require 'org-checklist)
 #+end_src
 
-and then to use it in a task you simply set the property =RESET_CHECK_BOXES= to =t= 
+and then to use it in a task you simply set the property =RESET_CHECK_BOXES= to =t=
 like this
 
 #+begin_src org :exports src
 ,* TODO Invoicing and Archive Tasks [0/7]
-   DEADLINE: <2009-07-01 Wed +1m -0d> 
+   DEADLINE: <2009-07-01 Wed +1m -0d>
 PROPERTIES:
 RESET_CHECK_BOXES: t
 END:
@@ -4191,7 +4191,7 @@ PROPERTIES:
 NOBLOCKING: t
 END:
 ...
-,** TODO Subtask  
+,** TODO Subtask
 #+end_src
 
 This prevents the =New Repeating Task= from being blocked if some of
@@ -4207,7 +4207,7 @@ ORDERED: t
 END:
 ,** TODO Step 1
 ,** TODO Step 2
-,** TODO Step 3  
+,** TODO Step 3
 #+end_src
 
 In this case you need to complete =Step 1= before you can complete
@@ -4231,7 +4231,7 @@ that the stars and heading task names line up in sublevels.
 
 To make org show leading stars use
 
-#+begin_src emacs-lisp :tangle yes 
+#+begin_src emacs-lisp :tangle yes
 (setq org-hide-leading-stars nil)
 #+end_src
 
@@ -4395,7 +4395,7 @@ attachment directory.
 PROPERTIES:
 Attachments: x.sql
 ID:       f1d38e9a-ff70-4cc4-ab50-e8b58b2aaa7b
-END:  
+END:
 #+end_src
 
 The attached file is saved in
@@ -4442,7 +4442,7 @@ date as follows:
 
 #+begin_src org :exports src
 ,* TODO Pay Wages
-  DEADLINE: <2009-07-01 Wed +1m -0d>   
+  DEADLINE: <2009-07-01 Wed +1m -0d>
 #+end_src
 
 This example repeats monthly and shows up in the agenda on the day it
@@ -4580,7 +4580,7 @@ LOGBOOK:...
 PROPERTIES:
 CLOCK_MODELINE_TOTAL: today
 Effort:   1:00
-END:  
+END:
 #+end_src
 
 The task has an estimated effort of 1 hour and when I clock in the
@@ -4639,7 +4639,7 @@ value setting and a special =SCHEDULED= date entry like this:
    [2009-11-14 Sat 11:45]
 PROPERTIES:
 STYLE: habit
-END:  
+END:
 #+end_src
 
 This marks the task as a habit and separates it from the regular task
@@ -4711,7 +4711,7 @@ file that can have habits defined
 PROPERTIES:
 LOGGING:  DONE(!)
 ARCHIVE:  %s_archive::* Habits
-END:  
+END:
 #+end_src
 ** Auto revert mode
 :PROPERTIES:
@@ -4785,14 +4785,14 @@ Emacs temporarily saves your buffer in an autosave file while you are
 editing your org buffer and a sufficient number of changes have
 accumulated.  If you have decrypted subtrees in your buffer these will
 be written to disk in plain text which possibly leaks sensitive information.
-To combat this org-mode now asks if you want to disable the autosave 
+To combat this org-mode now asks if you want to disable the autosave
 functionality in this buffer.
 
 Personally I really like the autosave feature.  99% of the time my encrypted
 entries are perfectly safe to write to the autosave file since they are
 still encrypted.  I tend to decrypt an entry, read the details for what
 I need to look up and then immediately save the file again with =C-x C-s=
-which re-encrypts the entry immediately.  This pretty much guarantees that 
+which re-encrypts the entry immediately.  This pretty much guarantees that
 my autosave files never have decrypted data stored in them.
 
 I disable the default org crypt auto-save setting as follows:
@@ -4962,12 +4962,12 @@ and it inserts an inactive timestamp like this
 
 #+begin_src org :exports src
 ,* <point here>
-  [2009-11-22 Sun 18:45]  
+  [2009-11-22 Sun 18:45]
 #+end_src
 
 This keeps an automatic record of when tasks are created which I find very useful.
 
-I also have a short cut key defined to invoke this function on demand so that I can 
+I also have a short cut key defined to invoke this function on demand so that I can
 insert the inactive timestamp anywhere on demand.
 
 #+begin_src emacs-lisp :tangle no
@@ -5051,7 +5051,7 @@ style.
     + Fred
       - completed all his tasks 2 days early
       - needs more work
-      - DONE: everything  
+      - DONE: everything
 #+end_src
 
 #+begin_src org :exports src
@@ -5072,7 +5072,7 @@ style.
      + Fred
        - completed all his tasks 2 days early
        - needs more work
->>>>>>>> DONE: everything  
+>>>>>>>> DONE: everything
 #+end_src
 
 Here is the formatting function.  Just highlight the region for the
@@ -5304,7 +5304,7 @@ each time I set a new position.
 :CUSTOM_ID: OrgMimeMail
 :END:
 
-I'm experimenting with sending mime mail from org.  I've added =C-c M=o= key bindings 
+I'm experimenting with sending mime mail from org.  I've added =C-c M=o= key bindings
 in the =org-mode-hook= to generate mail from an org-mode subtree.
 
 #+begin_src emacs-lisp :tangle yes
@@ -5537,9 +5537,7 @@ creating documents with spelling errors.
              ;; expands the files in the directories individually
              (org-defkey org-mode-map "\C-c["    'undefined)
              (org-defkey org-mode-map "\C-c]"    'undefined)
-             (org-defkey org-mode-map "\C-c;"    'undefined)
-             (org-defkey org-mode-map "\C-xnp"   'bh/narrow-to-org-project)
-             (org-defkey org-mode-map "\C-xnu"   'bh/narrow-up-one-org-level))
+             (org-defkey org-mode-map "\C-c;"    'undefined))
           'append)
 
 (add-hook 'org-mode-hook
@@ -5611,7 +5609,7 @@ when TABs in files need to be preserved (e.g. Makefiles).  I don't normally edit
 these files in org-mode so I leave this setting turned off.
 
 I've changed the default block indentation so that it is not indented
-from the text in the org file.  This allows editing source blocks in 
+from the text in the org file.  This allows editing source blocks in
 place without requiring use of =C-c '= so that code lines up correctly.
 
 #+begin_src emacs-lisp :tangle yes
@@ -5626,7 +5624,7 @@ place without requiring use of =C-c '= so that code lines up correctly.
 The following setting prevents accidentally editing hidden text when the point is inside a folded region.
 This can happen if you are in the body of a heading and globally fold the org-file with =S-TAB=
 
-I find invisible edits (and undo's) hard to deal with so now I can't edit invisible text.  
+I find invisible edits (and undo's) hard to deal with so now I can't edit invisible text.
 =C-c C-r= (org-reveal) will display where the point is if it is buried in invisible text
 to allow editing again.
 
@@ -5740,7 +5738,7 @@ org-mode Yasnippet: ~/.emacs.d/plugins/yasnippet/snippets/text-mode/org-mode/beg
 :  $0
 :  #+end_$1
 
-I used this to create =#+begin_*= blocks like 
+I used this to create =#+begin_*= blocks like
 - =#+begin_example=
 - =#+begin_src=
 - etc.
@@ -5871,7 +5869,7 @@ to create the commits so that I can run it on demand to easily commit
 all modified work when moving from one machine to another.
 
 =crontab= details:
-#+begin_example 
+#+begin_example
 0 * * * * ~/bin/org-git-sync.sh >/dev/null
 #+end_example
 *** ~/bin/org-git-sync.sh
@@ -5884,7 +5882,7 @@ org-repositories.  This loops through multiple repositories and
 commits any modified files.  I have the following org-mode
 repositories:
 
-- org 
+- org
 
   for all of my organization project files and todo lists
 
@@ -5921,7 +5919,7 @@ repositories.  If I include a graphic from some other source than
 ditaa or graphviz then I'll add it to the repository manually.  By
 default all PNG graphic files are ignored (since I assume they are
 produced by ditaa during export)
-#+begin_example 
+#+begin_example
 core
 core.*
 *.html
@@ -6007,7 +6005,7 @@ workstation at the same time - so that a merge is required.
 
 Here is the =git-sync= script
 
-#+begin_src sh 
+#+begin_src sh
 #!/bin/sh
 #
 
@@ -6099,7 +6097,7 @@ check_refs () {
 #   Bail out if ref is not fastforwardable so user can fix and rerun
 time {
   retval=0
-  if find $reporoot -type d -name '*.git' | { 
+  if find $reporoot -type d -name '*.git' | {
       while read repo
       do
         repo=${repo/\/.git/}
@@ -6172,7 +6170,7 @@ exit $retval
                                     ("STYLE_ALL" . "habit"))))
 
 
-#+end_src 
+#+end_src
 
 #+begin_src emacs-lisp :tangle no
 
@@ -6188,4 +6186,4 @@ exit $retval
                )))
     ad-do-it))
 
-#+end_src 
+#+end_src
