@@ -56,7 +56,7 @@
                                       "-l" "-c" "printf %s \"$PATH\"")
                         (buffer-string)))))
 
- ;; Fix ls problems
+;; Fix ls problems
 
 ;; (when (eq system-type 'darwin)
 ;;   (require 'ls-lisp)
@@ -346,18 +346,20 @@ want to use in the modeline *in lieu of* the original.")
 (bind-key "C-H-r" 'sacha/search-word-backward)
 (bind-key "C-H-s" 'sacha/search-word-forward)
 
+
+
 (defun double-quote ()
-(interactive)
-(if (use-region-p)
-(save-excursion
-(let ((beginning (region-beginning))
-(end (+ (region-end) 1)))
-(goto-char beginning)
-(insert "“")
-(goto-char end)
-(insert "”")))
-(insert "“”")
-(backward-char)))
+  (interactive)
+  (if (use-region-p)
+      (save-excursion
+        (let ((beginning (region-beginning))
+              (end (+ (region-end) 1)))
+          (goto-char beginning)
+          (insert "“")
+          (goto-char end)
+          (insert "”")))
+    (insert "“”")
+    (backward-char)))
 
 (bind-key "C-c \"" 'double-quote)
 
@@ -1207,10 +1209,9 @@ Subexpression references can be used (\1, \2, etc)."
       (narrow-to-region (region-beginning) (region-end))
       (delete-trailing-whitespace))))
 
-(global-set-key (kbd "H-n") 'clean-up-buffer-or-region)
-
-
-
+;; Uneven application of white-space is bad, m'kay?
+(bind-key "H-N" 'clean-up-buffer-or-region)
+(bind-key "H-n" 'cleanup-buffer)
 
 (setq package-archives
       '(("original"    . "http://tromey.com/elpa/")
@@ -1318,13 +1319,13 @@ Subexpression references can be used (\1, \2, etc)."
   :init
   (progn
 
-;;     ;; ;; Use variable width font faces in current buffer
-;;     (defun my-buffer-face-mode-variable ()
-;;       ;;   "Set font to a variable width (proportional) fonts in current buffer"
-;;       (interactive)
-;;       (setq buffer-face-mode-face '(:family "Menlo For Powerline" :height 100))
-;;       (text-scale-adjust 1)
-;;       (buffer-face-mode))
+    ;;     ;; ;; Use variable width font faces in current buffer
+    ;;     (defun my-buffer-face-mode-variable ()
+    ;;       ;;   "Set font to a variable width (proportional) fonts in current buffer"
+    ;;       (interactive)
+    ;;       (setq buffer-face-mode-face '(:family "Menlo For Powerline" :height 100))
+    ;;       (text-scale-adjust 1)
+    ;;       (buffer-face-mode))
 
     (setq system-uses-terminfo nil)
     ;; When you use this code, note that dabbrev-completion is C-x /, and yanking is C-y.
@@ -1367,26 +1368,26 @@ Subexpression references can be used (\1, \2, etc)."
                                  (goto-address-mode)
                                  (define-key term-raw-map (kbd "C-y") 'my-term-paste)
                                  (define-key term-raw-map (kbd "s-v") 'my-term-pasteboard-paste)
-;;                                  (let ((base03 "#002b36")
-;;                                        (base02 "#073642")
-;;                                        (base01 "#586e75")
-;;                                        (base00 "#657b83")
-;;                                        (base0 "#839496")
-;;                                        (base1 "#93a1a1")
-;;                                        (base2 "#eee8d5")
-;;                                        (base3 "#fdf6e3")
-;;                                        (yellow "#b58900")
-;;                                        (orange "#cb4b16")
-;;                                        (red "#dc322f")
-;;                                        (magenta "#d33682")
-;;                                        (violet "#6c71c4")
-;;                                        (blue "#268bd2")
-;;                                        (cyan "#2aa198")
-;;                                        (green "#859900"))
-;;                                    (setq ansi-term-color-vector
-;;                                          (vconcat `(unspecified ,base02 ,red ,green ,yellow ,blue
-;;                                                                 ,magenta ,cyan ,base2))))
-                                                                                                 ))
+                                 ;;                                  (let ((base03 "#002b36")
+                                 ;;                                        (base02 "#073642")
+                                 ;;                                        (base01 "#586e75")
+                                 ;;                                        (base00 "#657b83")
+                                 ;;                                        (base0 "#839496")
+                                 ;;                                        (base1 "#93a1a1")
+                                 ;;                                        (base2 "#eee8d5")
+                                 ;;                                        (base3 "#fdf6e3")
+                                 ;;                                        (yellow "#b58900")
+                                 ;;                                        (orange "#cb4b16")
+                                 ;;                                        (red "#dc322f")
+                                 ;;                                        (magenta "#d33682")
+                                 ;;                                        (violet "#6c71c4")
+                                 ;;                                        (blue "#268bd2")
+                                 ;;                                        (cyan "#2aa198")
+                                 ;;                                        (green "#859900"))
+                                 ;;                                    (setq ansi-term-color-vector
+                                 ;;                                          (vconcat `(unspecified ,base02 ,red ,green ,yellow ,blue
+                                 ;;                                                                 ,magenta ,cyan ,base2))))
+                                 ))
 
     (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
       (if (memq (process-status proc) '(signal exit))
@@ -1418,14 +1419,14 @@ Subexpression references can be used (\1, \2, etc)."
                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
                   (rename-buffer  (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))))))
 
-     ))
+    ))
 
 (use-package ansi-color
   :config
   (progn
     (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
     (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-        ))
+    ))
 
 
 ;;;_ , ascii
@@ -1476,7 +1477,7 @@ Subexpression references can be used (\1, \2, etc)."
                               :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
                               :doc-spec '(("(latex2e)Concept Index" )
                                           ("(latex2e)Command Index"))))))
-;; (org-babel-load-file "~/git/foss/emacs-starter-kit-social-sciences/starter-kit-latex.org")
+  ;; (org-babel-load-file "~/git/foss/emacs-starter-kit-social-sciences/starter-kit-latex.org")
   )
 
 ;;;_ , auto-complete
@@ -2623,142 +2624,142 @@ at the beginning of line, if already there."
                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
                   (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))))))
 
-    
+
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
 
 
 
-;;This makes Eshell’s ‘ls’ file names RET-able. Yay!
-;;   (eval-after-load "em-ls"
-;;     '(progn
-;;        (defun ted-eshell-ls-find-file-at-point (point)
-;;          "RET on Eshell's `ls' output to open files."
-;;          (interactive "d")
-;;          (find-file (buffer-substring-no-properties
-;;                      (previous-single-property-change point 'help-echo)
-;;                      (next-single-property-change point 'help-echo))))
+    ;;This makes Eshell’s ‘ls’ file names RET-able. Yay!
+    ;;   (eval-after-load "em-ls"
+    ;;     '(progn
+    ;;        (defun ted-eshell-ls-find-file-at-point (point)
+    ;;          "RET on Eshell's `ls' output to open files."
+    ;;          (interactive "d")
+    ;;          (find-file (buffer-substring-no-properties
+    ;;                      (previous-single-property-change point 'help-echo)
+    ;;                      (next-single-property-change point 'help-echo))))
 
-;;        (defun pat-eshell-ls-find-file-at-mouse-click (event)
-;;          "Middle click on Eshell's `ls' output to open files.
-;;    From Patrick Anderson via the wiki."
-;;          (interactive "e")
-;;          (ted-eshell-ls-find-file-at-point (posn-point (event-end event))))
+    ;;        (defun pat-eshell-ls-find-file-at-mouse-click (event)
+    ;;          "Middle click on Eshell's `ls' output to open files.
+    ;;    From Patrick Anderson via the wiki."
+    ;;          (interactive "e")
+    ;;          (ted-eshell-ls-find-file-at-point (posn-point (event-end event))))
 
-;;        (let ((map (make-sparse-keymap)))
-;;          (define-key map (kbd "RET")      'ted-eshell-ls-find-file-at-point)
-;;          (define-key map (kbd "<return>") 'ted-eshell-ls-find-file-at-point)
-;;          (define-key map (kbd "<mouse-2>") 'pat-eshell-ls-find-file-at-mouse-click)
-;;          (defvar ted-eshell-ls-keymap map))
+    ;;        (let ((map (make-sparse-keymap)))
+    ;;          (define-key map (kbd "RET")      'ted-eshell-ls-find-file-at-point)
+    ;;          (define-key map (kbd "<return>") 'ted-eshell-ls-find-file-at-point)
+    ;;          (define-key map (kbd "<mouse-2>") 'pat-eshell-ls-find-file-at-mouse-click)
+    ;;          (defvar ted-eshell-ls-keymap map))
 
-;;        (defadvice eshell-ls-decorated-name (after ted-electrify-ls activate)
-;;          "Eshell's `ls' now lets you click or RET on file names to open them."
-;;          (add-text-properties 0 (length ad-return-value)
-;;                               (list 'help-echo "RET, mouse-2: visit this file"
-;;                                     'mouse-face 'highlight
-;;                                     'keymap ted-eshell-ls-keymap)
-;;                               ad-return-value)
-;;          ad-return-value)))
+    ;;        (defadvice eshell-ls-decorated-name (after ted-electrify-ls activate)
+    ;;          "Eshell's `ls' now lets you click or RET on file names to open them."
+    ;;          (add-text-properties 0 (length ad-return-value)
+    ;;                               (list 'help-echo "RET, mouse-2: visit this file"
+    ;;                                     'mouse-face 'highlight
+    ;;                                     'keymap ted-eshell-ls-keymap)
+    ;;                               ad-return-value)
+    ;;          ad-return-value)))
 
-;;   (defun ted-eshell-ls-find-file ()
-;;           (interactive)
-;;     (let ((fname (buffer-substring-no-properties
-;;               (previous-single-property-change (point) 'help-echo)
-;;               (next-single-property-change (point) 'help-echo))))
-;;             ;; Remove any leading whitespace, including newline that might
-;;             ;; be fetched by buffer-substring-no-properties
-;;       (setq fname (replace-regexp-in-string "^[ \t\n]*" "" fname))
-;;             ;; Same for trailing whitespace and newline
-;;       (setq fname (replace-regexp-in-string "[ \t\n]*$" "" fname))
-;;       (cond
-;;        ((equal "" fname)
-;;         (message "No file name found at point"))
-;;        (fname
-;;         (find-file fname)))))
+    ;;   (defun ted-eshell-ls-find-file ()
+    ;;           (interactive)
+    ;;     (let ((fname (buffer-substring-no-properties
+    ;;               (previous-single-property-change (point) 'help-echo)
+    ;;               (next-single-property-change (point) 'help-echo))))
+    ;;             ;; Remove any leading whitespace, including newline that might
+    ;;             ;; be fetched by buffer-substring-no-properties
+    ;;       (setq fname (replace-regexp-in-string "^[ \t\n]*" "" fname))
+    ;;             ;; Same for trailing whitespace and newline
+    ;;       (setq fname (replace-regexp-in-string "[ \t\n]*$" "" fname))
+    ;;       (cond
+    ;;        ((equal "" fname)
+    ;;         (message "No file name found at point"))
+    ;;        (fname
+    ;;         (find-file fname)))))
 
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; ;;Here is a cool function by MilanZamazal? that brings lots of Debian commands together. Note how options are defined and documented using eshell-eval-using-options.
+    ;; ;;Here is a cool function by MilanZamazal? that brings lots of Debian commands together. Note how options are defined and documented using eshell-eval-using-options.
 
-;;     (defun eshell/deb (&rest rags)
-;;       (eshell-eval-using-options
-;;        "deb" args
-;;        '((?f "find" t find "list available packages matching a pattern")
-;;          (?i "installed" t installed "list installed debs matching a pattern")
-;;          (?l "list-files" t list-files "list files of a package")
-;;          (?s "show" t show "show an available package")
-;;          (?v "version" t version "show the version of an installed package")
-;;          (?w "where" t where "find the package containing the given file")
-;;          (nil "help" nil nil "show this usage information")
-;;          :show-usage)
-;;        (eshell-do-eval
-;;         (eshell-parse-command
-;;          (cond
-;;           (find
-;;            (format "apt-cache search %s" find))
-;;           (installed
-;;            (format "dlocate -l %s | grep '^.i'" installed))
-;;           (list-files
-;;            (format "dlocate -L %s | sort" list-files))
-;;           (show
-;;            (format "apt-cache show %s" show))
-;;           (version
-;;            (format "dlocate -s %s | egrep '^(Package|Status|Version):'" version))
-;;           (where
-;;            (format "dlocate %s" where))))
-;;         t)))
+    ;;     (defun eshell/deb (&rest rags)
+    ;;       (eshell-eval-using-options
+    ;;        "deb" args
+    ;;        '((?f "find" t find "list available packages matching a pattern")
+    ;;          (?i "installed" t installed "list installed debs matching a pattern")
+    ;;          (?l "list-files" t list-files "list files of a package")
+    ;;          (?s "show" t show "show an available package")
+    ;;          (?v "version" t version "show the version of an installed package")
+    ;;          (?w "where" t where "find the package containing the given file")
+    ;;          (nil "help" nil nil "show this usage information")
+    ;;          :show-usage)
+    ;;        (eshell-do-eval
+    ;;         (eshell-parse-command
+    ;;          (cond
+    ;;           (find
+    ;;            (format "apt-cache search %s" find))
+    ;;           (installed
+    ;;            (format "dlocate -l %s | grep '^.i'" installed))
+    ;;           (list-files
+    ;;            (format "dlocate -L %s | sort" list-files))
+    ;;           (show
+    ;;            (format "apt-cache show %s" show))
+    ;;           (version
+    ;;            (format "dlocate -s %s | egrep '^(Package|Status|Version):'" version))
+    ;;           (where
+    ;;            (format "dlocate %s" where))))
+    ;;         t)))
 
-;; ;; aliases
+    ;; ;; aliases
 
-;; (defalias 'open 'find-file)
-;; (defalias 'openo 'find-file-other-window)
+    ;; (defalias 'open 'find-file)
+    ;; (defalias 'openo 'find-file-other-window)
 
-;; (defun eshell/emacs (file)
-;;           (find-file file))
-
-
+    ;; (defun eshell/emacs (file)
+    ;;           (find-file file))
 
 
-;;   (require 'em-smart)
-;;   (setq eshell-where-to-jump 'begin)
-;;   (setq eshell-review-quick-commands nil)
-;;   (setq eshell-smart-space-goes-to-end t)
-
-;; (defvar explicit-su-file-name "/bin/su")
-;; (defvar explicit-su-args '("-"))
-
-;; (defun su (&optional buffer)
-;;   (interactive
-;;    (list
-;;     (and current-prefix-arg
-;;      (prog1
-;;          (read-buffer "SU buffer: "
-;;               (generate-new-buffer-name "*su*"))
-;;        (if (file-remote-p default-directory)
-;;        ;; It must be possible to declare a local default-directory.
-;;        (setq default-directory
-;;              (expand-file-name
-;;           (read-file-name
-;;            "Default directory: " default-directory default-directory
-;;            t nil 'file-directory-p))))))))
-;;   (setq buffer (get-buffer-create (or buffer "*su*")))
-;;   ;; Pop to buffer, so that the buffer's window will be correctly set
-;;   ;; when we call comint (so that comint sets the COLUMNS env var properly).
-;;   (pop-to-buffer buffer)
-;;   (unless (comint-check-proc buffer)
-;;     (let* ((prog explicit-su-file-name)
-;;        (name (file-name-nondirectory prog))
-;;        (startfile (concat "~/.emacs_" name))
-;;        (xargs-name (intern-soft (concat "explicit-" name "-args"))))
-;;   (apply 'make-comint-in-buffer "su" buffer prog
-;;          (if (file-exists-p startfile) startfile)
-;;          (if (and xargs-name (boundp xargs-name))
-;;          (symbol-value xargs-name)
-;;        '("-i")))
-;;   (shell-mode)))
-;;   buffer)
 
 
-    
+    ;;   (require 'em-smart)
+    ;;   (setq eshell-where-to-jump 'begin)
+    ;;   (setq eshell-review-quick-commands nil)
+    ;;   (setq eshell-smart-space-goes-to-end t)
+
+    ;; (defvar explicit-su-file-name "/bin/su")
+    ;; (defvar explicit-su-args '("-"))
+
+    ;; (defun su (&optional buffer)
+    ;;   (interactive
+    ;;    (list
+    ;;     (and current-prefix-arg
+    ;;      (prog1
+    ;;          (read-buffer "SU buffer: "
+    ;;               (generate-new-buffer-name "*su*"))
+    ;;        (if (file-remote-p default-directory)
+    ;;        ;; It must be possible to declare a local default-directory.
+    ;;        (setq default-directory
+    ;;              (expand-file-name
+    ;;           (read-file-name
+    ;;            "Default directory: " default-directory default-directory
+    ;;            t nil 'file-directory-p))))))))
+    ;;   (setq buffer (get-buffer-create (or buffer "*su*")))
+    ;;   ;; Pop to buffer, so that the buffer's window will be correctly set
+    ;;   ;; when we call comint (so that comint sets the COLUMNS env var properly).
+    ;;   (pop-to-buffer buffer)
+    ;;   (unless (comint-check-proc buffer)
+    ;;     (let* ((prog explicit-su-file-name)
+    ;;        (name (file-name-nondirectory prog))
+    ;;        (startfile (concat "~/.emacs_" name))
+    ;;        (xargs-name (intern-soft (concat "explicit-" name "-args"))))
+    ;;   (apply 'make-comint-in-buffer "su" buffer prog
+    ;;          (if (file-exists-p startfile) startfile)
+    ;;          (if (and xargs-name (boundp xargs-name))
+    ;;          (symbol-value xargs-name)
+    ;;        '("-i")))
+    ;;   (shell-mode)))
+    ;;   buffer)
+
+
+
     ))
 
 ;; eshell
@@ -2924,7 +2925,7 @@ at the beginning of line, if already there."
                                 er/try-expand-list
                                 '(mark-paragraph
                                   mark-page))))
-    
+
     (add-hook 'text-mode-hook 'er/add-text-mode-expansions)
     ))
 
@@ -4219,7 +4220,7 @@ end end))))))
   :bind ("H-j" . org-jira-create-issue)
   :init
   (progn
-    
+
     (require 'jira)
     (setq jira-url "https://cuboulder.atlassian.net//rpc/xmlrpc")
     (require 'org-jira)
@@ -4513,15 +4514,15 @@ end end))))))
   (progn
     (session-initialize)
 
-        (defun remove-session-use-package-from-settings ()
-     (when (string= (file-name-nondirectory (buffer-file-name)) "settings.el")
-            (save-excursion
-              (goto-char (point-min))
-              (when (re-search-forward "^ '(session-use-package " nil t)
-                (delete-region (line-beginning-position)
-                               (1+ (line-end-position)))))))
+    (defun remove-session-use-package-from-settings ()
+      (when (string= (file-name-nondirectory (buffer-file-name)) "settings.el")
+        (save-excursion
+          (goto-char (point-min))
+          (when (re-search-forward "^ '(session-use-package " nil t)
+            (delete-region (line-beginning-position)
+                           (1+ (line-end-position)))))))
 
-       (add-hook 'before-save-hook 'remove-session-use-package-from-settings)
+    (add-hook 'before-save-hook 'remove-session-use-package-from-settings)
 
     ;; expanded folded secitons as required
     (defun le::maybe-reveal ()
@@ -4588,7 +4589,7 @@ end end))))))
 
     ;; (ad-activate 'shell)
 
-    
+
     (defun comint-delchar-or-eof-or-kill-buffer (arg)
       (interactive "p")
       (if (null (get-buffer-process (current-buffer)))
@@ -4937,31 +4938,31 @@ prevents using commands with prefix arguments."
     (bind-key "A-M-w" 'wikipedia-query))
 
   :config
-;; (eval-after-load "w3m"
-;;   '(progn
-;;      (setq w3m-add-user-agent nil
-;;            w3m-default-display-inline-images t
-;;            w3m-default-save-directory "~/.emacs.d/.w3m"
-;;            w3m-favicon-use-cache-file t
-;;            w3m-key-binding (quote info)
-;;            w3m-profile-directory "~/.emacs.d/.w3m"
-;;            w3m-resize-images t
-;;            w3m-cookie-accept-bad-cookies t
-;;            w3m-use-cookies nil
-;;            w3m-key-binding (quote info)
-;;            w3m-display-inline-image t
-;; 	       ;; added my DKH
-;; 	       w3m-home-page "http://www.emacswiki.org/"
-;;            w3m-command-arguments
-;;            (nconc w3m-command-arguments
+  ;; (eval-after-load "w3m"
+  ;;   '(progn
+  ;;      (setq w3m-add-user-agent nil
+  ;;            w3m-default-display-inline-images t
+  ;;            w3m-default-save-directory "~/.emacs.d/.w3m"
+  ;;            w3m-favicon-use-cache-file t
+  ;;            w3m-key-binding (quote info)
+  ;;            w3m-profile-directory "~/.emacs.d/.w3m"
+  ;;            w3m-resize-images t
+  ;;            w3m-cookie-accept-bad-cookies t
+  ;;            w3m-use-cookies nil
+  ;;            w3m-key-binding (quote info)
+  ;;            w3m-display-inline-image t
+  ;;             ;; added my DKH
+  ;;             w3m-home-page "http://www.emacswiki.org/"
+  ;;            w3m-command-arguments
+  ;;            (nconc w3m-command-arguments
 
-;;                   '("-o" "http_proxy=http://192.168.0.5:8118"))
-;;            w3m-no-proxy-domains '("colorado.edu"
-;;            "competitions.colorado.edu" "neighbor.com" "jobsatcu.com"
-;;            "identi.ca" "vinylisland.org" "dhaley.org")
-;;            )))
+  ;;                   '("-o" "http_proxy=http://192.168.0.5:8118"))
+  ;;            w3m-no-proxy-domains '("colorado.edu"
+  ;;            "competitions.colorado.edu" "neighbor.com" "jobsatcu.com"
+  ;;            "identi.ca" "vinylisland.org" "dhaley.org")
+  ;;            )))
 
-  
+
   (let (proxy-host proxy-port)
     (with-temp-buffer
       (shell-command "scutil --proxy" (current-buffer))
@@ -5167,7 +5168,7 @@ prevents using commands with prefix arguments."
 ;;;_ , windmove
 
 (setq windmove-wrap-around t)
-(windmove-default-keybindings)	      ; Move between frames with Shift+arrow
+(windmove-default-keybindings)        ; Move between frames with Shift+arrow
                                         ; windmove shows a stacktrace when there is nothing to move to
 
 (defmacro maser/swallow-errors (name f-with-error)
@@ -5681,14 +5682,14 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;; variables in customize
 
 (if running-alternate-emacs
-      (progn
-        (add-hook 'after-init-hook
-          (lambda ()
-            (load-theme 'solarized-dark t)
-            (load-theme 'solarized-light t t))))
-    (add-hook 'after-init-hook
-          (lambda ()
-            (load-theme 'deeper-blue) t)))
+    (progn
+      (add-hook 'after-init-hook
+                (lambda ()
+                  (load-theme 'solarized-dark t)
+                  (load-theme 'solarized-light t t))))
+  (add-hook 'after-init-hook
+            (lambda ()
+              (load-theme 'deeper-blue) t)))
 
 
 
@@ -5738,6 +5739,9 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 (bind-key "<C-S-left>"   'buf-move-left)
 (bind-key "<C-S-right>"  'buf-move-right)
 
+;; Various superfluous white-space. Just say no.
+(add-hook 'before-save-hook 'cleanup-buffer-safe)
+
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
@@ -5746,4 +5750,3 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;; End:
 
 ;;; init.el ends here
-
