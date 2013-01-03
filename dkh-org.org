@@ -232,7 +232,6 @@ Here is my current =org-agenda-files= setup.
 #+begin_src emacs-lisp :tangle no
 (setq org-agenda-files (quote ("~/git/org"
                                "~/git/org/client1"
-                               "~/git/org/bzflag"
                                "~/git/client2")))
 #+end_src
 
@@ -245,7 +244,6 @@ Here is my current =org-agenda-files= setup.
     (setq org-agenda-files org-user-agenda-files)
   (setq org-agenda-files (quote ("~/git/org"
                                "~/git/org/client1"
-                               "~/git/org/bzflag"
                                "~/git/client2"))))
 #+end_src
 
@@ -680,7 +678,7 @@ Here is my setup for org-capture
       (quote (("t" "todo" entry (file "~/git/dkh-org/refile.org")
                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
               ("r" "respond" entry (file "~/git/dkh-org/refile.org")
-               "* TODO Respond to %:from on %:subject\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
               ("n" "note" entry (file "~/git/dkh-org/refile.org")
                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
               ("j" "Journal" entry (file+datetree "~/git/dkh-org/diary.org")
@@ -1096,7 +1094,7 @@ My day goes generally like this:
 - Look at my agenda and work on important tasks for today
   - Clock it in
   - Work on it until it is =DONE= or it gets interrupted
-- work on tasks
+- Work on tasks
 - Make journal entries (=C-M-r j=) for interruptions
 - Punch out for lunch and punch back in after lunch
 - work on more tasks
@@ -1172,7 +1170,9 @@ for each one.  This automatically links to the email in the task and
 makes it easy to find later.  Some emails are quick to respond to and
 some take research and a significant amount of time to complete.  I
 clock each one in it's own task just in case I need that clocked time
-later.
+later.  The capture template for Repond To tasks is now scheduled for
+today so I can refile the task to the appropriate org file without
+losing the task for a week.
 
 Next, I go to my newly created tasks to be refiled from the block
 agenda with =F12 a= and clock in an email task and deal with it.
@@ -1728,48 +1728,6 @@ The following setting shows 1 minute clocking gaps.
               :max-gap 0
               :gap-ok-around ("4:00"))))
 #+end_src
-** Automatically clocking tasks
-:PROPERTIES:
-:CUSTOM_ID: AutomaticallyClockingTasks
-:END:
-
-I spend time on an open source project called BZFlag.  During work for releases
-I want to clock the time I spend testing the new BZFlag client.  I have a key
-binding in my window manager that runs a script which starts the clock on my
-testing task, runs the BZFlag client, and on exit resumes the clock on the
-previous clocking task.
-
-The testing task has an ID property of
-=dcf55180-2a18-460e-8abb-a9f02f0893be= and the following elisp code
-starts the clock on this task.
-
-#+begin_src emacs-lisp :tangle yes
-(defun bh/clock-in-bzflagt-task ()
-  (interactive)
-  (bh/clock-in-task-by-id "dcf55180-2a18-460e-8abb-a9f02f0893be"))
-#+end_src
-
-This is invoked by a bash shell script as follows:
-
-#+begin_src sh :results output
-#!/bin/sh
-emacsclient -e '(bh/clock-in-bzflagt-task)'
-~/git/bzflag/trunk/bzflag/src/bzflag/bzflag -directory ~/git/bzflag/trunk/bzflag/data $*
-emacsclient -e '(bh/resume-clock)'
-#+end_src
-
-The resume clock function just returns the clock to the previous clocking task
-
-#+begin_src emacs-lisp :tangle yes
-(defun bh/resume-clock ()
-  (interactive)
-  (if (marker-buffer org-clock-interrupted-task)
-      (org-with-point-at org-clock-interrupted-task
-        (org-clock-in))
-    (org-clock-out)))
-#+end_src
-
-If no task was clocking =bh/resume-clock= just stops the clock.
 * Time reporting and tracking
 :PROPERTIES:
 :CUSTOM_ID: TimeReportingAndTracking
@@ -2145,7 +2103,6 @@ I have the following =#+FILETAGS:= entries in my org-mode files:
 |--------------+-----------------------|
 | todo.org     | PERSONAL              |
 | gsoc2009.org | GSOC PERSONAL         |
-| bzflag.org   | BZFLAG @home PERSONAL |
 | git.org      | GIT WORK              |
 | org.org      | ORG WORK              |
 | mark.org     | MARK PERSONAL         |
@@ -3549,7 +3506,7 @@ way to focus on what we are doing.
 #+begin_src emacs-lisp :tangle yes
 (global-set-key (kbd "<f5>") 'bh/org-todo)
 
-(defun bh/org-todo (arg)
+(defun bh/org-todo (rag)
   (interactive "p")
   (if (equal arg 4)
       (save-restriction
@@ -3588,18 +3545,21 @@ so change the default 'F' binding in the agenda to allow both"
 
 (defun bh/narrow-to-org-subtree ()
   (widen)
-  (org-narrow-to-subtree)
-  (save-restriction
-    (org-agenda-set-restriction-lock)))
+  (org-narrow-to-subtree))
 
 (defun bh/narrow-to-subtree ()
   (interactive)
   (if (equal major-mode 'org-agenda-mode)
       (org-with-point-at (org-get-at-bol 'org-hd-marker)
-        (bh/narrow-to-org-subtree))
-    (bh/narrow-to-org-subtree)))
+        (bh/narrow-to-org-subtree)
+        (save-restriction
+          (org-agenda-set-restriction-lock)))
+    (bh/narrow-to-org-subtree)
+    (save-restriction
+      (org-agenda-set-restriction-lock))))
 
 (add-hook 'org-agenda-mode-hook
+
           '(lambda () (org-defkey org-agenda-mode-map "N" 'bh/narrow-to-subtree))
           'append)
 
@@ -3636,8 +3596,12 @@ so change the default 'F' binding in the agenda to allow both"
   (interactive)
   (if (equal major-mode 'org-agenda-mode)
       (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
-        (bh/narrow-to-org-project))
-    (bh/narrow-to-org-project)))
+        (bh/narrow-to-org-project)
+        (save-restriction
+          (org-agenda-set-restriction-lock)))
+    (bh/narrow-to-org-project)
+    (save-restriction
+      (org-agenda-set-restriction-lock))))
 
 (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "P" 'bh/narrow-to-project))
@@ -4535,7 +4499,7 @@ Most of my logging is controlled by the global =org-todo-keywords=
 My logging settings are set as follows:
 #+begin_src emacs-lisp :tangle yes
 (setq org-log-done (quote time))
-(setq org-log-into-drawer "LOGBOOK")
+(setq org-log-into-drawer nil)
 #+end_src
 
 My =org-todo-keywords= are set as follows:
@@ -4552,11 +4516,19 @@ This adds a log entry whenever a task moves to any of the following states:
 - to =HOLD= status
 - to =CANCELLED= status (with a note) or out of =CANCELLED= status
 
-I keep clock times and states in the =LOGBOOK= drawer to keep my tasks
-uncluttered.  If a task is WAITING then the reason for why it is
-waiting is near the top of the LOGBOOK and unfolding the LOGBOOK
-drawer provides that information.  From the agenda simply hitting
-=SPC= on the task will reveal the LOGBOOK drawer.
+I keep clock times in the =LOGBOOK= drawer to keep my tasks
+uncluttered.  I have moved my state change notes outside the =LOGBOOK=
+drawer so they can be included in exports to other formats.
+
+If a task is WAITING then the reason why it is waiting is near the top
+of the task details.  From the agenda simply hitting =SPC= on the task will
+reveal the LOGBOOK drawer.
+
+I like to see state changes in my exports by default
+but these can be excluded by export options easily.  State change
+notes and inactive timestamps are normally exported by default since
+the note without the inactive timestamp is not very useful.
+
 ** Limiting time spent on tasks
 :PROPERTIES:
 :CUSTOM_ID: LimitingTimeSpentOnTasks
@@ -4857,13 +4829,13 @@ as a quick way to get back to the agenda and update the current view.
                                       ("K" . ignore)
                                       ("L" . ignore)
                                       ("M" . ignore)
-                                      ("N" . bh/narrow-to-subtree)
-                                      ("P" . bh/narrow-to-project)
+                                      ("N" . bh/narrow-to-org-subtree)
+                                      ("P" . bh/narrow-to-org-project)
                                       ("Q" . ignore)
                                       ("R" . ignore)
                                       ("S" . ignore)
                                       ("T" . bh/org-todo)
-                                      ("U" . bh/narrow-up-one-level)
+                                      ("U" . bh/narrow-up-one-org-level)
                                       ("V" . ignore)
                                       ("W" . bh/widen)
                                       ("X" . ignore)
@@ -4974,10 +4946,13 @@ insert the inactive timestamp anywhere on demand.
 (global-set-key (kbd "<f9> t") 'bh/insert-inactive-timestamp)
 #+end_src
 
-To prevent the timestamps from being exported in documents I use the following setting
+Timestamps can be selectively exported to other document formats using
+export options.  By default I enable including the timestamps since
+this is easy to override at the subtree and document levels using export
+options.
 
 #+begin_src emacs-lisp :tangle yes
-(setq org-export-with-timestamps nil)
+(setq org-export-with-timestamps t)
 #+end_src
 ** Return follows links
 :PROPERTIES:
@@ -5466,19 +5441,22 @@ since they are now projects and not tasks.
 (add-hook 'org-after-todo-state-change-hook 'bh/mark-next-parent-tasks-todo 'append)
 (add-hook 'org-clock-in-hook 'bh/mark-next-parent-tasks-todo 'append)
 #+end_src
-** Startup in content view
+
+** Startup in folded view
 :PROPERTIES:
-:CUSTOM_ID: StartupContentView
+:CUSTOM_ID: StartupView
 :END:
 [2012-04-08 Sun 07:26]
 
-Startup in content view.  This allows us to quickly visit all archive
-tasks in follow mode to check that we want to archive everything in
-the list _before_ we archive anything.
+Startup in folded view.
 
 #+begin_src emacs-lisp :tangle yes
-(setq org-startup-folded 'content)
+(setq org-startup-folded t)
 #+end_src
+
+I used to use content view by default so I could review org subtrees
+before archiving but my archiving workflow has changed so I no longer
+need this manual step.
 
 ** Allow alphabetical list entries
 :PROPERTIES:
@@ -5630,6 +5608,18 @@ to allow editing again.
 
 #+begin_src emacs-lisp :tangle yes
 (setq org-catch-invisible-edits 'error)
+#+end_src
+** Use utf-8 as default coding system
+:PROPERTIES:
+:CUSTOM_ID: DefaultCodingSystem
+:END:
+[2013-01-01 Tue 13:49]
+I use =utf-8= as the default coding system for all of my org files.
+
+#+begin_src emacs-lisp :tangle yes
+(prefer-coding-system 'utf-8)
+(set-charset-priority 'unicode)
+(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
 #+end_src
 * Things I Don't Use (Anymore)
 :PROPERTIES:
@@ -5837,6 +5827,47 @@ Here's the setup I use to propagate =STARTED= to parent tasks:
 
 (add-hook 'org-after-todo-state-change-hook 'bh/mark-parent-tasks-started 'append)
 #+end_src
+** Automatically clocking tasks
+:PROPERTIES:
+:CUSTOM_ID: AutomaticallyClockingTasks
+:END:
+
+I used to spend time on an open source project called BZFlag.  During
+work for releases I want to clock the time I spend testing the new
+BZFlag client.  I have a key binding in my window manager that runs a
+script which starts the clock on my testing task, runs the BZFlag
+client, and on exit resumes the clock on the previous clocking task.
+
+The testing task has an ID property of
+=dcf55180-2a18-460e-8abb-a9f02f0893be= and the following elisp code
+starts the clock on this task.
+
+#+begin_src emacs-lisp :tangle yes
+(defun bh/clock-in-bzflagt-task ()
+  (interactive)
+  (bh/clock-in-task-by-id "dcf55180-2a18-460e-8abb-a9f02f0893be"))
+#+end_src
+
+This is invoked by a bash shell script as follows:
+
+#+begin_src sh :results output
+#!/bin/sh
+emacsclient -e '(bh/clock-in-bzflagt-task)'
+~/git/bzflag/trunk/bzflag/src/bzflag/bzflag -directory ~/git/bzflag/trunk/bzflag/data $*
+emacsclient -e '(bh/resume-clock)'
+#+end_src
+
+The resume clock function just returns the clock to the previous clocking task
+
+#+begin_src emacs-lisp :tangle yes
+(defun bh/resume-clock ()
+  (interactive)
+  (if (marker-buffer org-clock-interrupted-task)
+        (org-clock-in))
+    (org-clock-out))
+#+end_src
+
++If no task was clocking =bh/resume-clock= just stops the clock.
 * Using Git for Automatic History, Backups, and Synchronization
 :PROPERTIES:
 :CUSTOM_ID: GitSync

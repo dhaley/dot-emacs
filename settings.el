@@ -455,7 +455,7 @@ module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc-h
  '(regex-tool-backend (quote perl))
  '(runner-init-file "~/.emacs.d/runner-conf.el")
  '(safe-local-variable-values (quote ((eval require (quote edg)) (eval ignore-errors (require (quote edg))) (after-save-hook my-byte-recompile-file) (after-save-hook git-commit-changes) (org-refer-by-number-id . "1C72AB51-33C2-4FF8-9367-2B494D125027"))))
- '(same-window-buffer-names (quote ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*" "*Apropos*" "*Summary*" "*Backtrace*" "*Buffer List*" "*Colors*" "*Command History*" "*Diff*" "*Proced*" "*vc-dir*" "*SQL*" "scratch.org" "*Compile-Log*" "*Ibuffer*")))
+ '(same-window-buffer-names (quote ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*" "*Apropos*" "*Summary*" "*Backtrace*" "*Buffer List*" "*Colors*" "*Command History*" "*Diff*" "*Proced*" "*vc-dir*" "*SQL*" "scratch.org" "*Compile-Log*" "*Ibuffer*" "*Pp Eval Output*")))
  '(same-window-regexps (quote ("\\*vc\\-.+\\*" "\\*magit.+\\*" "*grep*" "\\*compilation\\*\\(\\|<[0-9]+>\\)" "\\*Help\\*\\(\\|<[0-9]+>\\)" "\\*Shell Command Output\\*\\(\\|<[0-9]+>\\)" "\\*dictem.*")))
  '(sauron-hide-mode-line t)
  '(sauron-watch-nicks erc-pals)

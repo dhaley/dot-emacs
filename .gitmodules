@@ -355,3 +355,6 @@
 [submodule "site-lisp/eshell-manual"]
 	path = site-lisp/eshell-manual
 	url = https://github.com/nicferrier/eshell-manual.git
+[submodule "site-lisp/frame-tag"]
+	path = site-lisp/frame-tag
+	url = https://github.com/liangzan/frame-tag.el.git

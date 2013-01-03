@@ -3228,7 +3228,23 @@ at the beginning of line, if already there."
         (switch-to-buffer buffer)
         (set (make-local-variable 'mode-line-format) nil)))
 
-    (bind-key "C-x 5 t" 'ido-switch-buffer-tiny-frame)))
+    (bind-key "C-x 5 t" 'ido-switch-buffer-tiny-frame)
+
+
+    ;; Use ido everywhere
+    (require 'ido-ubiquitous)
+    (ido-ubiquitous-mode 1)
+
+    ;; Fix ido-ubiquitous for newer packages
+    (defmacro ido-ubiquitous-use-new-completing-read (cmd package)
+      `(eval-after-load ,package
+         '(defadvice ,cmd (around ido-ubiquitous-new activate)
+            (let ((ido-ubiquitous-enable-compatibility nil))
+              ad-do-it))))
+
+    (ido-ubiquitous-use-new-completing-read webjump 'webjump)
+    (ido-ubiquitous-use-new-completing-read yas/expand 'yasnippet)
+    (ido-ubiquitous-use-new-completing-read yas/visit-snippet-file 'yasnippet)))
 
 
 
@@ -5169,7 +5185,14 @@ prevents using commands with prefix arguments."
 
 (setq windmove-wrap-around t)
 (windmove-default-keybindings)        ; Move between frames with Shift+arrow
-                                        ; windmove shows a stacktrace when there is nothing to move to
+                                        ; windmove shows a stacktrace when
+                                        ; there is nothing to move to
+
+
+;; If, like me, you’re a heavy org-mode user, you’ll find that these key
+;; bindings won’t work in org-mode buffers because org-mode takes them
+;; over. Happily you can solve this by adding the line
+(setq org-replace-disputed-keys t)
 
 (defmacro maser/swallow-errors (name f-with-error)
   `(defun ,name ()
@@ -5297,9 +5320,7 @@ prevents using commands with prefix arguments."
             ;;            (wg-filter-buffer-list-by-not-major-mode 'erc-mode (buffer-list))
 
             (setq wg-file "/Users/daha1836/.emacs.d/data-alt/workgroups")
-            (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups")
-
-            )
+            (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups"))
         (if (file-readable-p workgroups-file)
             (wg-load workgroups-file))))
 
@@ -5742,6 +5763,9 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;; Various superfluous white-space. Just say no.
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
 
+(add-to-list 'load-path "~/.emacs.d/site-lisp/frame-tag")
+(require 'frame-tag)
+(frame-tag-mode 1)
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
