@@ -2346,7 +2346,9 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     (erc-track-mode 1)
 
     (use-package erc-alert)
-    (use-package 'erc-nick-notify)
+    (use-package erc-hl-nicks)
+
+    ;; (use-package 'erc-nick-notify)
 
     ;; (require 'erc-fill)
     ;; (erc-fill-mode t)
@@ -2362,11 +2364,11 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
 
     ;; (add-to-list 'erc-modules 'scrolltobottom)
 
-    (add-to-list 'erc-modules 'match)
-    (erc-update-modules)
+    ;; (add-to-list 'erc-modules 'match)
+    ;; (erc-update-modules)
 
-    (erc-match-enable)
-    (erc-match-mode 1)
+    ;; (erc-match-enable)
+    ;; (erc-match-mode 1)
 
     (erc-timestamp-mode t)
 
@@ -2490,15 +2492,13 @@ FORM => (eval FORM)."
     (eval-after-load 'erc
       '(progn
 
-         (require 'erc-hl-nicks)
-         (require 'erc-spelling)
-         (require 'erc-truncate)
+         ;; (require 'erc-hl-nicks)
+         ;; (require 'erc-spelling)
+         ;; (require 'erc-truncate)
          (ignore-errors
            ;; DO NOT use the version from marmalade
            (erc-nick-notify-mode t))
-         (add-to-list 'erc-modules 'spelling)
-         ;; (set-face-foreground 'erc-input-face "dim gray")
-         ;; (set-face-foreground 'erc-my-nick-face "blue")
+         ;; (add-to-list 'erc-modules 'spelling)
          )
 
       ;; from https://github.com/robru/.emacs.d/blob/master/setup-appearance.el
@@ -2513,8 +2513,6 @@ FORM => (eval FORM)."
     ;;                        :box nil))
     ))
 
-(use-package erc-hl-nicks
-  :load-path "~/.emacs.d/site-lisp/erc-hl-nicks")
 
 ;;;_ , eshell
 
@@ -4516,53 +4514,65 @@ end end))))))
     (add-hook 'ruby-mode-hook 'my-ruby-mode-hook)))
 
 
-(use-package alert
-  :init
-  (progn
-    (setq alert-default-style 'growl)
-    (alert-add-rule :status '(buried visible idle)
-                :severity '(moderate high urgent)
-                :mode 'erc-mode
-                :predicate
-                #'(lambda (info)
-                    (string-match (concat "\\`[^&].*@BitlBee\\'")
-                                  (erc-format-target-and/or-network)))
-                :persistent
-                #'(lambda (info)
-                    ;; If the buffer is buried, or the user has been
-                    ;; idle for `alert-reveal-idle-time' seconds,
-                    ;; make this alert persistent. Normally, alerts
-                    ;; become persistent after
-                    ;; `alert-persist-idle-time' seconds.
-                    (memq (plist-get info :status) '(buried idle)))
-                :style 'fringe
-                :continue t)
-))
+;; (use-package alert
+;;   :if running-alternate-emacs
+;;   :load-path "~/.emacs.d/lisp/alert"
+;;   :init
+;;   (progn
+;;     (setq alert-default-style 'growl)
+;;     (alert-add-rule :status '(buried visible idle)
+;;                 :severity '(moderate high urgent)
+;;                 :mode 'erc-mode
+;;                 :predicate
+;;                 #'(lambda (info)
+;;                     (string-match (concat "\\`[^&].*@BitlBee\\'")
+;;                                   (erc-format-target-and/or-network)))
+;;                 :persistent
+;;                 #'(lambda (info)
+;;                     ;; If the buffer is buried, or the user has been
+;;                     ;; idle for `alert-reveal-idle-time' seconds,
+;;                     ;; make this alert persistent. Normally, alerts
+;;                     ;; become persistent after
+;;                     ;; `alert-persist-idle-time' seconds.
+;;                     (memq (plist-get info :status) '(buried idle)))
+;;                 :style 'fringe
+;;                 :continue t)
+;; ))
 
 ;; Sauron
 
 (use-package sauron
+  :load-path "~/.emacs.d/site-lisp/sauron"
+  :if running-alternate-emacs
   :bind (("C-. s" . sauron-toggle-hide-show)
          ("C-. R" . sauron-clear))
   :init
   (progn
 
+    ;; uncomment to show sauron in the current frame
+    (setq sauron-separate-frame nil)
+
     ;; watch for some animals
     (setq sauron-watch-patterns 'erc-keywords)
     (setq sauron-watch-nicks 'erc-pals)
 
-    ;; John Wiegley’s alert.el has a bit of overlap with sauron; however, I’ve
-    ;; added some wrapper function to make it trivial to feed sauron events
-    ;; into alert. Simply adding:
-    (require 'alert)
-    (add-hook ‘sauron-event-added-functions ‘sauron-alert-el-adapter)
-    ;; event to ignore
+
+    ;; events to ignore
     (add-hook 'sauron-event-block-functions
               (lambda (origin prio msg &optional props)
                 (or
                  (string-match "^*** Users" msg)))) ;; filter out IRC spam
 
-    ))
+    )
+  ;; :config
+  ;; (progn
+  ;;   ;; John Wiegley’s alert.el has a bit of overlap with sauron; however, I’ve
+  ;;   ;; added some wrapper function to make it trivial to feed sauron events
+  ;;   ;; into alert. Simply adding:
+  ;;   (require 'alert)
+  ;;   (add-hook ‘sauron-event-added-functions ‘sauron-alert-el-adapter)
+;; )
+  )
 
 ;;(require 'saveplace)
 
@@ -5292,12 +5302,12 @@ prevents using commands with prefix arguments."
 ;;(windmove-default-keybindings)
 (setq framemove-hook-into-windmove t)
 
-(bind-key "M-<up>" 'fm-up-frame)
-(bind-key "M-<down>" 'fm-down-frame)
-(bind-key "M-<left>" 'fm-left-frame)
-(bind-key "M-<right>" 'fm-right-frame)
+;; (bind-key "M-<up>" 'fm-up-frame)
+;; (bind-key "M-<down>" 'fm-down-frame)
+;; (bind-key "M-<left>" 'fm-left-frame)
+;; (bind-key "M-<right>" 'fm-right-frame)
 
-(bind-key "M-S-<up>" 'fm-next-frame)
+;; (bind-key "M-S-<up>" 'fm-next-frame)
 
 ;;; http://www.emacswiki.org/emacs/frame-cmds.el
 ;; (require 'frame-cmds)
