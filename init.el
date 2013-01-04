@@ -2331,25 +2331,28 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :port 6667))
                        :secret))))
 
-    (add-hook 'after-init-hook 'im)
-    (add-hook 'after-init-hook 'irc)
+    ;; (add-hook 'after-init-hook 'im)
+    ;; (add-hook 'after-init-hook 'irc)
     )
 
   :config
   (progn
+
+    ;; add abbrevs
     (abbrev-table-put erc-mode-abbrev-table :parents (list text-mode-abbrev-table))
     (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))
+
     (erc-track-minor-mode 1)
     (erc-track-mode 1)
 
     (use-package erc-alert)
-    ;;    (use-package erc-highlight-nicknames)
+    (use-package 'erc-nick-notify)
 
-    (require 'erc-nick-notify)
-    (require 'erc-fill)
-    (erc-fill-mode t)
-    (require 'erc-ring)
-    (erc-ring-mode t)
+    ;; (require 'erc-fill)
+    ;; (erc-fill-mode t)
+
+    ;; (require 'erc-ring)
+    ;; (erc-ring-mode t)
 
     (require 'erc-match)
 
@@ -2422,15 +2425,6 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                   (kill-ring-save (point-min) (point-max)))
                 (message msg))
             (message (concat "No definition found for " (upcase term)))))))
-
-    (use-package sauron
-      :bind ("C-. s" . sauron-toggle-hide-show)
-      ("C-. R" . sauron-clear))
-
-    (add-hook 'sauron-event-block-functions
-              (lambda (origin prio msg &optional props)
-                (or
-                 (string-match "^*** Users" msg)))) ;; filter out IRC spam
 
 
     (defun switch-to-bitlbee ()
@@ -4521,6 +4515,54 @@ end end))))))
 
     (add-hook 'ruby-mode-hook 'my-ruby-mode-hook)))
 
+
+(use-package alert
+  :init
+  (progn
+    (setq alert-default-style 'growl)
+    (alert-add-rule :status '(buried visible idle)
+                :severity '(moderate high urgent)
+                :mode 'erc-mode
+                :predicate
+                #'(lambda (info)
+                    (string-match (concat "\\`[^&].*@BitlBee\\'")
+                                  (erc-format-target-and/or-network)))
+                :persistent
+                #'(lambda (info)
+                    ;; If the buffer is buried, or the user has been
+                    ;; idle for `alert-reveal-idle-time' seconds,
+                    ;; make this alert persistent. Normally, alerts
+                    ;; become persistent after
+                    ;; `alert-persist-idle-time' seconds.
+                    (memq (plist-get info :status) '(buried idle)))
+                :style 'fringe
+                :continue t)
+))
+
+;; Sauron
+
+(use-package sauron
+  :bind (("C-. s" . sauron-toggle-hide-show)
+         ("C-. R" . sauron-clear))
+  :init
+  (progn
+
+    ;; watch for some animals
+    (setq sauron-watch-patterns 'erc-keywords)
+    (setq sauron-watch-nicks 'erc-pals)
+
+    ;; John Wiegley’s alert.el has a bit of overlap with sauron; however, I’ve
+    ;; added some wrapper function to make it trivial to feed sauron events
+    ;; into alert. Simply adding:
+    (require 'alert)
+    (add-hook ‘sauron-event-added-functions ‘sauron-alert-el-adapter)
+    ;; event to ignore
+    (add-hook 'sauron-event-block-functions
+              (lambda (origin prio msg &optional props)
+                (or
+                 (string-match "^*** Users" msg)))) ;; filter out IRC spam
+
+    ))
 
 ;;(require 'saveplace)
 

@@ -361,3 +361,6 @@
 [submodule "site-lisp/org-camp"]
 	path = site-lisp/org-camp
 	url = https://github.com/openist/org-camp.git
+[submodule "site-lisp/sauron"]
+	path = site-lisp/sauron
+	url = https://github.com/djcb/sauron.git
