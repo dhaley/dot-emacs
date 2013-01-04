@@ -721,12 +721,12 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
   (dolist (buf (buffer-list))
     (with-current-buffer buf
       (when (eq major-mode 'gnus-article-mode)
-	(gnus-summary-show-article '(4))
-	(switch-to-buffer buf)
-	(goto-char (point-min))
-	(re-search-forward "^Archived-at: <\\(.*\\)>$")
-	(browse-url (match-string 1))
-	(gnus-summary-show-article)))))
+        (gnus-summary-show-article '(4))
+        (switch-to-buffer buf)
+        (goto-char (point-min))
+        (re-search-forward "^Archived-at: <\\(.*\\)>$")
+        (browse-url (match-string 1))
+        (gnus-summary-show-article)))))
 
 ;; from Peter Munster
 
@@ -758,7 +758,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
    [S-down ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ S-up])
 
 (define-key gnus-summary-mode-map (kbd "C-c 5") 'blow_up_article)
-
+;; (define-key gnus-summary-mode-map (kbd "C-c 5") 'gnus-summary-select-article-buffer)
 
 
 ;; text/calendar attachments

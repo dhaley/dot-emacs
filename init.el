@@ -4252,7 +4252,7 @@ end end))))))
 (use-package org-jira
   :load-path ("~/.emacs.d/elpa/jira-0.3.3"
               "~/.emacs.d/site-lisp/org-jira")
-  :commands (org-jira-create-issue org-jira-create-issue)
+  :commands (org-jira-create-issue org-jira-get-issue)
   :bind ("H-j" . org-jira-create-issue)
   :init
   (progn
