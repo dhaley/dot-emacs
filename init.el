@@ -5207,16 +5207,60 @@ prevents using commands with prefix arguments."
 (maser/swallow-errors windmove-right-without-errors windmove-right)
 (maser/swallow-errors windmove-left-without-errors windmove-left)
 
-;; (global-set-key (kbd "M-N") 'windmove-down-without-errors)
-;; (global-set-key (kbd "M-P") 'windmove-up-without-errors)
-;; (global-set-key (kbd "M-F") 'windmove-right-without-errors)
-;; (global-set-key (kbd "M-B") 'windmove-left-without-errors)
 
-(global-set-key (kbd "H-'") 'windmove-right-without-errors)
-(global-set-key (kbd "H-/") 'windmove-down-without-errors)
-(global-set-key (kbd "H-;") 'windmove-left-without-errors)
-(global-set-key (kbd "H-[") 'windmove-up-without-errors)
+(bind-key "H-'" 'windmove-right-without-errors)
+(bind-key "H-/" 'windmove-down-without-errors)
+(bind-key "H-;" 'windmove-left-without-errors)
+(bind-key "H-[" 'windmove-up-without-errors)
 
+(require 'framemove)
+;;   (framemove-default-keybindings)
+;;
+;; If you want to integrate framemove and windmove
+;; You can omit the call to 'framemove-default-keybindings
+;; And instead do:
+;;    (require 'framemove)
+;;(windmove-default-keybindings)
+(setq framemove-hook-into-windmove t)
+
+(bind-key "M-<up>" 'fm-up-frame)
+(bind-key "M-<down>" 'fm-down-frame)
+(bind-key "M-<left>" 'fm-left-frame)
+(bind-key "M-<right>" 'fm-right-frame)
+
+(bind-key "M-S-<up>" 'fm-next-frame)
+
+;;; http://www.emacswiki.org/emacs/frame-cmds.el
+;; (require 'frame-cmds)
+;; (global-set-key [(meta up)] 'move-frame-up)
+;; (global-set-key [(meta down)] 'move-frame-down)
+;; (global-set-key [(meta left)] 'move-frame-left)
+;; (global-set-key [(meta right)] 'move-frame-right)
+;; (global-set-key [(control meta down)] 'enlarge-frame)
+;; (global-set-key [(control meta right)] 'enlarge-frame-horizontally)
+;; (global-set-key [(control meta up)] 'shrink-frame)
+;; (global-set-key [(control meta left)] 'shrink-frame-horizontally)
+
+;; (global-set-key [(control ?x) (control ?z)] 'iconify-everything)
+;; (global-set-key [vertical-line S-down-mouse-1] 'iconify-everything)
+;; (global-set-key [(control ?z)] 'iconify/map-frame)
+;; (global-set-key [mode-line mouse-3] 'mouse-iconify/map-frame)
+;; (global-set-key [mode-line C-mouse-3] 'mouse-remove-window)
+;; (global-set-key [(control meta ?z)] 'show-hide)
+;; (global-set-key [vertical-line C-down-mouse-1] 'show-hide)
+;; (global-set-key [C-down-mouse-1] 'mouse-show-hide-mark-unmark)
+;; (substitute-key-definition 'delete-window 'remove-window global-map)
+;; (define-key ctl-x-map "o" 'other-window-or-frame)
+;; (define-key ctl-x-4-map "1" 'delete-other-frames)
+;; (define-key ctl-x-5-map "h" 'show-*Help*-buffer)
+;; (substitute-key-definition 'delete-window 'delete-windows-for global-map)
+;; (define-key global-map "\C-xt." 'save-frame-config)
+;; (define-key ctl-x-map "o" 'other-window-or-frame)
+;;
+;; (defalias 'doremi-prefix (make-sparse-keymap))
+;; (defvar doremi-map (symbol-function 'doremi-prefix) "Keymap for Do Re Mi commands.")
+;; (define-key global-map "\C-xt" 'doremi-prefix)
+;; (define-key doremi-map "." 'save-frame-config)
 ;;;_ , winner
 
 (use-package winner
@@ -5763,9 +5807,9 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;; Various superfluous white-space. Just say no.
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
 
-(add-to-list 'load-path "~/.emacs.d/site-lisp/frame-tag")
-(require 'frame-tag)
-(frame-tag-mode 1)
+;; (add-to-list 'load-path "~/.emacs.d/site-lisp/frame-tag")
+;; (require 'frame-tag)
+;; (frame-tag-mode 1)
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
