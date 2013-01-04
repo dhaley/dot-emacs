@@ -5302,12 +5302,12 @@ prevents using commands with prefix arguments."
 ;;(windmove-default-keybindings)
 (setq framemove-hook-into-windmove t)
 
-;; (bind-key "M-<up>" 'fm-up-frame)
-;; (bind-key "M-<down>" 'fm-down-frame)
-;; (bind-key "M-<left>" 'fm-left-frame)
-;; (bind-key "M-<right>" 'fm-right-frame)
+(bind-key "M-<up>" 'fm-up-frame)
+(bind-key "M-<down>" 'fm-down-frame)
+(bind-key "M-<left>" 'fm-left-frame)
+(bind-key "M-<right>" 'fm-right-frame)
 
-;; (bind-key "M-S-<up>" 'fm-next-frame)
+(bind-key "M-S-<up>" 'fm-next-frame)
 
 ;;; http://www.emacswiki.org/emacs/frame-cmds.el
 ;; (require 'frame-cmds)
