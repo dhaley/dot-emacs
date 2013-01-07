@@ -364,6 +364,22 @@ want to use in the modeline *in lieu of* the original.")
 (bind-key "C-c \"" 'double-quote)
 
 
+; gets the name of the buffer.
+(defun copy-buffer-name()
+  (interactive)
+  (let ((beg (point)))
+        (set-mark (point))
+        (insert buffer-file-name)
+        (kill-region beg (point))))
+
+; sets copy buffer name to Ctrl-c-p
+(global-set-key "\C-cp" 'copy-buffer-name)
+
+; copies the region to a string (typically for parseing).
+(defun region-to-string ()
+  (interactive)
+  (buffer-substring (mark) (point)))
+
 (bind-key "H-i" 'ispell-word)
 (bind-key "H-e" 'grab-email-my)
 (bind-key "H-r" 'winner-redo) ;; C-c <right>
@@ -5490,6 +5506,13 @@ prevents using commands with prefix arguments."
           fill-column 65)
     (set-window-margins (selected-window) 50 50)))
 
+
+;;;_ , xmsi-mode
+
+(use-package xmsi-mode
+;; (autoload 'xmsi-mode "xmsi-math-symbols-input" "Load xmsi minor mode for inputting math (Unicode) symbols." t)
+  :commands (xmsi-mode xmsi-math-symbols-input)
+)
 
 ;;;_ , yaml-mode
 
