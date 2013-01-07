@@ -3511,6 +3511,8 @@ at the beginning of line, if already there."
 (defalias 'eis 'elisp-index-search)
 
 (use-package lisp-mode
+  :mode ("\\.abbrev_defs" . lisp-mode)
+  :interpreter ("lisp" . lisp-mode)
   ;; :load-path "site-lisp/slime/contrib/"
   :init
   (progn
