@@ -253,7 +253,7 @@ Here is my current =org-agenda-files= setup.
                                     "~/git/dkh-org/.org-jira/FAC.org"
                                     "~/git/dkh-org/.org-jira/VCR.org"
                                     "~/git/dkh-org/.org-jira/SUP.org"
-                                    )))
+                                    ))))
 #+end_src
 
 =org-mode= manages the =org-agenda-files= variable automatically using
