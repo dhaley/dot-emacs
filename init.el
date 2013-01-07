@@ -2201,7 +2201,7 @@ The output appears in the buffer `*Async Shell Command*'."
 
 
 (use-package conf-mode
-  :mode ("\\.info"  . conf-mode))
+  :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
 
 (use-package php-mode
   :interpreter ("php" . php-mode)
@@ -2231,7 +2231,7 @@ The output appears in the buffer `*Async Shell Command*'."
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
-  :mode ("\\.\\(php\\|inc\\|module\\|test\\|install\\|theme\\|\\profile\\)\\|settings\\.local\\.php$" . drupal-mode)
+  :mode ("\\.\\(php\\|inc\\|module\\|test\\|install\\|theme\\|\\profile\\|\\local\\.php\\)$" . drupal-mode)
   :interpreter ("drupal" . drupal-mode)
 
   (progn
