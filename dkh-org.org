@@ -242,9 +242,18 @@ Here is my current =org-agenda-files= setup.
 ;;
 (if (boundp 'org-user-agenda-files)
     (setq org-agenda-files org-user-agenda-files)
-  (setq org-agenda-files (quote ("~/git/org"
-                               "~/git/org/client1"
-                               "~/git/client2"))))
+
+(setq org-agenda-files (quote (
+                                    "~/git/dkh-org/todo.org"
+                                    "~/git/dkh-org/refile.org"
+                                    ;;                                    "~/git/dkh-org/.org-jira/FIT.org"
+                                    "~/git/dkh-org/.org-jira/AFROTC.org"
+                                    "~/git/dkh-org/.org-jira/CUPRE.org"
+                                    "~/git/dkh-org/.org-jira/CS.org"
+                                    "~/git/dkh-org/.org-jira/FAC.org"
+                                    "~/git/dkh-org/.org-jira/VCR.org"
+                                    "~/git/dkh-org/.org-jira/SUP.org"
+                                    )))
 #+end_src
 
 =org-mode= manages the =org-agenda-files= variable automatically using
@@ -667,6 +676,8 @@ Here is my setup for org-capture
 #+begin_src emacs-lisp :tangle yes
 (setq org-directory "~/git/dkh-org")
 (setq org-default-notes-file "~/git/dkh-org/refile.org")
+
+(require 'org-exchange-capture)
 
 ;; I use C-M-r to start capture mode
 (global-set-key (kbd "C-M-r") 'org-capture)

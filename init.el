@@ -2185,7 +2185,7 @@ The output appears in the buffer `*Async Shell Command*'."
 
 
 (use-package conf-mode
-  :mode ("\\.info" . conf-mode))
+  :mode ("\\.info"  . conf-mode))
 
 (use-package php-mode
   :interpreter ("php" . php-mode)
@@ -2215,7 +2215,7 @@ The output appears in the buffer `*Async Shell Command*'."
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
-  :mode ("\\.\\(php\\|inc\\|module\\|test\\|install\\|theme\\|\\profile\\)$" . drupal-mode)
+  :mode ("\\.\\(php\\|inc\\|module\\|test\\|install\\|theme\\|\\profile\\)\\|settings\\.local\\.php$" . drupal-mode)
   :interpreter ("drupal" . drupal-mode)
 
   (progn
@@ -4069,19 +4069,6 @@ end end))))))
 
 ;; ;;;_ , org-mode
 ;;
-
-
-
-(setq org-user-agenda-files (quote (
-                                    "~/git/dkh-org/todo.org"
-                                    "~/git/dkh-org/refile.org"
-                                    ;;                                    "~/git/dkh-org/.org-jira/FIT.org"
-                                    "~/git/dkh-org/.org-jira/AFROTC.org"
-                                    "~/git/dkh-org/.org-jira/CUPRE.org"
-                                    "~/git/dkh-org/.org-jira/CS.org"
-                                    "~/git/dkh-org/.org-jira/FAC.org"
-                                    "~/git/dkh-org/.org-jira/SUP.org"
-                                    )))
 
 (use-package dot-org
   :if (not running-alternate-emacs)
