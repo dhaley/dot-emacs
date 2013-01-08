@@ -95,7 +95,6 @@
         'guru-mode
         'jira
         'js2-mode
-        'key-chord
         'lorem-ipsum
         'magit
         'nav
@@ -1462,7 +1461,7 @@ between Sessions”
 
 *** Expand Region
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/expand-region.el")
 (require 'expand-region)
@@ -1892,33 +1891,6 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 #+end_src
 
-** KeyChords
-
-#+begin_src emacs-lisp :tangle no
-
-(require 'key-chord)
-(key-chord-mode 1)
-
-(key-chord-define-global "''"     "`'\C-b")
-(key-chord-define-global ",,"     'indent-for-comment)
-(key-chord-define-global "qq"     "the ")
-(key-chord-define-global "QQ"     "The ")
-(key-chord-define-global ",."     'append-next-kill)
-(key-chord-define-global "4r"     "$")
-(key-chord-define-global "jk" 'goto-line)
-(key-chord-define-global "df"     'bookmark-jump)
-(key-chord-define-global "sd"     'er/expand-region)
-(key-chord-define-global "kl"     'dabbrev-expand)
-(key-chord-define-global "AS" 'my-swap-windows)
-(key-chord-define-global "SD" 'my-toggle-window-split)
-(key-chord-define-global "DF" 'toggle-windows-split)
-(key-chord-define-global "FG" 'split-window-switch-buffer)
-(key-chord-define-global "GH" 'hsplit-window-switch-buffer)
-(key-chord-define-global "JK" 'rotate-windows)
-(key-chord-define-global "KL" 'swap-buffers-in-windows)
-(key-chord-define-global "L:" 'transpose-windows)
-
-#+end_src
 
 
 ** Rotate text

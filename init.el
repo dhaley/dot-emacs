@@ -373,7 +373,7 @@ want to use in the modeline *in lieu of* the original.")
         (kill-region beg (point))))
 
 ; sets copy buffer name to Ctrl-c-p
-(global-set-key "\C-cp" 'copy-buffer-name)
+(bind-key "H-p" 'copy-buffer-name)
 
 ; copies the region to a string (typically for parseing).
 (defun region-to-string ()
@@ -2231,6 +2231,34 @@ The output appears in the buffer `*Async Shell Command*'."
 ;;     (add-hook 'php+-mode-hook '(lambda ()(subword-mode t)))
 ;;     (add-hook 'php+-mode-hook '(lambda () (php-electric-mode)))
 ;;     ))
+
+
+(use-package projectile
+  :load-path "~/.emacs.d/site-lisp/projectile"
+  :config
+  (progn
+    (projectile-global-mode)
+    ;; (bind-key "C-c p j" 'projectile-jump-to-project-file)
+    ;; (bind-key "C-c p f" 'projectile-grep-in-project)
+    ;; (bind-key "C-c p r" 'projectile-replace-in-project)
+    ;; (bind-key "C-c p b" 'projectile-switch-to-buffer)
+    ;; (bind-key "C-c p o" 'projectile-multi-occur)
+    ;; (bind-key "C-c p t" 'projectile-regenerate-tags)
+    ;; (bind-key "C-c p i" 'projectile-invalidate-project-cache)
+    )
+  )
+
+;; (setq echo-keystrokes 0.5)
+
+(use-package key-chord
+  :config
+  (progn (key-chord-mode 1)
+         (key-chord-define-global ";s" 'scratch)
+         (key-chord-define-global ";g" 'magit-status)
+         ;; (key-chord-define-global ",."     'append-next-kill)
+         ;; (key-chord-define-global "kl"     'dabbrev-expand)
+         (setq key-chord-two-keys-delay 0.3)
+         ))
 
 ;;;_ , drupal-mode
 

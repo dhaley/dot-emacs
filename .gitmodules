@@ -364,3 +364,6 @@
 [submodule "site-lisp/drupal-mode"]
 	path = site-lisp/drupal-mode
 	url = https://github.com/arnested/drupal-mode.git
+[submodule "site-lisp/projectile"]
+	path = site-lisp/projectile
+	url = https://github.com/bbatsov/projectile.git
