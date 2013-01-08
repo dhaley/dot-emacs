@@ -4234,8 +4234,22 @@ end end))))))
     (setq jiralib-url "https://cuboulder.atlassian.net")
     ;; jiralib is not explicitly required, since org-jira will load it.
     (setq org-jira-working-dir "~/git/dkh-org/.org-jira")
-    (setq org-jira-current-project "CUPRE")
-    ))
+    (setq org-jira-current-project "VCR")
+
+(setq jira-users
+      (list
+       (cons "Administrator" "webcom")
+       (cons "Matt Tucker" "matt")
+       (cons "Kevin Crafts" "kevin")
+       (cons "Damon Haley" "daha183")
+       (cons "Alfredo Nevarez" "alfredo")
+       (cons "Catherine Snider" "snider")
+       (cons "Kosta Tovstiadi" "kosta")
+       (cons "Will Kubie" "kubie")
+       (cons "Joanna Bertrand" "joanna")
+       (cons "Wendy Turnbull" "wendy")
+       ))))
+
 
 
 ;;;_ , pabbrev
