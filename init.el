@@ -391,6 +391,7 @@ want to use in the modeline *in lieu of* the original.")
 (bind-key "<H-right>" 'enlarge-window-horizontally)
 (bind-key "<H-up>" 'enlarge-window)
 (bind-key "<H-backspace>" 'scroll-down-command)
+(bind-key "H-f" 'new-frame)
 
 (defun grab-email-my ()
   "Grab the next email in the buffer
@@ -2233,20 +2234,21 @@ The output appears in the buffer `*Async Shell Command*'."
 ;;     ))
 
 
-(use-package projectile
-  :load-path "~/.emacs.d/site-lisp/projectile"
-  :config
-  (progn
-    (projectile-global-mode)
-    ;; (bind-key "C-c p j" 'projectile-jump-to-project-file)
-    ;; (bind-key "C-c p f" 'projectile-grep-in-project)
-    ;; (bind-key "C-c p r" 'projectile-replace-in-project)
-    ;; (bind-key "C-c p b" 'projectile-switch-to-buffer)
-    ;; (bind-key "C-c p o" 'projectile-multi-occur)
-    ;; (bind-key "C-c p t" 'projectile-regenerate-tags)
-    ;; (bind-key "C-c p i" 'projectile-invalidate-project-cache)
-    )
-  )
+;; (use-package projectile
+;;   :load-path "~/.emacs.d/site-lisp/projectile"
+;;   :diminish projectile
+;;   :config
+;;   (progn
+;;     (projectile-global-mode)
+;;     ;; (bind-key "C-c p j" 'projectile-jump-to-project-file)
+;;     ;; (bind-key "C-c p f" 'projectile-grep-in-project)
+;;     ;; (bind-key "C-c p r" 'projectile-replace-in-project)
+;;     ;; (bind-key "C-c p b" 'projectile-switch-to-buffer)
+;;     ;; (bind-key "C-c p o" 'projectile-multi-occur)
+;;     ;; (bind-key "C-c p t" 'projectile-regenerate-tags)
+;;     ;; (bind-key "C-c p i" 'projectile-invalidate-project-cache)
+;;     )
+;;   )
 
 ;; (setq echo-keystrokes 0.5)
 
@@ -2254,6 +2256,7 @@ The output appears in the buffer `*Async Shell Command*'."
   :config
   (progn (key-chord-mode 1)
          (key-chord-define-global ";s" 'scratch)
+         (key-chord-define-global ";d" 'delete-window)
          (key-chord-define-global ";g" 'magit-status)
          ;; (key-chord-define-global ",."     'append-next-kill)
          ;; (key-chord-define-global "kl"     'dabbrev-expand)
@@ -2328,6 +2331,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
   :if running-alternate-emacs
   :init
   (progn
+    (require 'sauron)
     (defun setup-irc-environment ()
       (interactive)
 
@@ -2379,9 +2383,15 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :port 6667))
                        :secret))))
 
-    (add-hook 'after-init-hook 'im)
-    (add-hook 'after-init-hook 'irc)
-    )
+   (add-hook 'after-init-hook 'im)
+   (add-hook 'after-init-hook 'irc)
+   (defun create-new-erc-frames ()
+     (interactive)
+     (switch-to-buffer "&bitlbee")
+     (sauron-toggle-hide-show)
+     (switch-to-buffer-other-frame "#drupal-colorado")
+     (switch-to-buffer-other-frame "#emacs"))
+   (bind-key "H-E" 'create-new-erc-frames)
 
   :config
   (progn
@@ -2396,27 +2406,10 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     (use-package erc-alert)
     (use-package erc-hl-nicks)
 
-    ;; (use-package 'erc-nick-notify)
-
-    ;; (require 'erc-fill)
-    ;; (erc-fill-mode t)
-
-    ;; (require 'erc-ring)
-    ;; (erc-ring-mode t)
-
     (require 'erc-match)
 
     ;; For bitlbee
     (require 'erc-nicklist)
-
-
-    ;; (add-to-list 'erc-modules 'scrolltobottom)
-
-    ;; (add-to-list 'erc-modules 'match)
-    ;; (erc-update-modules)
-
-    ;; (erc-match-enable)
-    ;; (erc-match-mode 1)
 
     (erc-timestamp-mode t)
 
@@ -5877,7 +5870,8 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
       (add-hook 'after-init-hook
                 (lambda ()
                   (load-theme 'solarized-dark t)
-                  (load-theme 'solarized-light t t))))
+                  ;; (load-theme 'solarized-light t t)
+                  )))
   (add-hook 'after-init-hook
             (lambda ()
               (load-theme 'deeper-blue) t)))
