@@ -2493,7 +2493,7 @@ FORM => (eval FORM)."
             (replace-match "<\\1>"))))
     (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
 
-    (erc-nick-notify-mode t)))
+    (erc-nick-notify-mode t))))
 
 ;;;_ , eshell
 
