@@ -1859,6 +1859,10 @@ Subexpression references can be used (\1, \2, etc)."
   :bind ("M-o c" . crosshairs-mode))
 
 
+(use-package csv-mode
+  :comamnds csv-mode
+  :mode ("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+
 ;;;_ , css-mode
 (use-package css-mode
   :mode ("\\.css$" . css-mode)
@@ -2662,9 +2666,11 @@ at the beginning of line, if already there."
 
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
 
+    ;; Make ls output be RET and mouse-2 clickable
+    ;; (load-library "esh-clickable-ls.el")
 
 
-    ;;This makes Eshell’s ‘ls’ file names RET-able. Yay!
+    ;; ;;This makes Eshell’s ‘ls’ file names RET-able. Yay!
       (eval-after-load "em-ls"
         '(progn
            (defun ted-eshell-ls-find-file-at-point (point)
