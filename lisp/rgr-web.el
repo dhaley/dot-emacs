@@ -14,7 +14,7 @@
           (w3m-browse-url url)
         (call-interactively 'browse-url))
     (when url (browse-url-default-browser url))
-    (message (concat "foo" url))
+    (message (concat "Goto " url))
     ))
 
 (defun rgr/browse-url (&optional url)
@@ -34,4 +34,4 @@
 ;;   outline-regexp: "^;;;_\\([,. ]+\\)"
 ;; End:
 
-;;; dkh-gnus.el ends here
+;;; rgr-web.el ends here

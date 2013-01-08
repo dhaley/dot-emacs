@@ -2387,7 +2387,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
    (add-hook 'after-init-hook 'irc)
    (defun create-new-erc-frames ()
      (interactive)
-     (switch-to-buffer "&bitlbee")
+     (switch-to-bitlbee)
      (sauron-toggle-hide-show)
      (switch-to-buffer-other-frame "#drupal-colorado")
      (switch-to-buffer-other-frame "#emacs"))
@@ -2406,50 +2406,10 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     (use-package erc-alert)
     (use-package erc-hl-nicks)
 
-    (require 'erc-match)
+    ;; (require 'erc-match)
 
     ;; For bitlbee
     (require 'erc-nicklist)
-
-    (erc-timestamp-mode t)
-
-    (setq erc-timestamp-only-if-changed-flag nil
-          erc-timestamp-format "[%H:%M] "
-          erc-fill-prefix "      "
-          erc-timestamp-mode t
-          erc-max-buffer-size 20000
-          erc-interpret-mirc-color nil
-          erc-insert-timestamp-function 'erc-insert-timestamp-left
-          erc-kill-queries-on-quit nil)
-
-    ;;     (require 'todochiku)
-
-    ;;      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;     ;;
-    ;;     ;; Change fill column on resize
-    ;;     ;;
-    ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    (make-variable-buffer-local 'erc-fill-column)
-
-    ;;      (setq erc-fill-column 75)
-
-    (defun qdot/erc-set-fill-columns ()
-      (interactive)
-      (save-excursion
-        (walk-windows
-         (lambda (w)
-           (let ((buffer (window-buffer w)))
-             (set-buffer buffer)
-             (when (eq major-mode 'erc-mode)
-               (message "Window size: %d" (window-width w))
-               (setq erc-fill-column (- (window-width w) 2))))))))
-
-    (setq window-configuration-change-hook (cddr window-configuration-change-hook))
-
-    (add-hook 'window-configuration-change-hook 'qdot/erc-set-fill-columns)
-
-    (setq erc-fill-static-center 12)
 
     (use-package erc-yank
       :init
@@ -2521,6 +2481,8 @@ FORM => (eval FORM)."
       "Deop myself from current channel."
       (erc-cmd-DEOP (format "%s" (erc-current-nick))))
 
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
     (defun my-reformat-jabber-backlog ()
       "Fix \"unkown participant\" backlog messages from bitlbee."
       (save-excursion
@@ -2530,30 +2492,7 @@ FORM => (eval FORM)."
             (replace-match "<\\1>"))))
     (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
 
-    (eval-after-load 'erc
-      '(progn
-
-         ;; (require 'erc-hl-nicks)
-         ;; (require 'erc-spelling)
-         ;; (require 'erc-truncate)
-         (ignore-errors
-           ;; DO NOT use the version from marmalade
-           (erc-nick-notify-mode t))
-         ;; (add-to-list 'erc-modules 'spelling)
-         )
-
-      ;; from https://github.com/robru/.emacs.d/blob/master/setup-appearance.el
-
-      ;; (set-face-attribute 'erc-notice-face nil
-      ;;                     :foreground "grey30"
-      ;;                     :bold nil)
-      )
-    ;; (eval-after-load "erc-button"
-    ;;   '(set-face-attribute 'erc-button nil
-    ;;                        :bold nil
-    ;;                        :box nil))
-    ))
-
+    (erc-nick-notify-mode t)))
 
 ;;;_ , eshell
 
