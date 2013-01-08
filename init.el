@@ -542,6 +542,7 @@ If no file is associated, just close buffer without prompt for save."
 (bind-key "M-s n" 'find-name-dired)
 (bind-key "M-s o" 'occur)
 
+
 ;;;_  . M-C-?
 
 (bind-key "<C-M-backspace>" 'backward-kill-sexp)
@@ -4241,7 +4242,7 @@ end end))))))
        (cons "Administrator" "webcom")
        (cons "Matt Tucker" "matt")
        (cons "Kevin Crafts" "kevin")
-       (cons "Damon Haley" "daha183")
+       (cons "Damon Haley" "daha1836")
        (cons "Alfredo Nevarez" "alfredo")
        (cons "Catherine Snider" "snider")
        (cons "Kosta Tovstiadi" "kosta")
