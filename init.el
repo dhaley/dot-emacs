@@ -24,28 +24,10 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 
-;; setting paths for OS X (macports)
-;; (when (eq system-type 'darwin)
-;;   (setenv "PATH"
-;;           (concat
-;;            "/opt/local/bin" ":"
-;;            "/opt/local/sbin" ":"
-;;            (getenv "PATH")))
-;;   (setq exec-path
-;;         '("/opt/local/bin"
-;;           "/opt/local/sbin"
-;;           "/usr/bin"
-;;           "/bin"
-;;           "/usr/sbin"
-;;           "/sbin"
-;;           "/usr/X11/bin")))
-
-
 ;; If you find that Emacs on OSX fails to pick up the same $PATH setting
 ;; that you get in command line shells, instead defaulting to an
 ;; impoverished default that doesn’t include (for instance) anything
 ;; installed via MacPorts:
-
 
 (add-hook 'after-init-hook
           #'(lambda ()
@@ -62,12 +44,6 @@
 ;;   (require 'ls-lisp)
 ;;   (setq ls-lisp-use-insert-directory-program nil))
 
-;; Screen bugs
-
-;; (setq default-frame-alist
-;;       '((top . 0) (left . 20)
-;;         (width . 100) (height . 48)
-;;         ))
 
 (setq message-log-max 16384)
 
@@ -2223,18 +2199,6 @@ The output appears in the buffer `*Async Shell Command*'."
     ))
 
 
-;; (use-package php+-mode
-;;   :interpreter ("php" . php+-mode)
-;;   init:
-;;   (progn
-;;     (php+-mode-setup)
-;;     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
-;;     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
-;;     (add-hook 'php+-mode-hook '(lambda ()(subword-mode t)))
-;;     (add-hook 'php+-mode-hook '(lambda () (php-electric-mode)))
-;;     ))
-
-
 ;; (use-package projectile
 ;;   :load-path "~/.emacs.d/site-lisp/projectile"
 ;;   :diminish projectile
@@ -2250,8 +2214,6 @@ The output appears in the buffer `*Async Shell Command*'."
 ;;     ;; (bind-key "C-c p i" 'projectile-invalidate-project-cache)
 ;;     )
 ;;   )
-
-;; (setq echo-keystrokes 0.5)
 
 (use-package key-chord
   :config
@@ -2388,7 +2350,8 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :port 6667))
                        :secret))))
    (add-hook 'after-init-hook 'im)
-   (add-hook 'after-init-hook 'irc))
+   (add-hook 'after-init-hook 'irc)
+   )
 
   :config
   (progn
@@ -4604,11 +4567,7 @@ end end))))))
     ;; John Wiegley’s alert.el has a bit of overlap with sauron; however, I’ve
     ;; added some wrapper function to make it trivial to feed sauron events
     ;; into alert. Simply adding:
-    ;; (require 'alert)
-    (require 'erc-alert)
-    ;; (add-hook ‘sauron-event-added-functions ‘sauron-alert-el-adapter)
-)
-  )
+    (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)))
 
 ;;(require 'saveplace)
 
@@ -5345,37 +5304,6 @@ prevents using commands with prefix arguments."
 
 (bind-key "M-S-<up>" 'fm-next-frame)
 
-;;; http://www.emacswiki.org/emacs/frame-cmds.el
-;; (require 'frame-cmds)
-;; (global-set-key [(meta up)] 'move-frame-up)
-;; (global-set-key [(meta down)] 'move-frame-down)
-;; (global-set-key [(meta left)] 'move-frame-left)
-;; (global-set-key [(meta right)] 'move-frame-right)
-;; (global-set-key [(control meta down)] 'enlarge-frame)
-;; (global-set-key [(control meta right)] 'enlarge-frame-horizontally)
-;; (global-set-key [(control meta up)] 'shrink-frame)
-;; (global-set-key [(control meta left)] 'shrink-frame-horizontally)
-
-;; (global-set-key [(control ?x) (control ?z)] 'iconify-everything)
-;; (global-set-key [vertical-line S-down-mouse-1] 'iconify-everything)
-;; (global-set-key [(control ?z)] 'iconify/map-frame)
-;; (global-set-key [mode-line mouse-3] 'mouse-iconify/map-frame)
-;; (global-set-key [mode-line C-mouse-3] 'mouse-remove-window)
-;; (global-set-key [(control meta ?z)] 'show-hide)
-;; (global-set-key [vertical-line C-down-mouse-1] 'show-hide)
-;; (global-set-key [C-down-mouse-1] 'mouse-show-hide-mark-unmark)
-;; (substitute-key-definition 'delete-window 'remove-window global-map)
-;; (define-key ctl-x-map "o" 'other-window-or-frame)
-;; (define-key ctl-x-4-map "1" 'delete-other-frames)
-;; (define-key ctl-x-5-map "h" 'show-*Help*-buffer)
-;; (substitute-key-definition 'delete-window 'delete-windows-for global-map)
-;; (define-key global-map "\C-xt." 'save-frame-config)
-;; (define-key ctl-x-map "o" 'other-window-or-frame)
-;;
-;; (defalias 'doremi-prefix (make-sparse-keymap))
-;; (defvar doremi-map (symbol-function 'doremi-prefix) "Keymap for Do Re Mi commands.")
-;; (define-key global-map "\C-xt" 'doremi-prefix)
-;; (define-key doremi-map "." 'save-frame-config)
 ;;;_ , winner
 
 (use-package winner
@@ -5427,57 +5355,6 @@ prevents using commands with prefix arguments."
 
       (if running-alternate-emacs
           (progn
-
-            ;;            (defun qdot/wg-filter-buffer-list-by-not-major-mode (major-mode buffer-list)
-            ;;              "Return only those buffers in BUFFER-LIST in major-mode MAJOR-MODE."
-            ;;              (remove-if (lambda (mm) (eq mm major-mode))
-            ;;                         buffer-list :key 'wg-buffer-major-mode))
-            ;;
-            ;;            (defun qdot/wg-filter-buffer-list-by-erc-query (server buffer-list)
-            ;;              "Return only those buffers in BUFFER-LIST in major-mode MAJOR-MODE."
-            ;;              (remove-if-not (lambda (buf) (erc-query-buffer-p (get-buffer buf)))
-            ;;                             buffer-list :key 'buffer-name))
-            ;;
-            ;;            (defun qdot/wg-buffer-list-filter-not-irc (workgroup buffer-list)
-            ;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
-            ;;              (qdot/wg-filter-buffer-list-by-not-major-mode 'erc-mode buffer-list))
-            ;;
-            ;;            (defun qdot/wg-buffer-list-filter-associated-not-irc (workgroup buffer-list)
-            ;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
-            ;;              (qdot/wg-filter-buffer-list-by-not-major-mode 'erc-mode (wg-buffer-list-filter-associated workgroup buffer-list)))
-            ;;
-            ;;
-            ;;            (defun qdot/wg-buffer-list-filter-erc-channel (workgroup buffer-list)
-            ;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
-            ;;              (wg-filter-buffer-list-by-regexp "^#"
-            ;;                                               (wg-filter-buffer-list-by-major-mode 'erc-mode buffer-list)))
-            ;;
-            ;;            (defun qdot/wg-buffer-list-filter-erc-query (workgroup buffer-list)
-            ;;              "Return only those buffers in BUFFER-LIST in `erc-mode'."
-            ;;              (qdot/wg-filter-buffer-list-by-erc-query 'erc-mode buffer-list))
-            ;;
-            ;;            (add-to-list
-            ;;             'wg-buffer-list-filter-definitions
-            ;;             '(qdot/erc-query "qdot/erc-query" qdot/wg-buffer-list-filter-erc-query))
-            ;;            (add-to-list
-            ;;             'wg-buffer-list-filter-definitions
-            ;;             '(qdot/erc-irc "qdot/erc-channel" qdot/wg-buffer-list-filter-erc-channel))
-            ;;            (add-to-list
-            ;;             'wg-buffer-list-filter-definitions
-            ;;             '(qdot/not-irc "qdot/not-irc" qdot/wg-buffer-list-filter-not-irc))
-            ;;
-            ;;            (add-to-list
-            ;;             'wg-buffer-list-filter-definitions
-            ;;             '(qdot/associated-not-irc "qdot/associated-not-irc" qdot/wg-buffer-list-filter-associated-not-irc))
-            ;;
-            ;;            (defun qdot/wg-set-buffer-lists ()
-            ;;              (wg-set-workgroup-parameter (wg-get-workgroup "work") 'wg-buffer-list-filter-order-alist '((default qdot/associated-not-irc qdot/not-irc all)))
-            ;;              (wg-set-workgroup-parameter (wg-get-workgroup "erc") 'wg-buffer-list-filter-order-alist '((default qdot/erc-irc all)))
-            ;;              (wg-set-workgroup-parameter (wg-get-workgroup "bitlbee") 'wg-buffer-list-filter-order-alist '((default qdot/erc-query all))))
-            ;;
-            ;;            (WG-filter-buffer-list-by-major-mode 'erc-mode (buffer-list))
-            ;;            (wg-filter-buffer-list-by-not-major-mode 'erc-mode (buffer-list))
-
             (setq wg-file "/Users/daha1836/.emacs.d/data-alt/workgroups")
             (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups"))
         (if (file-readable-p workgroups-file)
@@ -5485,10 +5362,6 @@ prevents using commands with prefix arguments."
 
     (require 'powerline)
     (powerline-default)
-
-    ;;    (require "~/.emacs.d/lisp/dkh-powerline")
-    ;;    (load "~/git/foss/hekt_dotfiles/.emacs.d/inits/21_init.extension.powerline.el")
-
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
     (bind-key "\\" 'toggle-input-method wg-map)
     )
@@ -5654,116 +5527,6 @@ $0"))))
   (setq ls-lisp-use-insert-directory-program nil))
 
 
-;; (use-package dkh-powerline
-;;   :defer t
-;;   :init
-;;   (progn
-;;     (defun arrow-right-xpm (color1 color2)
-;;   "Return an XPM right arrow string representing."
-;;   (format "/* XPM */
-;; static char * arrow_right[] = {
-;; \"10 15 2 1\",
-;; \". c %s\",
-;; \"  c %s\",
-;; \".         \",
-;; \"..        \",
-;; \"...       \",
-;; \"....      \",
-;; \".....     \",
-;; \"......    \",
-;; \".......   \",
-;; \"........  \",
-;; \".......   \",
-;; \"......    \",
-;; \".....     \",
-;; \"....      \",
-;; \"...       \",
-;; \"..        \",
-;; \".         \"};"  color1 color2))
-
-;; (defun arrow-left-xpm (color1 color2)
-;;   "Return an XPM right arrow string representing."
-;;   (format "/* XPM */
-;; static char * arrow_right[] = {
-;; \"10 15 2 1\",
-;; \". c %s\",
-;; \"  c %s\",
-;; \"         .\",
-;; \"        ..\",
-;; \"       ...\",
-;; \"      ....\",
-;; \"     .....\",
-;; \"    ......\",
-;; \"   .......\",
-;; \"  ........\",
-;; \"   .......\",
-;; \"    ......\",
-;; \"     .....\",
-;; \"      ....\",
-;; \"       ...\",
-;; \"        ..\",
-;; \"         .\"};"  color2 color1))
-
-
-;; (defconst color1 "#859900")
-;; (defconst color2 "#586E75")
-;; (defconst color3 "#839496")
-;; (defconst fontcolor1 "#FDF6E3")
-;; (defconst fontcolor2 "#EEE8D5")
-
-;; (defvar arrow-right-1 (create-image (arrow-right-xpm color1 color2)
-;;                                     'xpm t :ascent 'center))
-;; (defvar arrow-right-2 (create-image (arrow-right-xpm color2 "None")
-;;                                     'xpm t :ascent 'center))
-;; (defvar arrow-left-1  (create-image (arrow-left-xpm color2 color3)
-;;                                     'xpm t :ascent 'center))
-;; (defvar arrow-left-2  (create-image (arrow-left-xpm "None" color2)
-;;                                     'xpm t :ascent 'center))
-
-;; (setq-default mode-line-format
-;;  (list  '(:eval (concat (propertize " %m " 'face 'mode-line-color-1)
-;;                         (propertize " " 'display arrow-right-1)))
-;;         '(:eval (concat (propertize " %* %b " 'face 'mode-line-color-2)
-;;                         (propertize " " 'display arrow-right-2)))
-
-;;         ;; Justify right by filling with spaces to right fringe - 16
-;;         ;; (16 should be computed rahter than hardcoded)
-;;         '(:eval (propertize " "
-;;                             'display
-;;                             '((space :align-to (- right-fringe 17)))))
-
-;;         '(:eval (concat (propertize " " 'display arrow-left-2)
-;;                         (propertize " %p " 'face 'mode-line-color-2)))
-;;         '(:eval (concat (propertize " " 'display arrow-left-1)
-;;                         (propertize "%4l:%2c  " 'face 'mode-line-color-3)))
-;; ))
-
-;; (make-face 'mode-line-color-1)
-;; (set-face-attribute 'mode-line-color-1 nil
-;;                     :foreground color1
-;;                     :background fontcolor1)
-
-;; (make-face 'mode-line-color-2)
-;; (set-face-attribute 'mode-line-color-2 nil
-;;                     :foreground color2
-;;                     :background fontcolor2)
-
-;; (make-face 'mode-line-color-3)
-;; (set-face-attribute 'mode-line-color-3 nil
-;;                     :foreground color3
-;;                     :background fontcolor1)
-
-;; (set-face-attribute 'mode-line nil
-;;                     :foreground color3
-;;                     :background "#000"
-;;                     :box nil)
-;; (set-face-attribute 'mode-line-inactive nil
-;;                     :foreground "#002B35"
-;;                     :background "#000")
-
-;; ))
-
-
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
 
 (defun bw-toggle-solarized ()
@@ -5784,19 +5547,6 @@ $0"))))
   (let ((theme-name (ad-get-arg 0)))
     (when (or (eq theme-name 'solarized-dark)
               (eq theme-name 'solarized-light))
-      ;; (progn
-      ;;   (custom-set-faces
-      ;;    '(magit-diff-add ((t (:inherit diff-added :weight normal))))
-      ;;    '(magit-diff-del ((t (:inherit diff-removed :weight normal))))
-      ;;    '(diff-refine-change ((t (:inherit diff-refine-change :background nil))))
-      ;;    '(iedit-occurrence ((t (:inherit lazy-highlight))))
-      ;;    '(match ((t (:inherit lazy-highlight :reverse t))))
-      ;;    '(erb-face ((t (:background nil))))
-      ;;    '(erb-out-delim-face ((t (:inherit erb-exec-delim-face :foreground "#b58900")))))
-      ;;   (when (and (display-graphic-p) *is-a-mac*)
-      ;;     ;; My Macs have the --srgb flag set
-      ;;     (setq solarized-broken-srgb nil)))
-      )))
 
 (ad-activate 'load-theme)
 

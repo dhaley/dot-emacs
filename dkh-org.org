@@ -6229,3 +6229,15 @@ exit $retval
     ad-do-it))
 
 #+end_src
+
+#+begin_src emacs-lisp
+
+(org-add-link-type "mac-outlook" 'org-mac-outlook-open)
+
+(defun org-mac-outlook-open (msgid)
+  "Open a message in outlook"
+
+(shell-command (format "open \"`mdfind com_microsoft_outlook_recordID==%s`\""
+msgid)))
+
+#+end_src
