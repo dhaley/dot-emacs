@@ -44,12 +44,14 @@
                (throw 'proc-running proc)
              (throw 'proc-running nil)))))))
 
-(defun start-fetchmail (&optional name &rest extra-args)
+(defun start-fetchmail (&optional name once &rest extra-args)
   (interactive)
   (let ((procname (or name "*fetchmail*")))
     (unless (process-running-p procname)
       (message "Starting Fetchmail...")
-      (let ((buf (get-buffer-create procname)))
+      (let ((buf (get-buffer-create procname))
+            (args (copy-list extra-args)))
+        (unless once (nconc args '("-d" "900")))
         (setq fetchmail-process
               (apply #'start-process procname buf
                      "/opt/local/bin/fetchmail" "-d" "900" "-N" extra-args)))
@@ -100,7 +102,7 @@
           "*fetchmail*"
           (function
            (lambda ()
-             (start-fetchmail "*fetchmail*" "--idle")))))
+             (start-fetchmail "*fetchmail*" nil "--idle")))))
         ;; (fetchmail-lists-buf
         ;;  (get-buffer-or-call-func
         ;;   "*fetchmail-lists*"
@@ -108,7 +110,7 @@
         ;;    (lambda ()
         ;;      (let ((process-environment (copy-alist process-environment)))
         ;;        (setenv "FETCHMAILHOME" (expand-file-name "~/Messages/Newsdir"))
-        ;;        (start-fetchmail "*fetchmail-lists*"
+        ;;        (start-fetchmail "*fetchmail-lists*" nil
         ;;                         "-f" (expand-file-name
         ;;                               "~/Messages/fetchmailrc.lists")))))))
         ;; (fetchmail-spam-buf
@@ -118,7 +120,7 @@
         ;;    (lambda ()
         ;;      (let ((process-environment (copy-alist process-environment)))
         ;;        (setenv "FETCHMAILHOME" (expand-file-name "~/Maildir"))
-        ;;        (start-fetchmail "*fetchmail-spam*"
+        ;;        (start-fetchmail "*fetchmail-spam*" t
         ;;                         "-f" (expand-file-name
         ;;                               "~/Messages/fetchmailrc.spam")))))))
         ;; (fetchnews-buf
@@ -128,7 +130,7 @@
         ;;    (lambda ()
         ;;      (start-process "*fetchnews*"
         ;;                     (get-buffer-create "*fetchnews*")
-        ;;                     (executable-find "fetchnews") "-vvv" "-n")))))
+        ;;                     (executable-find "fetchnews") "-vvv")))))
         (cur-buf (current-buffer)))
     (delete-other-windows)
     (flet (

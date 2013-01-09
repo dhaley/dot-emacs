@@ -6230,7 +6230,7 @@ exit $retval
 
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 
 (org-add-link-type "mac-outlook" 'org-mac-outlook-open)
 

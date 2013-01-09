@@ -569,6 +569,14 @@ If no file is associated, just close buffer without prompt for save."
 (bind-key "C-x F" 'set-fill-column)
 (bind-key "C-x t" 'toggle-truncate-lines)
 
+(defun toggle-transparency ()
+  (interactive)
+  (if (/= (cadr (frame-parameter nil 'alpha)) 100)
+      (set-frame-parameter nil 'alpha '(100 100))
+    (set-frame-parameter nil 'alpha '(85 50))))
+
+(bind-key "C-x T" 'toggle-transparency)
+
 ;;;_  . C-x C-?
 
 (defun duplicate-line ()
@@ -1945,7 +1953,17 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , dired
 
 (use-package dired
-  :defer t
+   :defer t
+   :init
+   (progn
+     (defvar mark-files-cache (make-hash-table :test #'equal))
+
+     (defun mark-similar-versions (name)
+      (let ((pat name))
+        (if (string-match "^\\(.+?\\)-[0-9._-]+$" pat)
+            (setq pat (match-string 1 pat)))
+        (or (gethash pat mark-files-cache)
+            (ignore (puthash pat t mark-files-cache))))))
   :config
   (progn
     ;; Also auto refresh dired, but be quiet about it
@@ -3046,18 +3064,22 @@ at the beginning of line, if already there."
                                                  default)
                                          (+ 24 (length default)))
                                    'grep-find-history))))
-      (when command-args
-        (let ((null-device nil))        ; see grep
-          (grep command-args))))
+      (if command-args
+          (let ((null-device nil))      ; see grep
+            (grep command-args))))
 
     (bind-key "M-s p" 'find-grep-in-project))
 
   :config
   (progn
+    (use-package grep-ed)
+
     (grep-apply-setting 'grep-command "egrep -nH -e ")
-    (grep-apply-setting
-     'grep-find-command
-     '("find . -type f -print0 | xargs -P4 -0 egrep -nH -e " . 52))))
+    (if t
+        (grep-apply-setting 'grep-find-command '("gf -e " . 7))
+      (grep-apply-setting
+       'grep-find-command
+       '("find . -type f -print0 | xargs -P4 -0 egrep -nH -e " . 52)))))
 
 ;;;_ , gtags
 
@@ -4352,13 +4374,11 @@ end end))))))
                      (whitespace-mode 1)
                      (unicode-tokens-use-shortcuts 0)))
          (bind-key "M-RET" 'proof-goto-point coq-mode-map)
-         (bind-key "<tab>" 'yas/expand-from-trigger-key coq-mode-map)))
-
-    (defadvice proof-electric-terminator
-      (around insert-newline-after-terminator activate)
-      (save-excursion
-        ad-do-it)
-      (forward-char))))
+         (bind-key "<tab>" 'yas/expand-from-trigger-key coq-mode-map)
+         (bind-key "C-c C-p" (lambda ()
+                               (interactive)
+                               (proof-layout-windows)
+                               (proof-prf)) coq-mode-map)))))
 
 
 ;;;_ , ps-print
@@ -4511,6 +4531,24 @@ end end))))))
 
     (add-hook 'ruby-mode-hook 'my-ruby-mode-hook)))
 
+;;;_ , sage-mode
+
+(use-package sage
+  :load-path "/Applications/Misc/sage/local/share/emacs/"
+  :init
+  (progn
+    (setq sage-command "/Applications/Misc/sage/sage")
+
+    ;; If you want sage-view to typeset all your output and have plot()
+    ;; commands inline, uncomment the following line and configure sage-view:
+    (require 'sage-view "sage-view")
+    (add-hook 'sage-startup-before-prompt-hook 'compilation-setup)
+    (add-hook 'sage-startup-after-prompt-hook 'sage-view)
+    ;; You can use commands like
+    ;; (add-hook 'sage-startup-after-prompt-hook 'sage-view-disable-inline-output)
+    (add-hook 'sage-startup-after-prompt-hook 'sage-view-disable-inline-plots t)
+    ;; to enable some combination of features
+    ))
 
 ;; (use-package alert
 ;;   :if running-alternate-emacs
