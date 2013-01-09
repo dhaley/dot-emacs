@@ -5680,6 +5680,17 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;; Various superfluous white-space. Just say no.
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
 
+(defun open-in-desktop ()
+  "Open the current file in desktop.
+Works in Microsoft Windows, Mac OS X, Linux."
+  (interactive)
+  (cond
+   ((string-equal system-type "windows-nt")
+    (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" default-directory t t)))
+   ((string-equal system-type "darwin") (shell-command "open ."))
+   ((string-equal system-type "gnu/linux") (shell-command "xdg-open ."))
+   ) )
+
 ;; (add-to-list 'load-path "~/.emacs.d/site-lisp/frame-tag")
 ;; (require 'frame-tag)
 ;; (frame-tag-mode 1)
