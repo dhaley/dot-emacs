@@ -4569,8 +4569,6 @@ end end))))))
     ;; into alert. Simply adding:
     (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)))
 
-;;(require 'saveplace)
-
 ;; Saveplace
 ;; - places cursor in the last place you edited file
 (use-package saveplace
@@ -5546,7 +5544,7 @@ $0"))))
   (before load-theme)
   (let ((theme-name (ad-get-arg 0)))
     (when (or (eq theme-name 'solarized-dark)
-              (eq theme-name 'solarized-light))
+              (eq theme-name 'solarized-light)))))
 
 (ad-activate 'load-theme)
 
@@ -5688,8 +5686,9 @@ Works in Microsoft Windows, Mac OS X, Linux."
    ((string-equal system-type "windows-nt")
     (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" default-directory t t)))
    ((string-equal system-type "darwin") (shell-command "open ."))
-   ((string-equal system-type "gnu/linux") (shell-command "xdg-open ."))
-   ) )
+   ((string-equal system-type "gnu/linux") (shell-command "xdg-open ."))))
+
+(bind-key "C-S-o" 'open-in-desktop)
 
 ;; (add-to-list 'load-path "~/.emacs.d/site-lisp/frame-tag")
 ;; (require 'frame-tag)
