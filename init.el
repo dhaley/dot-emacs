@@ -3426,18 +3426,6 @@ at the beginning of line, if already there."
 (use-package json-mode
   :mode ("\\.json\\'" . json-mode))
 
-;;;_ , js3-mode
-
-;; (use-package js3-mode
-;;   :load-path "~/.emacs.d/site-lisp/js3-mode"
-;;   :mode ("\\.js\\'" . js3-mode)
-;;   :init
-;;   (progn
-;;     (autoload 'js3-mode "js3" nil t)
-;;     (setq-default js3-basic-offset 2)
-;;     ;;    (setq js2-strict-missing-semi-warning nil)
-;;     )
-;;   )
 
 ;;;_ , ledger
 
@@ -4549,31 +4537,6 @@ end end))))))
     (add-hook 'sage-startup-after-prompt-hook 'sage-view-disable-inline-plots t)
     ;; to enable some combination of features
     ))
-
-;; (use-package alert
-;;   :if running-alternate-emacs
-;;   :load-path "~/.emacs.d/lisp/alert"
-;;   :init
-;;   (progn
-;;     (setq alert-default-style 'growl)
-;;     (alert-add-rule :status '(buried visible idle)
-;;                 :severity '(moderate high urgent)
-;;                 :mode 'erc-mode
-;;                 :predicate
-;;                 #'(lambda (info)
-;;                     (string-match (concat "\\`[^&].*@BitlBee\\'")
-;;                                   (erc-format-target-and/or-network)))
-;;                 :persistent
-;;                 #'(lambda (info)
-;;                     ;; If the buffer is buried, or the user has been
-;;                     ;; idle for `alert-reveal-idle-time' seconds,
-;;                     ;; make this alert persistent. Normally, alerts
-;;                     ;; become persistent after
-;;                     ;; `alert-persist-idle-time' seconds.
-;;                     (memq (plist-get info :status) '(buried idle)))
-;;                 :style 'fringe
-;;                 :continue t)
-;; ))
 
 ;; Sauron
 
