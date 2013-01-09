@@ -2332,10 +2332,9 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
   :if running-alternate-emacs
   :init
   (progn
-    (require 'sauron)
+
     (defun setup-irc-environment ()
       (interactive)
-
       (set-frame-font
        "-*-Lucida Grande-normal-normal-normal-*-*-*-*-*-p-0-iso10646-1" nil
        nil)
@@ -2348,9 +2347,14 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
             erc-fill-prefix "          "
             erc-fill-column 88
             erc-insert-timestamp-function 'erc-insert-timestamp-left)
-
       (set-input-method "Agda")
-      (pabbrev-mode 1))
+
+      (defun reset-erc-track-mode ()
+        (interactive)
+        (setq erc-modified-channels-alist nil)
+        (erc-modified-channels-update))
+
+      (bind-key "C-c r" 'reset-erc-track-mode))
 
     (add-hook 'erc-mode-hook 'setup-irc-environment)
 
@@ -2383,19 +2387,22 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
                                                 :type 'netrc
                                                 :port 6667))
                        :secret))))
-
    (add-hook 'after-init-hook 'im)
-   (add-hook 'after-init-hook 'irc)
-   (defun create-new-erc-frames ()
-     (interactive)
-     (switch-to-bitlbee)
-     (sauron-toggle-hide-show)
-     (switch-to-buffer-other-frame "#drupal-colorado")
-     (switch-to-buffer-other-frame "#emacs"))
-   (bind-key "H-E" 'create-new-erc-frames)
+   (add-hook 'after-init-hook 'irc))
 
   :config
   (progn
+    (require 'sauron)
+    ;; turn on abbrevs
+    (abbrev-mode 1)
+
+    (defun create-new-erc-frames ()
+      (interactive)
+      (switch-to-bitlbee)
+      (sauron-toggle-hide-show)
+      (switch-to-buffer-other-frame "#drupal-colorado")
+      (switch-to-buffer-other-frame "#emacs"))
+    (bind-key "H-E" 'create-new-erc-frames)
 
     ;; add abbrevs
     (abbrev-table-put erc-mode-abbrev-table :parents (list text-mode-abbrev-table))
@@ -2407,9 +2414,7 @@ $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -
     (use-package erc-alert)
     (use-package erc-hl-nicks)
 
-    ;; (require 'erc-match)
-
-    ;; For bitlbee
+    ;; For bitlbee - not very useful unless jabber icons would populate
     (require 'erc-nicklist)
 
     (use-package erc-yank
@@ -2482,6 +2487,50 @@ FORM => (eval FORM)."
       "Deop myself from current channel."
       (erc-cmd-DEOP (format "%s" (erc-current-nick))))
 
+
+        (defun erc-cmd-UNTRACK (&optional target)
+      "Add TARGET to the list of target to be tracked."
+      (if target
+          (erc-with-server-buffer
+           (let ((untracked
+                  (car (erc-member-ignore-case target erc-track-exclude))))
+             (if untracked
+                 (erc-display-line
+                  (erc-make-notice
+                   (format "%s is not currently tracked!" target))
+                  'active)
+               (add-to-list 'erc-track-exclude target)
+               (erc-display-line
+                (erc-make-notice (format "Now not tracking %s" target))
+                'active))))
+
+        (if (null erc-track-exclude)
+            (erc-display-line
+             (erc-make-notice "Untracked targets list is empty") 'active)
+
+          (erc-display-line (erc-make-notice "Untracked targets list:") 'active)
+          (mapc #'(lambda (item)
+                    (erc-display-line (erc-make-notice item) 'active))
+                (erc-with-server-buffer erc-track-exclude))))
+      t)
+
+
+    (defun erc-cmd-TRACK (target)
+      "Remove TARGET of the list of targets which they should not be tracked.
+   If no TARGET argument is specified, list contents of `erc-track-exclude'."
+      (when target
+        (erc-with-server-buffer
+         (let ((tracked
+                (not (car (erc-member-ignore-case target erc-track-exclude)))))
+           (if tracked
+               (erc-display-line
+                (erc-make-notice (format "%s is currently tracked!" target))
+                'active)
+             (setq erc-track-exclude (remove target erc-track-exclude))
+             (erc-display-line
+              (erc-make-notice (format "Now tracking %s" target))
+              'active)))))
+      t)
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     (defun my-reformat-jabber-backlog ()
@@ -2491,7 +2540,7 @@ FORM => (eval FORM)."
         (if (looking-at
              "^<root> System message: Message from unknown participant \\([^:]+\\):")
             (replace-match "<\\1>"))))
-    (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog))))
+    (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)))
 
 
 ;;;_ , eshell
@@ -2500,68 +2549,6 @@ FORM => (eval FORM)."
   :defer t
   :init
   (progn
-    (setq eshell-prompt-regexp "^[^#$]*[#$] ")
-
-    (load "em-hist")           ; So the history vars are defined
-    (if (boundp 'eshell-save-history-on-exit)
-        (setq eshell-save-history-on-exit t)) ; Don't ask, just save
-                                        ;(message "eshell-ask-to-save-history is %s" eshell-ask-to-save-history)
-    (if (boundp 'eshell-ask-to-save-history)
-        (setq eshell-ask-to-save-history 'always)) ; For older(?) version
-                                        ;(message "eshell-ask-to-save-history is %s" eshell-ask-to-save-history)
-
-    (defun eshell/ef (fname-regexp &rest dir) (ef fname-regexp default-directory))
-
-
-;;; ---- path manipulation
-
-    (defun pwd-repl-home (pwd)
-      (interactive)
-      (let* ((home (expand-file-name (getenv "HOME")))
-             (home-len (length home)))
-        (if (and
-             (>= (length pwd) home-len)
-             (equal home (substring pwd 0 home-len)))
-            (concat "~" (substring pwd home-len))
-          pwd)))
-
-    (defun curr-dir-git-branch-string (pwd)
-      "Returns current git branch as a string, or the empty string if
-PWD is not in a git repo (or the git command is not found)."
-      (interactive)
-      (when (and (eshell-search-path "git")
-                 (locate-dominating-file pwd ".git"))
-        (let ((git-output (shell-command-to-string (concat "cd " pwd " && git branch | grep '\\*' | sed -e 's/^\\* //'"))))
-          (propertize (concat "["
-                              (if (> (length git-output) 0)
-                                  (substring git-output 0 -1)
-                                "(no branch)")
-                              "]") 'face `(:foreground "green"))
-          )))
-
-    (setq eshell-prompt-function
-          (lambda ()
-            (concat
-             (propertize ((lambda (p-lst)
-                            (if (> (length p-lst) 3)
-                                (concat
-                                 (mapconcat (lambda (elm) (if (zerop (length elm)) ""
-                                                       (substring elm 0 1)))
-                                            (butlast p-lst 3)
-                                            "/")
-                                 "/"
-                                 (mapconcat (lambda (elm) elm)
-                                            (last p-lst 3)
-                                            "/"))
-                              (mapconcat (lambda (elm) elm)
-                                         p-lst
-                                         "/")))
-                          (split-string (pwd-repl-home (eshell/pwd)) "/")) 'face `(:foreground "yellow"))
-             (or (curr-dir-git-branch-string (eshell/pwd)))
-             (propertize "# " 'face 'default))))
-
-    (setq eshell-highlight-prompt nil)
-
     (defun eshell-initialize ()
       (defun eshell-spawn-external-command (beg end)
         "Parse and expand any history references in current input."
@@ -2581,56 +2568,118 @@ PWD is not in a git repo (or the git command is not found)."
       (eval-after-load "em-unix"
         '(progn
            (unintern 'eshell/su)
-           (unintern 'eshell/sudo))))
-    ;; https://github.com/anthracite/emacs-config/blob/master/init.el
-    (defun eshell-maybe-bol ()
-      "Moves point behind the eshell prompt, or
+           (unintern 'eshell/sudo)))
+
+      (setq eshell-prompt-regexp "^[^#$]*[#$] ")
+
+      (load "em-hist")           ; So the history vars are defined
+      (if (boundp 'eshell-save-history-on-exit)
+          (setq eshell-save-history-on-exit t)) ; Don't ask, just save
+                                        ;(message "eshell-ask-to-save-history is %s" eshell-ask-to-save-history)
+      (if (boundp 'eshell-ask-to-save-history)
+          (setq eshell-ask-to-save-history 'always)) ; For older(?) version
+                                        ;(message "eshell-ask-to-save-history is %s" eshell-ask-to-save-history)
+
+      (defun eshell/ef (fname-regexp &rest dir) (ef fname-regexp default-directory))
+
+
+;;; ---- path manipulation
+
+      (defun pwd-repl-home (pwd)
+        (interactive)
+        (let* ((home (expand-file-name (getenv "HOME")))
+               (home-len (length home)))
+          (if (and
+               (>= (length pwd) home-len)
+               (equal home (substring pwd 0 home-len)))
+              (concat "~" (substring pwd home-len))
+            pwd)))
+
+      (defun curr-dir-git-branch-string (pwd)
+        "Returns current git branch as a string, or the empty string if
+PWD is not in a git repo (or the git command is not found)."
+        (interactive)
+        (when (and (eshell-search-path "git")
+                   (locate-dominating-file pwd ".git"))
+          (let ((git-output (shell-command-to-string (concat "cd " pwd " && git branch | grep '\\*' | sed -e 's/^\\* //'"))))
+            (propertize (concat "["
+                                (if (> (length git-output) 0)
+                                    (substring git-output 0 -1)
+                                  "(no branch)")
+                                "]") 'face `(:foreground "green"))
+            )))
+
+      (setq eshell-prompt-function
+            (lambda ()
+              (concat
+               (propertize ((lambda (p-lst)
+                              (if (> (length p-lst) 3)
+                                  (concat
+                                   (mapconcat (lambda (elm) (if (zerop (length elm)) ""
+                                                         (substring elm 0 1)))
+                                              (butlast p-lst 3)
+                                              "/")
+                                   "/"
+                                   (mapconcat (lambda (elm) elm)
+                                              (last p-lst 3)
+                                              "/"))
+                                (mapconcat (lambda (elm) elm)
+                                           p-lst
+                                           "/")))
+                            (split-string (pwd-repl-home (eshell/pwd)) "/")) 'face `(:foreground "yellow"))
+               (or (curr-dir-git-branch-string (eshell/pwd)))
+               (propertize "# " 'face 'default))))
+
+      (setq eshell-highlight-prompt nil)
+      ;; https://github.com/anthracite/emacs-config/blob/master/init.el
+      (defun eshell-maybe-bol ()
+        "Moves point behind the eshell prompt, or
 at the beginning of line, if already there."
-      (interactive)
-      (let ((p (point)))
-        (eshell-bol)
-        (when (= p (point))
-          (beginning-of-line))))
-    (defun eshell-clear ()
-      "Clears the eshell buffer."
-      (interactive)
-      (let ((inhibit-read-only t))
-        (erase-buffer)))
+        (interactive)
+        (let ((p (point)))
+          (eshell-bol)
+          (when (= p (point))
+            (beginning-of-line))))
+      (defun eshell-clear ()
+        "Clears the eshell buffer."
+        (interactive)
+        (let ((inhibit-read-only t))
+          (erase-buffer)))
 
-    (defun dkh-eshell-macs ()
-      (interactive)
-      "Creates a tool config shell and switches to it. If a buffer with name already exists, we simply switch to it."
-      (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*"))))
-        (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
-               (switch-to-buffer buffer-of-name))
-              ( t
-                (progn
-                  (eshell t)
+      (defun dkh-eshell-macs ()
+        (interactive)
+        "Creates a tool config shell and switches to it. If a buffer with name already exists, we simply switch to it."
+        (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*"))))
+          (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
+                 (switch-to-buffer buffer-of-name))
+                ( t
+                  (progn
+                    (eshell t)
                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
-                  (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*")))))))
+                    (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*")))))))
 
 
-    (defun dkh-shell-with-name (name)
-      (interactive "sName: ")
-      "Creates a shell with name given by the first argument, and switches to it. If a buffer with name already exists, we simply switch to it."
-      (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))
-            (localdir name))
-        (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
-               (switch-to-buffer buffer-of-name))
-              ( t
-                (progn
-                  (eshell)
+      (defun dkh-shell-with-name (name)
+        (interactive "sName: ")
+        "Creates a shell with name given by the first argument, and switches to it. If a buffer with name already exists, we simply switch to it."
+        (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))
+              (localdir name))
+          (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
+                 (switch-to-buffer buffer-of-name))
+                ( t
+                  (progn
+                    (eshell)
                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
-                  (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))))))
+                    (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))))))
 
 
-    (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
+      (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
 
-    ;; Make ls output be RET and mouse-2 clickable
-    ;; (load-library "esh-clickable-ls.el")
+      ;; Make ls output be RET and mouse-2 clickable
+      ;; (load-library "esh-clickable-ls.el")
 
 
-    ;; ;;This makes Eshell’s ‘ls’ file names RET-able. Yay!
+      ;; ;;This makes Eshell’s ‘ls’ file names RET-able. Yay!
       (eval-after-load "em-ls"
         '(progn
            (defun ted-eshell-ls-find-file-at-point (point)
@@ -2757,12 +2806,12 @@ at the beginning of line, if already there."
     ;;   (shell-mode)))
     ;;   buffer)
 
-
+    )
+    (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
     (add-hook 'eshell-mode-hook
               '(lambda ()
                  (local-set-key "\C-c\C-q" 'eshell-kill-process)
-                 (local-set-key "\C-c\C-k" 'compile)))
-    ))
+                 (local-set-key "\C-c\C-k" 'compile)))))
 
 ;; eshell
 (eval-after-load 'esh-opt
@@ -4550,14 +4599,15 @@ end end))))))
                  (string-match "^*** Users" msg)))) ;; filter out IRC spam
 
     )
-  ;; :config
-  ;; (progn
-  ;;   ;; John Wiegley’s alert.el has a bit of overlap with sauron; however, I’ve
-  ;;   ;; added some wrapper function to make it trivial to feed sauron events
-  ;;   ;; into alert. Simply adding:
-  ;;   (require 'alert)
-  ;;   (add-hook ‘sauron-event-added-functions ‘sauron-alert-el-adapter)
-;; )
+  :config
+  (progn
+    ;; John Wiegley’s alert.el has a bit of overlap with sauron; however, I’ve
+    ;; added some wrapper function to make it trivial to feed sauron events
+    ;; into alert. Simply adding:
+    ;; (require 'alert)
+    (require 'erc-alert)
+    ;; (add-hook ‘sauron-event-added-functions ‘sauron-alert-el-adapter)
+)
   )
 
 ;;(require 'saveplace)
