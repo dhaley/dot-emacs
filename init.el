@@ -2491,9 +2491,8 @@ FORM => (eval FORM)."
         (if (looking-at
              "^<root> System message: Message from unknown participant \\([^:]+\\):")
             (replace-match "<\\1>"))))
-    (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
+    (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog))))
 
-    (erc-nick-notify-mode t))))
 
 ;;;_ , eshell
 
