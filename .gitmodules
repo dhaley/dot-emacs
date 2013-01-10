@@ -367,3 +367,6 @@
 [submodule "site-lisp/solarized-emacs"]
 	path = site-lisp/solarized-emacs
 	url = https://github.com/vmann/solarized-emacs.git
+[submodule "site-lisp/emacs_drush"]
+	path = site-lisp/emacs_drush
+	url = https://github.com/arnested/emacs_drush.git
