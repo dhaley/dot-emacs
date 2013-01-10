@@ -301,9 +301,6 @@
 [submodule "site-lisp/flycheck"]
         path = site-lisp/flycheck
         url = https://github.com/lunaryorn/flycheck.git
-[submodule "site-lisp/solarized-emacs"]
-        path = site-lisp/solarized-emacs
-        url = https://github.com/bbatsov/solarized-emacs.git
 [submodule "site-lisp/ecukes"]
         path = site-lisp/ecukes
         url = https://github.com/rejeep/ecukes.git
@@ -362,8 +359,11 @@
         path = site-lisp/sauron
         url = https://github.com/djcb/sauron.git
 [submodule "site-lisp/drupal-mode"]
-	path = site-lisp/drupal-mode
-	url = https://github.com/arnested/drupal-mode.git
+        path = site-lisp/drupal-mode
+        url = https://github.com/arnested/drupal-mode.git
 [submodule "site-lisp/projectile"]
-	path = site-lisp/projectile
-	url = https://github.com/bbatsov/projectile.git
+        path = site-lisp/projectile
+        url = https://github.com/bbatsov/projectile.git
+[submodule "site-lisp/solarized-emacs"]
+	path = site-lisp/solarized-emacs
+	url = https://github.com/vmann/solarized-emacs.git

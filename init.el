@@ -1,8 +1,6 @@
 ;;;_. Initialization
 
 
-;; borrowed from:
-;; https://github.com/purcell/emacs.d/blob/master/init.el
 (defconst *is-a-mac*
   (eq system-type 'darwin)
   "Is this running on OS X?")
@@ -1331,6 +1329,40 @@ Subexpression references can be used (\1, \2, etc)."
 
     (setq system-uses-terminfo nil)
     ;; When you use this code, note that dabbrev-completion is C-x /, and yanking is C-y.
+
+
+    (defun my-term-hook ()
+  (goto-address-mode)
+  (define-key term-raw-map "\C-y" 'my-term-paste)
+  (let ((base03  "#002b36")
+        (base02  "#073642")
+        (base01  "#586e75")
+        (base00  "#657b83")
+        (base0   "#839496")
+        (base1   "#93a1a1")
+        (base2   "#eee8d5")
+        (base3   "#fdf6e3")
+        (yellow  "#b58900")
+        (orange  "#cb4b16")
+        (red     "#dc322f")
+        (magenta "#d33682")
+        (violet  "#6c71c4")
+        (blue    "#268bd2")
+        (cyan    "#2aa198")
+        (green   "#859900"))
+    ;; (setq ansi-term-color-vector
+  ;;         (vconcat `(ansi-term-color-vector [,base01 ,red ,green ,yellow ,blue
+  ;; ,magenta ,cyan ,base03])))
+
+    ))
+
+                   ;; (vconcat `(unspecified ,base02 ,red ,green ,yellow ,blue
+          ;;                        ,magenta ,cyan ,base2)))))
+
+     ;; `(ansi-term-color-vector [,base01 ,red ,green ,yellow ,blue ,magenta ,cyan ,base03])
+
+    ;; (add-hook 'term-mode-hook 'my-term-hook)
+
 
     (add-hook 'term-mode-hook
               '(lambda ()
