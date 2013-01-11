@@ -5727,6 +5727,29 @@ Works in Microsoft Windows, Mac OS X, Linux."
 
 (bind-key "C-S-o" 'open-in-desktop)
 
+;;;; Emoji composition tests
+;;; Regional indicators (#x1F1E6 - #x1F1FF)
+
+(defun emoji-insert_regions ()
+  "Insert Regional indicators (#x1F1E6 - #x1F1FF)"
+  (interactive)
+(insert (mapconcat (lambda (s) (mapcar (lambda (c) (+ c (- #x1F1FF ?Z))) s))
+                   '("CN" "DE" "ES" "FR" "GB" "IT" "JP" "KR" "RU" "US")
+                   " ")))
+
+;;;
+(defun emoji-insert_comparision ()
+  "Variation Selectors 15 (text-style) and 16 (emoji-style)"
+  (interactive)
+(insert (mapconcat
+         (lambda (c) (format "#x%04x:\t%c\uFE0E\u20E3 %c\uFE0F\u20E3" c c c))
+         (cdr (assq 'keycap mac-emoji-variation-characters-alist)) "\n")
+        ?\n
+        (mapconcat
+         (lambda (c) (format "#x%04x:\t%c\uFE0E %c\uFE0F" c c c))
+         (mapconcat 'cdr mac-emoji-variation-characters-alist "") "\n")))
+
+
 ;; (add-to-list 'load-path "~/.emacs.d/site-lisp/frame-tag")
 ;; (require 'frame-tag)
 ;; (frame-tag-mode 1)
