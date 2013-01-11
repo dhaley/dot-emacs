@@ -2826,6 +2826,7 @@ at the beginning of line, if already there."
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
     (add-hook 'eshell-mode-hook
               '(lambda ()
+                 ;; (or (getenv "CDPATH") (setenv "CDPATH" ".:~:~/.emacs.d:~/data:~/data/releases"))
                  (local-set-key "\C-c\C-q" 'eshell-kill-process)
                  (local-set-key "\C-c\C-k" 'compile)))))
 
