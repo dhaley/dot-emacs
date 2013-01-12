@@ -2106,7 +2106,11 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                       (split-string omitted-files "\n" t)
                       "\\|")
                      "\\)")))
-              (funcall dired-omit-regexp-orig))))))
+              (funcall dired-omit-regexp-orig)
+
+              (define-key dired-mode-map [?@] 'dired-up-directory)
+
+              )))))
 
     (eval-after-load "dired-aux"
       '(defun dired-do-async-shell-command (command &optional arg file-list)
