@@ -453,7 +453,7 @@
  '(redisplay-dont-pause t t)
  '(regex-tool-backend (quote perl))
  '(runner-init-file "~/.emacs.d/runner-conf.el")
- '(safe-local-variable-values (quote ((project_name . "fm") (eval require (quote edg)) (eval ignore-errors (require (quote edg))) (after-save-hook git-commit-changes))))
+ '(safe-local-variable-values (quote ((project-name . "vcr") (project_name . "fm") (eval require (quote edg)) (eval ignore-errors (require (quote edg))) (after-save-hook git-commit-changes))))
  '(same-window-regexps (quote ("\\*vc\\-.+\\*" "\\*magit.+\\*" "*grep*" "\\*compilation\\*\\(\\|<[0-9]+>\\)" "\\*Help\\*\\(\\|<[0-9]+>\\)" "\\*Shell Command Output\\*\\(\\|<[0-9]+>\\)" "\\*dictem.*")))
  '(sauron-hide-mode-line t)
  '(sauron-watch-nicks erc-pals)
