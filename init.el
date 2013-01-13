@@ -5753,6 +5753,31 @@ Works in Microsoft Windows, Mac OS X, Linux."
          (lambda (c) (format "#x%04x:\t%c\uFE0E %c\uFE0F" c c c))
          (mapconcat 'cdr mac-emoji-variation-characters-alist "") "\n")))
 
+;; ### Project utilities
+
+;; (defun project-directory ()
+;;   (let ((root (ffip-project-root)))
+;;     (if root (directory-file-name root))))
+
+;; (defun project-make ()
+;;   (interactive)
+;;   (let ((root (locate-dominating-file (buffer-file-name) "Makefile")))
+;;     (if root
+;;         (shell-command (format "cd %s && make" root))
+;;       (message "No Makefile found"))))
+
+;; ;; Allow hooks to be defined in .dir-locals.el
+
+;; (defun project-apply-directory-hooks ()
+;;   "Sets directory-local hooks using the value of `directory-hooks-alist', which
+;; is a list of (hook-name . hook-function) pairs."
+;;   (when (boundp 'directory-hooks-alist)
+;;     (dolist (hook-definition directory-hooks-alist)
+;;       (add-hook (car hook-definition)
+;;                 (cdr hook-definition)
+;;                 nil t))))
+
+;; (add-hook 'hack-local-variables-hook #'project-apply-directory-hooks)
 
 ;; (add-to-list 'load-path "~/.emacs.d/site-lisp/frame-tag")
 ;; (require 'frame-tag)
