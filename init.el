@@ -2941,9 +2941,9 @@ PWD is not in a project"
   (let ((project-root-dir (locate-dominating-file default-directory
                                                   ".dir-locals.el")))
     (let ((path (split-string project-root-dir "/")))     ; path as list
-      ;; (car (last (nbutlast path 1)))
-      (message "%S" (car (last (nbutlast path 1))))
-      )))
+      (car (last (nbutlast path 1)))
+      )
+    ))
 
 
 
