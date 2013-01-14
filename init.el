@@ -2827,6 +2827,80 @@ at the beginning of line, if already there."
     ;;   buffer)
 
     )
+
+
+
+    (defun eshell/cds ()
+      "Change directory to the project's root."
+      (eshell/cd (locate-dominating-file default-directory ".dir-locals.el")))
+
+    (defun eshell/cdg ()
+  "Change directory to the project's root."
+  (eshell/cd (locate-dominating-file default-directory ".git")))
+
+    ;;;###autoload
+(defun eshell/extract (file)
+  (let ((command (some (lambda (x)
+                         (if (string-match-p (car x) file)
+                             (cadr x)))
+                       '((".*\.tar.bz2" "tar xjf")
+                         (".*\.tar.gz" "tar xzf")
+                         (".*\.bz2" "bunzip2")
+                         (".*\.rar" "unrar x")
+                         (".*\.gz" "gunzip")
+                         (".*\.tar" "tar xf")
+                         (".*\.tbz2" "tar xjf")
+                         (".*\.tgz" "tar xzf")
+                         (".*\.zip" "unzip")
+                         (".*\.Z" "uncompress")
+                         (".*" "echo 'Could not extract the file:'")))))
+    (eshell-command-result (concat command " " file))))
+
+(defun esk-eshell-in-dir (&optional prompt)
+  "Change the directory of an existing eshell to the directory of the file in
+  the current buffer or launch a new eshell if one isn't running.  If the
+  current buffer does not have a file (e.g., a *scratch* buffer) launch or raise
+  eshell, as appropriate.  Given a prefix arg, prompt for the destination
+  directory."
+  (interactive "P")
+  (let* ((name (buffer-file-name))
+         (dir (cond (prompt (read-directory-name "Directory: " nil nil t))
+                    (name (file-name-directory name))
+                    (t nil)))
+         (buffers (delq nil (mapcar (lambda (buf)
+                                      (with-current-buffer buf
+                                        (when (eq 'eshell-mode major-mode)
+                                          (buffer-name))))
+                                    (buffer-list))))
+         (buffer (cond ((eq 1 (length buffers)) (first buffers))
+                       ((< 1 (length buffers)) (ido-completing-read
+                                                "Eshell buffer: " buffers nil t
+                                                nil nil (first buffers)))
+                       (t (eshell)))))
+    (with-current-buffer buffer
+      (when dir
+        (eshell/cd (list dir))
+        (eshell-send-input))
+      (end-of-buffer)
+      (pop-to-buffer buffer))))
+
+
+(defun curr-dir-svn-string (pwd)
+  (interactive)
+  (when (and (eshell-search-path "svn")
+             (locate-dominating-file pwd ".svn"))
+    (concat "[s:"
+            (cond ((string-match-p "/trunk\\(/.*\\)?" pwd)
+                   "trunk")
+                  ((string-match "/branches/\\([^/]+\\)\\(/.*\\)?" pwd)
+                   (match-string 1 pwd))
+                  (t
+                   "(no branch)"))
+            "] ")))
+
+ ;; (eshell/export "EPOCROOT=\\Paragon\\")
+
+
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
     (add-hook 'eshell-mode-hook
               '(lambda ()
