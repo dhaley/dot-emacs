@@ -453,7 +453,7 @@
  '(redisplay-dont-pause t t)
  '(regex-tool-backend (quote perl))
  '(runner-init-file "~/.emacs.d/runner-conf.el")
- '(safe-local-variable-values (quote ((project-name . "vcr"))))
+ '(safe-local-variable-values (quote ((clj-project-name . "vcr") (project-name . "vcr"))))
  '(same-window-regexps (quote ("\\*vc\\-.+\\*" "\\*magit.+\\*" "*grep*" "\\*compilation\\*\\(\\|<[0-9]+>\\)" "\\*Help\\*\\(\\|<[0-9]+>\\)" "\\*Shell Command Output\\*\\(\\|<[0-9]+>\\)" "\\*dictem.*")))
  '(sauron-hide-mode-line t)
  '(sauron-watch-nicks erc-pals)

@@ -2900,11 +2900,48 @@ at the beginning of line, if already there."
 
  ;; (eshell/export "EPOCROOT=\\Paragon\\")
 
+;; http://permalink.gmane.org/gmane.emacs.devel/107713
+;; (defadvice cd (around dir-locals-on-cd activate)
+;;    "Apply the variables defined in .dir-locals.el when changing
+;;  into and outof a directory in eshell."
+;;    ;; clean up old variables
+;;    (while file-local-variables-alist
+;;      (let ((x (pop file-local-variables-alist)))
+;;        (kill-local-variable x)))
+;;    ;; cd
+;;    ad-do-it
+;;    ;; run hack-dir-local-variables w/o buffer-file-name
+;;    (let ((variables-file (dir-locals-find-file default-directory))
+;;         (class nil)
+;;         (dir-name nil))
+;;      (cond
+;;       ((stringp variables-file)
+;;        (setq dir-name (file-name-directory default-directory))
+;;        (setq class (dir-locals-read-from-file variables-file)))
+;;       ((consp variables-file)
+;;        (setq dir-name (car variables-file))
+;;        (setq class (cdr variables-file))))
+;;      (when class
+;;        (let ((variables
+;;              (dir-locals-collect-variables
+;;               (dir-locals-get-class-variables class) dir-name nil)))
+;;         (when variables
+;;           (hack-local-variables-filter variables dir-name)))))
+;;    ;; apply file-local-variables to buffer
+;;    (while file-local-variables-alist
+;;      (let ((x (pop file-local-variables-alist)))
+;;        (if (consp x)
+;;            (set (car x) (cdr x))
+;;          (kill-local-variable x)))))
+
+
+
 
     (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
     (add-hook 'eshell-mode-hook
               '(lambda ()
                  ;; (or (getenv "CDPATH") (setenv "CDPATH" ".:~:~/.emacs.d:~/data:~/data/releases"))
+                 (make-local-variable 'project-name)
                  (local-set-key "\C-c\C-q" 'eshell-kill-process)
                  (local-set-key "\C-c\C-k" 'compile)))))
 
