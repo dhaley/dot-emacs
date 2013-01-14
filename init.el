@@ -5401,6 +5401,9 @@ prevents using commands with prefix arguments."
     ;; (local-set-key (kbd "RET") 'newline-and-indent)
     ;; :mode ("\\.\\(php\\|tpl\\|\\.html\\.erb\\)$" . web-mode)
     ;; :interpreter ("web" . web-mode)
+
+    (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))
+
     ))
 
 
