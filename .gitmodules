@@ -85,9 +85,6 @@
 [submodule "site-lisp/slime"]
         path = site-lisp/slime
         url = https://github.com/jwiegley/slime.git
-[submodule "site-lisp/yasnippet"]
-        path = site-lisp/yasnippet
-        url = https://github.com/jwiegley/yasnippet.git
 [submodule "site-lisp/zencoding"]
         path = site-lisp/zencoding
         url = https://github.com/rooney/zencoding.git
@@ -368,5 +365,8 @@
         path = site-lisp/solarized-emacs
         url = https://github.com/vmann/solarized-emacs.git
 [submodule "site-lisp/ibuffer-git"]
-	path = site-lisp/ibuffer-git
-	url = https://github.com/jrockway/ibuffer-git.git
+        path = site-lisp/ibuffer-git
+        url = https://github.com/jrockway/ibuffer-git.git
+[submodule "site-lisp/eproject"]
+        path = site-lisp/eproject
+        url = https://github.com/jrockway/eproject.git
