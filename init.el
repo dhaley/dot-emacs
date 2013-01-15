@@ -6143,109 +6143,121 @@ prevents using commands with prefix arguments."
 
 ;;;_ , yasnippet
 
-;; (use-package yasnippet
-;;   ;; :if (not noninteractive)
-;;   :diminish yas-minor-mode
-;;   :commands (yas-reload-all
-;;              yas-global-mode
-;;              yas-minor-mode
-;;              snippet-mode
-;;              yas-expand
-;;              yas-expand-snippet
-;;              yas-minor-mode-on
-;;              dired-snippets-dir)
-;;   :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
-;;   :init
-;;   (progn
-;;     (setq ;; Yasnippet
-;;      ;; Dont print yasnippet messages
-;;      yas-verbosity 0
-;;      ;; Snippet directories
-;;      yas-snippet-dirs (list (expand-file-name
-;;                              "snippets" user-emacs-directory))
-;;      ;; Disable yasnippet prompt by default
-;;      ;; (using auto-complete to prompt)
-;;      yas-prompt-functions '(yas-popup-isearch-prompt
-;;                             yas-ido-prompt
-;;                             yas-completing-prompt
-;;                             yas-no-prompt))
+(use-package yasnippet
+  ;; :if (not noninteractive)
+  :diminish yas-minor-mode
+  :commands (yas-reload-all
+             yas-global-mode
+             yas-minor-mode
+             snippet-mode
+             yas-expand
+             yas-expand-snippet
+             yas-minor-mode-on
+             dired-snippets-dir)
+  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
+  :init
+  (progn
 
-;;     (defalias 'yas/reload-all 'yas-reload-all)
-;;     (defalias 'yas/global-mode 'yas-global-mode)
-;;     (defalias 'yas/minor-mode 'yas-minor-mode)
-;;     (defalias 'yas/expand 'yas-expand)
-;;     (defalias 'yas/expand-snippet 'yas-expand-snippet)
+    (hook-into-modes #'(lambda () (yas/minor-mode 1))
+                     '(prog-mode-hook
+                       org-mode-hook
+                       ruby-mode-hook
+                       message-mode-hook
+                       gud-mode-hook
+                       erc-mode-hook))
 
-;;     (hook-into-modes #'yas-minor-mode-on my-prog-mode-hooks)
-;;     (add-hook 'org-mode-hook 'yas-minor-mode-on)
-;;     (add-hook 'erc-mode-hook 'yas-minor-mode-on)
-;;     )
-;;   :config
-;;   (progn
+  ;; (hook-into-modes #'(lambda () (yas/minor-mode 1)
+    ;;                      )
+    ;; (hook-into-modes #'yas-minor-mode my-prog-mode-hooks)
+    ;; (add-hook 'org-mode-hook 'yas-minor-mode-on)
+    ;; (add-hook 'erc-mode-hook 'yas-minor-mode-on)
 
-;;     ;; (bind-key "C-x y" 'yas-insert-snippet yas-minor-mode-map)
-;;     (use-package popup
-;;       :init
-;;       (progn
-;;         (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
-;;           (when (featurep 'popup)
-;;             (popup-menu*
-;;              (mapcar
-;;               (lambda (choice)
-;;                 (popup-make-item
-;;                  (or (and display-fn (funcall display-fn choice))
-;;                     choice)
-;;                  :value choice))
-;;               choices)
-;;              :prompt prompt
-;;              ;; start isearch mode immediately
-;;              :isearch t)))))
+    (setq ;; Yasnippet
+     ;; Dont print yasnippet messages
+     yas-verbosity 0
+     ;; Snippet directories
+     yas-snippet-dirs (list (expand-file-name
+                             "snippets" user-emacs-directory))
+     ;; Disable yasnippet prompt by default
+     ;; (using auto-complete to prompt)
+     yas-prompt-functions '(yas-popup-isearch-prompt
+                            yas-ido-prompt
+                            yas-completing-prompt
+                            yas-no-prompt))
 
-;;     (defun dired-snippets-dir ()
-;;       "Open dired in the yas snippets dir."
-;;       (interactive)
-;;       (dired (expand-file-name
-;;               "snippets" user-emacs-directory)))
-;;     (yas-reload-all)
+    (defalias 'yas/reload-all 'yas-reload-all)
+    (defalias 'yas/global-mode 'yas-global-mode)
+    (defalias 'yas/minor-mode 'yas-minor-mode)
+    (defalias 'yas/expand 'yas-expand)
+    (defalias 'yas/expand-snippet 'yas-expand-snippet)
 
-;;     ;; (yas/initialize)
-;;     ;; (yas/load-directory (expand-file-name "snippets/" user-emacs-directory))
+    )
+  :config
+  (progn
+    (yas/initialize)
+    ;; (bind-key "C-x y" 'yas-insert-snippet yas-minor-mode-map)
+    (use-package popup
+      :init
+      (progn
+        (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
+          (when (featurep 'popup)
+            (popup-menu*
+             (mapcar
+              (lambda (choice)
+                (popup-make-item
+                 (or (and display-fn (funcall display-fn choice))
+                    choice)
+                 :value choice))
+              choices)
+             :prompt prompt
+             ;; start isearch mode immediately
+             :isearch t)))))
 
-;;     (bind-key "<tab>" 'yas/next-field-or-maybe-expand yas/keymap)
+    (defun dired-snippets-dir ()
+      "Open dired in the yas snippets dir."
+      (interactive)
+      (dired (expand-file-name
+              "snippets" user-emacs-directory)))
 
-;;     (defun yas/new-snippet (&optional choose-instead-of-guess)
-;;       (interactive "P")
-;;       (let ((guessed-directories (yas/guess-snippet-directories)))
-;;         (switch-to-buffer "*new snippet*")
-;;         (erase-buffer)
-;;         (kill-all-local-variables)
-;;         (snippet-mode)
-;;         (set (make-local-variable 'yas/guessed-modes)
-;;              (mapcar #'(lambda (d)
-;;                          (intern (yas/table-name (car d))))
-;;                      guessed-directories))
-;;         (unless (and choose-instead-of-guess
-;;                      (not (y-or-n-p "Insert a snippet with useful headers? ")))
-;;           (yas/expand-snippet "\
-;; # -*- mode: snippet -*-
-;; # name: $1
-;; # --
-;; $0"))))
+    ;; (yas-reload-all)
 
-;;     (bind-key "C-c y TAB" 'yas/expand)
-;;     (bind-key "C-c y n" 'yas/new-snippet)
-;;     (bind-key "C-c y f" 'yas/find-snippets)
-;;     (bind-key "C-c y r" 'yas/reload-all)
-;;     (bind-key "C-c y v" 'yas/visit-snippet-file)
+    (yas/load-directory (expand-file-name "snippets/" user-emacs-directory))
+
+    (bind-key "<tab>" 'yas/next-field-or-maybe-expand yas/keymap)
+
+    (defun yas/new-snippet (&optional choose-instead-of-guess)
+      (interactive "P")
+      (let ((guessed-directories (yas/guess-snippet-directories)))
+        (switch-to-buffer "*new snippet*")
+        (erase-buffer)
+        (kill-all-local-variables)
+        (snippet-mode)
+        (set (make-local-variable 'yas/guessed-modes)
+             (mapcar #'(lambda (d)
+                         (intern (yas/table-name (car d))))
+                     guessed-directories))
+        (unless (and choose-instead-of-guess
+                     (not (y-or-n-p "Insert a snippet with useful headers? ")))
+          (yas/expand-snippet "\
+# -*- mode: snippet -*-
+# name: $1
+# --
+$0"))))
+
+    (bind-key "C-c y TAB" 'yas/expand)
+    (bind-key "C-c y n" 'yas/new-snippet)
+    (bind-key "C-c y f" 'yas/find-snippets)
+    (bind-key "C-c y r" 'yas/reload-all)
+    (bind-key "C-c y v" 'yas/visit-snippet-file)
 
 
-;;     (yas/define-snippets 'text-mode
-;;                          '(("email" "damon.haley@colorado.edu" "(user's email)" nil nil nil nil nil)
-;;                            ("phone" "303-492-1236" "(phone numer)" nil nil nil nil nil)
-;;                            ("thanks" "Thanks. Let me know if you have any questions or concerns" "(salutation)" nil nil nil nil nil)
-;;                            ("time" "`(current-time-string)`" "(current time)" nil nil nil nil nil))
-;;                          'nil)
-;;     ))
+    (yas/define-snippets 'text-mode
+                         '(("email" "damon.haley@colorado.edu" "(user's email)" nil nil nil nil nil)
+                           ("phone" "303-492-1236" "(phone numer)" nil nil nil nil nil)
+                           ("thanks" "Thanks. Let me know if you have any questions or concerns" "(salutation)" nil nil nil nil nil)
+                           ("time" "`(current-time-string)`" "(current time)" nil nil nil nil nil))
+                         'nil)
+    ))
 
 
 ;;;_ , yaoddmuse
