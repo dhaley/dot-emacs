@@ -2100,7 +2100,6 @@ Subexpression references can be used (\1, \2, etc)."
               ("Magit" (name . "\*magit"))
               ))))
 
-     )
     (add-hook 'ibuffer-mode-hook
               #'(lambda ()
                   (ibuffer-switch-to-saved-filter-groups "default")))))
