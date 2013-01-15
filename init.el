@@ -1600,6 +1600,7 @@ Subexpression references can be used (\1, \2, etc)."
   :init
   (progn
     (use-package pos-tip)
+    (use-package yasnippet)
     (ac-config-default))
 
   :config
@@ -6163,15 +6164,14 @@ prevents using commands with prefix arguments."
                        org-mode-hook
                        ruby-mode-hook
                        message-mode-hook
-                       gud-mode-hook
-                       erc-mode-hook))
-
-  ;; (hook-into-modes #'(lambda () (yas/minor-mode 1)
-    ;;                      )
-    ;; (hook-into-modes #'yas-minor-mode my-prog-mode-hooks)
-    ;; (add-hook 'org-mode-hook 'yas-minor-mode-on)
-    ;; (add-hook 'erc-mode-hook 'yas-minor-mode-on)
-
+                       erc-mode-hook
+                       emacs-lisp-mode-hook
+                       pyhon-mode-hook
+                       coffee-mode-hook
+                       js-mode-hook
+                       js2-mode-hook
+                       actionscript-mode-hook
+                       ))
     (setq ;; Yasnippet
      ;; Dont print yasnippet messages
      yas-verbosity 0
@@ -6194,7 +6194,7 @@ prevents using commands with prefix arguments."
     )
   :config
   (progn
-    (yas/initialize)
+    ;; (yas/initialize)
     ;; (bind-key "C-x y" 'yas-insert-snippet yas-minor-mode-map)
     (use-package popup
       :init
@@ -6219,7 +6219,7 @@ prevents using commands with prefix arguments."
       (dired (expand-file-name
               "snippets" user-emacs-directory)))
 
-    ;; (yas-reload-all)
+    (yas-reload-all)
 
     (yas/load-directory (expand-file-name "snippets/" user-emacs-directory))
 
@@ -6250,13 +6250,6 @@ $0"))))
     (bind-key "C-c y r" 'yas/reload-all)
     (bind-key "C-c y v" 'yas/visit-snippet-file)
 
-
-    (yas/define-snippets 'text-mode
-                         '(("email" "damon.haley@colorado.edu" "(user's email)" nil nil nil nil nil)
-                           ("phone" "303-492-1236" "(phone numer)" nil nil nil nil nil)
-                           ("thanks" "Thanks. Let me know if you have any questions or concerns" "(salutation)" nil nil nil nil nil)
-                           ("time" "`(current-time-string)`" "(current time)" nil nil nil nil nil))
-                         'nil)
     ))
 
 
