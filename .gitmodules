@@ -382,3 +382,9 @@
 [submodule "site-lisp/ido-ubiquitous"]
 	path = site-lisp/ido-ubiquitous
 	url = https://github.com/technomancy/ido-ubiquitous.git
+[submodule "site-lisp/timelog-mode"]
+	path = site-lisp/timelog-mode
+	url = https://github.com/arvidj/timelog-mode.git
+[submodule "site-lisp/flymake-easy"]
+	path = site-lisp/flymake-easy
+	url = https://github.com/purcell/flymake-easy.git
