@@ -373,3 +373,6 @@
 [submodule "site-lisp/yasnippet"]
 	path = site-lisp/yasnippet
 	url = https://github.com/capitaomorte/yasnippet.git
+[submodule "site-lisp/flyspell-php"]
+	path = site-lisp/flyspell-php
+	url = https://github.com/purcell/flymake-php.git

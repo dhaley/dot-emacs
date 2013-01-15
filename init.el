@@ -2094,6 +2094,7 @@ Subexpression references can be used (\1, \2, etc)."
                        (mode . gnus-summary-mode)
                        (mode . gnus-article-mode)
                        (name . "^\\.bbdb$")
+                       (name . "^\\*fetchmail\\*$")
                        (name . "^\\.newsrc-dribble")
                        (name . "^\\*gnus trace\\*$")
                        (name . "^\\*scratch\\* (gnus)$")
@@ -2446,6 +2447,7 @@ The output appears in the buffer `*Async Shell Command*'."
   (and (boundp 'eproject-mode) eproject-mode))
 
 (use-package eproject
+  :defer t
   :commands (eproject-root
              eproject-maybe-turn-on)
   :mode (("\\.eproject\\'" . dot-eproject-mode))
