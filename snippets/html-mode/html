@@ -1,13 +1,7 @@
-# -*- mode: snippet -*-
-# name: html
+# contributor: Jimmy Wu <frozenthrone88@gmail.com>
+# name: <html>...</html>
 # key: html
 # --
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>$1</title>
-  </head>
-  <body>
-    $0
-  </body>
+  $0
 </html>

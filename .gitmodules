@@ -367,3 +367,6 @@
 [submodule "site-lisp/solarized-emacs"]
         path = site-lisp/solarized-emacs
         url = https://github.com/vmann/solarized-emacs.git
+[submodule "site-lisp/ibuffer-git"]
+	path = site-lisp/ibuffer-git
+	url = https://github.com/jrockway/ibuffer-git.git

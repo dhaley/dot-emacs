@@ -130,7 +130,8 @@
  '(erc-modules (quote (button notifications autojoin completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services spelling smiley stamp spelling track truncate track-score hl-nicks)))
  '(erc-nick "dkh")
  '(erc-notifications-icon "~/.emacs.d/icons/irc.png")
- '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac" "matt" "kevin" "jo" "cathy" "wiegley" "qdot" "crafts" "miles" "alfredo" "Karin" "BerntH" "technomancy" "ultimateboy")))
+ '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac" "matt"
+                    "kevin" "jo" "cathy" "wiegley" "qdot" "crafts" "miles" "alfredo" "Karin" "BerntH" "technomancy" "ultimateboy" "a00001")))
  '(erc-port 6667)
  '(erc-priority-people-regexp "\\`[^#].+")
  '(erc-prompt (lambda nil (if erc-network (concat "[" (symbol-name erc-network) "]") (concat "[" (car erc-default-recipients) "]"))))
@@ -309,6 +310,8 @@
  '(ido-enable-tramp-completion nil)
  '(ido-enter-matching-directory (quote first))
  '(ido-ignore-files (quote ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "\\`\\.DS_Store" "\\`\\.localized" "\\.sparsebundle/" "\\.dmg\\'")))
+ '(ido-file-extensions-order '(".py" ".rb" ".java" ".coffee" ".js" ".c" ".cpp" ".el" ".html" ".htm" ".xhtml" ".styl" ".scss" ".sass" ".css"  ".org" ".md" ".markdowm" ".doc" ".txt" ".rst" ".yml" ".yaml" ".xml" ".ini" ".cfg" ".cnf"))
+ '(ido-ignore-buffers '("\\` " "*Ido Completions*" "*Completions*" "*helm*" "type-break"))
  '(ido-save-directory-list-file "~/.emacs.d/data/ido.last")
  '(ido-use-virtual-buffers t)
  '(image-dired-dir "~/.emacs.d/data/image-dired/")

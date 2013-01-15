@@ -14,6 +14,13 @@
   (eq system-type 'gnu/linux)
   "Is this running on Linux?")
 
+(defconst user-cache-directory
+  (file-truename "~/.cache/emacs-user-cache"))
+
+;; These should always exist
+(make-directory user-cache-directory t)
+
+
 ;; Set path to .emacs.d
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
@@ -233,6 +240,69 @@ want to use in the modeline *in lieu of* the original.")
 
 
 (add-hook 'after-change-major-mode-hook 'clean-mode-line)
+
+
+;; Modes and mode groupings
+(defmacro hook-into-modes (func modes)
+  `(dolist (mode-hook ,modes)
+     (add-hook mode-hook ,func)))
+
+(defvar my-lisp-modes
+  '(emacs-lisp-mode
+    inferior-emacs-lisp-mode
+    ielm-mode
+    lisp-mode
+    inferior-lisp-mode
+    lisp-interaction-mode
+    slime-repl-mode))
+
+(defvar my-lisp-mode-hooks
+  (mapcar (function
+           (lambda (mode)
+             (intern
+              (concat (symbol-name mode) "-hook"))))
+          my-lisp-modes))
+
+(defvar my-prog-mode-hooks
+  '(prog-mode-hook
+    emacs-lisp-mode-hook
+    pyhon-mode-hook
+    coffee-mode-hook
+    js-mode-hook
+    js2-mode-hook
+    actionscript-mode-hook
+    ruby-mode-hook
+    haskell-mode-hook
+    clojure-mode-hook
+    go-mode-hook
+    groovy-mode-hook
+    qml-mode-hook))
+
+(defvar my-significant-whitespace-mode-hooks
+  '(coffee-mode-hook
+    python-mode-hook
+    haskell-mode-hook
+    stylus-mode-hook
+    haml-mode-hook))
+
+(defvar my-markup-mode-hooks
+  '(html-mode-hook
+    markdown-mode-hook
+    rst-mode-hook
+    org-mode-hook))
+
+(defvar my-html-like-mode-hooks
+  '(html-mode-hook
+    handlebars-mode-hook
+    nxml-mode-hook
+    web-mode-hook
+    haml-mode-hook))
+
+(defvar my-css-like-mode-hooks
+  '(css-mode-hook
+    stylus-mode-hook
+    sass-mode-hook
+    scss-mode))
 
 ;;; alias the new `flymake-report-status-slim' to
 ;;; `flymake-report-status'
@@ -1909,10 +1979,133 @@ Subexpression references can be used (\1, \2, etc)."
 
 (use-package ibuffer
   :defer t
-  :init
-  (add-hook 'ibuffer-mode-hook
-            #'(lambda ()
-                (ibuffer-switch-to-saved-filter-groups "default"))))
+  :bind ("C-x C-b" . ibuffer)
+  :config
+  (progn
+    (use-package ibuffer-git)
+    (define-ibuffer-column size-h
+      (:name "Size" :inline t)
+      (cond
+       ((> (buffer-size) 1000)
+        (format "%7.1fk" (/ (buffer-size) 1000.0)))
+       ((> (buffer-size) 1000000)
+        (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+       (t
+        (format "%8d" (buffer-size)))))
+
+    (setq
+     ibuffer-default-sorting-mode 'filename/process
+     ibuffer-eliding-string "…"
+     ibuffer-compile-formats t
+     ibuffer-formats '((mark modified read-only
+                             " " (name 25 25 :left :elide)
+                             " " (size-h 9 -1 :right)
+                             " " (mode 7 7 :left :elide)
+                             " " (git-status 8 8 :left)
+                             " " filename-and-process)
+                       (mark " " (name 16 -1) " " filename))
+     ibuffer-show-empty-filter-groups nil
+     ibuffer-saved-filter-groups
+     (quote (("default"
+              ("emacs lisp" (mode . emacs-lisp-mode))
+              ("python" (mode . python-mode))
+              ("ruby" (mode . ruby-mode))
+              ("coffee-script" (mode . coffee-mode))
+              ("java-script" (or
+                              (mode . js-mode)
+                              (mode . js2-mode)))
+              ("action-script" (mode . actionscript-mode))
+              ("java" (mode . java-mode))
+              ("html" (or
+                       (mode . html-mode)
+                       (mode . web-mode)
+                       (mode . haml-mode)))
+              ("xml" (mode . nxml-mode))
+              ("css preprocessor" (or
+                                   (mode . scss-mode)
+                                   (mode . sass-mode)
+                                   (mode . stylus-mode)))
+              ("css" (mode . css-mode))
+              ("org agenda" (mode . org-agenda-mode))
+              ("org" (or
+                      (mode . org-mode)
+                      (name . "^\\*Calendar\\*$")
+                      (name . "^diary$")))
+              ("text misc" (or
+                            (mode . text-mode)
+                            (mode . rst-mode)
+                            (mode . markdown-mode)))
+              ("w3m" (mode . w3m-mode))
+              ("git" (or
+                      (mode . magit-log-edit-mode)
+                      (mode . magit-log)))
+              ("dired" (mode . dired-mode))
+              ("help" (or
+                       (mode . Info-mode)
+                       (mode . help-mode)
+                       (mode . Man-mode)
+                       (mode . apropos-mode)
+                       (mode . woman-mode)))
+              ("*kite*" (name . "^\\*kite.*\\*"))
+              ("*helm*" (name . "^\\*helm.*\\*"))
+              ("*buffer*" (name . "\\*.*\\*"))
+              ("ssh"
+               (or
+                (name . "\\*tramp")
+                (name . "^\\*debug tramp")
+                ))
+              ("emacs"
+               (or
+                (mode . occur-mode)
+                (mode . bookmark-bmenu-mode)
+                (mode . help-mode)
+                (name . "^\\*scratch\\*$")
+                (name . "^\\*Messages\\*$")
+
+                (name . "^\\*Compile-Log\\*$")
+                (name . "^\\*Backtrace\\*$")
+                (name . "^\\*info\\*$")
+                (name . "^\\*Occur\\*$")
+                (name . "^\\*grep\\*$")
+                (name . "^\\*Process List\\*$")
+                (name . "^\\*gud\\*$")
+                (name . "^\\*compilation\\*$")
+                (name . "^\\*Kill Ring\\*$")
+                ))
+              ("latex" (or (mode . latex-mode)
+                           (mode . LaTeX-mode)
+                           (mode . bibtex-mode)
+                           (mode . reftex-mode)))
+              ("irc"
+               (or
+                (name . "^\\*Sauron\\*$")
+                (mode . garak-mode)
+                (name . "^\\*Garak\\*$")
+                (mode . erc-mode)
+                (mode . twittering-mode)
+                (name . "^\\*scratch\\* (irc)$")
+                ))
+              ("gnus" (or
+                       (mode . message-mode)
+                       (mode . bbdb-mode)
+                       (mode . mail-mode)
+                       (mode . gnus-group-mode)
+                       (mode . gnus-summary-mode)
+                       (mode . gnus-article-mode)
+                       (name . "^\\.bbdb$")
+                       (name . "^\\.newsrc-dribble")
+                       (name . "^\\*gnus trace\\*$")
+                       (name . "^\\*scratch\\* (gnus)$")
+                       ))
+              ("Magit" (name . "\*magit"))
+              ))))
+
+     )
+    (add-hook 'ibuffer-mode-hook
+              #'(lambda ()
+                  (ibuffer-switch-to-saved-filter-groups "default")))))
+
+
 
 ;;;_ , iflipb
 
@@ -2238,6 +2431,154 @@ The output appears in the buffer `*Async Shell Command*'."
     (bind-key "C-. C-=" 'emms-player-mplayer-volume-up)))
 
 
+(use-package pcache
+  :defer t
+  :init
+  (progn
+    (setq
+     pcache-directory
+     (let ((dir (expand-file-name "pcache/" user-cache-directory)))
+       (make-directory dir t)
+       dir))))
+
+(defun eproject-active ()
+  "Check if eproject is available and it's minor mode enabled."
+  (and (boundp 'eproject-mode) eproject-mode))
+
+(use-package eproject
+  :commands (eproject-root
+             eproject-maybe-turn-on)
+  :mode (("\\.eproject\\'" . dot-eproject-mode))
+  :diminish ((eproject-mode . "prj"))
+  :init
+  (progn
+    (setq eproject-completing-read-function 'eproject--ido-completing-read)
+    (use-package eproject-extras
+      :commands (eproject-open-all-project-files
+                 eproject-ibuffer
+                 eproject-find-file
+                 eproject-grep)
+      :config
+      (progn
+        (unbind-key "C-c C-f" eproject-mode-map)
+        (unbind-key "C-c C-b" eproject-mode-map)))
+    (use-package eproject-tasks
+      :commands (helm-eproject-tasks))
+
+    (defun my-eproject-maybe-turn-on ()
+      "Ignores errors"
+      (interactive)
+      (condition-case msg
+          (eproject-maybe-turn-on)
+        (error (message "Ignored eproject-maybe-turn-on error: %s" msg))))
+
+    (hook-into-modes #'my-eproject-maybe-turn-on
+                     my-prog-mode-hooks)
+    (hook-into-modes #'my-eproject-maybe-turn-on
+                     my-css-like-mode-hooks)
+    (hook-into-modes #'my-eproject-maybe-turn-on
+                     my-html-like-mode-hooks)
+    (hook-into-modes #'my-eproject-maybe-turn-on
+                     '(dired-mode-hook)))
+  :config
+  (progn
+    ;; Order of these project definitions are important
+    ;; The latest defined project types are checked first.
+
+    (define-project-type generic () nil
+      :relevant-files (".*")
+      :irrelevant-files ("^[.]" "^[#]" ".git/" ".hg/" ".bzr/" "_darcs/")
+      :file-name-map (lambda (root) (lambda (root file) file))
+      :local-variables (lambda (root) (lambda (root file) nil))
+      :config-file ".eproject")
+
+    (define-project-type generic-eproject (generic) (look-for ".eproject"))
+    (define-project-type generic-git (generic) (look-for ".git/"))
+    (define-project-type generic-hg (generic) (look-for ".hg"))
+    (define-project-type generic-bzr (generic) (look-for ".bzr"))
+    (define-project-type generic-darcs (generic) (look-for "_darcs"))
+
+    (define-project-type nodejs (generic)
+      (look-for "package.json")
+      :relevant-files ("\\.js\\'" "\\.coffee\\'"
+                       "\\.html\\'" "\\.hb\\'"
+                       "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
+                       "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
+                       "\\.rst\\'" "\\.org\\'"
+                       "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
+      :irrelevant-files ("^[.]" "^[#]"
+                         "node_modules/.*"
+                         "\\.sass-cache/.*"
+                         "tmp/.*"
+                         "log/.*"
+                         "\\.min\\.js\\'"
+                         "\\.min\\.css\\'")
+      :main-file "package.json")
+
+    (define-project-type web (generic) nil
+      :relevant-files ("\\.py\\'""\\.rb\\'"
+                       "\\.js\\'" "\\.coffee\\'"
+                       "\\.html\\'" "\\.haml\\'" "\\.hb\\'"
+                       "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
+                       "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
+                       "\\.rst\\'" "\\.org\\'"
+                       "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
+      :irrelevant-files ("node_modules/.*"
+                         "\\.sass-cache/.*"
+                         "tmp/.*"
+                         "log/.*"
+                         "\\.min\\.js\\'"
+                         "\\.min\\.css\\'"))
+
+    (define-project-type ruby-on-rails (web)
+      (and (look-for "Gemfile") (look-for "config/application.rb"))
+      :irrelevant-files ("app/assets/images/.*"
+                         "tmp/.*"
+                         "log/.*"
+                         "public/.*"
+                         "vendor/.*"
+                         "\\.min\\.js\\'"
+                         "\\.min\\.css\\'")
+      :main-file "Gemfile")
+
+    (define-project-type django (web)
+      (look-for "manage.py")
+      :irrelevant-files ("media/.*"
+                         "contrib/.*"
+                         ".*\\.sqlite?"
+                         "node_modules/.*"
+                         "\\.sass-cache/.*"
+                         "static/tinymce/.*"
+                         "\\.min\\.js\\'"
+                         "\\.min\\.css\\'"
+                         "static/CACHE/.*")
+      :main-file "manage.py")
+
+    (define-project-type appcelerator (generic)
+      (and (look-for ".project") (look-for "tiapp.xml"))
+      :relevant-files ("\\.js\\'" "\\.coffee\\'"
+                       "\\.html\\'" "\\.hb\\'"
+                       "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
+                       "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
+                       "\\.rst\\'" "\\.org\\'"
+                       "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
+      :irrelevant-files ("^[.]" "^[#]"
+                         "build/.*"
+                         "node_modules/.*"
+                         "\\.sass-cache/.*"
+                         "tmp/.*"
+                         "log/.*"
+                         "\\.min\\.js\\'"
+                         "\\.min\\.css\\'")
+      :main-file "tiapp.xml")))
+
+
+(use-package truthy
+  :commands (truthy
+             truthy-s
+             truthy-l))
+
+
 
 (use-package conf-mode
   :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
@@ -2272,16 +2613,53 @@ The output appears in the buffer `*Async Shell Command*'."
 ;;     )
 ;;   )
 
+
 (use-package key-chord
+  ;; :if (and
+  ;;      (not degrade-p-minimalism)
+  ;;      (not degrade-p-noninteractive))
+  :commands
+  (key-chord-mode
+   key-chord-define
+   key-chord-define-global)
+  :init
+  (progn
+    (setq
+     key-chord-two-keys-delay 0.05
+     key-chord-one-key-delay 0.15)
+    ;; (when (not degrade-p-terminal)
+      (key-chord-mode 1)
+      )
+  ;; )
   :config
-  (progn (key-chord-mode 1)
-         (key-chord-define-global ";s" 'scratch)
-         (key-chord-define-global ";d" 'delete-window)
-         (key-chord-define-global ";g" 'magit-status)
-         ;; (key-chord-define-global ",."     'append-next-kill)
-         ;; (key-chord-define-global "kl"     'dabbrev-expand)
-         (setq key-chord-two-keys-delay 0.3)
-         ))
+  (progn
+    (mapc
+     (lambda (keyscommand)
+       (key-chord-define-global
+        (car keyscommand) (cdr keyscommand)))
+     '(;; top row shifted keys (kind of)
+       ("1j" . "!")
+       ("2j" . "'") ("2k" . "\"") ("2l" . "`")
+       ("2w" . "@") ;; note exception
+       ("3j" . "#")
+       ("4j" . "$")
+       ("5j" . "%")
+       ("6a" . "&")
+       ("7a" . "\\") ("7s" . "|") ("7d" . "/") ;; standing slashes: \ | /
+       ;; brackets: ( { [ <
+       ("8a" . "(") ("9a" . ")")
+       ("8s" . "{") ("9s" . "}")
+       ("8d" . "[") ("9d" . "]")
+       ("8f" . "<") ("9f" . ">")
+       ("0a" . "=")
+       ("+a" . "?")))
+    (key-chord-define-global ";s" 'scratch)
+    (key-chord-define-global ";d" 'delete-window)
+    (key-chord-define-global ";g" 'magit-status)
+
+    ))
+
+
 
 ;;;_ , drupal-mode
 
@@ -3142,10 +3520,113 @@ PWD is not in a project"
          ("C-c i r" . ispell-region)))
 
 ;; load Flymake cursor
+
 (use-package flymake
+  ;; :if (not degrade-p-flymake)
+  :commands (flymake-mode
+             flymake-mode-on)
+  :init
+  (progn
+    (setq
+     flymake-no-changes-timeout (* 60 5)
+     flymake-start-syntax-check-on-find-file nil
+     flymake-start-syntax-check-on-newline nil)
+
+    (use-package js
+      :if (executable-find "jshint")
+      :defer t
+      :config
+      (progn
+        (use-package flymake-jshint)))
+
+    (use-package js2-mode
+      :if (executable-find "jshint")
+      :defer t
+      :config
+      (progn
+        (use-package flymake-jshint)
+        (add-hook 'js2-mode-hook 'flymake-mode-on)))
+
+    (use-package flymake-jsonlint
+      :if (executable-find "jsonlint")
+      :commands flymake-jsonlint-load
+      :init
+      (progn
+        (add-hook 'json-mode-hook 'flymake-jsonlint-load)
+        (add-hook 'json-mode-hook 'flymake-mode-on)))
+
+    (use-package flymake-ruby
+      :commands flymake-ruby-load
+      :init
+      (progn
+        (add-hook 'ruby-mode-hook 'flymake-ruby-load)
+        (add-hook 'ruby-mode-hook 'flymake-mode-on)))
+
+    (use-package flymake-coffee
+      :commands flymake-coffee-load
+      :init
+      (progn
+        (add-hook 'coffee-mode-hook 'flymake-coffee-load)
+        (add-hook 'coffee-mode-hook 'flymake-mode-on)))
+
+    (use-package flymake-php
+      :commands flymake-php-load
+      :init
+      (progn
+        (add-hook 'php-mode-hook 'flymake-php-load)
+        (add-hook 'php-mode-hook 'flymake-mode-on)))
+
+    (use-package flymake-python-pyflakes
+      :commands flymake-python-pyflakes-load
+      :init
+      (progn
+        (setq flymake-python-pyflakes-executable "flake8")
+        (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
+        (add-hook 'python-mode-hook 'flymake-mode-on)))
+
+    (use-package flymake-python-pyflakes
+      :commands flymake-python-pyflakes-load)
+
+    (use-package flymake-scss
+      :commands flymake-scss-load
+      :init
+      (progn
+        (add-hook 'scss-mode-hook 'flymake-scss-load)
+        (add-hook 'scss-mode-hook 'flymake-mode-on))))
   :config
   (progn
     (use-package flymake-cursor)))
+
+(use-package flycheck
+  :disabled t
+  :commands (flycheck-mode)
+  :init
+  (progn
+    (add-hook 'python-mode-hook 'flycheck-mode))
+  :config
+  (progn
+    (use-package flymake-cursor)))
+
+
+(use-package geben
+  :commands (geben
+             geben-mode))
+
+(use-package highlight-tail
+  :commands highlight-tail-mode)
+
+
+(use-package nyan-mode
+  ;; :if (and
+  ;;      (not degrade-p-looks)
+  ;;      (not degrade-p-terminal)
+  ;;      (not degrade-p-noninteractive))
+  :disabled t
+  :commands nyan-mode
+  :init
+  (progn (nyan-mode 1)))
+
+
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
@@ -3355,10 +3836,6 @@ PWD is not in a project"
          ))
 
 
-;;;_ , ibuffer
-
-(use-package ibuffer
-  :bind ("C-x C-b" . ibuffer))
 
 ;;;_ , ido
 
@@ -3585,8 +4062,15 @@ PWD is not in a project"
 
 ;; JSON files
 (use-package json-mode
-  :mode ("\\.json\\'" . json-mode))
-
+  :commands json-mode
+  :mode ("\\.json\\'" . json-mode)
+  :config
+  (progn
+    (use-package json-pretty-print
+      :commands json-pretty-print)
+    (add-hook 'json-mode-hook
+              #'(lambda ()
+                  (set (make-local-variable 'js-indent-level) 2)))))
 
 ;;;_ , ledger
 
@@ -3986,9 +4470,62 @@ PWD is not in a project"
 ;;;_ , markdown-mode
 
 (use-package markdown-mode
-  :mode ("\\.md\\'" . markdown-mode)
+  :commands markdown-mode
+  :mode (("\\.markdown\\'" . markdown-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.mdwn\\'" . markdown-mode)
+         ("\\.mkd\\'" . markdown-mode)
+         ("\\.mkdown\\'" . markdown-mode)
+         ("\\.mdtext\\'" . markdown-mode))
   :init
   (progn
+      (setq markdown-command "pandoc -f markdown -t html")
+    (defun markdown-imenu-create-index ()
+      (let* ((root '(nil . nil))
+             cur-alist
+             (cur-level 0)
+             (pattern "^\\(\\(#+\\)[ \t]*\\(.+\\)\\|\\([^# \t\n=-].*\\)\n===+\\|\\([^# \t\n=-].*\\)\n---+\\)$")
+             (empty-heading "-")
+             (self-heading ".")
+             hashes pos level heading)
+        (save-excursion
+          (goto-char (point-min))
+          (while (re-search-forward pattern (point-max) t)
+            (cond
+             ((setq hashes (match-string-no-properties 2))
+              (setq heading (match-string-no-properties 3)
+                    pos (match-beginning 1)
+                    level (length hashes)))
+             ((setq heading (match-string-no-properties 4))
+              (setq pos (match-beginning 4)
+                    level 1))
+             ((setq heading (match-string-no-properties 5))
+              (setq pos (match-beginning 5)
+                    level 2)))
+            (let ((alist (list (cons heading pos))))
+              (cond
+               ((= cur-level level) ; new sibling
+                (setcdr cur-alist alist)
+                (setq cur-alist alist))
+               ((< cur-level level) ; first child
+                (dotimes (i (- level cur-level 1))
+                  (setq alist (list (cons empty-heading alist))))
+                (if cur-alist
+                    (let* ((parent (car cur-alist))
+                           (self-pos (cdr parent)))
+                      (setcdr parent (cons (cons self-heading self-pos) alist)))
+                  (setcdr root alist)) ; primogenitor
+                (setq cur-alist alist)
+                (setq cur-level level))
+               (t ; new sibling of an ancestor
+                (let ((sibling-alist (last (cdr root))))
+                  (dotimes (i (1- level))
+                    (setq sibling-alist (last (cdar sibling-alist))))
+                  (setcdr sibling-alist alist)
+                  (setq cur-alist alist))
+                (setq cur-level level)))))
+          (cdr root))))
+
     (defun markdown-preview-file ()
       "run Marked on the current file and revert the buffer"
       (interactive)
@@ -4008,10 +4545,10 @@ PWD is not in a project"
             ("h6"   "^###### \\(.*\\)$" 1)
             ("fn"   "^\\[\\^\\(.*\\)\\]" 1)
             ))
-
     (add-hook 'markdown-mode-hook
-              (lambda ()
-                (setq imenu-generic-expression markdown-imenu-generic-expression)))))
+              '(lambda ()
+                 (setq imenu-create-index-function 'markdown-imenu-create-index)
+                 (setq imenu-generic-expression markdown-imenu-generic-expression)))))
 
 ;;;;_ , mark-multiple
 
@@ -4441,6 +4978,12 @@ end end))))))
   :commands pabbrev-mode
   :diminish pabbrev-mode)
 
+
+(use-package pandoc-mode
+  :commands (turn-on-pandoc
+             pandoc-load-default-settings))
+
+
 ;;;_ , paredit
 
 (use-package paredit
@@ -4605,9 +5148,17 @@ end end))))))
 ;;;;_ , rainbow-mode
 
 (use-package rainbow-mode
-  :diminish rainbow-mode
-  :load-path "rainbow-mode"
-  :commands (rainbow-mode))
+  ;; :if (and
+  ;;      (not degrade-p-terminal)
+  ;;      (not degrade-p-font-lock))
+  :commands rainbow-mode
+  :init
+  (progn
+    (hook-into-modes #'rainbow-mode
+                     '(css-mode-hook
+                       stylus-mode-hook
+                       sass-mode-hook)))
+  :diminish ((rainbow-mode . "rb")))
 
 ;;;_ , recentf
 
@@ -5467,6 +6018,10 @@ prevents using commands with prefix arguments."
 
 (bind-key "M-S-<up>" 'fm-next-frame)
 
+
+(use-package wgrep
+  :commands (wgrep-setup))
+
 ;;;_ , winner
 
 (use-package winner
@@ -5589,58 +6144,110 @@ prevents using commands with prefix arguments."
 
 ;;;_ , yasnippet
 
-(use-package yasnippet
-  :if (not noninteractive)
-  :diminish yas/minor-mode
-  :commands (yas/minor-mode yas/expand)
-  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
-  :init
-  (hook-into-modes #'(lambda () (yas/minor-mode 1))
-                   '(prog-mode-hook
-                     org-mode-hook
-                     ruby-mode-hook
-                     message-mode-hook
-                     gud-mode-hook
-                     erc-mode-hook))
-  :config
-  (progn
-    (yas/initialize)
-    ;; (yas/load-directory (expand-file-name "snippets/" user-emacs-directory))
+;; (use-package yasnippet
+;;   ;; :if (not noninteractive)
+;;   :diminish yas-minor-mode
+;;   :commands (yas-reload-all
+;;              yas-global-mode
+;;              yas-minor-mode
+;;              snippet-mode
+;;              yas-expand
+;;              yas-expand-snippet
+;;              yas-minor-mode-on
+;;              dired-snippets-dir)
+;;   :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
+;;   :init
+;;   (progn
+;;     (setq ;; Yasnippet
+;;      ;; Dont print yasnippet messages
+;;      yas-verbosity 0
+;;      ;; Snippet directories
+;;      yas-snippet-dirs (list (expand-file-name
+;;                              "snippets" user-emacs-directory))
+;;      ;; Disable yasnippet prompt by default
+;;      ;; (using auto-complete to prompt)
+;;      yas-prompt-functions '(yas-popup-isearch-prompt
+;;                             yas-ido-prompt
+;;                             yas-completing-prompt
+;;                             yas-no-prompt))
 
-    (bind-key "<tab>" 'yas/next-field-or-maybe-expand yas/keymap)
+;;     (defalias 'yas/reload-all 'yas-reload-all)
+;;     (defalias 'yas/global-mode 'yas-global-mode)
+;;     (defalias 'yas/minor-mode 'yas-minor-mode)
+;;     (defalias 'yas/expand 'yas-expand)
+;;     (defalias 'yas/expand-snippet 'yas-expand-snippet)
 
-    (defun yas/new-snippet (&optional choose-instead-of-guess)
-      (interactive "P")
-      (let ((guessed-directories (yas/guess-snippet-directories)))
-        (switch-to-buffer "*new snippet*")
-        (erase-buffer)
-        (kill-all-local-variables)
-        (snippet-mode)
-        (set (make-local-variable 'yas/guessed-modes)
-             (mapcar #'(lambda (d)
-                         (intern (yas/table-name (car d))))
-                     guessed-directories))
-        (unless (and choose-instead-of-guess
-                     (not (y-or-n-p "Insert a snippet with useful headers? ")))
-          (yas/expand-snippet "\
-# -*- mode: snippet -*-
-# name: $1
-# --
-$0"))))
+;;     (hook-into-modes #'yas-minor-mode-on my-prog-mode-hooks)
+;;     (add-hook 'org-mode-hook 'yas-minor-mode-on)
+;;     (add-hook 'erc-mode-hook 'yas-minor-mode-on)
+;;     )
+;;   :config
+;;   (progn
 
-    (bind-key "C-c y TAB" 'yas/expand)
-    (bind-key "C-c y n" 'yas/new-snippet)
-    (bind-key "C-c y f" 'yas/find-snippets)
-    (bind-key "C-c y r" 'yas/reload-all)
-    (bind-key "C-c y v" 'yas/visit-snippet-file)
+;;     ;; (bind-key "C-x y" 'yas-insert-snippet yas-minor-mode-map)
+;;     (use-package popup
+;;       :init
+;;       (progn
+;;         (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
+;;           (when (featurep 'popup)
+;;             (popup-menu*
+;;              (mapcar
+;;               (lambda (choice)
+;;                 (popup-make-item
+;;                  (or (and display-fn (funcall display-fn choice))
+;;                     choice)
+;;                  :value choice))
+;;               choices)
+;;              :prompt prompt
+;;              ;; start isearch mode immediately
+;;              :isearch t)))))
+
+;;     (defun dired-snippets-dir ()
+;;       "Open dired in the yas snippets dir."
+;;       (interactive)
+;;       (dired (expand-file-name
+;;               "snippets" user-emacs-directory)))
+;;     (yas-reload-all)
+
+;;     ;; (yas/initialize)
+;;     ;; (yas/load-directory (expand-file-name "snippets/" user-emacs-directory))
+
+;;     (bind-key "<tab>" 'yas/next-field-or-maybe-expand yas/keymap)
+
+;;     (defun yas/new-snippet (&optional choose-instead-of-guess)
+;;       (interactive "P")
+;;       (let ((guessed-directories (yas/guess-snippet-directories)))
+;;         (switch-to-buffer "*new snippet*")
+;;         (erase-buffer)
+;;         (kill-all-local-variables)
+;;         (snippet-mode)
+;;         (set (make-local-variable 'yas/guessed-modes)
+;;              (mapcar #'(lambda (d)
+;;                          (intern (yas/table-name (car d))))
+;;                      guessed-directories))
+;;         (unless (and choose-instead-of-guess
+;;                      (not (y-or-n-p "Insert a snippet with useful headers? ")))
+;;           (yas/expand-snippet "\
+;; # -*- mode: snippet -*-
+;; # name: $1
+;; # --
+;; $0"))))
+
+;;     (bind-key "C-c y TAB" 'yas/expand)
+;;     (bind-key "C-c y n" 'yas/new-snippet)
+;;     (bind-key "C-c y f" 'yas/find-snippets)
+;;     (bind-key "C-c y r" 'yas/reload-all)
+;;     (bind-key "C-c y v" 'yas/visit-snippet-file)
 
 
-    (yas/define-snippets 'text-mode
-                         '(("email" "damon.haley@colorado.edu" "(user's email)" nil nil nil nil nil)
-                           ("phone" "303-492-1236" "(phone numer)" nil nil nil nil nil)
-                           ("thanks" "Thanks. Let me know if you have any questions or concerns" "(salutation)" nil nil nil nil nil)
-                           ("time" "`(current-time-string)`" "(current time)" nil nil nil nil nil))
-                         'nil)))
+;;     (yas/define-snippets 'text-mode
+;;                          '(("email" "damon.haley@colorado.edu" "(user's email)" nil nil nil nil nil)
+;;                            ("phone" "303-492-1236" "(phone numer)" nil nil nil nil nil)
+;;                            ("thanks" "Thanks. Let me know if you have any questions or concerns" "(salutation)" nil nil nil nil nil)
+;;                            ("time" "`(current-time-string)`" "(current time)" nil nil nil nil nil))
+;;                          'nil)
+;;     ))
+
 
 ;;;_ , yaoddmuse
 
@@ -5876,6 +6483,10 @@ Works in Microsoft Windows, Mac OS X, Linux."
         (mapconcat
          (lambda (c) (format "#x%04x:\t%c\uFE0E %c\uFE0F" c c c))
          (mapconcat 'cdr mac-emoji-variation-characters-alist "") "\n")))
+
+
+(define-key global-map (kbd "C-+") 'text-scale-increase)
+(define-key global-map (kbd "C--") 'text-scale-decrease)
 
 ;; ### Project utilities
 
