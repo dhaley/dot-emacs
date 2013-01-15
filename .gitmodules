@@ -371,8 +371,14 @@
         path = site-lisp/eproject
         url = https://github.com/jrockway/eproject.git
 [submodule "site-lisp/yasnippet"]
-	path = site-lisp/yasnippet
-	url = https://github.com/capitaomorte/yasnippet.git
-[submodule "site-lisp/flyspell-php"]
-	path = site-lisp/flyspell-php
-	url = https://github.com/purcell/flymake-php.git
+        path = site-lisp/yasnippet
+        url = https://github.com/capitaomorte/yasnippet.git
+[submodule "site-lisp/flymake-php"]
+        path = site-lisp/flymake-php
+        url = https://github.com/purcell/flymake-php.git
+[submodule "site-lisp/page-break-lines"]
+	path = site-lisp/page-break-lines
+	url = https://github.com/purcell/page-break-lines.git
+[submodule "site-lisp/ido-ubiquitous"]
+	path = site-lisp/ido-ubiquitous
+	url = https://github.com/technomancy/ido-ubiquitous.git
