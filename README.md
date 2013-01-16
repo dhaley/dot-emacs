@@ -42,7 +42,7 @@ HOPEFULLY!!!
 More documentation both inside the code and in this file to come...
 
 This github repository is written, stolen or maintained by Damon Haley
-<dhaley@warphmail.com>
+<dhaley@warpmail.com>
 http://vinylisland.org
 
 Remember: This is free software. Reuse and learning from existing code
