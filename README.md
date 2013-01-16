@@ -1,6 +1,6 @@
 # Dot-emacs #
 
-A bodacious fork of John Wiegley's OS-X Emacs Mac Port.
+A bodacious fork of John Wiegley's dot-emacs OS-X flavored Emacs configuration.
 
 More power!
 ［✔］Win［ ］Lose
