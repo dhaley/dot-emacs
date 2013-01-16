@@ -26,11 +26,11 @@ More power!
 
 ### Then do this: ###
 
-% git clone git@github.com:dhaley/dot-emacs.git .emacs.d
+`% git clone git@github.com:dhaley/dot-emacs.git .emacs.d`
 
 ### Finally do this: ###
 
-% git submodule update --init
+`% git submodule update --init`
 
 YOU'RE DONE!!!!!
 
