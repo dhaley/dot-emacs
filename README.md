@@ -19,9 +19,10 @@ More power!
 
 ----------
 
-### To use this config, first grab Yamamoto Mitsuharu emacs port at: ###
+### To use this config, first grab Yamamoto Mitsuharu's [emacs port][] ###
 
-https://github.com/railwaycat/emacs-mac-port.git
+[emacs port]: https://github.com/railwaycat/emacs-mac-port.git
+
 
 ### Then do this: ###
 
