@@ -192,6 +192,12 @@
 
 (defvar running-alternate-emacs nil)
 
+
+(defvar workgroups-preload-map)
+(define-prefix-command 'workgroups-preload-map)
+
+(bind-key "C-8" 'workgroups-preload-map)
+
 ;;;_ , Enable disabled commands
 
 (put 'downcase-region  'disabled nil)   ; Let downcasing work
@@ -2670,52 +2676,71 @@ The output appears in the buffer `*Async Shell Command*'."
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
     (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
     (setq flymake-phpcs-show-rule t)
-    (defun my-insert-drupal-hook (tagname)
-      "Clone the specified function as a new module hook implementation.
 
-For Drupal <= 6, you will need to grab the developer documentation
-before generating the TAGS file:
+    ;; coder.module compilation errors.
+    (add-to-list
+     'compilation-error-regexp-alist
+     ;; These regexps parse the HTML output that coder displays in a browser.
+     '("<span class="fieldset-legend">\\(.+\\)</span>.*<h2>\\(.+\\)</h2>.*coder-warning .*Line \\([0-9]+\\): \\(.+\\) <pre>" 2 3))
 
-cvs -z6 -d:pserver:anonymous:anonymous@cvs.drupal.org:/cvs/drupal-contrib export -r DRUPAL-6--1 -d developer-docs contributions/docs/developer
+    (add-to-list
+     'compilation-error-regexp-alist
+                                        ; Identify line, same file as previous error.
+     '("coder-warning .*Line \\([0-9]+\\):  \\(.+\\)<pre>" nil 1))
 
-Exuberant ctags:
-$ ctags -eR --langmap=php:+.module.install.inc.engine --languages=php
+    (add-to-list
+     'compilation-error-regexp-alist
+     ;; drupal log by syslog-ng.module                                                                                 
+     '("drupal: .*||\\(.+\\) \(line \\([0-9]+\\) of \\(.+\\)\)\." 3 2))
 
-Old etags:
-$ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -name '*.inc' -o -name '*.engine' \\) | etags --language=php -
-"
-      (interactive (find-tag-interactive "Hook: "))
-      (let ((module (file-name-sans-extension
-                     (file-name-nondirectory (buffer-file-name)))))
-        (find-tag (format "^function %s(" tagname) nil t)
-        (let ((tmp-buffer (generate-new-buffer "*temp*")))
-          (c-mark-function)
-          (copy-to-buffer tmp-buffer (point) (mark))
-          (kill-buffer) ;; the relevant API file
-          (switch-to-buffer tmp-buffer))
-        (newline)
-        (forward-line -1)
-        (insert "/**\n * Implements ")
-        (forward-word)
-        (forward-char) ;; to start of function name
-        (let ((start (point)))
-          (search-forward "(")
-          (backward-char)
-          (let ((funcname (filter-buffer-substring start (point))))
-            (move-beginning-of-line nil)
-            (backward-char)
-            (insert funcname)))
-        (insert "().\n */")
-        (search-forward "_")
-        (backward-char)
-        (delete-region (point) (progn (forward-word -1) (point)))
-        (insert module)
-        (let ((function (filter-buffer-substring (point-min) (point-max))))
-          (kill-buffer)
-          (insert function))
-        (backward-sexp)
-        (forward-line)
-        (back-to-indentation)))))
+
+        ;; (defun my-insert-drupal-hook (tagname)
+;;       "Clone the specified function as a new module hook implementation.
+
+;; For Drupal <= 6, you will need to grab the developer documentation
+;; before generating the TAGS file:
+
+;; cvs -z6 -d:pserver:anonymous:anonymous@cvs.drupal.org:/cvs/drupal-contrib export -r DRUPAL-6--1 -d developer-docs contributions/docs/developer
+
+;; Exuberant ctags:
+;; $ ctags -eR --langmap=php:+.module.install.inc.engine --languages=php
+
+;; Old etags:
+;; $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -name '*.inc' -o -name '*.engine' \\) | etags --language=php -
+;; "
+;;       (interactive (find-tag-interactive "Hook: "))
+;;       (let ((module (file-name-sans-extension
+;;                      (file-name-nondirectory (buffer-file-name)))))
+;;         (find-tag (format "^function %s(" tagname) nil t)
+;;         (let ((tmp-buffer (generate-new-buffer "*temp*")))
+;;           (c-mark-function)
+;;           (copy-to-buffer tmp-buffer (point) (mark))
+;;           (kill-buffer) ;; the relevant API file
+;;           (switch-to-buffer tmp-buffer))
+;;         (newline)
+;;         (forward-line -1)
+;;         (insert "/**\n * Implements ")
+;;         (forward-word)
+;;         (forward-char) ;; to start of function name
+;;         (let ((start (point)))
+;;           (search-forward "(")
+;;           (backward-char)
+;;           (let ((funcname (filter-buffer-substring start (point))))
+;;             (move-beginning-of-line nil)
+;;             (backward-char)
+;;             (insert funcname)))
+;;         (insert "().\n */")
+;;         (search-forward "_")
+;;         (backward-char)
+;;         (delete-region (point) (progn (forward-word -1) (point)))
+;;         (insert module)
+;;         (let ((function (filter-buffer-substring (point-min) (point-max))))
+;;           (kill-buffer)
+;;           (insert function))
+;;         (backward-sexp)
+;;         (forward-line)
+;;         (back-to-indentation)))
+        ))
 
 
 
@@ -2936,6 +2961,16 @@ FORM => (eval FORM)."
              "^<root> System message: Message from unknown participant \\([^:]+\\):")
             (replace-match "<\\1>"))))
     (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)))
+
+(defun curr-dir-project-string ()
+  "Returns current project as a string, or the empty string if
+PWD is not in a project"
+  (interactive)
+  (let ((project-root-dir (locate-dominating-file default-directory ".site_name")))
+    (let ((path (split-string project-root-dir "/")))     ; path as list
+      (car (last (nbutlast path 1)))
+      )
+    ))
 
 
 ;;;_ , eshell
@@ -3230,17 +3265,6 @@ at the beginning of line, if already there."
       ;;            (set (car x) (cdr x))
       ;;          (kill-local-variable x)))))
 
-      (defun curr-dir-project-string ()
-        "Returns current project as a string, or the empty string if
-PWD is not in a project"
-        (interactive)
-        (let ((project-root-dir (locate-dominating-file default-directory
-                                                        ".dir-locals.el")))
-          (let ((path (split-string project-root-dir "/")))     ; path as list
-            (car (last (nbutlast path 1)))
-            )
-          ))
-
 
 
       (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
@@ -3249,7 +3273,7 @@ PWD is not in a project"
                    ;; (or (getenv "CDPATH") (setenv "CDPATH" ".:~:~/.emacs.d:~/data:~/data/releases"))
                    (make-local-variable 'project-name)
                    (local-set-key "\C-c\C-q" 'eshell-kill-process)
-                   (local-set-key "\C-c\C-k" 'compile)))))
+                   (local-set-key "\C-c\C-k" 'compile))))))
 
   ;; eshell
   (eval-after-load 'esh-opt
@@ -3258,10 +3282,16 @@ PWD is not in a project"
        (require 'em-term)
        ;; If I try to SSH from an eshell, launch it in ansi-term instead
        (add-to-list 'eshell-visual-commands "ssh")))
-  ;; fix ANSI colour issues from test runners etc.
+
+  ;; If you want to use it with [[Eshell]], try the following to remove escape sequences from the output:
+
   (add-hook 'eshell-preoutput-filter-functions
             'ansi-color-filter-apply)
 
+  ;;The following will add colors, but its very slow. Don't try it on /dev or similar huge directories:
+
+ (add-hook 'eshell-preoutput-filter-functions
+           'ansi-color-apply)
 
   (use-package esh-toggle
     :requires eshell
@@ -5274,6 +5304,13 @@ end end))))))
       (if window-system
           (add-hook 'after-init-hook 'session-initialize t))))
 
+
+;;;_ , sh-mode
+(use-package sh-mode
+  :mode ("\\.bashrc\\|\\.bash_alias\\|.bash_history\\|alias"  . sh-mode))
+
+
+
 ;;;_ , sh-script
 
   (use-package sh-script
@@ -5962,10 +5999,6 @@ prevents using commands with prefix arguments."
     :if (not noninteractive)
     :init
     (progn
-      (defvar workgroups-preload-map)
-      (define-prefix-command 'workgroups-preload-map)
-
-      (bind-key "C-8" 'workgroups-preload-map)
       (bind-key "C-8" 'wg-switch-to-index-1 workgroups-preload-map)
       (bind-key "0" 'wg-switch-to-index-0 workgroups-preload-map)
       (bind-key " 1" 'wg-switch-to-index-1 workgroups-preload-map)
@@ -6410,40 +6443,72 @@ Works in Microsoft Windows, Mac OS X, Linux."
   (define-key global-map (kbd "C-+") 'text-scale-increase)
   (define-key global-map (kbd "C--") 'text-scale-decrease)
 
-  ;; ### Project utilities
+;; ### Project utilities
 
-  ;; (defun project-directory ()
-  ;;   (let ((root (ffip-project-root)))
-  ;;     (if root (directory-file-name root))))
+(defun initialize_cu_drupal ()
+  "Sets up project variables with out having anything project specific in the
+.dir-locals.el file. "
+  (setq site-directory (locate-dominating-file default-directory ".dir-locals.el")
+        tags-file-name (concat site-directory "TAGS")
+        readme-file-name (concat site-directory "README.md")
+        profile-name (curr-dir-project-string)
+        profile-directory (concat site-directory "profiles/" profile-name)
+        module-directory (concat profile-directory "/modules")
+        theme-directory (concat profile-directory "/themes")
+        profile-theme-directory (concat profile-directory "/themes/" profile-name)
+        feature-directory (concat module-directory "/features")
+        contrib-directory (concat module-directory "/contrib")
+        custom-directory (concat module-directory "/custom"))
 
-  ;; (defun project-make ()
-  ;;   (interactive)
-  ;;   (let ((root (locate-dominating-file (buffer-file-name) "Makefile")))
-  ;;     (if root
-  ;;         (shell-command (format "cd %s && make" root))
-  ;;       (message "No Makefile found"))))
+  (setenv "8dr" readme-file-name)
+  (setenv "8ds" site-directory)
+  (setenv "8dp" profile-directory)
+  (setenv "8dT" theme-directory)
+  (setenv "8dt" profile-theme-directory)
+  (setenv "8dm" module-directory)
+  (setenv "8dc" custom-directory)
+  (setenv "8df" feature-directory)
+  (setenv "8db" contrib-directory)
 
-  ;; ;; Allow hooks to be defined in .dir-locals.el
+  (bind-key "C-8 d r" (lambda()(interactive)(find-file readme-file-name)))
+  (bind-key "C-8 d s" (lambda()(interactive)(find-file site-directory)))
+  (bind-key "C-8 d p" (lambda()(interactive)(find-file profile-directory)))
+  (bind-key "C-8 d T" (lambda()(interactive)(find-file theme-directory)))
+  (bind-key "C-8 d t" (lambda()(interactive)(find-file profile-theme-directory)))
+  (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
+  (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
+  (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
+  (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory))))
 
-  ;; (defun project-apply-directory-hooks ()
-  ;;   "Sets directory-local hooks using the value of `directory-hooks-alist', which
-  ;; is a list of (hook-name . hook-function) pairs."
-  ;;   (when (boundp 'directory-hooks-alist)
-  ;;     (dolist (hook-definition directory-hooks-alist)
-  ;;       (add-hook (car hook-definition)
-  ;;                 (cdr hook-definition)
-  ;;                 nil t))))
+;; Registers
 
-  ;; (add-hook 'hack-local-variables-hook #'project-apply-directory-hooks)
+(dolist (r `(
+             (?A (file . "~/git/.emacs.d/.eshell/alias"))
+             (?P (file . "~/git/.emacs.d/dkh-private.org"))
+           (?O (file . "~/.emacs.d/dkh-org.org"))
+           (?R (file-query "~/git/.emacs.d/.secret/.passwd.gpg" 3490 3499))
+           (?a (file . "~/git/.emacs.d/.abbrev_defs"))
+           (?e (file . "~/git/.emacs.d/eshell/alias"))
+           (?g (file . "~/.emacs.d/gnus-settings.el"))
+           (?G (file . "~/.emacs.d/dot-gnus.el"))
+           (?i (file . "~/.emacs.d/init.el"))
+           (?b (file . "~/git/dkh-org/doc/keybindings.org"))
+           (?o (file . "~/.emacs.d/dkh-org.org"))
+           (?s (file . "~/.emacs.d/settings.el"))
+           (?t (file . "~/git/dkh-org/todo.org"))
+           (?u (file . "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el"))
+           (?v (file . "~/.emacs.d/dkh-core.org"))
+           (?z (file . "~/.zshrc"))
+))
+  (set-register (car r) (cadr r)))
 
-  ;; (add-to-list 'load-path "~/.emacs.d/site-lisp/frame-tag")
-  ;; (require 'frame-tag)
-  ;; (frame-tag-mode 1)
 
   ;; Local Variables:
   ;;   mode: emacs-lisp
   ;;   mode: allout
   ;;   outline-regexp: "^;;;_\\([,. ]+\\)"
   ;; End:
+
+
 
 ;;; init.el ends here
