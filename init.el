@@ -120,6 +120,7 @@
 (defun quickping (host)
   (= 0 (call-process "/sbin/ping" nil nil nil "-c1" "-W50" "-q" host)))
 
+
 (defun cleanup-term-log ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings."
   (interactive)
