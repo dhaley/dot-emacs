@@ -1,5 +1,13 @@
 ;;;_. Initialization
 
+(setq message-log-max 16384)
+
+(defconst emacs-start-time (current-time))
+
+(unless noninteractive
+  (message "Loading %s..." load-file-name))
+
+(load (expand-file-name "load-path" (file-name-directory load-file-name)))
 
 (defconst *is-a-mac*
   (eq system-type 'darwin)
@@ -50,24 +58,12 @@
 ;;   (setq ls-lisp-use-insert-directory-program nil))
 
 
-(setq message-log-max 16384)
 
 (setenv "E" "~/.emacs.d")
 (setenv "O" "~/git/dkh-org")
 (setenv "S" "~/git/src")
 (setenv "D" "~/data")
 
-(defconst emacs-start-time (current-time))
-
-(unless noninteractive
-  (message "Loading %s..." load-file-name))
-
-(load (expand-file-name "load-path" (file-name-directory load-file-name)))
-
-
-
-;; '(mac-command-modifier (quote hyper))
-;; '(mac-option-modifier (quote meta))
 ;; Keybonds
 
 (global-set-key [(hyper a)] 'mark-whole-buffer)
