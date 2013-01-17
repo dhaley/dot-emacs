@@ -286,11 +286,33 @@
  '(hippie-expand-try-functions-list (quote (yas/hippie-try-expand try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(history-delete-duplicates t)
  '(history-length 200)
+ '(list-colors-sort 'hsv )
  '(ibuffer-default-display-maybe-show-predicates t)
  '(ibuffer-expert t)
  '(ibuffer-formats (quote ((mark modified read-only " " (name 16 -1) " " (size 6 -1 :right) " " (mode 16 16) " " filename) (mark " " (name 16 -1) " " filename))))
  '(ibuffer-maybe-show-regexps nil)
  '(ibuffer-saved-filter-groups (quote (("default" ("Commands" (or (mode . shell-mode) (mode . eshell-mode) (mode . term-mode) (mode . compilation-mode))) ("Helm" (mode . helm-mode)) ("Magit" (or (mode . magit-status-mode) (mode . magit-log-mode))) ("Haskell" (or (mode . haskell-mode) (mode . haskell-cabal-mode) (mode . literate-haskell-mode))) ("C++" (or (mode . c-mode) (mode . c++-mode))) ("Lisp" (mode . emacs-lisp-mode)) ("Dired" (mode . dired-mode)) ("Gnus" (or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode) (name . "^\\.newsrc-dribble"))) ("Org" (or (name . "^\\*Calendar\\*$") (name . "^diary$") (mode . org-mode))) ("Emacs" (or (name . "^\\*scratch\\*$") (name . "^\\*Messages\\*$")))))))
+ '(ibuffer-never-show-predicates
+      (list
+       ;; Gnus development version
+       "^\\*Completions\\*$"
+       "^\\*nnimap"
+       "^\\*gnus trace"
+       "^\\*imap log"
+       ;; Elim
+       "^\\*elim"
+       ;; others
+       "^\\*Completions\\*$"
+       "^\\*BBDB\\*$"
+       "^\\.bbdb$"
+       "^\\.newsrc-dribble$"
+       ;;       "^\\*magit-"        ;; magit stuff
+       "^\\*fsm-debug"     ;; jabber
+       "\\.org_archive$"   ;; orgmode archive files
+       "^\\*jekyll-aa\\*$" ;; local jekyll server
+       "\\.diary$"
+;;       "^mumamo-fetch-major-mode-setup-php-mode$"
+         "\\*vc\\*"))
  '(ibuffer-show-empty-filter-groups nil)
  '(ibuffer-shrink-to-minimum-size t t)
  '(ibuffer-use-other-window t)
@@ -390,6 +412,7 @@
  '(nxml-slash-auto-complete-flag t)
  '(offlineimap-command "offlineimap -u machineui")
  '(org-src-tab-acts-natively t)
+ '(org-jira-current-project "VCR")
  '(pabbrev-idle-timer-verbose nil)
  '(package-archives (quote (("gnu" . "http://elpa.gnu.org/packages/") ("ELPA" . "http://tromey.com/elpa/") ("Marmalade" . "http://marmalade-repo.org/packages/"))))
  '(parens-require-spaces t)
@@ -469,6 +492,7 @@
  '(sc-default-cite-frame (quote ((begin (progn (sc-fill-if-different) (setq sc-tmp-nested-regexp (sc-cite-regexp "") sc-tmp-nonnested-regexp (sc-cite-regexp) sc-tmp-dumb-regexp (concat "\\(" (sc-cite-regexp "") "\\)" (sc-cite-regexp sc-citation-nonnested-root-regexp))))) ("^[    ]*$" (if sc-cite-blank-lines-p (sc-cite-line) (sc-fill-if-different ""))) ((and (looking-at "^-- ?$") (not (save-excursion (goto-char (match-end 0)) (re-search-forward "^-- ?$" nil t)))) (sc-fill-if-different "")) (sc-reference-tag-string (if (string= sc-reference-tag-string "") (list (quote continue)) nil)) (sc-tmp-dumb-regexp (sc-cite-coerce-dumb-citer)) (sc-tmp-nested-regexp (sc-add-citation-level)) (sc-tmp-nonnested-regexp (sc-cite-coerce-cited-line)) (sc-nested-citation-p (sc-add-citation-level)) (t (sc-cite-line)) (end (sc-fill-if-different "")))))
  '(sc-preferred-attribution-list nil)
  '(sc-use-only-preference-p t)
+ '(initial-scratch-message "ಠ_ಠ")
  '(scroll-bar-mode nil)
  '(semanticdb-default-save-directory "~/.emacs.d/data/semanticdb")
  '(send-mail-function (quote sendmail-send-it))

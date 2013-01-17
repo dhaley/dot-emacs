@@ -1296,6 +1296,36 @@ Subexpression references can be used (\1, \2, etc)."
 
 ;;;_. Packages
 
+
+;; Install the packages I need if not already installed
+
+(defun rwd-require-package (name)
+  (or (package-installed-p name) (package-install name)))
+
+(setq dkh-required-packages
+      (list
+       'apache-mode
+       'applescript-mode
+       'buffer-move
+       'color-theme
+       'css-mode
+       'eshell-info
+       'jira
+       'key-chord
+       'lorem-ipsum
+       'pcache
+       'rainbow-mode
+       'smarter-compile
+       'smex
+       'switch-window
+       'window-number
+       'zenburn-theme
+       ))
+
+;; (package-refresh-contents)
+(dolist (package dkh-required-packages) (when (not (package-installed-p package)) (package-install package)))
+
+
 ;;;_ , el-get
 
 (use-package el-get
@@ -2567,17 +2597,54 @@ The output appears in the buffer `*Async Shell Command*'."
 (use-package conf-mode
   :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
 
+
+
 (use-package php-mode
-  :interpreter ("php" . php-mode)
-  init:
+  :commands php-mode
+  :mode ("\\.php\\'" . php-mode)
+  :init
   (progn
-    (require 'php-extras)
+    (use-package php-completion-mode
+      :commands php-completion-mode)
+
+    ;; (use-package php-extras)
+
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
+    (setq php-completion-file "~/git/ewax/misc/php-completion-file")
 
-    ;;(setq php-completion-file "~/git/ewax/misc/php-completion-file")
+    (add-hook 'php-mode-hook
+              '(lambda ()
+                 (outline-minor-mode)
+                 (setq outline-regexp " *\\(private funct\\|public funct\\|funct\\|class\\|#head\\)")
+                 (hide-sublevels 1)
+                 (imenu-add-menubar-index)
+                 (subword-mode t)
+                 ;; (php-electric-mode)
+                 (message "I came here to do Drupal")
+                 ))
 
-    (add-hook 'php-mode-hook '(lambda ()(c-subword-mode t)))
-    (add-hook 'php-mode-hook '(lambda () (php-electric-mode)))
+
+    (bind-key "C-8 o n" 'outline-next-visible-heading)
+    (bind-key "C-8 o p" 'outline-previous-visible-heading)
+    (bind-key "C-8 o i" 'show-children)
+    (bind-key "C-8 o s" 'show-subtree)
+    (bind-key "C-8 o d" 'hide-subtree)
+    (bind-key "C-8 o u" 'outline-up-heading)
+    (bind-key "C-8 o f" 'outline-forward-same-level)
+    (bind-key "C-8 o b" 'outline-backward-same-level)
+    (bind-key "C-8 o t" 'hide-body)
+    (bind-key "C-8 o a" 'show-all)
+    (bind-key "C-8 o c" 'hide-entry)
+    (bind-key "C-8 o e" 'show-entry)
+    (bind-key "C-8 o l" 'hide-leaves)
+    (bind-key "C-8 o k" 'show-branches)
+    (bind-key "C-8 o q" 'hide-sublevels)
+    (bind-key "C-8 o o" 'hide-other)
+    (bind-key "C-8 o ^" 'outline-move-subtree-up)
+    (bind-key "C-8 o v" 'outline-move-subtree-down)
+    (bind-key "C-8 o <" 'outline-promote)
+    (bind-key "C-8 o >" 'outline-demote)
+    (bind-key "C-8 o m" 'outline-insert-heading)
     ))
 
 
@@ -2652,6 +2719,7 @@ The output appears in the buffer `*Async Shell Command*'."
   :interpreter ("drupal" . drupal-mode)
 
   (progn
+    (require 'php-mode)
     (require 'etags)
     (require 'smart-dash)
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
@@ -3453,6 +3521,15 @@ at the beginning of line, if already there."
              flymake-mode-on)
   :init
   (progn
+
+    ;; Drupal-type extensions for Flymake
+                                        ;(add-to-list 'flymake-allowed-file-name-masks '("\\.module$" flymake-php-init))
+                                        ;(add-to-list 'flymake-allowed-file-name-masks '("\\.install$" flymake-php-init))
+                                        ;(add-to-list 'flymake-allowed-file-name-masks '("\\.inc$" flymake-php-init))
+                                        ;(add-to-list 'flymake-allowed-file-name-masks '("\\.engine$" flymake-php-init))
+                                        ;(add-to-list 'flymake-allowed-file-name-masks '("\\.view$" flymake-php-init))
+                                        ;(add-hook 'php-mode-hook (lambda () (flymake-mode 1)))
+
     (setq
      flymake-no-changes-timeout (* 60 5)
      flymake-start-syntax-check-on-find-file nil
@@ -4063,11 +4140,63 @@ at the beginning of line, if already there."
 
 
                                         ; elisp
+(defalias 'acm 'auto-complete-mode)
+(defalias 'ai 'auto-install-from-emacswiki)
+(defalias 'bb  'bbdb)
+(defalias 'bc  'bbdb-create)
+(defalias 'cc 'calc)
+(defalias 'delete-matching-lines 'flush-lines)
+(defalias 'delete-non-matching-lines 'keep-lines)
+(defalias 'dml 'delete-matching-lines)
+(defalias 'dnml 'delete-non-matching-lines)
+(defalias 'dsm 'desktop-save-mode)
+(defalias 'dtw 'delete-trailing-whitespace)
 (defalias 'eb 'eval-buffer)
-(defalias 'er 'eval-region)
 (defalias 'ed 'eval-defun)
-(defalias 'ele 'eval-last-sexp)
+(defalias 'egi 'el-get-install)
 (defalias 'eis 'elisp-index-search)
+(defalias 'ele 'eval-last-sexp)
+(defalias 'elm 'emacs-lisp-mode)
+(defalias 'er 'eval-region)
+(defalias 'eu 'eudc-query-form)
+(defalias 'ev 'eval-buffer)
+(defalias 'fb 'flyspell-buffer)
+(defalias 'fd 'find-dired)
+(defalias 'g 'grep)
+(defalias 'gf 'grep-find)
+(defalias 'gwsm 'global-whitespace-mode)
+(defalias 'hm 'html-mode)
+(defalias 'iw 'ispell-word)
+(defalias 'j 'jabber)
+(defalias 'lcd 'list-colors-display)
+(defalias 'lf 'load-file)
+(defalias 'list-matching-lines 'occur)
+(defalias 'll 'load-library)  ;; dynamic, instead of require
+(defalias 'lml 'list-matching-lines)
+(defalias 'man 'woman)
+(defalias 'ntr 'narrow-to-region)
+(defalias 'om 'org-mode)
+(defalias 'pi 'package-install)
+(defalias 'ps 'powershell)
+(defalias 'qrr 'query-replace-regexp)
+(defalias 'r 'list-registers)
+(defalias 'rb 'revert-buffer)
+(defalias 'rn 'wdired-change-to-wdired-mode) ; rename file in dired
+(defalias 'rof 'recentf-open-files)
+(defalias 'rr 'reverse-region)
+(defalias 'rs 'replace-string)
+(defalias 'sbc 'set-background-color)
+(defalias 'sc 'sql-connect)
+(defalias 'sh 'shell)
+(defalias 'sl 'sort-lines)
+(defalias 'ssm 'shell-script-mode)
+(defalias 'tc 'dkh/toggle-chrome)
+(defalias 'td 'toggle-debug-on-error)
+(defalias 'tm 'text-mode)
+(defalias 'vbm 'visual-basic-mode)
+(defalias 'vlm 'visual-line-mode)
+(defalias 'wsm 'whitespace-mode)
+
 
 (use-package lisp-mode
   :mode ("\\.abbrev_defs" . lisp-mode)
@@ -6420,9 +6549,18 @@ Works in Microsoft Windows, Mac OS X, Linux."
 
 ;; ### Project utilities
 
+
+;; (defun set-site-directroy ()
+;;   "Sets up project variables with out having anything project specific in the
+;; .dir-locals.el file. "
+;;   (interactive)
+;;   (setq site-directory (locate-dominating-file default-directory ".dir-locals.el")
+;; ))
+
 (defun initialize_cu_drupal ()
   "Sets up project variables with out having anything project specific in the
 .dir-locals.el file. "
+  (interactive)
   (setq site-directory (locate-dominating-file default-directory ".dir-locals.el")
         tags-file-name (concat site-directory "TAGS")
         readme-file-name (concat site-directory "README.md")
@@ -6476,6 +6614,9 @@ Works in Microsoft Windows, Mac OS X, Linux."
              (?z (file . "~/.zshrc"))
              ))
   (set-register (car r) (cadr r)))
+
+
+
 
 
 ;; Local Variables:
