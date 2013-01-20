@@ -2,7 +2,8 @@
 ;;; Snippet definitions:
 ;;;
 (yas-define-snippets 'text-mode
-                     '(("email" "`(replace-regexp-in-string \"@\" \"@NOSPAM.\" user-mail-address)`" "(user's email)" nil nil nil nil nil nil)
+                     '(("dh" "Damon Haley\n" "dh" nil nil nil nil "direct-keybinding" nil)
+                       ("email" "`(replace-regexp-in-string \"@\" \"@NOSPAM.\" user-mail-address)`" "(user's email)" nil nil nil nil nil nil)
                        ("fail" "［ ］Pass［✔］Fail" "［✔］Fail" nil nil nil nil nil nil)
                        ("fliptable" "(╯°□°）╯︵ ┻━┻" "(╯°□°）╯︵ ┻━┻" nil nil nil nil nil nil)
                        ("flower" "♡(✿ˇ◡ˇ)人(ˇ◡ˇ✿)♡" "♡(✿ˇ◡ˇ)人(ˇ◡ˇ✿)♡" nil nil nil nil nil nil)
@@ -62,4 +63,4 @@
                        ("todo" "TODO $0\nSCHEDULED: `(with-temp-buffer (org-insert-time-stamp (current-time)))`\n:PROPERTIES:\n:ID:       `(shell-command-to-string \"uuidgen\")`:CREATED: `(with-temp-buffer (org-insert-time-stamp (current-time) t t))`\n:END:" "TODO" nil nil nil nil nil nil)))
 
 
-;;; Do not edit! File generated at Tue Jan 15 10:55:25 2013
+;;; Do not edit! File generated at Fri Jan 18 13:56:41 2013

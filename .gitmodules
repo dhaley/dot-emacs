@@ -388,3 +388,6 @@
 [submodule "site-lisp/flymake-easy"]
 	path = site-lisp/flymake-easy
 	url = https://github.com/purcell/flymake-easy.git
+[submodule "site-lisp/less-css-mode"]
+	path = site-lisp/less-css-mode
+	url = https://github.com/purcell/less-css-mode.git
