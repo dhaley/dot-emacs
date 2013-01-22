@@ -314,21 +314,6 @@ want to use in the modeline *in lieu of* the original.")
     sass-mode-hook
     scss-mode))
 
-;;; alias the new `flymake-report-status-slim' to
-;;; `flymake-report-status'
-(defalias 'flymake-report-status 'flymake-report-status-slim)
-(defun flymake-report-status-slim (e-w &optional status)
-  "Show \"slim\" flymake status in mode line."
-  (when e-w
-    (setq flymake-mode-line-e-w e-w))
-  (when status
-    (setq flymake-mode-line-status status))
-  (let* ((mode-line " Φ"))
-    (when (> (length flymake-mode-line-e-w) 0)
-      (setq mode-line (concat mode-line ":" flymake-mode-line-e-w)))
-    (setq mode-line (concat mode-line flymake-mode-line-status))
-    (setq flymake-mode-line mode-line)
-    (force-mode-line-update)))
 
 ;; Working with Coding Systems and Unicode in Emacs
 
@@ -2642,6 +2627,7 @@ The output appears in the buffer `*Async Shell Command*'."
 
 (use-package php-mode
   :commands php-mode
+  :diminish php-mode
   :mode ("\\.php\\'" . php-mode)
   :init
   (progn
@@ -2764,8 +2750,10 @@ The output appears in the buffer `*Async Shell Command*'."
     (require 'etags)
     (require 'smart-dash)
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
-    (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
-    (setq flymake-phpcs-show-rule t)
+
+
+    ;; (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
+    ;; (setq flymake-phpcs-show-rule t)
 
     ;; coder.module compilation errors.
     (add-to-list
@@ -3560,65 +3548,83 @@ at the beginning of line, if already there."
 
 ;; load Flymake cursor
 
-(use-package flymake
-  ;; :if (not degrade-p-flymake)
-  :commands (flymake-mode
-             flymake-mode-on)
-  :init
-  (progn
+;; (use-package flymake
+;;   ;; :if (not degrade-p-flymake)
+;;   :commands (flymake-mode
+;;              flymake-mode-on)
+;;   :init
+;;   (progn
 
-    ;; Drupal-type extensions for Flymake
-                                        ;(add-to-list 'flymake-allowed-file-name-masks '("\\.module$" flymake-php-init))
-                                        ;(add-to-list 'flymake-allowed-file-name-masks '("\\.install$" flymake-php-init))
-                                        ;(add-to-list 'flymake-allowed-file-name-masks '("\\.inc$" flymake-php-init))
-                                        ;(add-to-list 'flymake-allowed-file-name-masks '("\\.engine$" flymake-php-init))
-                                        ;(add-to-list 'flymake-allowed-file-name-masks '("\\.view$" flymake-php-init))
-                                        ;(add-hook 'php-mode-hook (lambda () (flymake-mode 1)))
+;;     ;; Drupal-type extensions for Flymake
+;;                                         ;(add-to-list 'flymake-allowed-file-name-masks '("\\.module$" flymake-php-init))
+;;                                         ;(add-to-list 'flymake-allowed-file-name-masks '("\\.install$" flymake-php-init))
+;;                                         ;(add-to-list 'flymake-allowed-file-name-masks '("\\.inc$" flymake-php-init))
+;;                                         ;(add-to-list 'flymake-allowed-file-name-masks '("\\.engine$" flymake-php-init))
+;;                                         ;(add-to-list 'flymake-allowed-file-name-masks '("\\.view$" flymake-php-init))
+;;                                         ;(add-hook 'php-mode-hook (lambda () (flymake-mode 1)))
 
-    (setq
-     flymake-no-changes-timeout (* 60 5)
-     flymake-start-syntax-check-on-find-file nil
-     flymake-start-syntax-check-on-newline nil)
+;;     (setq
+;;      flymake-no-changes-timeout (* 60 5)
+;;      flymake-start-syntax-check-on-find-file nil
+;;      flymake-start-syntax-check-on-newline nil)
 
-    (use-package js
-      :if (executable-find "jshint")
-      :defer t
-      :config
-      (progn
-        (use-package flymake-jshint)))
+;;     (use-package js
+;;       :if (executable-find "jshint")
+;;       :defer t
+;;       :config
+;;       (progn
+;;         (use-package flymake-jshint)))
 
-    (use-package js2-mode
-      :if (executable-find "jshint")
-      :defer t
-      :config
-      (progn
-        (use-package flymake-jshint)
-        (add-hook 'js2-mode-hook 'flymake-mode-on)))
+;;     (use-package js2-mode
+;;       :if (executable-find "jshint")
+;;       :defer t
+;;       :config
+;;       (progn
+;;         (use-package flymake-jshint)
+;;         (add-hook 'js2-mode-hook 'flymake-mode-on)))
 
-    (use-package flymake-jsonlint
-      :if (executable-find "jsonlint")
-      :commands flymake-jsonlint-load
-      :init
-      (progn
-        (add-hook 'json-mode-hook 'flymake-jsonlint-load)
-        (add-hook 'json-mode-hook 'flymake-mode-on)))
+;;     (use-package flymake-jsonlint
+;;       :if (executable-find "jsonlint")
+;;       :commands flymake-jsonlint-load
+;;       :init
+;;       (progn
+;;         (add-hook 'json-mode-hook 'flymake-jsonlint-load)
+;;         (add-hook 'json-mode-hook 'flymake-mode-on)))
 
-    (use-package flymake-php
-      :commands flymake-php-load
-      :init
-      (progn
-        (add-hook 'php-mode-hook 'flymake-php-load)
-        (add-hook 'php-mode-hook 'flymake-mode-on)))
+;;     (use-package flymake-php
+;;       :commands flymake-php-load
+;;       :init
+;;       (progn
+;;         (add-hook 'php-mode-hook 'flymake-php-load)
+;;         (add-hook 'php-mode-hook 'flymake-mode-on)))
 
-    (use-package flymake-scss
-      :commands flymake-scss-load
-      :init
-      (progn
-        (add-hook 'scss-mode-hook 'flymake-scss-load)
-        (add-hook 'scss-mode-hook 'flymake-mode-on))))
-  :config
-  (progn
-    (use-package flymake-cursor)))
+;;     (use-package flymake-scss
+;;       :commands flymake-scss-load
+;;       :init
+;;       (progn
+;;         (add-hook 'scss-mode-hook 'flymake-scss-load)
+;;         (add-hook 'scss-mode-hook 'flymake-mode-on))))
+;;   :config
+;;   (progn
+;;     (use-package flymake-cursor)))
+
+
+;;; alias the new `flymake-report-status-slim' to
+;;; `flymake-report-status'
+;; (defalias 'flymake-report-status 'flymake-report-status-slim)
+;; (defun flymake-report-status-slim (e-w &optional status)
+;;   "Show \"slim\" flymake status in mode line."
+;;   (when e-w
+;;     (setq flymake-mode-line-e-w e-w))
+;;   (when status
+;;     (setq flymake-mode-line-status status))
+;;   (let* ((mode-line " Φ"))
+;;     (when (> (length flymake-mode-line-e-w) 0)
+;;       (setq mode-line (concat mode-line ":" flymake-mode-line-e-w)))
+;;     (setq mode-line (concat mode-line flymake-mode-line-status))
+;;     (setq flymake-mode-line mode-line)
+;;     (force-mode-line-update)))
+
 
 ;;;_ , flycheck
 
@@ -4948,7 +4954,7 @@ end end))))))
 
 (use-package dot-org
   :if (not running-alternate-emacs)
-  :commands org-agenda-list
+  :commands (org-agenda-list)
   :bind (
          ("C-c l" . org-store-link)
          ("<f12>" . org-agenda)
@@ -4994,7 +5000,12 @@ end end))))))
   (progn
     (require 'yasnippet)
     (require 'org)
-    (require 'org-habit) ;; added by dkh
+
+    (use-package org-habit
+      ;; :commands org-habit-toggle-habbits
+      :diminish org-habit)
+
+    ;; (require 'org-habit) ;; added by dkh
     (require 'org-drill)
     ;; (org-babel-tangle "~/.emacs.d/dkh-org.org")
     (org-babel-load-file "~/.emacs.d/dkh-org.org")
@@ -5152,6 +5163,10 @@ end end))))))
            (cons "Joanna Bertrand" "joanna")
            (cons "Wendy Turnbull" "wendy")))))
 
+
+(use-package outline-mode
+  :commands outline-mode
+  :diminish outline-mode)
 
 ;;;_ , pabbrev
 
@@ -5562,14 +5577,12 @@ end end))))))
 
 ;;;_ , sh-mode
   (use-package sh-mode
-    :mode ("\\.bashrc\\|\\.bash_alias\\|\\.sh\\|.bash_history\\|alias"  . sh-mode))
-
+    :mode ("\\.bashrc\\|\\.bash_alias\\|\\.sh\\|.bash_history\\|alias" . sh-mode))
 
 
 ;;;_ , sh-script
 
   (use-package sh-script
-    :defer t
     :config
     (progn
       (defvar sh-script-initialized nil)

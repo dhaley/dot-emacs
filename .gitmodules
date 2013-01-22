@@ -349,9 +349,6 @@
 [submodule "site-lisp/projectile"]
         path = site-lisp/projectile
         url = https://github.com/bbatsov/projectile.git
-[submodule "site-lisp/solarized-emacs"]
-        path = site-lisp/solarized-emacs
-        url = https://github.com/vmann/solarized-emacs.git
 [submodule "site-lisp/ibuffer-git"]
         path = site-lisp/ibuffer-git
         url = https://github.com/jrockway/ibuffer-git.git
@@ -380,5 +377,5 @@
         path = site-lisp/less-css-mode
         url = https://github.com/purcell/less-css-mode.git
 [submodule "site-lisp/ac/auto-complete"]
-	path = site-lisp/ac/auto-complete
-	url = git://github.com/auto-complete/auto-complete
+        path = site-lisp/ac/auto-complete
+        url = git://github.com/auto-complete/auto-complete

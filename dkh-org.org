@@ -5254,7 +5254,7 @@ post of the org-mode mailing list.  I actually use M-x a lot now
 because IDO completion is so easy.
 
 Here's the smex setup I use
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 (add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 (require 'smex)
 (smex-initialize)
