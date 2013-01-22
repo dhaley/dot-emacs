@@ -2495,137 +2495,137 @@ The output appears in the buffer `*Async Shell Command*'."
        (make-directory dir t)
        dir))))
 
-(defun eproject-active ()
-  "Check if eproject is available and it's minor mode enabled."
-  (and (boundp 'eproject-mode) eproject-mode))
+;; (defun eproject-active ()
+;;   "Check if eproject is available and it's minor mode enabled."
+;;   (and (boundp 'eproject-mode) eproject-mode))
 
-(use-package eproject
-  :defer t
-  :commands (eproject-root
-             eproject-maybe-turn-on)
-  :mode (("\\.eproject\\'" . dot-eproject-mode))
-  :diminish ((eproject-mode . "prj"))
-  :init
-  (progn
-    (setq eproject-completing-read-function 'eproject--ido-completing-read)
-    (use-package eproject-extras
-      :commands (eproject-open-all-project-files
-                 eproject-ibuffer
-                 eproject-find-file
-                 eproject-grep)
-      :config
-      (progn
-        (unbind-key "C-c C-f" eproject-mode-map)
-        (unbind-key "C-c C-b" eproject-mode-map)))
-    (use-package eproject-tasks
-      :commands (helm-eproject-tasks))
+;; (use-package eproject
+;;   :defer t
+;;   :commands (eproject-root
+;;              eproject-maybe-turn-on)
+;;   :mode (("\\.eproject\\'" . dot-eproject-mode))
+;;   :diminish ((eproject-mode . "prj"))
+;;   :init
+;;   (progn
+;;     (setq eproject-completing-read-function 'eproject--ido-completing-read)
+;;     (use-package eproject-extras
+;;       :commands (eproject-open-all-project-files
+;;                  eproject-ibuffer
+;;                  eproject-find-file
+;;                  eproject-grep)
+;;       :config
+;;       (progn
+;;         (unbind-key "C-c C-f" eproject-mode-map)
+;;         (unbind-key "C-c C-b" eproject-mode-map)))
+;;     (use-package eproject-tasks
+;;       :commands (helm-eproject-tasks))
 
-    (defun my-eproject-maybe-turn-on ()
-      "Ignores errors"
-      (interactive)
-      (condition-case msg
-          (eproject-maybe-turn-on)
-        (error (message "Ignored eproject-maybe-turn-on error: %s" msg))))
+;;     (defun my-eproject-maybe-turn-on ()
+;;       "Ignores errors"
+;;       (interactive)
+;;       (condition-case msg
+;;           (eproject-maybe-turn-on)
+;;         (error (message "Ignored eproject-maybe-turn-on error: %s" msg))))
 
-    (hook-into-modes #'my-eproject-maybe-turn-on
-                     my-prog-mode-hooks)
-    (hook-into-modes #'my-eproject-maybe-turn-on
-                     my-css-like-mode-hooks)
-    (hook-into-modes #'my-eproject-maybe-turn-on
-                     my-html-like-mode-hooks)
-    (hook-into-modes #'my-eproject-maybe-turn-on
-                     '(dired-mode-hook)))
-  :config
-  (progn
-    ;; Order of these project definitions are important
-    ;; The latest defined project types are checked first.
+;;     (hook-into-modes #'my-eproject-maybe-turn-on
+;;                      my-prog-mode-hooks)
+;;     (hook-into-modes #'my-eproject-maybe-turn-on
+;;                      my-css-like-mode-hooks)
+;;     (hook-into-modes #'my-eproject-maybe-turn-on
+;;                      my-html-like-mode-hooks)
+;;     (hook-into-modes #'my-eproject-maybe-turn-on
+;;                      '(dired-mode-hook)))
+;;   :config
+;;   (progn
+;;     ;; Order of these project definitions are important
+;;     ;; The latest defined project types are checked first.
 
-    (define-project-type generic () nil
-      :relevant-files (".*")
-      :irrelevant-files ("^[.]" "^[#]" ".git/" ".hg/" ".bzr/" "_darcs/")
-      :file-name-map (lambda (root) (lambda (root file) file))
-      :local-variables (lambda (root) (lambda (root file) nil))
-      :config-file ".eproject")
+;;     (define-project-type generic () nil
+;;       :relevant-files (".*")
+;;       :irrelevant-files ("^[.]" "^[#]" ".git/" ".hg/" ".bzr/" "_darcs/")
+;;       :file-name-map (lambda (root) (lambda (root file) file))
+;;       :local-variables (lambda (root) (lambda (root file) nil))
+;;       :config-file ".eproject")
 
-    (define-project-type generic-eproject (generic) (look-for ".eproject"))
-    (define-project-type generic-git (generic) (look-for ".git/"))
-    (define-project-type generic-hg (generic) (look-for ".hg"))
-    (define-project-type generic-bzr (generic) (look-for ".bzr"))
-    (define-project-type generic-darcs (generic) (look-for "_darcs"))
+;;     (define-project-type generic-eproject (generic) (look-for ".eproject"))
+;;     (define-project-type generic-git (generic) (look-for ".git/"))
+;;     (define-project-type generic-hg (generic) (look-for ".hg"))
+;;     (define-project-type generic-bzr (generic) (look-for ".bzr"))
+;;     (define-project-type generic-darcs (generic) (look-for "_darcs"))
 
-    (define-project-type nodejs (generic)
-      (look-for "package.json")
-      :relevant-files ("\\.js\\'" "\\.coffee\\'"
-                       "\\.html\\'" "\\.hb\\'"
-                       "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
-                       "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
-                       "\\.rst\\'" "\\.org\\'"
-                       "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
-      :irrelevant-files ("^[.]" "^[#]"
-                         "node_modules/.*"
-                         "\\.sass-cache/.*"
-                         "tmp/.*"
-                         "log/.*"
-                         "\\.min\\.js\\'"
-                         "\\.min\\.css\\'")
-      :main-file "package.json")
+;;     (define-project-type nodejs (generic)
+;;       (look-for "package.json")
+;;       :relevant-files ("\\.js\\'" "\\.coffee\\'"
+;;                        "\\.html\\'" "\\.hb\\'"
+;;                        "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
+;;                        "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
+;;                        "\\.rst\\'" "\\.org\\'"
+;;                        "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
+;;       :irrelevant-files ("^[.]" "^[#]"
+;;                          "node_modules/.*"
+;;                          "\\.sass-cache/.*"
+;;                          "tmp/.*"
+;;                          "log/.*"
+;;                          "\\.min\\.js\\'"
+;;                          "\\.min\\.css\\'")
+;;       :main-file "package.json")
 
-    (define-project-type web (generic) nil
-      :relevant-files ("\\.py\\'""\\.rb\\'"
-                       "\\.js\\'" "\\.coffee\\'"
-                       "\\.html\\'" "\\.haml\\'" "\\.hb\\'"
-                       "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
-                       "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
-                       "\\.rst\\'" "\\.org\\'"
-                       "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
-      :irrelevant-files ("node_modules/.*"
-                         "\\.sass-cache/.*"
-                         "tmp/.*"
-                         "log/.*"
-                         "\\.min\\.js\\'"
-                         "\\.min\\.css\\'"))
+;;     (define-project-type web (generic) nil
+;;       :relevant-files ("\\.py\\'""\\.rb\\'"
+;;                        "\\.js\\'" "\\.coffee\\'"
+;;                        "\\.html\\'" "\\.haml\\'" "\\.hb\\'"
+;;                        "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
+;;                        "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
+;;                        "\\.rst\\'" "\\.org\\'"
+;;                        "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
+;;       :irrelevant-files ("node_modules/.*"
+;;                          "\\.sass-cache/.*"
+;;                          "tmp/.*"
+;;                          "log/.*"
+;;                          "\\.min\\.js\\'"
+;;                          "\\.min\\.css\\'"))
 
-    (define-project-type ruby-on-rails (web)
-      (and (look-for "Gemfile") (look-for "config/application.rb"))
-      :irrelevant-files ("app/assets/images/.*"
-                         "tmp/.*"
-                         "log/.*"
-                         "public/.*"
-                         "vendor/.*"
-                         "\\.min\\.js\\'"
-                         "\\.min\\.css\\'")
-      :main-file "Gemfile")
+;;     (define-project-type ruby-on-rails (web)
+;;       (and (look-for "Gemfile") (look-for "config/application.rb"))
+;;       :irrelevant-files ("app/assets/images/.*"
+;;                          "tmp/.*"
+;;                          "log/.*"
+;;                          "public/.*"
+;;                          "vendor/.*"
+;;                          "\\.min\\.js\\'"
+;;                          "\\.min\\.css\\'")
+;;       :main-file "Gemfile")
 
-    (define-project-type django (web)
-      (look-for "manage.py")
-      :irrelevant-files ("media/.*"
-                         "contrib/.*"
-                         ".*\\.sqlite?"
-                         "node_modules/.*"
-                         "\\.sass-cache/.*"
-                         "static/tinymce/.*"
-                         "\\.min\\.js\\'"
-                         "\\.min\\.css\\'"
-                         "static/CACHE/.*")
-      :main-file "manage.py")
+;;     (define-project-type django (web)
+;;       (look-for "manage.py")
+;;       :irrelevant-files ("media/.*"
+;;                          "contrib/.*"
+;;                          ".*\\.sqlite?"
+;;                          "node_modules/.*"
+;;                          "\\.sass-cache/.*"
+;;                          "static/tinymce/.*"
+;;                          "\\.min\\.js\\'"
+;;                          "\\.min\\.css\\'"
+;;                          "static/CACHE/.*")
+;;       :main-file "manage.py")
 
-    (define-project-type appcelerator (generic)
-      (and (look-for ".project") (look-for "tiapp.xml"))
-      :relevant-files ("\\.js\\'" "\\.coffee\\'"
-                       "\\.html\\'" "\\.hb\\'"
-                       "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
-                       "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
-                       "\\.rst\\'" "\\.org\\'"
-                       "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
-      :irrelevant-files ("^[.]" "^[#]"
-                         "build/.*"
-                         "node_modules/.*"
-                         "\\.sass-cache/.*"
-                         "tmp/.*"
-                         "log/.*"
-                         "\\.min\\.js\\'"
-                         "\\.min\\.css\\'")
-      :main-file "tiapp.xml")))
+;;     (define-project-type appcelerator (generic)
+;;       (and (look-for ".project") (look-for "tiapp.xml"))
+;;       :relevant-files ("\\.js\\'" "\\.coffee\\'"
+;;                        "\\.html\\'" "\\.hb\\'"
+;;                        "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
+;;                        "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
+;;                        "\\.rst\\'" "\\.org\\'"
+;;                        "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
+;;       :irrelevant-files ("^[.]" "^[#]"
+;;                          "build/.*"
+;;                          "node_modules/.*"
+;;                          "\\.sass-cache/.*"
+;;                          "tmp/.*"
+;;                          "log/.*"
+;;                          "\\.min\\.js\\'"
+;;                          "\\.min\\.css\\'")
+;;       :main-file "tiapp.xml")))
 
 
 (use-package truthy
@@ -3603,37 +3603,12 @@ at the beginning of line, if already there."
         (add-hook 'json-mode-hook 'flymake-jsonlint-load)
         (add-hook 'json-mode-hook 'flymake-mode-on)))
 
-    (use-package flymake-ruby
-      :commands flymake-ruby-load
-      :init
-      (progn
-        (add-hook 'ruby-mode-hook 'flymake-ruby-load)
-        (add-hook 'ruby-mode-hook 'flymake-mode-on)))
-
-    (use-package flymake-coffee
-      :commands flymake-coffee-load
-      :init
-      (progn
-        (add-hook 'coffee-mode-hook 'flymake-coffee-load)
-        (add-hook 'coffee-mode-hook 'flymake-mode-on)))
-
     (use-package flymake-php
       :commands flymake-php-load
       :init
       (progn
         (add-hook 'php-mode-hook 'flymake-php-load)
         (add-hook 'php-mode-hook 'flymake-mode-on)))
-
-    (use-package flymake-python-pyflakes
-      :commands flymake-python-pyflakes-load
-      :init
-      (progn
-        (setq flymake-python-pyflakes-executable "flake8")
-        (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
-        (add-hook 'python-mode-hook 'flymake-mode-on)))
-
-    (use-package flymake-python-pyflakes
-      :commands flymake-python-pyflakes-load)
 
     (use-package flymake-scss
       :commands flymake-scss-load
@@ -5587,7 +5562,7 @@ end end))))))
 
 ;;;_ , sh-mode
   (use-package sh-mode
-    :mode ("\\.bashrc\\|\\.bash_alias\\|.bash_history\\|alias"  . sh-mode))
+    :mode ("\\.bashrc\\|\\.bash_alias\\|\\.sh\\|.bash_history\\|alias"  . sh-mode))
 
 
 
