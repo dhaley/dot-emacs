@@ -145,9 +145,6 @@
 [submodule "lisp/use-package"]
         path = lisp/use-package
         url = git://github.com/jwiegley/use-package.git
-[submodule "site-lisp/el-get"]
-        path = site-lisp/el-get
-        url = https://github.com/dimitri/el-get.git
 [submodule "site-lisp/zencoding-mode"]
         path = site-lisp/zencoding-mode
         url = git://github.com/rooney/zencoding.git
@@ -160,9 +157,6 @@
 [submodule "lisp/erc-yank"]
         path = lisp/erc-yank
         url = git://github.com/jwiegley/erc-yank.git
-[submodule "lisp/emacs-async"]
-        path = lisp/emacs-async
-        url = git://github.com/jwiegley/emacs-async.git
 [submodule "site-lisp/eval-expr"]
         path = site-lisp/eval-expr
         url = git://github.com/jwiegley/eval-expr.git
@@ -211,12 +205,6 @@
 [submodule "site-lisp/elisp-slime-nav"]
         path = site-lisp/elisp-slime-nav
         url = https://github.com/purcell/elisp-slime-nav.git
-[submodule "site-lisp/dvc"]
-        path = site-lisp/dvc
-        url = https://github.com/emacsmirror/dvc.git
-[submodule "site-lisp/melpa"]
-        path = site-lisp/melpa
-        url = https://github.com/milkypostman/melpa.git
 [submodule "site-lisp/ruby-mode"]
         path = site-lisp/ruby-mode
         url = https://github.com/jwiegley/ruby-mode.git
@@ -377,17 +365,20 @@
         path = site-lisp/flymake-php
         url = https://github.com/purcell/flymake-php.git
 [submodule "site-lisp/page-break-lines"]
-	path = site-lisp/page-break-lines
-	url = https://github.com/purcell/page-break-lines.git
+        path = site-lisp/page-break-lines
+        url = https://github.com/purcell/page-break-lines.git
 [submodule "site-lisp/ido-ubiquitous"]
-	path = site-lisp/ido-ubiquitous
-	url = https://github.com/technomancy/ido-ubiquitous.git
+        path = site-lisp/ido-ubiquitous
+        url = https://github.com/technomancy/ido-ubiquitous.git
 [submodule "site-lisp/timelog-mode"]
-	path = site-lisp/timelog-mode
-	url = https://github.com/arvidj/timelog-mode.git
+        path = site-lisp/timelog-mode
+        url = https://github.com/arvidj/timelog-mode.git
 [submodule "site-lisp/flymake-easy"]
-	path = site-lisp/flymake-easy
-	url = https://github.com/purcell/flymake-easy.git
+        path = site-lisp/flymake-easy
+        url = https://github.com/purcell/flymake-easy.git
 [submodule "site-lisp/less-css-mode"]
-	path = site-lisp/less-css-mode
-	url = https://github.com/purcell/less-css-mode.git
+        path = site-lisp/less-css-mode
+        url = https://github.com/purcell/less-css-mode.git
+[submodule "site-lisp/ac/auto-complete"]
+	path = site-lisp/ac/auto-complete
+	url = git://github.com/auto-complete/auto-complete
