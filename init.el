@@ -260,66 +260,66 @@ want to use in the modeline *in lieu of* the original.")
 
 
 ;; Modes and mode groupings
-(defmacro hook-into-modes (func modes)
-  `(dolist (mode-hook ,modes)
-     (add-hook mode-hook ,func)))
+;; (defmacro hook-into-modes (func modes)
+;;   `(dolist (mode-hook ,modes)
+;;      (add-hook mode-hook ,func)))
 
-(defvar my-lisp-modes
-  '(emacs-lisp-mode
-    inferior-emacs-lisp-mode
-    ielm-mode
-    lisp-mode
-    inferior-lisp-mode
-    lisp-interaction-mode
-    slime-repl-mode))
+;; (defvar my-lisp-modes
+;;   '(emacs-lisp-mode
+;;     inferior-emacs-lisp-mode
+;;     ielm-mode
+;;     lisp-mode
+;;     inferior-lisp-mode
+;;     lisp-interaction-mode
+;;     slime-repl-mode))
 
-(defvar my-lisp-mode-hooks
-  (mapcar (function
-           (lambda (mode)
-             (intern
-              (concat (symbol-name mode) "-hook"))))
-          my-lisp-modes))
+;; (defvar my-lisp-mode-hooks
+;;   (mapcar (function
+;;            (lambda (mode)
+;;              (intern
+;;               (concat (symbol-name mode) "-hook"))))
+;;           my-lisp-modes))
 
-(defvar my-prog-mode-hooks
-  '(prog-mode-hook
-    emacs-lisp-mode-hook
-    pyhon-mode-hook
-    coffee-mode-hook
-    js-mode-hook
-    js2-mode-hook
-    actionscript-mode-hook
-    ruby-mode-hook
-    haskell-mode-hook
-    clojure-mode-hook
-    go-mode-hook
-    groovy-mode-hook
-    qml-mode-hook))
+;; (defvar my-prog-mode-hooks
+;;   '(prog-mode-hook
+;;     emacs-lisp-mode-hook
+;;     pyhon-mode-hook
+;;     coffee-mode-hook
+;;     js-mode-hook
+;;     js2-mode-hook
+;;     actionscript-mode-hook
+;;     ruby-mode-hook
+;;     haskell-mode-hook
+;;     clojure-mode-hook
+;;     go-mode-hook
+;;     groovy-mode-hook
+;;     qml-mode-hook))
 
-(defvar my-significant-whitespace-mode-hooks
-  '(coffee-mode-hook
-    python-mode-hook
-    haskell-mode-hook
-    stylus-mode-hook
-    haml-mode-hook))
+;; (defvar my-significant-whitespace-mode-hooks
+;;   '(coffee-mode-hook
+;;     python-mode-hook
+;;     haskell-mode-hook
+;;     stylus-mode-hook
+;;     haml-mode-hook))
 
-(defvar my-markup-mode-hooks
-  '(html-mode-hook
-    markdown-mode-hook
-    rst-mode-hook
-    org-mode-hook))
+;; (defvar my-markup-mode-hooks
+;;   '(html-mode-hook
+;;     markdown-mode-hook
+;;     rst-mode-hook
+;;     org-mode-hook))
 
-(defvar my-html-like-mode-hooks
-  '(html-mode-hook
-    handlebars-mode-hook
-    nxml-mode-hook
-    web-mode-hook
-    haml-mode-hook))
+;; (defvar my-html-like-mode-hooks
+;;   '(html-mode-hook
+;;     handlebars-mode-hook
+;;     nxml-mode-hook
+;;     web-mode-hook
+;;     haml-mode-hook))
 
-(defvar my-css-like-mode-hooks
-  '(css-mode-hook
-    stylus-mode-hook
-    sass-mode-hook
-    scss-mode))
+;; (defvar my-css-like-mode-hooks
+;;   '(css-mode-hook
+;;     stylus-mode-hook
+;;     sass-mode-hook
+;;     scss-mode))
 
 
 ;; Working with Coding Systems and Unicode in Emacs
@@ -2130,7 +2130,7 @@ Subexpression references can be used (\1, \2, etc)."
               ))))
 
 
-    (require 'ibuffer-ext)
+    ;; (require 'ibuffer-ext)
     (add-to-list 'ibuffer-never-show-predicates "^\\*")
 
     (add-hook 'ibuffer-mode-hook
@@ -2627,7 +2627,7 @@ The output appears in the buffer `*Async Shell Command*'."
 (use-package php-mode
   :commands php-mode
   :diminish php-mode
-  :mode ("\\.php\\'" . php-mode)
+  ;; :mode ("\\.php\\'" . php-mode)
   :init
   (progn
     (use-package php-completion-mode
@@ -2646,7 +2646,7 @@ The output appears in the buffer `*Async Shell Command*'."
                  (imenu-add-menubar-index)
                  (subword-mode t)
                  ;; (php-electric-mode)
-                 (message "I came here to do Drupal")
+                 (message "I came here to do php")
                  ))
 
 
@@ -2664,8 +2664,7 @@ The output appears in the buffer `*Async Shell Command*'."
     (bind-key "C-8 o e" 'show-entry)
     (bind-key "C-8 o l" 'hide-leaves)
     (bind-key "C-8 o k" 'show-branches)
-    (bind-key "C-8 o q" 'hide-sublevels)
-    (bind-key "C-8 o o" 'hide-other)
+    (bind-key "C-8 o q" 'hide-sublevels)    (bind-key "C-8 o o" 'hide-other)
     (bind-key "C-8 o ^" 'outline-move-subtree-up)
     (bind-key "C-8 o v" 'outline-move-subtree-down)
     (bind-key "C-8 o <" 'outline-promote)
@@ -2743,81 +2742,31 @@ The output appears in the buffer `*Async Shell Command*'."
 (use-package drupal-mode
   :mode ("\\.\\(php\\|inc\\|module\\|test\\|install\\|theme\\|\\profile\\|\\local\\.php\\)$" . drupal-mode)
   :interpreter ("drupal" . drupal-mode)
-
+  :init
   (progn
-    (require 'php-mode)
+    ;; (require 'php-mode)
     (require 'etags)
     (require 'smart-dash)
-    (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
-
-
 
     ;; coder.module compilation errors.
-    (add-to-list
-     'compilation-error-regexp-alist
-     ;; These regexps parse the HTML output that coder displays in a browser.
-     '("<span class="fieldset-legend">\\(.+\\)</span>.*<h2>\\(.+\\)</h2>.*coder-warning .*Line \\([0-9]+\\): \\(.+\\) <pre>" 2 3))
+    ;; (add-to-list
+    ;;  'compilation-error-regexp-alist
+    ;;  ;; These regexps parse the HTML output that coder displays in a browser.
+    ;;  '("<span class="fieldset-legend">\\(.+\\)</span>.*<h2>\\(.+\\)</h2>.*coder-warning .*Line \\([0-9]+\\): \\(.+\\) <pre>" 2 3))
 
-    (add-to-list
-     'compilation-error-regexp-alist
-                                        ; Identify line, same file as previous error.
-     '("coder-warning .*Line \\([0-9]+\\):  \\(.+\\)<pre>" nil 1))
+    ;; (add-to-list
+    ;;  'compilation-error-regexp-alist
+    ;;                                     ; Identify line, same file as previous error.
+    ;;  '("coder-warning .*Line \\([0-9]+\\):  \\(.+\\)<pre>" nil 1))
 
-    (add-to-list
-     'compilation-error-regexp-alist
-     ;; drupal log by syslog-ng.module
-     '("drupal: .*||\\(.+\\) \(line \\([0-9]+\\) of \\(.+\\)\)\." 3 2))
+    ;; (add-to-list
+    ;;  'compilation-error-regexp-alist
+    ;;  ;; drupal log by syslog-ng.module
+    ;;  '("drupal: .*||\\(.+\\) \(line \\([0-9]+\\) of \\(.+\\)\)\." 3 2))
 
-
-    ;; (defun my-insert-drupal-hook (tagname)
-    ;;       "Clone the specified function as a new module hook implementation.
-
-    ;; For Drupal <= 6, you will need to grab the developer documentation
-    ;; before generating the TAGS file:
-
-    ;; cvs -z6 -d:pserver:anonymous:anonymous@cvs.drupal.org:/cvs/drupal-contrib export -r DRUPAL-6--1 -d developer-docs contributions/docs/developer
-
-    ;; Exuberant ctags:
-    ;; $ ctags -eR --langmap=php:+.module.install.inc.engine --languages=php
-
-    ;; Old etags:
-    ;; $ find . -type f \\( -name '*.php' -o -name '*.module' -o -name '*.install' -o -name '*.inc' -o -name '*.engine' \\) | etags --language=php -
-    ;; "
-    ;;       (interactive (find-tag-interactive "Hook: "))
-    ;;       (let ((module (file-name-sans-extension
-    ;;                      (file-name-nondirectory (buffer-file-name)))))
-    ;;         (find-tag (format "^function %s(" tagname) nil t)
-    ;;         (let ((tmp-buffer (generate-new-buffer "*temp*")))
-    ;;           (c-mark-function)
-    ;;           (copy-to-buffer tmp-buffer (point) (mark))
-    ;;           (kill-buffer) ;; the relevant API file
-    ;;           (switch-to-buffer tmp-buffer))
-    ;;         (newline)
-    ;;         (forward-line -1)
-    ;;         (insert "/**\n * Implements ")
-    ;;         (forward-word)
-    ;;         (forward-char) ;; to start of function name
-    ;;         (let ((start (point)))
-    ;;           (search-forward "(")
-    ;;           (backward-char)
-    ;;           (let ((funcname (filter-buffer-substring start (point))))
-    ;;             (move-beginning-of-line nil)
-    ;;             (backward-char)
-    ;;             (insert funcname)))
-    ;;         (insert "().\n */")
-    ;;         (search-forward "_")
-    ;;         (backward-char)
-    ;;         (delete-region (point) (progn (forward-word -1) (point)))
-    ;;         (insert module)
-    ;;         (let ((function (filter-buffer-substring (point-min) (point-max))))
-    ;;           (kill-buffer)
-    ;;           (insert function))
-    ;;         (backward-sexp)
-    ;;         (forward-line)
-    ;;         (back-to-indentation)))
-    ))
-
-
+    (add-hook 'drupal-mode-hook
+              '(lambda ()
+                 (message "I came here to do Drupal")))))
 
 ;;;_ , erc
 
@@ -3552,24 +3501,19 @@ at the beginning of line, if already there."
               "site-lisp/flycheck/deps/s.el")
   :init
   (progn
-    (progn
-
-          ;; (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
-    ;; (setq flymake-phpcs-show-rule t)
-
-      (add-hook 'drupal-mode-hook 'flycheck-mode))
 
     (flycheck-declare-checker phpcs
       "A PHP syntax checker using the PHP_CodeSniffer.
 
 See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
-      :command '("phpcs" "--report=emacs" source)
+      :command '("phpcs" "--standard=Drupal --report=emacs" source)
       :error-patterns
       '(("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): error - \\(?4:.*\\)" error)
         ("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): warning - \\(?4:.*\\)" warning))
-      :modes '(php-mode php+-mode)
+      :modes '(php-mode php+-mode drupal-mode)
       :next-checkers '(php))
-    (add-to-list 'flycheck-checkers 'phpcs)
+
+    (push 'phpcs flycheck-checkers)
 
     (flycheck-declare-checker bash
       "Bash checker"
@@ -3581,12 +3525,13 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
 
     (push 'bash flycheck-checkers)
 
-
     (flycheck-declare-checker zsh
+      "ZSH checker"
       :command '("zsh" "-n" "-d" "-f" source)
       :error-patterns '(("^\\(?1:.*\\):\\(?2:[0-9]+\\): \\(?4:.*\\)$" error))
       :modes 'sh-mode
       :predicate '(eq sh-shell 'zsh))
+    (push 'zsh flycheck-checkers)
 
     (flycheck-declare-checker xmllint
       "xmllint checker"
@@ -3666,7 +3611,7 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
     (add-hook 'prog-mode-hook 'flycheck-mode)
     (add-hook 'nxml-mode-hook 'flycheck-mode)
     (add-hook 'js2-mode-hook 'flycheck-mode)
-    ;; (add-hook 'haskell-mode-hook 'flycheck-mode)
+    (add-hook 'drupal-mode-hook 'flycheck-mode)
     )
 
   :config
@@ -4261,10 +4206,18 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
 (defalias 'vlm 'visual-line-mode)
 (defalias 'wsm 'whitespace-mode)
 
+;; Utilities every Emacs Lisp coders should master:
+;;
+;;   paredit          Let's you manipulate sexps with ease
+;;   redshank         Think: Lisp refactoring
+;;   edebug           Knowing the traditional debugger is good too
+;;   eldoc
+;;   cldoc
+;;   elint
+;;   elp
+;;   ert
 
 (use-package lisp-mode
-  :mode ("\\.abbrev_defs" . lisp-mode)
-  :interpreter ("lisp" . lisp-mode)
   ;; :load-path "site-lisp/slime/contrib/"
   :init
   (progn
@@ -4288,7 +4241,7 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
                ("(\\(ert-deftest\\)\\>[         '(]*\\(setf[    ]+\\sw+\\|\\sw+\\)?"
                 (1 font-lock-keyword-face)
                 (2 font-lock-function-name-face
-                   nil t)))))
+                 nil t)))))
           lisp-modes)
 
     (defvar slime-mode nil)
@@ -4298,8 +4251,8 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
       (unless lisp-mode-initialized
         (setq lisp-mode-initialized t)
 
-        (use-package redshank
-          :diminish redshank-mode)
+        ;; (use-package redshank
+        ;;   :diminish redshank-mode)
 
         (use-package elisp-slime-nav
           :diminish elisp-slime-nav-mode)
@@ -4392,14 +4345,11 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
 
       (auto-fill-mode 1)
       (paredit-mode 1)
-
-      (require 'redshank-loader
-               "~/.emacs.d/site-lisp/redshank/redshank-loader")
-
-      (redshank-mode 1)
+      ;; (redshank-mode 1)
       (elisp-slime-nav-mode 1)
 
       (local-set-key (kbd "<return>") 'paredit-newline)
+
       (add-hook 'after-save-hook 'check-parens nil t)
 
       (if (memq major-mode
@@ -4415,8 +4365,8 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
 
       (yas/minor-mode 1))
 
-
     (hook-into-modes #'my-lisp-mode-hook lisp-mode-hooks)))
+
 
 ;;;_ , log4j-mode
 
@@ -6098,7 +6048,7 @@ end end))))))
 ;;;_ , web-mode
 
   (use-package web-mode
-    :mode ("\\.tpl\\.php$" . web-mode)
+    :mode ("\\.tpl\\.php\\.html$" . web-mode)
     :init
     (progn
       (defun web-mode-hook () "Hooks for Web mode."
@@ -6118,9 +6068,10 @@ end end))))))
         ;; (setq web-mode-disable-css-colorization t)
         ;;       (setq web-mode-extra-php-constants '("constant1" "constant2")) Also available : web-mode-extra-php-keywords, web-mode-extra-js-keywords, web-mode-extra-jsp-keywords, web-mode-extra-asp-keywords
         ;; (Note: do not put this line in the hook)
-
+        (zencoding-mode)
         )
-      ;; (add-hook 'web-mode-hook 'web-mode-hook)
+      (add-hook 'web-mode-hook 'web-mode-hook)
+
       ;; (add-hook 'local-write-file-hooks (lambda () (delete-trailing-whitespace) nil))
       ;; (local-set-key (kbd "RET") 'newline-and-indent)
       ;; :mode ("\\.\\(php\\|tpl\\|\\.html\\.erb\\)$" . web-mode)

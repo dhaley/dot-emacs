@@ -367,3 +367,6 @@
 [submodule "override/gnus"]
         path = override/gnus
         url = https://github.com/jwiegley/gnus.git
+[submodule "site-lisp/paredit"]
+	path = site-lisp/paredit
+	url = https://github.com/emacsmirror/paredit.git
