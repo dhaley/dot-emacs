@@ -485,7 +485,7 @@ Here are my =TODO= state keywords and colour settings:
 
 #+begin_src emacs-lisp :tangle yes
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE"))))
 
 (setq org-todo-keyword-faces
@@ -973,8 +973,8 @@ don't want to spend time waiting for it to be generated.
 :END:
 
 #+begin_src emacs-lisp :tangle yes
-;; Dim blocked tasks
-(setq org-agenda-dim-blocked-tasks t)
+;; Do not dim blocked tasks
+(setq org-agenda-dim-blocked-tasks nil)
 
 ;; Compact the block agenda view
 (setq org-agenda-compact-blocks t)
@@ -3939,7 +3939,7 @@ Here are the =.emacs= settings:
 ;; Enable display of the time grid so we can see the marker for the current time
 (setq org-agenda-time-grid (quote ((daily today remove-match)
                                    #("----------------" 0 16 (org-heading t))
-                                   (830 1000 1200 1300 1500 1700))))
+                                   (0900 1100 1300 1500 1700))))
 
 ;; Display tags farther right
 (setq org-agenda-tags-column -102)
@@ -4510,6 +4510,7 @@ Most of my logging is controlled by the global =org-todo-keywords=
 My logging settings are set as follows:
 #+begin_src emacs-lisp :tangle yes
 (setq org-log-done (quote time))
+(setq org-log-state-notes-insert-after-drawers t)
 (setq org-log-into-drawer nil)
 #+end_src
 
@@ -4517,7 +4518,7 @@ My =org-todo-keywords= are set as follows:
 
 #+begin_src emacs-lisp :tangle no
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
+      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/@)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE"))))
 #+end_src
 
@@ -5091,7 +5092,7 @@ I'm finding I use org-occur =C-c / /= a lot when trying to find
 details in my org-files.  The following setting keeps the highlighted
 results of the search even after modifying the text.  This allows me
 to edit the file without having to reissue the org-occur command to
-find the other matches in my file.
+find the other matches in my file. =C-c C-c= removes the highlights.
 
 #+begin_src emacs-lisp :tangle yes
 (setq org-remove-highlights-with-change nil)

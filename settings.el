@@ -125,13 +125,12 @@
  '(erc-hide-list (quote ("JOIN" "NICK" "PART" "QUIT" "MODE")))
  '(erc-ignore-list (quote ("rudybot!.*" "anxt")))
  '(erc-join-buffer (quote bury))
- '(erc-keywords (quote (" cu " " tor " "Damon" "dkh" "dhaley" "eshell" "matt$" "gmane" "gwene" "locate-dominating-file" "usenet" "proxy" "privacy" " socks " "gnus" "workgroups" "wireshark" "hushmail" "page manager" "super cookie" "[^.]php" "nxhtml" "nxml" "erc-keywords" "libnotify" "[^#]orgW?mode" "rate module" "[^#]conkeror" "noscript" "https-everywhere" "references module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc-hl" "erc-highlight" "web-mode" "flymake" "Rasa" "dkh" "laima")))
+ '(erc-keywords (quote (" cu " " tor " "Damon" "dkh" "dhaley" "eshell" "matt$" "gmane" "gwene" "locate-dominating-file" "usenet" "proxy" "privacy" " socks " "gnus" "workgroups" "wireshark" "hushmail" "page manager" "super cookie" "[^.]php" "nxhtml" "nxml" "erc-keywords" "libnotify" "[^#]orgW?mode" "rate module" "[^#]conkeror" "noscript" "https-everywhere" "references module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc-hl" "erc-highlight" "web-mode" "flymake" "Rasa" "dkh" "laima" "prelude" "flycheck" "eproject" "locate-dominating-file" "projectile")))
  '(erc-log-channels-directory "~/Messages/.erc/logs")
  '(erc-log-write-after-send t)
  '(erc-modules (quote (button notifications autojoin completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services spelling smiley stamp spelling track truncate track-score hl-nicks)))
  '(erc-nick "dkh")
- '(erc-notifications-icon "~/.emacs.d/icons/irc.png")
- '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac" "matt" "kevin" "jo" "cathy" "wiegley" "qdot" "crafts" "miles" "alfredo" "Karin" "BerntH" "technomancy" "ultimateboy" "a00001")))
+ '(erc-notifications-icon "~/.emacs.d/icons/irc.png") '(erc-pals (quote ("laimagaigalas" "matu4921" "^johnw!" "sachac" "matt" "kevin" "jo" "cathy" "wiegley" "qdot" "crafts" "miles" "alfredo" "Karin" "BerntH" "technomancy" "ultimateboy" "a00001" "bozhidar")))
  '(erc-port 6667)
  '(erc-priority-people-regexp "\\`[^#].+")
  '(erc-prompt (lambda nil (if erc-network (concat "[" (symbol-name erc-network) "]") (concat "[" (car erc-default-recipients) "]"))))
@@ -293,7 +292,7 @@
  '(ibuffer-formats (quote ((mark modified read-only " " (name 16 -1) " " (size 6 -1 :right) " " (mode 16 16) " " filename) (mark " " (name 16 -1) " " filename))))
  '(ibuffer-maybe-show-regexps nil)
  '(ibuffer-saved-filter-groups (quote (("default" ("Commands" (or (mode . shell-mode) (mode . eshell-mode) (mode . term-mode) (mode . compilation-mode))) ("Helm" (mode . helm-mode)) ("Magit" (or (mode . magit-status-mode) (mode . magit-log-mode))) ("Haskell" (or (mode . haskell-mode) (mode . haskell-cabal-mode) (mode . literate-haskell-mode))) ("C++" (or (mode . c-mode) (mode . c++-mode))) ("Lisp" (mode . emacs-lisp-mode)) ("Dired" (mode . dired-mode)) ("Gnus" (or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode) (name . "^\\.newsrc-dribble"))) ("Org" (or (name . "^\\*Calendar\\*$") (name . "^diary$") (mode . org-mode))) ("Emacs" (or (name . "^\\*scratch\\*$") (name . "^\\*Messages\\*$")))))))
- '(ibuffer-never-show-predicates
+'(ibuffer-maybe-show-predicate
       (list
        ;; Gnus development version
        "^\\*Completions\\*$"
@@ -313,7 +312,12 @@
        "^\\*jekyll-aa\\*$" ;; local jekyll server
        "\\.diary$"
 ;;       "^mumamo-fetch-major-mode-setup-php-mode$"
-         "\\*vc\\*"))
+         "\\*vc\\*"
+         "^\\*w3m cache\\*$"
+         "^\\*w3m-cookie-parse-temp\\*$"
+         "^\\*w3m[-]work\\*$"
+         "^\\*w3m[-]work\\*"
+         ))
  '(ibuffer-show-empty-filter-groups nil)
  '(ibuffer-shrink-to-minimum-size t t)
  '(ibuffer-use-other-window t)

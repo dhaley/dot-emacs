@@ -1315,7 +1315,7 @@ Subexpression references can be used (\1, \2, etc)."
        'apache-mode
        'applescript-mode
        'buffer-move
-       'color-theme
+       ;; 'color-theme
        'css-mode
        'eshell-info
        'jira
@@ -1327,7 +1327,7 @@ Subexpression references can be used (\1, \2, etc)."
        ;; 'smex
        'switch-window
        'window-number
-       'zenburn-theme
+       ;; 'zenburn-theme
        ))
 
 ;; (package-refresh-contents)
@@ -1425,130 +1425,118 @@ Subexpression references can be used (\1, \2, etc)."
 
 ;;;_ , ansi-term
 
-(use-package ansi-term
-  :defer t
-  :init
-  (progn
+;; (use-package ansi-term
+;;   :defer t
+;;   :init
+;;   (progn
 
-    ;;     ;; ;; Use variable width font faces in current buffer
-    ;;     (defun my-buffer-face-mode-variable ()
-    ;;       ;;   "Set font to a variable width (proportional) fonts in current buffer"
-    ;;       (interactive)
-    ;;       (setq buffer-face-mode-face '(:family "Menlo For Powerline" :height 100))
-    ;;       (text-scale-adjust 1)
-    ;;       (buffer-face-mode))
+;;     ;;     ;; ;; Use variable width font faces in current buffer
+;;     ;;     (defun my-buffer-face-mode-variable ()
+;;     ;;       ;;   "Set font to a variable width (proportional) fonts in current buffer"
+;;     ;;       (interactive)
+;;     ;;       (setq buffer-face-mode-face '(:family "Menlo For Powerline" :height 100))
+;;     ;;       (text-scale-adjust 1)
+;;     ;;       (buffer-face-mode))
 
-    (setq system-uses-terminfo nil)
-    ;; When you use this code, note that dabbrev-completion is C-x /, and yanking is C-y.
-
-
-    (defun my-term-hook ()
-      (goto-address-mode)
-      (define-key term-raw-map "\C-y" 'my-term-paste)
-      (let ((base03  "#002b36")
-            (base02  "#073642")
-            (base01  "#586e75")
-            (base00  "#657b83")
-            (base0   "#839496")
-            (base1   "#93a1a1")
-            (base2   "#eee8d5")
-            (base3   "#fdf6e3")
-            (yellow  "#b58900")
-            (orange  "#cb4b16")
-            (red     "#dc322f")
-            (magenta "#d33682")
-            (violet  "#6c71c4")
-            (blue    "#268bd2")
-            (cyan    "#2aa198")
-            (green   "#859900"))
-        (setq ansi-term-color-vector
-              (vconcat `(ansi-term-color-vector [,base01 ,red ,green ,yellow ,blue ,magenta ,cyan ,base03])))
-        ))
-
-    ;; ["#586e75" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#002b36"]
-    ;; ["#586e75" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#002b36"]
-    ;; error in process filter: face-attribute: Wrong type argument: symbolp,
-    ;; "#586e75"
-    ;; error in process filter: Invalid face: ansi-term-color-vector
-    ;; (vconcat `(unspecified ,base02 ,red ,green ,yellow ,blue
-    ;;                        ,magenta ,cyan ,base2)))))
-
-    ;; `(ansi-term-color-vector [,base01 ,red ,green ,yellow ,blue ,magenta ,cyan ,base03])
-
-    ;; (add-hook 'term-mode-hook 'my-term-hook)
+;;     (setq system-uses-terminfo nil)
+;;     ;; When you use this code, note that dabbrev-completion is C-x /, and yanking is C-y.
 
 
-    (add-hook 'term-mode-hook
-              '(lambda ()
-                 (linum-mode 0)
-                 (term-set-escape-char ?\C-z)
-                 (term-set-escape-char ?\C-x)
-                 (define-key term-raw-map "\C-c" 'term-interrupt-subjob)
-                 (define-key term-raw-map (kbd "M-x") 'execute-extended-command)
-                 (define-key term-raw-escape-map "/"
-                   (lambda ()
-                     (interactive)
-                     (let ((beg (point)))
-                       (dabbrev-expand nil)
-                       (kill-region beg (point)))
-                     (term-send-raw-string (substring-no-properties (current-kill 0)))))
-                 (setq autopair-dont-activate t)
-                 (setq ac-auto-start nil)
-                 (visual-line-mode -1)
-                 ;; (my-buffer-face-mode-variable)
-                 ))
+;;     (add-hook 'term-mode-hook
+;;               '(lambda ()
+;;                  (linum-mode 0)
+;;                  (term-set-escape-char ?\C-z)
+;;                  (term-set-escape-char ?\C-x)
+;;                  (define-key term-raw-map "\C-c" 'term-interrupt-subjob)
+;;                  (define-key term-raw-map (kbd "M-x") 'execute-extended-command)
+;;                  (define-key term-raw-escape-map "/"
+;;                    (lambda ()
+;;                      (interactive)
+;;                      (let ((beg (point)))
+;;                        (dabbrev-expand nil)
+;;                        (kill-region beg (point)))
+;;                      (term-send-raw-string (substring-no-properties (current-kill 0)))))
+;;                  (setq autopair-dont-activate t)
+;;                  (setq ac-auto-start nil)
+;;                  (visual-line-mode -1)
+;;                  ;; (my-buffer-face-mode-variable)
+;;                  ))
+
+;; (add-hook 'term-load-hook
+;;   (lambda()
+;;     (define-key term-raw-map (kbd "M-J") 'windmove-left)
+;;     (define-key term-raw-map (kbd "M-L") 'windmove-right)
+;;     (define-key term-raw-map (kbd "M-I") 'windmove-up)
+;;     (define-key term-raw-map (kbd "M-K") 'windmove-down)
+;;     (define-key term-raw-map (kbd "M-F") 'toggle-maximize-buffer)
+;;     ))
 
 
-    (defun my-term-paste (&optional string)
-      (interactive)
-      (process-send-string
-       (get-buffer-process (current-buffer))
-       (if string string (current-kill 0))))
+;;     (defun my-term-paste (&optional string)
+;;       (interactive)
+;;       (process-send-string
+;;        (get-buffer-process (current-buffer))
+;;        (if string string (current-kill 0))))
 
-    (defun my-term-pasteboard-paste ()
-      (interactive)
-      (process-send-string
-       (get-buffer-process (current-buffer))
-       (ns-get-pasteboard)))
+;;     (defun my-term-pasteboard-paste ()
+;;       (interactive)
+;;       (process-send-string
+;;        (get-buffer-process (current-buffer))
+;;        (ns-get-pasteboard)))
 
-    (add-hook 'term-exec-hook '(lambda ()
-                                 (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)
-                                 (goto-address-mode)
-                                 (define-key term-raw-map (kbd "C-y") 'my-term-paste)
-                                 (define-key term-raw-map (kbd "s-v") 'my-term-pasteboard-paste)
-                                 ))
+;;     (add-hook 'term-exec-hook '(lambda ()
+;;                                  (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)
+;;                                  (goto-address-mode)
+;;                                  (define-key term-raw-map (kbd "C-y") 'my-term-paste)
+;;                                  (define-key term-raw-map (kbd "s-v") 'my-term-pasteboard-paste)
+;;                                  ))
 
-    (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
-      (if (memq (process-status proc) '(signal exit))
-          (let ((buffer (process-buffer proc)))
-            ad-do-it
-            (kill-buffer buffer))
-        ad-do-it))
-    (ad-activate 'term-sentinel)
+;;     (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
+;;       (if (memq (process-status proc) '(signal exit))
+;;           (let ((buffer (process-buffer proc)))
+;;             ad-do-it
+;;             (kill-buffer buffer))
+;;         ad-do-it))
+;;     (ad-activate 'term-sentinel)
 
-    (defvar my-term-shell "/usr/local/bin/zsh")
-    (defadvice ansi-term (before force-bash)
-      (interactive (list my-term-shell)))
-    (ad-activate 'ansi-term)
+;;     (defvar my-term-shell "/usr/local/bin/zsh")
+;;     (defadvice ansi-term (before force-bash)
+;;       (interactive (list my-term-shell)))
+;;     (ad-activate 'ansi-term)
 
-    (setenv "PATH" (shell-command-to-string "echo $PATH"))
+;;     (setenv "PATH" (shell-command-to-string "echo $PATH"))
 
-    (defun visit-ansi-term ()
-      (interactive)
-      "Creates an ansi-term and switches to it. If a buffer with name already exists, we simply switch to it."
-      (let ((buffer-of-name (get-buffer (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))
-            ;;        (default-directory "/home/www")
-            (term-cmd "/bin/zsh")
-            )
-        (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
-               (switch-to-buffer buffer-of-name))
-              ( t
-                (progn
-                  (ansi-term term-cmd)
-                                        ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
-                  (rename-buffer  (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))))))))
+;;     (defun visit-ansi-term ()
+;;       (interactive)
+;;       "Creates an ansi-term and switches to it. If a buffer with name already exists, we simply switch to it."
+;;       (let ((buffer-of-name (get-buffer (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))
+;;             ;;        (default-directory "/home/www")
+;;             (term-cmd "/bin/zsh")
+;;             )
+;;         (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
+;;                (switch-to-buffer buffer-of-name))
+;;               ( t
+;;                 (progn
+;;                   (ansi-term term-cmd)
+;;                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
+;;                   (rename-buffer  (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))))))))
 
-(use-package ansi-color
+;; Enabled minor modes: Abbrev Auto-Composition Auto-Compression Auto-Encryption
+;; Blink-Cursor Change-Cursor Column-Number Delete-Selection *Diff-Auto-Refine
+;; File-Name-Shadow Font-Lock Global-Auto-Complete *Global-Auto-Revert
+;; Global-Font-Lock *Helm-Match-Plug-in *Icomplete *Ido-Everywhere *Ido-Hacks
+;; *Ido-Ubiquitous Line-Number Mac-Mouse-Wheel Menu-Bar Mouse-Wheel
+;; Override-Global Pretty-Control-L Recentf Shell-Dirtrack Temp-Buffer-Resize
+;; Tooltip Transient-Mark Winner
+
+;; Enabled minor modes: Abbrev Auto-Composition Auto-Compression Auto-Encryption
+;; Blink-Cursor Change-Cursor Column-Number Delete-Selection File-Name-Shadow
+;; Font-Lock Global-Auto-Complete Global-Font-Lock Line-Number Mac-Mouse-Wheel
+;; Menu-Bar Mouse-Wheel Override-Global Recentf Shell-Dirtrack Temp-Buffer-Resize
+;; Tooltip Transient-Mark Winner
+
+
+(use-package ansi-colorrm
   :config
   (progn
     (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
@@ -1629,7 +1617,7 @@ Subexpression references can be used (\1, \2, etc)."
   :init
   (progn
     (use-package pos-tip)
-    (use-package yasnippet)
+    ;; (use-package yasnippet)
     (ac-config-default))
 
   :config
@@ -2133,6 +2121,10 @@ Subexpression references can be used (\1, \2, etc)."
                        ))
               ("Magit" (name . "\*magit"))
               ))))
+
+
+    (require 'ibuffer-ext)
+    (add-to-list 'ibuffer-never-show-predicates "^\\*")
 
     (add-hook 'ibuffer-mode-hook
               #'(lambda ()
@@ -2910,7 +2902,9 @@ The output appears in the buffer `*Async Shell Command*'."
     (erc-track-mode 1)
 
     (use-package erc-alert)
+    ;; (use-package erc-highlight-nicknames)
     (use-package erc-hl-nicks)
+    (use-package erc-patch)
 
     ;; For bitlbee - not very useful unless jabber icons would populate
     (require 'erc-nicklist)
@@ -3546,86 +3540,6 @@ at the beginning of line, if already there."
          ("C-c i m" . ispell-message)
          ("C-c i r" . ispell-region)))
 
-;; load Flymake cursor
-
-;; (use-package flymake
-;;   ;; :if (not degrade-p-flymake)
-;;   :commands (flymake-mode
-;;              flymake-mode-on)
-;;   :init
-;;   (progn
-
-;;     ;; Drupal-type extensions for Flymake
-;;                                         ;(add-to-list 'flymake-allowed-file-name-masks '("\\.module$" flymake-php-init))
-;;                                         ;(add-to-list 'flymake-allowed-file-name-masks '("\\.install$" flymake-php-init))
-;;                                         ;(add-to-list 'flymake-allowed-file-name-masks '("\\.inc$" flymake-php-init))
-;;                                         ;(add-to-list 'flymake-allowed-file-name-masks '("\\.engine$" flymake-php-init))
-;;                                         ;(add-to-list 'flymake-allowed-file-name-masks '("\\.view$" flymake-php-init))
-;;                                         ;(add-hook 'php-mode-hook (lambda () (flymake-mode 1)))
-
-;;     (setq
-;;      flymake-no-changes-timeout (* 60 5)
-;;      flymake-start-syntax-check-on-find-file nil
-;;      flymake-start-syntax-check-on-newline nil)
-
-;;     (use-package js
-;;       :if (executable-find "jshint")
-;;       :defer t
-;;       :config
-;;       (progn
-;;         (use-package flymake-jshint)))
-
-;;     (use-package js2-mode
-;;       :if (executable-find "jshint")
-;;       :defer t
-;;       :config
-;;       (progn
-;;         (use-package flymake-jshint)
-;;         (add-hook 'js2-mode-hook 'flymake-mode-on)))
-
-;;     (use-package flymake-jsonlint
-;;       :if (executable-find "jsonlint")
-;;       :commands flymake-jsonlint-load
-;;       :init
-;;       (progn
-;;         (add-hook 'json-mode-hook 'flymake-jsonlint-load)
-;;         (add-hook 'json-mode-hook 'flymake-mode-on)))
-
-;;     (use-package flymake-php
-;;       :commands flymake-php-load
-;;       :init
-;;       (progn
-;;         (add-hook 'php-mode-hook 'flymake-php-load)
-;;         (add-hook 'php-mode-hook 'flymake-mode-on)))
-
-;;     (use-package flymake-scss
-;;       :commands flymake-scss-load
-;;       :init
-;;       (progn
-;;         (add-hook 'scss-mode-hook 'flymake-scss-load)
-;;         (add-hook 'scss-mode-hook 'flymake-mode-on))))
-;;   :config
-;;   (progn
-;;     (use-package flymake-cursor)))
-
-
-;;; alias the new `flymake-report-status-slim' to
-;;; `flymake-report-status'
-;; (defalias 'flymake-report-status 'flymake-report-status-slim)
-;; (defun flymake-report-status-slim (e-w &optional status)
-;;   "Show \"slim\" flymake status in mode line."
-;;   (when e-w
-;;     (setq flymake-mode-line-e-w e-w))
-;;   (when status
-;;     (setq flymake-mode-line-status status))
-;;   (let* ((mode-line " Φ"))
-;;     (when (> (length flymake-mode-line-e-w) 0)
-;;       (setq mode-line (concat mode-line ":" flymake-mode-line-e-w)))
-;;     (setq mode-line (concat mode-line flymake-mode-line-status))
-;;     (setq flymake-mode-line mode-line)
-;;     (force-mode-line-update)))
-
-
 ;;;_ , flycheck
 
 (use-package flycheck
@@ -3635,6 +3549,18 @@ at the beginning of line, if already there."
   (progn
     (progn
       (add-hook 'drupal-mode-hook 'flycheck-mode))
+
+    (flycheck-declare-checker phpcs
+      "A PHP syntax checker using the PHP_CodeSniffer.
+
+See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
+      :command '("phpcs" "--report=emacs" source)
+      :error-patterns
+      '(("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): error - \\(?4:.*\\)" error)
+        ("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): warning - \\(?4:.*\\)" warning))
+      :modes '(php-mode php+-mode)
+      :next-checkers '(php))
+    (add-to-list 'flycheck-checkers 'phpcs)
 
     (flycheck-declare-checker bash
       "Bash checker"
@@ -4998,7 +4924,7 @@ end end))))))
          )
   :init
   (progn
-    (require 'yasnippet)
+    ;; (use-package 'yasnippet)
     (require 'org)
 
     (use-package org-habit
@@ -6220,7 +6146,7 @@ end end))))))
   (bind-key "H-;" 'windmove-left-without-errors)
   (bind-key "H-[" 'windmove-up-without-errors)
 
-  (require 'framemove)
+  (use-package  framemove)
   ;;   (framemove-default-keybindings)
   ;;
   ;; If you want to integrate framemove and windmove
@@ -6518,26 +6444,26 @@ $0"))))
 
   (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
 
-  (defun bw-toggle-solarized ()
-    "Toggles between solarized light and dark"
-    (interactive)
-    (cond
-     ((custom-theme-enabled-p 'solarized-dark)
-      (progn
-        (disable-theme 'solarized-dark)
-        (enable-theme 'solarized-light)))
-     ((custom-theme-enabled-p 'solarized-light)
-      (progn
-        (disable-theme 'solarized-light)
-        (enable-theme 'solarized-dark)))))
+  ;; (defun bw-toggle-solarized ()
+  ;;   "Toggles between solarized light and dark"
+  ;;   (interactive)
+  ;;   (cond
+  ;;    ((custom-theme-enabled-p 'solarized-dark)
+  ;;     (progn
+  ;;       (disable-theme 'solarized-dark)
+  ;;       (enable-theme 'solarized-light)))
+  ;;    ((custom-theme-enabled-p 'solarized-light)
+  ;;     (progn
+  ;;       (disable-theme 'solarized-light)
+  ;;       (enable-theme 'solarized-dark)))))
 
-  (defadvice load-theme
-    (before load-theme)
-    (let ((theme-name (ad-get-arg 0)))
-      (when (or (eq theme-name 'solarized-dark)
-                (eq theme-name 'solarized-light)))))
+  ;; (defadvice load-theme
+  ;;   (before load-theme)
+  ;;   (let ((theme-name (ad-get-arg 0)))
+  ;;     (when (or (eq theme-name 'solarized-dark)
+  ;;               (eq theme-name 'solarized-light)))))
 
-  (ad-activate 'load-theme)
+  ;; (ad-activate 'load-theme)
 
   (blink-cursor-mode 1)
 
@@ -6599,16 +6525,16 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
   ;; we load the theme after init because we might have changed some
   ;; variables in customize
 
-  (if running-alternate-emacs
-      (progn
-        (add-hook 'after-init-hook
-                  (lambda ()
-                    (load-theme 'solarized-dark t)
-                    ;; (load-theme 'solarized-light t t)
-                    )))
-    (add-hook 'after-init-hook
-              (lambda ()
-                (load-theme 'deeper-blue) t)))
+  ;; (if running-alternate-emacs
+  ;;     (progn
+  ;;       (add-hook 'after-init-hook
+  ;;                 (lambda ()
+  ;;                   (load-theme 'solarized-dark t)
+  ;;                   ;; (load-theme 'solarized-light t t)
+  ;;                   )))
+  ;;   (add-hook 'after-init-hook
+  ;;             (lambda ()
+  ;;               (load-theme 'deeper-blue) t)))
 
 
 

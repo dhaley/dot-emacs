@@ -139,9 +139,6 @@
 [submodule "site-lisp/ido-hacks"]
         path = site-lisp/ido-hacks
         url = https://github.com/jwiegley/ido-hacks.git
-[submodule "lisp/bind-key"]
-        path = lisp/bind-key
-        url = git://github.com/jwiegley/bind-key.git
 [submodule "lisp/use-package"]
         path = lisp/use-package
         url = git://github.com/jwiegley/use-package.git
@@ -379,3 +376,6 @@
 [submodule "site-lisp/ac/auto-complete"]
         path = site-lisp/ac/auto-complete
         url = git://github.com/auto-complete/auto-complete
+[submodule "site-lisp/solarized-emacs"]
+        path = site-lisp/solarized-emacs
+        url = https://github.com/bbatsov/solarized-emacs.git
