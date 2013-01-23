@@ -215,6 +215,13 @@
 (put 'set-goal-column  'disabled nil)
 (put 'upcase-region    'disabled nil)   ; Let upcasing work
 
+;; To use YASnippet as a non-global minor mode, replace `(yas-global-mode 1)` with
+;; `(yas-reload-all)` to load the snippet tables. Then add a call to
+;; `(yas-minor-mode)` to the major-modes where you to enable YASnippet.
+
+(require 'yasnippet)
+(yas-reload-all)
+
 ;;Hiding and replacing modeline strings with clean-mode-line
 
 (defvar mode-line-cleaner-alist
@@ -2744,8 +2751,6 @@ The output appears in the buffer `*Async Shell Command*'."
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
 
 
-    ;; (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
-    ;; (setq flymake-phpcs-show-rule t)
 
     ;; coder.module compilation errors.
     (add-to-list
@@ -3548,6 +3553,10 @@ at the beginning of line, if already there."
   :init
   (progn
     (progn
+
+          ;; (setq flymake-phpcs-command "~/.emacs.d/site-lisp/flymake-phpcs/bin/flymake_phpcs")
+    ;; (setq flymake-phpcs-show-rule t)
+
       (add-hook 'drupal-mode-hook 'flycheck-mode))
 
     (flycheck-declare-checker phpcs
@@ -3571,6 +3580,13 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
       :predicate '(eq sh-shell 'bash))
 
     (push 'bash flycheck-checkers)
+
+
+    (flycheck-declare-checker zsh
+      :command '("zsh" "-n" "-d" "-f" source)
+      :error-patterns '(("^\\(?1:.*\\):\\(?2:[0-9]+\\): \\(?4:.*\\)$" error))
+      :modes 'sh-mode
+      :predicate '(eq sh-shell 'zsh))
 
     (flycheck-declare-checker xmllint
       "xmllint checker"
@@ -4578,6 +4594,8 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
   :mode (("\\.markdown\\'" . markdown-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.mdwn\\'" . markdown-mode)
+         ("\\.mkdn\\'" . markdown-mode)
+         ("\\.mdown\\'" . markdown-mode)
          ("\\.mkd\\'" . markdown-mode)
          ("\\.mkdown\\'" . markdown-mode)
          ("\\.mdtext\\'" . markdown-mode))

@@ -217,9 +217,6 @@
 [submodule "site-lisp/smart-dash"]
         path = site-lisp/smart-dash
         url = https://github.com/emacsmirror/smart-dash.git
-[submodule "site-lisp/flymake-phpcs"]
-        path = site-lisp/flymake-phpcs
-        url = https://github.com/illusori/emacs-flymake-phpcs.git
 [submodule "site-lisp/identica-mode"]
         path = site-lisp/identica-mode
         url = https://github.com/emacsmirror/identica-mode.git
@@ -268,9 +265,6 @@
 [submodule "site-lisp/org-merge-driver"]
         path = site-lisp/org-merge-driver
         url = git://orgmode.org/org-merge-driver.git
-[submodule "override/emacs-flymake"]
-        path = override/emacs-flymake
-        url = https://github.com/illusori/emacs-flymake.git
 [submodule "site-lisp/bbdb-vcard"]
         path = site-lisp/bbdb-vcard
         url = git://github.com/trebb/bbdb-vcard.git
@@ -349,9 +343,6 @@
 [submodule "site-lisp/yasnippet"]
         path = site-lisp/yasnippet
         url = https://github.com/capitaomorte/yasnippet.git
-[submodule "site-lisp/flymake-php"]
-        path = site-lisp/flymake-php
-        url = https://github.com/purcell/flymake-php.git
 [submodule "site-lisp/page-break-lines"]
         path = site-lisp/page-break-lines
         url = https://github.com/purcell/page-break-lines.git
@@ -361,9 +352,6 @@
 [submodule "site-lisp/timelog-mode"]
         path = site-lisp/timelog-mode
         url = https://github.com/arvidj/timelog-mode.git
-[submodule "site-lisp/flymake-easy"]
-        path = site-lisp/flymake-easy
-        url = https://github.com/purcell/flymake-easy.git
 [submodule "site-lisp/less-css-mode"]
         path = site-lisp/less-css-mode
         url = https://github.com/purcell/less-css-mode.git
@@ -376,3 +364,6 @@
 [submodule "site-lisp/emacs-async"]
         path = site-lisp/emacs-async
         url = https://github.com/jwiegley/emacs-async.git
+[submodule "override/gnus"]
+        path = override/gnus
+        url = https://github.com/jwiegley/gnus.git
