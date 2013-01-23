@@ -322,9 +322,6 @@
 [submodule "site-lisp/nodejs-mode"]
         path = site-lisp/nodejs-mode
         url = https://github.com/emacsmirror/nodejs-mode.git
-[submodule "override/gnus"]
-        path = override/gnus
-        url = https://github.com/jwiegley/gnus.git
 [submodule "site-lisp/eshell-manual"]
         path = site-lisp/eshell-manual
         url = https://github.com/nicferrier/eshell-manual.git
@@ -377,5 +374,5 @@
         path = site-lisp/solarized-emacs
         url = https://github.com/bbatsov/solarized-emacs.git
 [submodule "site-lisp/emacs-async"]
-	path = site-lisp/emacs-async
-	url = https://github.com/jwiegley/emacs-async.git
+        path = site-lisp/emacs-async
+        url = https://github.com/jwiegley/emacs-async.git
