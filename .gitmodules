@@ -187,9 +187,6 @@
 [submodule "site-lisp/debbugs"]
         path = site-lisp/debbugs
         url = git://github.com/jwiegley/debbugs-gnu.git
-[submodule "site-lisp/asynk"]
-        path = site-lisp/asynk
-        url = https://github.com/skarra/ASynK.git
 [submodule "site-lisp/auto-overlays"]
         path = site-lisp/auto-overlays
         url = https://github.com/emacsmirror/auto-overlays.git
@@ -379,3 +376,6 @@
 [submodule "site-lisp/solarized-emacs"]
         path = site-lisp/solarized-emacs
         url = https://github.com/bbatsov/solarized-emacs.git
+[submodule "site-lisp/emacs-async"]
+	path = site-lisp/emacs-async
+	url = https://github.com/jwiegley/emacs-async.git
