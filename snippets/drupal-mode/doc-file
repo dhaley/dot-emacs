@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: Documenting files
+# key: doc-file
+# --
+/**
+ * @file
+ * Programmatically create VCR content. Oh Yeah!
+ *
+ * Will create pages, menus and menu items, beans and more.
+ * More power!
+ */

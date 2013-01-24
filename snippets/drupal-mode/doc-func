@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: Documenting functions and methods
+# key: doc-func
+# --
+/**
+ * Verifies the syntax of the given e-mail address.
+ *
+ * Empty e-mail addresses are allowed. See RFC 2822 for details.
+ *
+ * @param string $mail
+ *   A string containing an email address.
+ *
+ * @return bool
+ *   TRUE if the address is in a valid format, and FALSE if it isn't.
+ */

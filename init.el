@@ -2130,7 +2130,7 @@ Subexpression references can be used (\1, \2, etc)."
 
 
     ;; (require 'ibuffer-ext)
-    (add-to-list 'ibuffer-never-show-predicates "^\\*")
+    ;; (add-to-list 'ibuffer-never-show-predicates "^\\*")
 
     (add-hook 'ibuffer-mode-hook
               #'(lambda ()
