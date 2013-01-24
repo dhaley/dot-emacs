@@ -2632,7 +2632,7 @@ The output appears in the buffer `*Async Shell Command*'."
     (use-package php-completion-mode
       :commands php-completion-mode)
 
-    ;; (use-package php-extras)
+    (use-package php-extras)
 
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")

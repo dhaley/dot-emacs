@@ -15,14 +15,13 @@
                        ("mad" "(╬ ಠ益ಠ)" "(╬ ಠ益ಠ)" nil nil nil nil nil nil)
                        ("no" "［ ］Yes［✔］No" "［✔］No" nil nil nil nil nil nil)
                        ("pass" "［✔］Pass［ ］Fail" "［✔］Pass" nil nil nil nil nil nil)
+                       ("sal" "Thanks and let me know if you have any questions or concerns,\n\nDamon" "salutation" nil nil nil nil nil nil)
                        ("smile" "(｡◕‿◕｡)" "(｡◕‿◕｡)" nil nil nil nil nil nil)
                        ("spider" "/╲/\\╭ºoꍘoº╮/\\╱\\" "/╲/\\╭ºoꍘoº╮/\\╱\\" nil nil nil nil nil nil)
                        ("supson" "¯\\_(ツ)_/¯" "¯\\_(ツ)_/¯" nil nil nil nil nil nil)
                        ("time" "`(current-time-string)`" "(current time)" nil nil nil nil nil nil)
                        ("win" "［✔］Win［ ］Lose" "［✔］Win" nil nil nil nil nil nil)
-                       ("xd" "( ˃ ヮ˂)" "( ˃ ヮ˂)" nil nil nil nil nil nil)
-                       ("yes" "［✔］Yes［ ］No" "［✔］Yes" nil nil nil nil nil nil)
-                       ("yudothis" "щ(ﾟДﾟщ)" "щ(ﾟДﾟщ)" nil nil nil nil nil nil)))
+                       ("yes" "［✔］Yes［ ］No" "［✔］Yes" nil nil nil nil nil nil)))
 
 
 ;;; Snippet definitions:
@@ -62,4 +61,4 @@
                        ("todo" "TODO $0\nSCHEDULED: `(with-temp-buffer (org-insert-time-stamp (current-time)))`\n:PROPERTIES:\n:ID:       `(shell-command-to-string \"uuidgen\")`:CREATED: `(with-temp-buffer (org-insert-time-stamp (current-time) t t))`\n:END:" "TODO" nil nil nil nil nil nil)))
 
 
-;;; Do not edit! File generated at Wed Jan 23 16:24:23 2013
+;;; Do not edit! File generated at Wed Jan 23 22:18:38 2013
