@@ -61,4 +61,4 @@
                        ("todo" "TODO $0\nSCHEDULED: `(with-temp-buffer (org-insert-time-stamp (current-time)))`\n:PROPERTIES:\n:ID:       `(shell-command-to-string \"uuidgen\")`:CREATED: `(with-temp-buffer (org-insert-time-stamp (current-time) t t))`\n:END:" "TODO" nil nil nil nil nil nil)))
 
 
-;;; Do not edit! File generated at Wed Jan 23 22:18:38 2013
+;;; Do not edit! File generated at Thu Jan 24 12:21:34 2013

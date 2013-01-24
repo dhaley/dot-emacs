@@ -5,4 +5,4 @@
                      '(("dir" "file { \"/home/$1\":\n  owner   => $1,\n  group   => $1,\n  mode    => 0700,\n  type    => directory,\n  ensure  => directory;\n}" "dir" nil nil nil nil nil nil)))
 
 
-;;; Do not edit! File generated at Wed Jan 23 22:18:38 2013
+;;; Do not edit! File generated at Thu Jan 24 12:21:34 2013
