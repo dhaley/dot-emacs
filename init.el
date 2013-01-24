@@ -5092,7 +5092,7 @@ end end))))))
   :commands paredit-mode
   :diminish paredit-mode
   :config
-  ((progn
+  (progn
      (use-package paredit-ext)
 
      (bind-key "C-M-l" 'paredit-recentre-on-sexp paredit-mode-map)
@@ -5160,7 +5160,7 @@ end end))))))
        (add-hook 'allout-mode-hook
                  #'(lambda ()
                      (bind-key "M-k" 'paredit-raise-sexp allout-mode-map)
-                     (bind-key "M-h" 'mark-containing-sexp allout-mode-map))))))
+                     (bind-key "M-h" 'mark-containing-sexp allout-mode-map)))))
 
 ;;;_ , paren
 
