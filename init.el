@@ -1624,7 +1624,6 @@ Subexpression references can be used (\1, \2, etc)."
   :init
   (progn
     (use-package pos-tip)
-    ;; (use-package yasnippet)
     (ac-config-default))
 
   :config
@@ -2625,8 +2624,8 @@ The output appears in the buffer `*Async Shell Command*'."
 
 
 (use-package php-mode
-  :commands php-mode
   :diminish php-mode
+  :commands php-mode
   ;; :mode ("\\.php\\'" . php-mode)
   :init
   (progn
@@ -2748,7 +2747,12 @@ The output appears in the buffer `*Async Shell Command*'."
     (require 'etags)
     (require 'smart-dash)
 
-    ;; coder.module compilation errors.
+    ;; (defun my-drupal-hook-function ()
+    ;;   (set (make-local-variable 'compile-command) (format "phpcs --report=emacs --standard=PEAR %s" (buffer-file-name))))
+
+    ;; (add-hook 'drupal-mode-hook 'my-drupal-hook-function)
+
+;; coder.module compilation errors.
     ;; (add-to-list
     ;;  'compilation-error-regexp-alist
     ;;  ;; These regexps parse the HTML output that coder displays in a browser.
@@ -2764,8 +2768,15 @@ The output appears in the buffer `*Async Shell Command*'."
     ;;  ;; drupal log by syslog-ng.module
     ;;  '("drupal: .*||\\(.+\\) \(line \\([0-9]+\\) of \\(.+\\)\)\." 3 2))
 
+
+    ;; http://pear.php.net/manual/en/package.php.php-codesniffer.reporting.php
     (add-hook 'drupal-mode-hook
               '(lambda ()
+                 ;; (yas-load-directory "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets/drupal-mode" 'drupal-mode)
+                 (set (make-local-variable 'compile-command) (format "phpcs --report=emacs --standard=PEAR %s" (buffer-file-name)))
+                 (yas-minor-mode 1)
+                 ;; (setq yas/mode-symbol 'rails-mode))
+                 (setq yas-extra-modes 'drupal-mode)
                  (message "I came here to do Drupal")))))
 
 ;;;_ , erc
@@ -3506,7 +3517,7 @@ at the beginning of line, if already there."
       "A PHP syntax checker using the PHP_CodeSniffer.
 
 See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
-      :command '("phpcs" "--standard=Drupal --report=emacs" source)
+      :command '("phpcs" "--standard=Drupal" "--report=emacs" source)
       :error-patterns
       '(("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): error - \\(?4:.*\\)" error)
         ("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): warning - \\(?4:.*\\)" warning))
@@ -4251,8 +4262,8 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
       (unless lisp-mode-initialized
         (setq lisp-mode-initialized t)
 
-        ;; (use-package redshank
-        ;;   :diminish redshank-mode)
+        (use-package redshank
+          :diminish redshank-mode)
 
         (use-package elisp-slime-nav
           :diminish elisp-slime-nav-mode)
@@ -5059,8 +5070,9 @@ end end))))))
 
 
 (use-package outline-mode
-  :commands outline-mode
-  :diminish outline-mode)
+  :diminish outline-mode
+  :commands outline-mode)
+
 
 ;;;_ , pabbrev
 
@@ -6286,8 +6298,14 @@ end end))))))
        ;; Dont print yasnippet messages
        yas-verbosity 0
        ;; Snippet directories
-       yas-snippet-dirs (list (expand-file-name
-                               "snippets" user-emacs-directory))
+       ;; yas-snippet-dirs (list (expand-file-name
+       ;;                         "snippets" user-emacs-directory))
+
+
+       yas-snippet-dirs
+          '("~/.emacs.d/snippets"            ;; personal snippets
+            "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets"
+            )
        ;; Disable yasnippet prompt by default
        ;; (using auto-complete to prompt)
        yas-prompt-functions '(yas-popup-isearch-prompt

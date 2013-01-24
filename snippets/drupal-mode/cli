@@ -1,0 +1,22 @@
+# -*- mode: snippet -*-
+# name: cli execution script template
+# key: cli
+# --
+<?php
+
+/**
+ * @file
+ * A drupal cli execution script
+ *
+ * Run drupal API hooks from the command line.
+ * This is useful before putting functionality in a site install.
+ */
+
+error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+
+define('DRUPAL_ROOT', getcwd());
+// Necessary if running from command line!
+ip_address() = "localhost";
+require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+require_once "includes/install.inc";
+drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
