@@ -125,7 +125,7 @@
  '(erc-hide-list (quote ("JOIN" "NICK" "PART" "QUIT" "MODE")))
  '(erc-ignore-list (quote ("rudybot!.*" "anxt")))
  '(erc-join-buffer (quote bury))
- '(erc-keywords (quote (" cu " " tor " "Damon" "dkh" "dhaley" "eshell" "matt$" "gmane" "gwene" "locate-dominating-file" "usenet" "proxy" "privacy" " socks " "gnus" "workgroups" "wireshark" "hushmail" "page manager" "super cookie" "[^.]php" "nxhtml" "nxml" "erc-keywords" "libnotify" "[^#]orgW?mode" "rate module" "[^#]conkeror" "noscript" "https-everywhere" "references module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc-hl" "erc-highlight" "web-mode" "flymake" "Rasa" "dkh" "laima" "prelude" "flycheck" "eproject" "locate-dominating-file" "projectile")))
+ '(erc-keywords (quote (" cu " " tor " "Damon" "dkh" "dhaley" "eshell" "matt$" "gmane" "gwene" "locate-dominating-file" "usenet" "proxy" "privacy" " socks " "gnus" "workgroups" "wireshark" "hushmail" "page manager" "super cookie" "[^.]php" "nxhtml" "nxml" "erc-keywords" "libnotify" "[^#]orgW?mode" "rate module" "[^#]conkeror" "noscript" "https-everywhere" "references module" "org2blog" "Johan Falk" "Lanier" "solarized" "bbdb" "magit" "w3m" "erc-hl" "erc-highlight" "web-mode" "flymake" "Rasa" "dkh" "laima" "prelude" "flycheck" "eproject" "locate-dominating-file" "projectile" "dirlocal")))
  '(erc-log-channels-directory "~/Messages/.erc/logs")
  '(erc-log-write-after-send t)
  '(erc-modules (quote (button notifications autojoin completion dcc fill identd irccontrols list log match menu move-to-prompt netsplit networks noncommands readonly replace ring scrolltobottom services spelling smiley stamp spelling track truncate track-score hl-nicks)))

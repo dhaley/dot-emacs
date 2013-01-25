@@ -367,9 +367,6 @@
 [submodule "site-lisp/php-eldoc"]
         path = site-lisp/php-eldoc
         url = https://github.com/zenozeng/php-eldoc.git
-[submodule "site-lisp/use-package"]
-        path = site-lisp/use-package
-        url = https://github.com/jwiegley/use-package.git
 [submodule "override/tramp"]
 	path = override/tramp
 	url = https://github.com/jwiegley/tramp.git

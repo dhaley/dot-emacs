@@ -1346,22 +1346,22 @@ Subexpression references can be used (\1, \2, etc)."
   (progn
     (defvar allout-unprefixed-keybindings nil)
 
-    ;; (defun my-allout-mode-hook ()
-    ;;   (dolist (mapping '((?b . allout-hide-bodies)
-    ;;                      (?c . allout-hide-current-entry)
-    ;;                      (?l . allout-hide-current-leaves)
-    ;;                      (?i . allout-show-current-branches)
-    ;;                      (?e . allout-show-entry)
-    ;;                      (?o . allout-show-to-offshoot)))
-    ;;     (bind-key (concat (format-kbd-macro allout-command-prefix)
-    ;;                       " " (char-to-string (car mapping)))
-    ;;               (cdr mapping)
-    ;;               allout-mode-map))
+    (defun my-allout-mode-hook ()
+      (dolist (mapping '((?b . allout-hide-bodies)
+                         (?c . allout-hide-current-entry)
+                         (?l . allout-hide-current-leaves)
+                         (?i . allout-show-current-branches)
+                         (?e . allout-show-entry)
+                         (?o . allout-show-to-offshoot)))
+        (bind-key (concat (format-kbd-macro allout-command-prefix)
+                          " " (char-to-string (car mapping)))
+                  (cdr mapping)
+                  allout-mode-map))
 
-    ;;   (if (memq major-mode lisp-modes)
-    ;;       (unbind-key "C-k" allout-mode-map)))
+      (if (memq major-mode lisp-modes)
+          (unbind-key "C-k" allout-mode-map)))
 
-    ;; (add-hook 'allout-mode-hook 'my-allout-mode-hook)
+    (add-hook 'allout-mode-hook 'my-allout-mode-hook)
     ))
 
 
