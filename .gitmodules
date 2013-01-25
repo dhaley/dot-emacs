@@ -139,9 +139,6 @@
 [submodule "site-lisp/ido-hacks"]
         path = site-lisp/ido-hacks
         url = https://github.com/jwiegley/ido-hacks.git
-[submodule "lisp/use-package"]
-        path = lisp/use-package
-        url = git://github.com/jwiegley/use-package.git
 [submodule "site-lisp/zencoding-mode"]
         path = site-lisp/zencoding-mode
         url = git://github.com/rooney/zencoding.git
@@ -368,8 +365,14 @@
         path = override/gnus
         url = https://github.com/jwiegley/gnus.git
 [submodule "site-lisp/paredit"]
-	path = site-lisp/paredit
-	url = https://github.com/emacsmirror/paredit.git
+        path = site-lisp/paredit
+        url = https://github.com/emacsmirror/paredit.git
 [submodule "site-lisp/yasnippet-drupal-mode"]
-	path = site-lisp/yasnippet-drupal-mode
-	url = git://gitorious.org/drupal-development-helpers/yasnippet-drupal-mode.git
+        path = site-lisp/yasnippet-drupal-mode
+        url = git://gitorious.org/drupal-development-helpers/yasnippet-drupal-mode.git
+[submodule "site-lisp/php-eldoc"]
+        path = site-lisp/php-eldoc
+        url = https://github.com/zenozeng/php-eldoc.git
+[submodule "site-lisp/use-package"]
+	path = site-lisp/use-package
+	url = https://github.com/jwiegley/use-package.git

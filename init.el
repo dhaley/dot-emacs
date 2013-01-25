@@ -537,6 +537,13 @@ improved by many.."
 (bind-key "M-g c" 'goto-char)
 (bind-key "M-g l" 'goto-line)
 
+;; Move more quickly
+(global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (next-line 5))))
+(global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (previous-line 5))))
+(global-set-key (kbd "C-S-f") (lambda () (interactive) (ignore-errors (forward-char 5))))
+(global-set-key (kbd "C-S-b") (lambda () (interactive) (ignore-errors (backward-char 5))))
+
+
 (global-set-key (vector 'remap 'goto-line) 'goto-line-with-feedback)
 
 (defun goto-line-with-feedback ()
@@ -2632,8 +2639,6 @@ The output appears in the buffer `*Async Shell Command*'."
     (use-package php-completion-mode
       :commands php-completion-mode)
 
-    (use-package php-extras)
-
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
 
@@ -2743,7 +2748,7 @@ The output appears in the buffer `*Async Shell Command*'."
   :interpreter ("drupal" . drupal-mode)
   :init
   (progn
-    ;; (require 'php-mode)
+    (require 'php-extras)
     (require 'etags)
     (require 'smart-dash)
 
@@ -4145,21 +4150,8 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
             (insert account))
           (forward-line))))))
 
-;;;_ , lisp-mode
+;;;_ , aliases
 
-;; Utilities every Emacs Lisp coders should master:
-;;
-;;   paredit          Let's you manipulate sexps with ease
-;;   redshank         Think: Lisp refactoring
-;;   edebug           Knowing the traditional debugger is good too
-;;   eldoc
-;;   cldoc
-;;   elint
-;;   elp
-;;   ert
-
-
-                                        ; elisp
 (defalias 'acm 'auto-complete-mode)
 (defalias 'ai 'auto-install-from-emacswiki)
 (defalias 'bb  'bbdb)
@@ -4216,6 +4208,8 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
 (defalias 'vbm 'visual-basic-mode)
 (defalias 'vlm 'visual-line-mode)
 (defalias 'wsm 'whitespace-mode)
+
+;;;_ , lisp-mode
 
 ;; Utilities every Emacs Lisp coders should master:
 ;;
@@ -6431,18 +6425,18 @@ $0"))))
 
   (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
 
-  ;; (defun bw-toggle-solarized ()
-  ;;   "Toggles between solarized light and dark"
-  ;;   (interactive)
-  ;;   (cond
-  ;;    ((custom-theme-enabled-p 'solarized-dark)
-  ;;     (progn
-  ;;       (disable-theme 'solarized-dark)
-  ;;       (enable-theme 'solarized-light)))
-  ;;    ((custom-theme-enabled-p 'solarized-light)
-  ;;     (progn
-  ;;       (disable-theme 'solarized-light)
-  ;;       (enable-theme 'solarized-dark)))))
+  (defun bw-toggle-solarized ()
+    "Toggles between solarized light and dark"
+    (interactive)
+    (cond
+     ((custom-theme-enabled-p 'solarized-dark)
+      (progn
+        (disable-theme 'solarized-dark)
+        (enable-theme 'solarized-light)))
+     ((custom-theme-enabled-p 'solarized-light)
+      (progn
+        (disable-theme 'solarized-light)
+        (enable-theme 'solarized-dark)))))
 
   ;; (defadvice load-theme
   ;;   (before load-theme)
@@ -6512,16 +6506,16 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
   ;; we load the theme after init because we might have changed some
   ;; variables in customize
 
-  ;; (if running-alternate-emacs
-  ;;     (progn
-  ;;       (add-hook 'after-init-hook
-  ;;                 (lambda ()
-  ;;                   (load-theme 'solarized-dark t)
-  ;;                   ;; (load-theme 'solarized-light t t)
-  ;;                   )))
-  ;;   (add-hook 'after-init-hook
-  ;;             (lambda ()
-  ;;               (load-theme 'deeper-blue) t)))
+  (if running-alternate-emacs
+      (progn
+        (add-hook 'after-init-hook
+                  (lambda ()
+                    (load-theme 'solarized-dark t)
+                    ;; (load-theme 'solarized-light t t)
+                    )))
+    (add-hook 'after-init-hook
+              (lambda ()
+                (load-theme 'solarized-dark t) t)))
 
 
 
