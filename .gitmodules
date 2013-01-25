@@ -34,9 +34,6 @@
 [submodule "override/org-mode"]
         path = override/org-mode
         url = git://orgmode.org/org-mode.git
-[submodule "override/cedet"]
-        path = override/cedet
-        url = https://github.com/emacsmirror/cedet.git
 [submodule "site-lisp/ace-jump-mode"]
         path = site-lisp/ace-jump-mode
         url = https://github.com/winterTTr/ace-jump-mode.git
@@ -229,9 +226,6 @@
 [submodule "site-lisp/wgrep"]
         path = site-lisp/wgrep
         url = https://github.com/mhayashi1120/Emacs-wgrep.git
-[submodule "override/tramp"]
-        path = override/tramp
-        url = https://github.com/emacsmirror/tramp.git
 [submodule "site-lisp/expand-region"]
         path = site-lisp/expand-region
         url = https://github.com/magnars/expand-region.el.git
@@ -374,5 +368,5 @@
         path = site-lisp/php-eldoc
         url = https://github.com/zenozeng/php-eldoc.git
 [submodule "site-lisp/use-package"]
-	path = site-lisp/use-package
-	url = https://github.com/jwiegley/use-package.git
+        path = site-lisp/use-package
+        url = https://github.com/jwiegley/use-package.git

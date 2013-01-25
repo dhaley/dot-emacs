@@ -94,7 +94,7 @@
 
 (mac-switch-meta)
 
-;; you can also bind the Function-key to Hyper. Without losing the ability to
+;; you can also bind the Function-key to Hyper.  Without losing the ability to
 ;; change the volume or pause/play - those will still work.
 
 ;(setq mac-command-modifier 'meta)
@@ -102,6 +102,7 @@
 (setq mac-function-modifier 'hyper)
 
 (require 'use-package)
+
 (eval-when-compile
   (setq use-package-verbose (null byte-compile-current-file)))
 
@@ -216,9 +217,6 @@
 (put 'upcase-region    'disabled nil)   ; Let upcasing work
 
 ;; To use YASnippet as a non-global minor mode, replace `(yas-global-mode 1)` with
-;; `(yas-reload-all)` to load the snippet tables. Then add a call to
-;; `(yas-minor-mode)` to the major-modes where you to enable YASnippet.
-
 (require 'yasnippet)
 (yas-reload-all)
 
@@ -259,69 +257,6 @@ want to use in the modeline *in lieu of* the original.")
 (add-hook 'after-change-major-mode-hook 'clean-mode-line)
 
 
-;; Modes and mode groupings
-;; (defmacro hook-into-modes (func modes)
-;;   `(dolist (mode-hook ,modes)
-;;      (add-hook mode-hook ,func)))
-
-;; (defvar my-lisp-modes
-;;   '(emacs-lisp-mode
-;;     inferior-emacs-lisp-mode
-;;     ielm-mode
-;;     lisp-mode
-;;     inferior-lisp-mode
-;;     lisp-interaction-mode
-;;     slime-repl-mode))
-
-;; (defvar my-lisp-mode-hooks
-;;   (mapcar (function
-;;            (lambda (mode)
-;;              (intern
-;;               (concat (symbol-name mode) "-hook"))))
-;;           my-lisp-modes))
-
-;; (defvar my-prog-mode-hooks
-;;   '(prog-mode-hook
-;;     emacs-lisp-mode-hook
-;;     pyhon-mode-hook
-;;     coffee-mode-hook
-;;     js-mode-hook
-;;     js2-mode-hook
-;;     actionscript-mode-hook
-;;     ruby-mode-hook
-;;     haskell-mode-hook
-;;     clojure-mode-hook
-;;     go-mode-hook
-;;     groovy-mode-hook
-;;     qml-mode-hook))
-
-;; (defvar my-significant-whitespace-mode-hooks
-;;   '(coffee-mode-hook
-;;     python-mode-hook
-;;     haskell-mode-hook
-;;     stylus-mode-hook
-;;     haml-mode-hook))
-
-;; (defvar my-markup-mode-hooks
-;;   '(html-mode-hook
-;;     markdown-mode-hook
-;;     rst-mode-hook
-;;     org-mode-hook))
-
-;; (defvar my-html-like-mode-hooks
-;;   '(html-mode-hook
-;;     handlebars-mode-hook
-;;     nxml-mode-hook
-;;     web-mode-hook
-;;     haml-mode-hook))
-
-;; (defvar my-css-like-mode-hooks
-;;   '(css-mode-hook
-;;     stylus-mode-hook
-;;     sass-mode-hook
-;;     scss-mode))
-
-
 ;; Working with Coding Systems and Unicode in Emacs
 
 (prefer-coding-system 'utf-8)
@@ -337,7 +272,7 @@ want to use in the modeline *in lieu of* the original.")
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
-;;;_. Keybindings
+;;;_.  Keybindings
 
 ;; Main keymaps for personal bindings are:
 ;;
@@ -871,7 +806,7 @@ If no file is associated, just close buffer without prompt for save."
 
 (defun define-keys (mode-map keybindings)
   "Takes a mode map, and a list of (key function-designator)
-lists. The functions are bound to the keys in the given mode-map.
+lists.  The functions are bound to the keys in the given mode-map.
 Keys are in kbd format."
   (mapc (lambda (keybinding)
           (destructuring-bind (key function) keybinding
@@ -880,7 +815,7 @@ Keys are in kbd format."
 
 (defun global-set-keys (keybindings)
   "Takes a list of (key function-designator) lists.
-The functions are globally bound to the keys. Keys
+The functions are globally bound to the keys.  Keys
 are in kbd format."
   (mapc (lambda (keybinding)
           (destructuring-bind (key function) keybinding
@@ -1040,13 +975,15 @@ are in kbd format."
 ;;;_, Toggle between split windows and a single window
 
 (defun my-iswitchb-close()
-  "Open iswitchb or, if in minibuffer go to next match. Handy way to cycle through the ring."
+  "Open iswitchb or, if in minibuffer go to next match.  Handy way to cycle through the ring."
   (interactive)
   (if (window-minibuffer-p (selected-window))
       (keyboard-escape-quit)))
 
 (defun toggle-windows-split()
-  "Switch back and forth between one window and whatever split of windows we might have in the frame. The idea is to maximize the current buffer, while being able to go back to the previous split of windows in the frame simply by calling this command again."
+  "Switch back and forth between one window and whatever split of windows we
+  might have in the frame.  The idea is to maximize the current buffer,
+while being able to go back to the previous split of windows in the frame simply by calling this command again."
   (interactive)
   (if (not (window-minibuffer-p (selected-window)))
       (progn
@@ -1316,7 +1253,7 @@ Subexpression references can be used (\1, \2, etc)."
 
 
 
-;;;_. Packages
+;;;_.  Packages
 
 
 ;; Install the packages I need if not already installed
@@ -1391,7 +1328,7 @@ Subexpression references can be used (\1, \2, etc)."
 ;;;_ , ace-jump-mode
 
 (use-package ace-jump-mode
-  :bind ("C-. C-s" . ace-jump-mode))
+:bind ("C-. C-s" . ace-jump-mode))
 
 ;;;_ , agda
 
@@ -1409,22 +1346,24 @@ Subexpression references can be used (\1, \2, etc)."
   (progn
     (defvar allout-unprefixed-keybindings nil)
 
-    (defun my-allout-mode-hook ()
-      (dolist (mapping '((?b . allout-hide-bodies)
-                         (?c . allout-hide-current-entry)
-                         (?l . allout-hide-current-leaves)
-                         (?i . allout-show-current-branches)
-                         (?e . allout-show-entry)
-                         (?o . allout-show-to-offshoot)))
-        (bind-key (concat (format-kbd-macro allout-command-prefix)
-                          " " (char-to-string (car mapping)))
-                  (cdr mapping)
-                  allout-mode-map))
+    ;; (defun my-allout-mode-hook ()
+    ;;   (dolist (mapping '((?b . allout-hide-bodies)
+    ;;                      (?c . allout-hide-current-entry)
+    ;;                      (?l . allout-hide-current-leaves)
+    ;;                      (?i . allout-show-current-branches)
+    ;;                      (?e . allout-show-entry)
+    ;;                      (?o . allout-show-to-offshoot)))
+    ;;     (bind-key (concat (format-kbd-macro allout-command-prefix)
+    ;;                       " " (char-to-string (car mapping)))
+    ;;               (cdr mapping)
+    ;;               allout-mode-map))
 
-      (if (memq major-mode lisp-modes)
-          (unbind-key "C-k" allout-mode-map)))
+    ;;   (if (memq major-mode lisp-modes)
+    ;;       (unbind-key "C-k" allout-mode-map)))
 
-    (add-hook 'allout-mode-hook 'my-allout-mode-hook)))
+    ;; (add-hook 'allout-mode-hook 'my-allout-mode-hook)
+    ))
+
 
 ;;;_ , archive-region
 
@@ -1522,7 +1461,7 @@ Subexpression references can be used (\1, \2, etc)."
 
 ;;     (defun visit-ansi-term ()
 ;;       (interactive)
-;;       "Creates an ansi-term and switches to it. If a buffer with name already exists, we simply switch to it."
+;;       "Creates an ansi-term and switches to it.  If a buffer with name already exists, we simply switch to it."
 ;;       (let ((buffer-of-name (get-buffer (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))
 ;;             ;;        (default-directory "/home/www")
 ;;             (term-cmd "/bin/zsh")
@@ -2041,7 +1980,7 @@ Subexpression references can be used (\1, \2, etc)."
      ibuffer-show-empty-filter-groups nil
      ibuffer-saved-filter-groups
      (quote (("default"
-              ("emacs lisp" (mode . emacs-lisp-mode))
+              ("emacs Lisp" (mode . emacs-lisp-mode))
               ("python" (mode . python-mode))
               ("ruby" (mode . ruby-mode))
               ("coffee-script" (mode . coffee-mode))
@@ -3120,7 +3059,7 @@ at the beginning of line, if already there."
 
       (defun dkh-eshell-macs ()
         (interactive)
-        "Creates a tool config shell and switches to it. If a buffer with name already exists, we simply switch to it."
+        "Creates a tool config shell and switches to it.  If a buffer with name already exists, we simply switch to it."
         (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*"))))
           (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
                  (switch-to-buffer buffer-of-name))
@@ -3133,7 +3072,8 @@ at the beginning of line, if already there."
 
       (defun dkh-shell-with-name (name)
         (interactive "sName: ")
-        "Creates a shell with name given by the first argument, and switches to it. If a buffer with name already exists, we simply switch to it."
+        "Creates a shell with name given by the first argument, and switches
+        to it.  If a buffer with name already exists, we simply switch to it."
         (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))
               (localdir name))
           (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
@@ -5554,28 +5494,6 @@ end end))))))
     :init
     (setq smerge-command-prefix (kbd "C-. C-.")))
 
-;;;;_ , smex
-
-;;   (use-package smex
-;;     :load-path "smex"
-;;     :bind ("M-X" . dhl-invoke-smex)
-;;     :requires ido
-;;     :config
-;;     (progn
-;;       (smex-initialize)
-;;       (setq smex-save-file "~/.smex")
-;;       (smex-auto-update)
-
-;;       (defun dhl-invoke-smex (x)
-;;         "Invokes smex, if called without a prefix argument,
-;; smex-major-mode-commands otherwise. Note that this
-;; prevents using commands with prefix arguments."
-;;         (interactive "p")
-;;         (if (= x 1)
-;;             (smex)
-;;           (smex-major-mode-commands)))))
-
-
 ;;;_ , stopwatch
 
   (use-package stopwatch
@@ -6675,16 +6593,10 @@ Works in Microsoft Windows, Mac OS X, Linux."
                ))
     (set-register (car r) (cadr r)))
 
-
-
-
-
-  ;; Local Variables:
-  ;;   mode: emacs-lisp
-  ;;   mode: allout
-  ;;   outline-regexp: "^;;;_\\([,. ]+\\)"
-  ;; End:
-
-
+;; Local Variables:
+;;   mode: emacs-lisp
+;;   mode: allout
+;;   outline-regexp: "^;;;_\\([,. ]+\\)"
+;; End:
 
 ;;; init.el ends here
