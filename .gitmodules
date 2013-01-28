@@ -370,3 +370,9 @@
 [submodule "override/tramp"]
 	path = override/tramp
 	url = https://github.com/jwiegley/tramp.git
+[submodule "site-lisp/skewer-mode"]
+	path = site-lisp/skewer-mode
+	url = https://github.com/skeeto/skewer-mode.git
+[submodule "site-lisp/emacs-http-server"]
+	path = site-lisp/emacs-http-server
+	url = https://github.com/skeeto/emacs-http-server.git

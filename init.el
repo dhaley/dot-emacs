@@ -101,6 +101,7 @@
 ;(setq mac-option-modifier 'super)
 (setq mac-function-modifier 'hyper)
 
+
 (require 'use-package)
 
 (eval-when-compile
@@ -271,6 +272,8 @@ want to use in the modeline *in lieu of* the original.")
 
 ;; Treat clipboard input as UTF-8 string first; compound text next, etc.
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+
+
 
 ;;;_.  Keybindings
 
@@ -477,6 +480,30 @@ improved by many.."
 (global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (previous-line 5))))
 (global-set-key (kbd "C-S-f") (lambda () (interactive) (ignore-errors (forward-char 5))))
 (global-set-key (kbd "C-S-b") (lambda () (interactive) (ignore-errors (backward-char 5))))
+
+
+; http://ergoemacs.org/emacs/emacs_form_feed_section_paging.html
+(defun forward-block ()
+  "Move cursor forward to next occurrence of double newline character.
+In most major modes, this is the same as `forward-paragraph', however, this command's behavior is the same regardless of syntax table."
+  (interactive)
+  (skip-chars-forward "\n")
+  (when (not (search-forward-regexp "\n[[:blank:]]*\n" nil t))
+    (goto-char (point-max)) ) )
+
+(defun backward-block ()
+  "Move cursor backward to previous occurrence of double newline char.
+See: `forward-block'"
+  (interactive)
+  (skip-chars-backward "\n")
+  (when (not (search-backward-regexp "\n[[:blank:]]*\n" nil t))
+    (goto-char (point-min))
+    )
+  )
+
+(bind-key "<C-up>" 'backward-block) ; Ctrl+↑
+(bind-key "<C-down>" 'forward-block) ; Ctrl+↓
+
 
 
 (global-set-key (vector 'remap 'goto-line) 'goto-line-with-feedback)
@@ -1245,6 +1272,13 @@ Subexpression references can be used (\1, \2, etc)."
 (bind-key "H-N" 'clean-up-buffer-or-region)
 (bind-key "H-n" 'cleanup-buffer)
 
+
+(global-set-key (kbd "H-j")
+            (lambda ()
+                  (interactive)
+                  (join-line -1)))
+
+
 (setq package-archives
       '(("original"    . "http://tromey.com/elpa/")
         ("gnu"         . "http://elpa.gnu.org/packages/")
@@ -1284,6 +1318,7 @@ Subexpression references can be used (\1, \2, etc)."
 ;; (package-refresh-contents)
 (dolist (package dkh-required-packages) (when (not (package-installed-p package)) (package-install package)))
 
+
 
 ;;;_ , el-get
 
@@ -2613,7 +2648,9 @@ The output appears in the buffer `*Async Shell Command*'."
     (bind-key "C-8 o <" 'outline-promote)
     (bind-key "C-8 o >" 'outline-demote)
     (bind-key "C-8 o m" 'outline-insert-heading)
-    ))
+    (use-package php-completion-mode
+      :commands php-completion-mode))
+  )
 
 
 ;; (use-package projectile
@@ -2691,37 +2728,20 @@ The output appears in the buffer `*Async Shell Command*'."
     (require 'etags)
     (require 'smart-dash)
 
+
     ;; (defun my-drupal-hook-function ()
     ;;   (set (make-local-variable 'compile-command) (format "phpcs --report=emacs --standard=PEAR %s" (buffer-file-name))))
-
     ;; (add-hook 'drupal-mode-hook 'my-drupal-hook-function)
-
-;; coder.module compilation errors.
-    ;; (add-to-list
-    ;;  'compilation-error-regexp-alist
-    ;;  ;; These regexps parse the HTML output that coder displays in a browser.
-    ;;  '("<span class="fieldset-legend">\\(.+\\)</span>.*<h2>\\(.+\\)</h2>.*coder-warning .*Line \\([0-9]+\\): \\(.+\\) <pre>" 2 3))
-
-    ;; (add-to-list
-    ;;  'compilation-error-regexp-alist
-    ;;                                     ; Identify line, same file as previous error.
-    ;;  '("coder-warning .*Line \\([0-9]+\\):  \\(.+\\)<pre>" nil 1))
-
-    ;; (add-to-list
-    ;;  'compilation-error-regexp-alist
-    ;;  ;; drupal log by syslog-ng.module
-    ;;  '("drupal: .*||\\(.+\\) \(line \\([0-9]+\\) of \\(.+\\)\)\." 3 2))
-
 
     ;; http://pear.php.net/manual/en/package.php.php-codesniffer.reporting.php
     (add-hook 'drupal-mode-hook
               '(lambda ()
-                 ;; (yas-load-directory "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets/drupal-mode" 'drupal-mode)
-                 (set (make-local-variable 'compile-command) (format "phpcs --report=emacs --standard=PEAR %s" (buffer-file-name)))
                  (yas-minor-mode 1)
-                 ;; (setq yas/mode-symbol 'rails-mode))
                  (setq yas-extra-modes 'drupal-mode)
-                 (message "I came here to do Drupal")))))
+                 (message "I came here to do Drupal")))
+
+    (add-to-list 'Info-directory-list "~/.emacs.d/site-lisp/drupal-mode")
+    ))
 
 ;;;_ , erc
 
@@ -3098,35 +3118,35 @@ at the beginning of line, if already there."
 
       ;; http://www.emacswiki.org/emacs-ru/EshellEnhancedLS
       ;; ;;This makes Eshell’s ‘ls’ file names RET-able. Yay!
-      ;; (eval-after-load "em-ls"
-      ;;   '(progn
-      ;;      (defun ted-eshell-ls-find-file-at-point (point)
-      ;;        "RET on Eshell's `ls' output to open files."
-      ;;        (interactive "d")
-      ;;        (find-file (buffer-substring-no-properties
-      ;;                    (previous-single-property-change point 'help-echo)
-      ;;                    (next-single-property-change point 'help-echo))))
+      (eval-after-load "em-ls"
+        '(progn
+           (defun ted-eshell-ls-find-file-at-point (point)
+             "RET on Eshell's `ls' output to open files."
+             (interactive "d")
+             (find-file (buffer-substring-no-properties
+                         (previous-single-property-change point 'help-echo)
+                         (next-single-property-change point 'help-echo))))
 
-      ;;      (defun pat-eshell-ls-find-file-at-mouse-click (event)
-      ;;        "Middle click on Eshell's `ls' output to open files.
-      ;;  From Patrick Anderson via the wiki."
-      ;;        (interactive "e")
-      ;;        (ted-eshell-ls-find-file-at-point (posn-point (event-end event))))
+           (defun pat-eshell-ls-find-file-at-mouse-click (event)
+             "Middle click on Eshell's `ls' output to open files.
+       From Patrick Anderson via the wiki."
+             (interactive "e")
+             (ted-eshell-ls-find-file-at-point (posn-point (event-end event))))
 
-      ;;      (let ((map (make-sparse-keymap)))
-      ;;        (define-key map (kbd "RET")      'ted-eshell-ls-find-file-at-point)
-      ;;        (define-key map (kbd "<return>") 'ted-eshell-ls-find-file-at-point)
-      ;;        (define-key map (kbd "<mouse-2>") 'pat-eshell-ls-find-file-at-mouse-click)
-      ;;        (defvar ted-eshell-ls-keymap map))
+           (let ((map (make-sparse-keymap)))
+             (define-key map (kbd "RET")      'ted-eshell-ls-find-file-at-point)
+             (define-key map (kbd "<return>") 'ted-eshell-ls-find-file-at-point)
+             (define-key map (kbd "<mouse-2>") 'pat-eshell-ls-find-file-at-mouse-click)
+             (defvar ted-eshell-ls-keymap map))
 
-      ;;      (defadvice eshell-ls-decorated-name (after ted-electrify-ls activate)
-      ;;        "Eshell's `ls' now lets you click or RET on file names to open them."
-      ;;        (add-text-properties 0 (length ad-return-value)
-      ;;                             (list 'help-echo "RET, mouse-2: visit this file"
-      ;;                                   'mouse-face 'highlight
-      ;;                                   'keymap ted-eshell-ls-keymap)
-      ;;                             ad-return-value)
-      ;;        ad-return-value)))
+           (defadvice eshell-ls-decorated-name (after ted-electrify-ls activate)
+             "Eshell's `ls' now lets you click or RET on file names to open them."
+             (add-text-properties 0 (length ad-return-value)
+                                  (list 'help-echo "RET, mouse-2: visit this file"
+                                        'mouse-face 'highlight
+                                        'keymap ted-eshell-ls-keymap)
+                                  ad-return-value)
+             ad-return-value)))
 
 
       ;; Info Manual
@@ -3363,47 +3383,6 @@ at the beginning of line, if already there."
 
 
 
-;; (use-package linum-mode
-;;   (progn
-;; (global-linum-mode 1)
-;; (setq linum-format
-;;       (lambda (line)
-;; (propertize
-;; (format
-;; (let
-;; ((w (length (number-to-string (count-lines (point-min)
-;; (point-max))))))
-;; (concat " %" (number-to-string w) "d ")) line) 'face 'linum)))
-
-;; (add-hook 'compilation-mode-hook '(lambda () (linum-mode 0)))
-
-;; ;; Left click to jump to line
-;; (defun line-at-click ()
-;;   (cdr (cdr (mouse-position))))
-
-;; (defun md-goto-linum ()
-;;   (interactive)
-;;   (setq *linum-mdown-line* nil)
-;;   (goto-line (line-at-click)))
-
-;; (setq linum-mode-inhibit-modes-list '(eshell-mode
-;;                                       shell-mode
-;;                                       erc-mode
-;;                                       jabber-roster-mode
-;;                                       jabber-chat-mode
-;;                                       gnus-group-mode
-;;                                       gnus-summary-mode
-;;                                       gnus-article-mode))
-
-;; (defadvice linum-on (around linum-on-inhibit-for-modes)
-;;   "Stop the load of linum-mode for some major modes."
-;;     (unless (member major-mode linum-mode-inhibit-modes-list)
-;;       ad-do-it))
-
-;; (ad-activate 'linum-on)
-
-;;     ))
-
 ;;;_ , eval-expr
 
 (use-package eval-expr
@@ -3458,36 +3437,18 @@ at the beginning of line, if already there."
   :init
   (progn
 
-    (flycheck-declare-checker phpcs
-      "A PHP syntax checker using the PHP_CodeSniffer.
+    ;; overriding php-phpcs to set Drupal standard
+    (flycheck-declare-checker php-phpcs
+      "A PHP syntax checker using PHP_CodeSniffer.
 
 See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
+      ;; :command '("phpcs" "--report=emacs" source)
       :command '("phpcs" "--standard=Drupal" "--report=emacs" source)
       :error-patterns
       '(("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): error - \\(?4:.*\\)" error)
         ("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): warning - \\(?4:.*\\)" warning))
-      :modes '(php-mode php+-mode drupal-mode)
+      :modes '(php-mode php+-mode)
       :next-checkers '(php))
-
-    (push 'phpcs flycheck-checkers)
-
-    (flycheck-declare-checker bash
-      "Bash checker"
-      :command '("bash" "--norc" "--noprofile" "-n" source)
-      :error-patterns
-      '(("^\\(?1:.*\\): line \\(?2:[0-9]+\\): \\(?4:.*\\)$" error))
-      :modes 'sh-mode
-      :predicate '(eq sh-shell 'bash))
-
-    (push 'bash flycheck-checkers)
-
-    (flycheck-declare-checker zsh
-      "ZSH checker"
-      :command '("zsh" "-n" "-d" "-f" source)
-      :error-patterns '(("^\\(?1:.*\\):\\(?2:[0-9]+\\): \\(?4:.*\\)$" error))
-      :modes 'sh-mode
-      :predicate '(eq sh-shell 'zsh))
-    (push 'zsh flycheck-checkers)
 
     (flycheck-declare-checker xmllint
       "xmllint checker"
@@ -3567,11 +3528,13 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
     (add-hook 'prog-mode-hook 'flycheck-mode)
     (add-hook 'nxml-mode-hook 'flycheck-mode)
     (add-hook 'js2-mode-hook 'flycheck-mode)
-    (add-hook 'drupal-mode-hook 'flycheck-mode)
+    ;; (add-hook 'drupal-mode-hook 'flycheck-mode)
+    (add-hook 'php-mode-hook 'flycheck-mode)
     )
 
   :config
   (progn
+    ;; (use-package flymake-cursor)
     (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
     (defalias 's-collapse-whitespace 'identity)))
 
@@ -6596,6 +6559,7 @@ Works in Microsoft Windows, Mac OS X, Linux."
 ;; Local Variables:
 ;;   mode: emacs-lisp
 ;;   mode: allout
+;;   mode: page-break-lines
 ;;   outline-regexp: "^;;;_\\([,. ]+\\)"
 ;; End:
 
