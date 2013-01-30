@@ -1308,7 +1308,7 @@ Subexpression references can be used (\1, \2, etc)."
        ;; 'color-theme
        'css-mode
        'eshell-info
-       'jira
+       ;; 'jira
        'key-chord
        'lorem-ipsum
        'pcache
@@ -2670,44 +2670,18 @@ The output appears in the buffer `*Async Shell Command*'."
   :diminish projectile
   :config
   (progn
-    (require 's)
+    (setq projectile-project-compilation-commands
+    (format "phpcs --report=emacs --standard=Drupal %s" (buffer-file-name)))
 
-    ;; (add-to-list 'projectile-globally-ignored-directories '("includes" "misc" "modules" "scripts" "themes"))
-
+    (add-to-list 'projectile-globally-ignored-directories '("/includes" "/misc" "/modules" "/scripts" "/themes"))
     (add-to-list 'projectile-globally-ignored-files '(".htaccess" "authorize.php" "cron.php" "index.php" "install.php" "robots.txt" "update.php" "web.config" "xmlrpc.php"))
 
-(setq projectile-tags-command
-      "~/bin/etags_drupal.sh")
+    (setq projectile-tags-command "~/bin/etags_drupal.sh")
+
     (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
     (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep)
-    (bind-key "C-c h" 'helm-projectile)
 
-
-    )
-  )
-
-;; (use-package find-file-in-project
-;;   :diminish projectile
-;;   :config
-;;   (progn
-;;     ;; Function to create new functions that look for a specific pattern
-;;     (defun ffip-create-pattern-file-finder (&rest patterns)
-;;       (lexical-let ((patterns patterns))
-;;         (lambda ()
-;;           (interactive)
-;;           (let ((ffip-patterns patterns))
-;;                  (find-file-in-project)))))
-
-;;     ;; Find file in project, with specific patterns
-;;     ;; (global-unset-key (kbd "C-8 f"))
-;;     (bind-key "C-8 f ph" (ffip-create-pattern-file-finder "*.php"))
-;;     (bind-key "C-8 f if" (ffip-create-pattern-file-finder "*.info"))
-;;     (bind-key "C-8 f md" (ffip-create-pattern-file-finder "*.md"))
-;;     (bind-key "C-8 f mo" (ffip-create-pattern-file-finder "*.module"))
-;;     (bind-key "C-8 f in" (ffip-create-pattern-file-finder "*.inc"))
-;;     (bind-key "C-8 f cs" (ffip-create-pattern-file-finder "*.css"))
-
-;;   ))
+    (bind-key "C-c h" 'helm-projectile)))
 
 (use-package key-chord
   ;; :if (and
@@ -4959,8 +4933,7 @@ end end))))))
     ))
 
 (use-package org-jira
-  :load-path ("~/.emacs.d/elpa/jira-0.3.3"
-              "~/.emacs.d/site-lisp/org-jira")
+  :load-path ("~/.emacs.d/override/emacs-soap-client" "~/.emacs.d/site-lisp/org-jira")
   :commands (org-jira-create-issue org-jira-get-issue)
   :bind (
          ("C-8 j G" . org-jira-get-subtasks)
@@ -4977,9 +4950,9 @@ end end))))))
   :init
   (progn
 
-    (require 'jira)
+    ;; (require 'jira)
     (setq jira-url "https://cuboulder.atlassian.net//rpc/xmlrpc")
-    (require 'org-jira)
+    ;; (require 'org-jira)
     (setq jiralib-url "https://cuboulder.atlassian.net")
     ;; jiralib is not explicitly required, since org-jira will load it.
     (setq org-jira-working-dir "~/git/dkh-org/.org-jira")
@@ -6565,7 +6538,27 @@ Works in Microsoft Windows, Mac OS X, Linux."
     (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
     (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
     (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
-    (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory))))
+    (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory)))
+
+
+    (require 'find-file-in-project)
+    ;; Function to create new functions that look for a specific pattern
+    (defun ffip-create-pattern-file-finder (&rest patterns)
+      (lexical-let ((patterns patterns))
+        (lambda ()
+          (interactive)
+          (let ((ffip-patterns patterns))
+            (find-file-in-project)))))
+
+    ;; Find file in project, with specific patterns
+    ;; (global-unset-key (kbd "C-8 f"))
+    (bind-key "C-8 f ph" (ffip-create-pattern-file-finder "*.php"))
+    (bind-key "C-8 f if" (ffip-create-pattern-file-finder "*.info"))
+    (bind-key "C-8 f md" (ffip-create-pattern-file-finder "*.md"))
+    (bind-key "C-8 f mo" (ffip-create-pattern-file-finder "*.module"))
+    (bind-key "C-8 f in" (ffip-create-pattern-file-finder "*.inc"))
+    (bind-key "C-8 f cs" (ffip-create-pattern-file-finder "*.css"))
+    (projectile-on))
 
   ;; Registers
 
