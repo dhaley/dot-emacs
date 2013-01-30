@@ -760,6 +760,11 @@ If no file is associated, just close buffer without prompt for save."
 
 (bind-key "C-c k" 'keep-lines)
 
+
+
+
+
+
 (eval-when-compile
   (defvar emacs-min-top)
   (defvar emacs-min-left)
@@ -1354,6 +1359,15 @@ Subexpression references can be used (\1, \2, etc)."
   (progn
     (if (file-exists-p abbrev-file-name)
         (quietly-read-abbrev-file))
+
+
+
+    (defun reload-abbrevs () "\
+reload abbrevs."
+      (interactive "")
+      (kill-all-abbrevs)
+      (read-abbrev-file abbrev-file-name)
+      )
 
     (add-hook 'expand-load-hook
               (lambda ()
@@ -2624,7 +2638,6 @@ The output appears in the buffer `*Async Shell Command*'."
                  (imenu-add-menubar-index)
                  (subword-mode t)
                  ;; (php-electric-mode)
-                 (message "I came here to do php")
                  ))
 
 
@@ -2653,22 +2666,48 @@ The output appears in the buffer `*Async Shell Command*'."
   )
 
 
-;; (use-package projectile
-;;   :load-path "~/.emacs.d/site-lisp/projectile"
+(use-package projectile
+  :diminish projectile
+  :config
+  (progn
+    (require 's)
+
+    ;; (add-to-list 'projectile-globally-ignored-directories '("includes" "misc" "modules" "scripts" "themes"))
+
+    (add-to-list 'projectile-globally-ignored-files '(".htaccess" "authorize.php" "cron.php" "index.php" "install.php" "robots.txt" "update.php" "web.config" "xmlrpc.php"))
+
+(setq projectile-tags-command
+      "~/bin/etags_drupal.sh")
+    (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
+    (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep)
+    (bind-key "C-c h" 'helm-projectile)
+
+
+    )
+  )
+
+;; (use-package find-file-in-project
 ;;   :diminish projectile
 ;;   :config
 ;;   (progn
-;;     (projectile-global-mode)
-;;     ;; (bind-key "C-c p j" 'projectile-jump-to-project-file)
-;;     ;; (bind-key "C-c p f" 'projectile-grep-in-project)
-;;     ;; (bind-key "C-c p r" 'projectile-replace-in-project)
-;;     ;; (bind-key "C-c p b" 'projectile-switch-to-buffer)
-;;     ;; (bind-key "C-c p o" 'projectile-multi-occur)
-;;     ;; (bind-key "C-c p t" 'projectile-regenerate-tags)
-;;     ;; (bind-key "C-c p i" 'projectile-invalidate-project-cache)
-;;     )
-;;   )
+;;     ;; Function to create new functions that look for a specific pattern
+;;     (defun ffip-create-pattern-file-finder (&rest patterns)
+;;       (lexical-let ((patterns patterns))
+;;         (lambda ()
+;;           (interactive)
+;;           (let ((ffip-patterns patterns))
+;;                  (find-file-in-project)))))
 
+;;     ;; Find file in project, with specific patterns
+;;     ;; (global-unset-key (kbd "C-8 f"))
+;;     (bind-key "C-8 f ph" (ffip-create-pattern-file-finder "*.php"))
+;;     (bind-key "C-8 f if" (ffip-create-pattern-file-finder "*.info"))
+;;     (bind-key "C-8 f md" (ffip-create-pattern-file-finder "*.md"))
+;;     (bind-key "C-8 f mo" (ffip-create-pattern-file-finder "*.module"))
+;;     (bind-key "C-8 f in" (ffip-create-pattern-file-finder "*.inc"))
+;;     (bind-key "C-8 f cs" (ffip-create-pattern-file-finder "*.css"))
+
+;;   ))
 
 (use-package key-chord
   ;; :if (and
@@ -2727,17 +2766,12 @@ The output appears in the buffer `*Async Shell Command*'."
     (require 'php-extras)
     (require 'etags)
     (require 'smart-dash)
-
-
-    ;; (defun my-drupal-hook-function ()
-    ;;   (set (make-local-variable 'compile-command) (format "phpcs --report=emacs --standard=PEAR %s" (buffer-file-name))))
-    ;; (add-hook 'drupal-mode-hook 'my-drupal-hook-function)
-
-    ;; http://pear.php.net/manual/en/package.php.php-codesniffer.reporting.php
+    (require 'projectile)
     (add-hook 'drupal-mode-hook
               '(lambda ()
                  (yas-minor-mode 1)
                  (setq yas-extra-modes 'drupal-mode)
+                 (projectile-on)
                  (message "I came here to do Drupal")))
 
     (add-to-list 'Info-directory-list "~/.emacs.d/site-lisp/drupal-mode")
@@ -3438,17 +3472,17 @@ at the beginning of line, if already there."
   (progn
 
     ;; overriding php-phpcs to set Drupal standard
-    (flycheck-declare-checker php-phpcs
-      "A PHP syntax checker using PHP_CodeSniffer.
+;;     (flycheck-declare-checker php-phpcs-drupal
+;;       "A PHP syntax checker using PHP_CodeSniffer.
 
-See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
-      ;; :command '("phpcs" "--report=emacs" source)
-      :command '("phpcs" "--standard=Drupal" "--report=emacs" source)
-      :error-patterns
-      '(("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): error - \\(?4:.*\\)" error)
-        ("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): warning - \\(?4:.*\\)" warning))
-      :modes '(php-mode php+-mode)
-      :next-checkers '(php))
+;; See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
+;;       ;; :command '("phpcs" "--report=emacs" source)
+;;       :command '("phpcs" "--standard=Drupal" "--report=emacs" source)
+;;       :error-patterns
+;;       '(("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): error - \\(?4:.*\\)" error)
+;;         ("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): warning - \\(?4:.*\\)" warning))
+;;       :modes '(php-mode php+-mode)
+;;       :next-checkers '(php))
 
     (flycheck-declare-checker xmllint
       "xmllint checker"
@@ -3528,7 +3562,6 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
     (add-hook 'prog-mode-hook 'flycheck-mode)
     (add-hook 'nxml-mode-hook 'flycheck-mode)
     (add-hook 'js2-mode-hook 'flycheck-mode)
-    ;; (add-hook 'drupal-mode-hook 'flycheck-mode)
     (add-hook 'php-mode-hook 'flycheck-mode)
     )
 
@@ -4253,7 +4286,7 @@ See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
 
       (auto-fill-mode 1)
       (paredit-mode 1)
-      ;; (redshank-mode 1)
+      (redshank-mode 1)
       (elisp-slime-nav-mode 1)
 
       (local-set-key (kbd "<return>") 'paredit-newline)
