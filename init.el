@@ -227,7 +227,7 @@
   `((auto-complete-mode . " α")
     (yas/minor-mode . " υ")
     (paredit-mode . " π")
-    (eldoc-mode . "")
+    (eldoc-mode . "ℯ")
     (abbrev-mode . "")
     ;; Major modes
     (lisp-interaction-mode . "λ")
@@ -1632,15 +1632,17 @@ reload abbrevs."
 ;;;_ , autopair
 
 (use-package autopair
-  :disabled t
+  :disabled t ;; replaced with smartparens
   :commands autopair-mode
   :diminish autopair-mode
   :init
-  (hook-into-modes #'autopair-mode '(c-mode-common-hook
+  (hook-into-modes #'autopair-mode '(emacs-lisp-mode-hook
                                      text-mode-hook
+                                     js2-mode-hook
                                      ruby-mode-hook
                                      python-mode-hook
                                      sh-mode-hook)))
+
 ;;;_ , autorevert
 
 (use-package autorevert
@@ -2210,6 +2212,8 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
   :defer t
   :init
   (progn
+    ;; (require 'dired-sequence)
+
     (defvar mark-files-cache (make-hash-table :test #'equal))
 
     (defun mark-similar-versions (name)
@@ -2371,7 +2375,25 @@ The output appears in the buffer `*Async Shell Command*'."
         (dired first-dir)
         (dired-other-window second-dir))
 
-      (bind-key "C-c J" 'dired-double-jump))))
+      (bind-key "C-c J" 'dired-double-jump)
+
+      (defun dired-back-to-top ()
+        (interactive)
+        (beginning-of-buffer)
+        (next-line 2))
+
+      (define-key dired-mode-map
+        (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
+
+      (defun dired-jump-to-bottom ()
+        (interactive)
+        (end-of-buffer)
+        (next-line -1))
+
+      (define-key dired-mode-map
+        (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
+
+      )))
 
 ;;;_ , doxymacs
 
@@ -2472,139 +2494,6 @@ The output appears in the buffer `*Async Shell Command*'."
      (let ((dir (expand-file-name "pcache/" user-cache-directory)))
        (make-directory dir t)
        dir))))
-
-;; (defun eproject-active ()
-;;   "Check if eproject is available and it's minor mode enabled."
-;;   (and (boundp 'eproject-mode) eproject-mode))
-
-;; (use-package eproject
-;;   :defer t
-;;   :commands (eproject-root
-;;              eproject-maybe-turn-on)
-;;   :mode (("\\.eproject\\'" . dot-eproject-mode))
-;;   :diminish ((eproject-mode . "prj"))
-;;   :init
-;;   (progn
-;;     (setq eproject-completing-read-function 'eproject--ido-completing-read)
-;;     (use-package eproject-extras
-;;       :commands (eproject-open-all-project-files
-;;                  eproject-ibuffer
-;;                  eproject-find-file
-;;                  eproject-grep)
-;;       :config
-;;       (progn
-;;         (unbind-key "C-c C-f" eproject-mode-map)
-;;         (unbind-key "C-c C-b" eproject-mode-map)))
-;;     (use-package eproject-tasks
-;;       :commands (helm-eproject-tasks))
-
-;;     (defun my-eproject-maybe-turn-on ()
-;;       "Ignores errors"
-;;       (interactive)
-;;       (condition-case msg
-;;           (eproject-maybe-turn-on)
-;;         (error (message "Ignored eproject-maybe-turn-on error: %s" msg))))
-
-;;     (hook-into-modes #'my-eproject-maybe-turn-on
-;;                      my-prog-mode-hooks)
-;;     (hook-into-modes #'my-eproject-maybe-turn-on
-;;                      my-css-like-mode-hooks)
-;;     (hook-into-modes #'my-eproject-maybe-turn-on
-;;                      my-html-like-mode-hooks)
-;;     (hook-into-modes #'my-eproject-maybe-turn-on
-;;                      '(dired-mode-hook)))
-;;   :config
-;;   (progn
-;;     ;; Order of these project definitions are important
-;;     ;; The latest defined project types are checked first.
-
-;;     (define-project-type generic () nil
-;;       :relevant-files (".*")
-;;       :irrelevant-files ("^[.]" "^[#]" ".git/" ".hg/" ".bzr/" "_darcs/")
-;;       :file-name-map (lambda (root) (lambda (root file) file))
-;;       :local-variables (lambda (root) (lambda (root file) nil))
-;;       :config-file ".eproject")
-
-;;     (define-project-type generic-eproject (generic) (look-for ".eproject"))
-;;     (define-project-type generic-git (generic) (look-for ".git/"))
-;;     (define-project-type generic-hg (generic) (look-for ".hg"))
-;;     (define-project-type generic-bzr (generic) (look-for ".bzr"))
-;;     (define-project-type generic-darcs (generic) (look-for "_darcs"))
-
-;;     (define-project-type nodejs (generic)
-;;       (look-for "package.json")
-;;       :relevant-files ("\\.js\\'" "\\.coffee\\'"
-;;                        "\\.html\\'" "\\.hb\\'"
-;;                        "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
-;;                        "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
-;;                        "\\.rst\\'" "\\.org\\'"
-;;                        "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
-;;       :irrelevant-files ("^[.]" "^[#]"
-;;                          "node_modules/.*"
-;;                          "\\.sass-cache/.*"
-;;                          "tmp/.*"
-;;                          "log/.*"
-;;                          "\\.min\\.js\\'"
-;;                          "\\.min\\.css\\'")
-;;       :main-file "package.json")
-
-;;     (define-project-type web (generic) nil
-;;       :relevant-files ("\\.py\\'""\\.rb\\'"
-;;                        "\\.js\\'" "\\.coffee\\'"
-;;                        "\\.html\\'" "\\.haml\\'" "\\.hb\\'"
-;;                        "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
-;;                        "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
-;;                        "\\.rst\\'" "\\.org\\'"
-;;                        "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
-;;       :irrelevant-files ("node_modules/.*"
-;;                          "\\.sass-cache/.*"
-;;                          "tmp/.*"
-;;                          "log/.*"
-;;                          "\\.min\\.js\\'"
-;;                          "\\.min\\.css\\'"))
-
-;;     (define-project-type ruby-on-rails (web)
-;;       (and (look-for "Gemfile") (look-for "config/application.rb"))
-;;       :irrelevant-files ("app/assets/images/.*"
-;;                          "tmp/.*"
-;;                          "log/.*"
-;;                          "public/.*"
-;;                          "vendor/.*"
-;;                          "\\.min\\.js\\'"
-;;                          "\\.min\\.css\\'")
-;;       :main-file "Gemfile")
-
-;;     (define-project-type django (web)
-;;       (look-for "manage.py")
-;;       :irrelevant-files ("media/.*"
-;;                          "contrib/.*"
-;;                          ".*\\.sqlite?"
-;;                          "node_modules/.*"
-;;                          "\\.sass-cache/.*"
-;;                          "static/tinymce/.*"
-;;                          "\\.min\\.js\\'"
-;;                          "\\.min\\.css\\'"
-;;                          "static/CACHE/.*")
-;;       :main-file "manage.py")
-
-;;     (define-project-type appcelerator (generic)
-;;       (and (look-for ".project") (look-for "tiapp.xml"))
-;;       :relevant-files ("\\.js\\'" "\\.coffee\\'"
-;;                        "\\.html\\'" "\\.hb\\'"
-;;                        "\\.json\\'" "\\.y[a]?ml\\'" "\\.xml\\'"
-;;                        "\\.txt\\'" "\\.markdown\\'" "\\.md\\'"
-;;                        "\\.rst\\'" "\\.org\\'"
-;;                        "\\.css\\'" "\\.sass\\'" "\\.scss\\'" "\\.styl\\'")
-;;       :irrelevant-files ("^[.]" "^[#]"
-;;                          "build/.*"
-;;                          "node_modules/.*"
-;;                          "\\.sass-cache/.*"
-;;                          "tmp/.*"
-;;                          "log/.*"
-;;                          "\\.min\\.js\\'"
-;;                          "\\.min\\.css\\'")
-;;       :main-file "tiapp.xml")))
-
 
 (use-package truthy
   :commands (truthy
@@ -2748,7 +2637,11 @@ The output appears in the buffer `*Async Shell Command*'."
                  (projectile-on)
                  (message "I came here to do Drupal")))
 
-    (add-to-list 'Info-directory-list "~/.emacs.d/site-lisp/drupal-mode")
+    (add-to-list 'Info-directory-list '("~/.emacs.d/site-lisp/drupal-mode"
+    "~/.emacs.d/site-lisp/php-extras"))
+
+    ;; (bind-key "C-c C-v" 'drupal-module-name)
+
     ))
 
 ;;;_ , erc
@@ -3288,7 +3181,9 @@ at the beginning of line, if already there."
                    ;; (or (getenv "CDPATH") (setenv "CDPATH" ".:~:~/.emacs.d:~/data:~/data/releases"))
                    (make-local-variable 'project-name)
                    (local-set-key "\C-c\C-q" 'eshell-kill-process)
-                   (local-set-key "\C-c\C-k" 'compile))))))
+                   (local-set-key "\C-c\C-k" 'compile))))
+
+    ))
 
 ;; eshell
 (eval-after-load 'esh-opt
@@ -5456,6 +5351,30 @@ end end))))))
 
       (bind-key "M-O" 'show-compilation)))
 
+(use-package smartparens
+  :commands (smartparens-mode
+             smartparens-global-mode
+             turn-on-smartparens-mode
+             turn-off-smartparens-mode)
+  :diminish smartparens-mode
+  :init
+  (progn
+    (setq
+     sp-ignore-modes-list
+     '(calc-mode
+       dired-mode
+       ibuffer-mode
+       minibuffer-inactive-mode
+       sr-mode
+       web-mode))
+  (hook-into-modes #'smartparens-mode '(
+                                     text-mode-hook
+                                     ruby-mode-hook
+                                     php-mode-hook
+                                     python-mode-hook
+                                     sh-mode-hook))))
+
+
 ;;;_ , smerge-mode
 
   (use-package smerge-mode
@@ -5975,7 +5894,6 @@ end end))))))
       ))
 
 
-
 ;;;_ , windmove
 
   (setq windmove-wrap-around t)
@@ -6092,6 +6010,7 @@ end end))))))
 ;;;_ , wrap-region
 
   (use-package wrap-region
+    :disabled t ; replaced by smartparens and/or autopair
     :commands wrap-region-mode
     :diminish wrap-region-mode
     :config
@@ -6508,6 +6427,8 @@ Works in Microsoft Windows, Mac OS X, Linux."
     "Sets up project variables with out having anything project specific in the
 .dir-locals.el file. "
     (interactive)
+    ;; (drupal-detect-drupal-version)
+
     (setq site-directory (locate-dominating-file default-directory ".dir-locals.el")
           tags-file-name (concat site-directory "TAGS")
           readme-file-name (concat site-directory "README.md")

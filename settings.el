@@ -499,6 +499,19 @@
  '(sc-preferred-attribution-list nil)
  '(sc-use-only-preference-p t)
  '(initial-scratch-message "ಠ_ಠ")
+ '(initial-scratch-message ";;_
+;; __ _,******
+;; ,-----, _ _,**
+;; | Mu! | _ ____,****
+;; ;-----; _
+;; \\ ^__^
+;; \\ (^^)\\_______
+;; ^-(..)\\ )\\/\\/^_^
+;; ||----w |
+;; __.-''*-,.,____||_____||___,_.-
+;; '' ''
+
+")
  '(scroll-bar-mode nil)
  '(semanticdb-default-save-directory "~/.emacs.d/data/semanticdb")
  '(send-mail-function (quote sendmail-send-it))

@@ -376,3 +376,6 @@
 [submodule "site-lisp/emacs-http-server"]
 	path = site-lisp/emacs-http-server
 	url = https://github.com/skeeto/emacs-http-server.git
+[submodule "site-lisp/dired-sequence"]
+	path = site-lisp/dired-sequence
+	url = https://github.com/jave/dired-sequence.git
