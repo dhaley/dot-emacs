@@ -1912,6 +1912,27 @@ reload abbrevs."
                                          try-complete-lisp-symbol-partially
                                          try-complete-lisp-symbol))
 
+
+(use-package calfw
+  :commands cfw:open-calendar-buffer
+  :init
+  (progn
+    (use-package calfw-org
+      :commands cfw:open-org-calendar
+      :config
+      (progn
+        (defun cfw:open-org-calendar ()
+          "Open an org schedule calendar in the new buffer."
+          (interactive)
+          (let* ((source1 (cfw:org-create-source))
+                 (cp (cfw:create-calendar-component-buffer
+                      :view 'two-weeks
+                      :contents-sources (list source1)
+                      :custom-map cfw:org-schedule-map
+                      :sorter 'cfw:org-schedule-sorter)))
+            (switch-to-buffer (cfw:cp-get-buffer cp))))))))
+
+
 ;;;_ , cmake-mode
 
 (use-package cmake-mode
@@ -2721,7 +2742,11 @@ The output appears in the buffer `*Async Shell Command*'."
       (switch-to-bitlbee)
       (sauron-toggle-hide-show)
       (switch-to-buffer-other-frame "#drupal-colorado")
-      (switch-to-buffer-other-frame "#emacs"))
+      (switch-to-buffer-other-frame "#emacs")
+      )
+
+    ;; (frame-configuration-to-register REGISTER &optional ARG)
+    ;; (set-register "E"  (list (current-frame-configuration) (point-marker)))
     (bind-key "H-E" 'create-new-erc-frames)
 
     ;; add abbrevs
@@ -6484,7 +6509,6 @@ Works in Microsoft Windows, Mac OS X, Linux."
   ;; Registers
 
   (dolist (r `(
-               (?A (file . "~/git/.emacs.d/.eshell/alias"))
                (?P (file . "~/git/.emacs.d/dkh-private.org"))
                (?O (file . "~/.emacs.d/dkh-org.org"))
                (?R (file-query "~/git/.emacs.d/.secret/.passwd.gpg" 3490 3499))

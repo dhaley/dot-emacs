@@ -32,3 +32,4 @@ logs/
 /org-clock-save.el
 /workgroups
 /#dkh-core.org#
+flycheck-org-clock-save*

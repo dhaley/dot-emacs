@@ -379,3 +379,6 @@
 [submodule "site-lisp/dired-sequence"]
 	path = site-lisp/dired-sequence
 	url = https://github.com/jave/dired-sequence.git
+[submodule "site-lisp/emacs-window-layout"]
+	path = site-lisp/emacs-window-layout
+	url = https://github.com/kiwanami/emacs-window-layout.git
