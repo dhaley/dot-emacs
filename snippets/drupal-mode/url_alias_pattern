@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: PATH AUTO url alias pattern
+# key: url-alias
+# --
+[node:menu-link:parents:join-path]/[node:title]
