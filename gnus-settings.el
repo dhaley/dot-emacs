@@ -140,7 +140,6 @@
  '(mm-text-html-renderer (quote w3m))
  '(mm-verify-option (quote always))
  '(mm-w3m-safe-url-regexp nil)
-;; '(nnir-imap-default-search-key "imap")
  '(nnmail-crosspost nil)
  '(nnmail-expiry-wait 30)
  '(nnmail-extra-headers (quote (To Cc Newsgroups)))
@@ -170,5 +169,4 @@
  '(gnus-treat-body-boundary nil)    ; No body/header separator
  '(gnus-blocked-images nil)          ; HTML rendering
  '(gnus-gravatar-properties '(:ascent center))
- '(gnus-gravatar-too-ugly gnus-ignored-from-addresses)
- )
+ '(gnus-gravatar-too-ugly gnus-ignored-from-addresses))
