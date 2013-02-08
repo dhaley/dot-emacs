@@ -192,9 +192,12 @@
 
 (define-key gnus-article-mode-map [(meta ?q)] 'gnus-article-fill-long-lines)
 
+
 ;;(define-key gnus-article-mode-map (kbd "M-w") 'org-w3m-copy-for-org-mode)
 (define-key gnus-article-mode-map (kbd "C-c C-x M-w") 'org-w3m-copy-for-org-mode)
 
+(define-key gnus-article-mode-map (kbd "M-H") 'gnus-summary-catchup-to-here)
+(define-key gnus-article-mode-map (kbd "Z-h") 'gnus-summary-catchup-to-here)
 
 
 (defface gnus-summary-expirable-face
@@ -395,63 +398,47 @@ is:
     (gnus-demon-add-handler 'save-gnus-newsrc nil 1)
     (gnus-demon-add-handler 'gnus-demon-close-connections nil 3)))
 
-(use-package nnir
-  :init
-  (progn
-    (defun activate-gnus ()
-      (unless (get-buffer "*Group*") (gnus)))
+;; (use-package nnir
+;;   :init
+;;   (progn
+;;     (defun activate-gnus ()
+;;       (unless (get-buffer "*Group*") (gnus)))
 
-    (defun gnus-goto-article (message-id)
-      (activate-gnus)
-      (gnus-summary-read-group "INBOX" 15 t)
-      (let ((nnir-imap-default-search-key "imap")
-            (nnir-ignored-newsgroups
-             (concat "\\(\\(list\\.wg21\\|archive\\)\\.\\|"
-                     "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")))
-        (gnus-summary-refer-article message-id)))
+;;     (defun gnus-goto-article (message-id)
+;;       (activate-gnus)
+;;       (gnus-summary-read-group "INBOX" 15 t)
+;;       (let ((nnir-imap-default-search-key "imap")
+;;             (nnir-ignored-newsgroups "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")
+;;         (gnus-summary-refer-article message-id)))
 
-    (defvar gnus-query-history nil)
+;;     (defvar gnus-query-history nil)
 
-    (defun gnus-query (query &optional arg)
-      (interactive
-       (list (read-string (format "IMAP Query %s: "
-                                  (if current-prefix-arg "All" "Mail"))
-                          (format-time-string "SENTSINCE %d-%b-%Y "
-                                              (time-subtract (current-time)
-                                                             (days-to-time 90)))
-                          'gnus-query-history)
-             current-prefix-arg))
-      (activate-gnus)
-      (let ((nnir-imap-default-search-key "imap")
-            (nnir-ignored-newsgroups
-             (if arg
-                 (concat (regexp-opt
-                          '(
-                            ;; "archive"
-                            ;; "archive.emacs"
-                            ;; "list"
-                            ;; "list.bahai"
-                            ;; "list.boost"
-                            ;; "list.clang"
-                            "list.emacs"
-                            ;; "list.isocpp"
-                            ;; "list.ledger"
-                            ;; "list.llvm"
-                            ;; "list.wg21"
-                            ;; "mail"
-                            ;; "mail.save"
-                            ;; "Drafts"
-                            "Sent Messages"
-                            ))
-                         "\\'")
-               (concat "\\(\\(list\\|archive\\)\\.\\|"
-                       "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)"))))
-        (gnus-group-make-nnir-group
-         nil `((query    . ,query)
-               (criteria . "")
-               (server   . "nnimap:Local")))))
+;;     (defun gnus-query (query &optional arg)
+;;       (interactive
+;;        (list (read-string (format "IMAP Query %s: "
+;;                                   (if current-prefix-arg "All" "Mail"))
+;;                           (format-time-string "SENTSINCE %d-%b-%Y "
+;;                                               (time-subtract (current-time)
+;;                                                              (days-to-time 90)))
+;;                           'gnus-query-history)
+;;              current-prefix-arg))
+;;       (activate-gnus)
+;;       (let ((nnir-imap-default-search-key "imap")
+;;             (nnir-ignored-newsgroups
+;;              (if arg
+;;                  (concat (regexp-opt
+;;                           '(
+;;                             "list.emacs"
+;;                             ))
+;;                          "\\'")
+;;                (concat "\\(\\(list\\|archive\\)\\.\\|"
+;;                        "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)"))))
+;;         (gnus-group-make-nnir-group
+;;          nil `((query    . ,query)
+;;                (criteria . "")
+;;                (server   . "nnimap:Local")))))
 
-    (define-key global-map [(alt meta ?f)] 'gnus-query)))
+;;     (define-key global-map [(alt meta ?f)] 'gnus-query)))
 
 
 (use-package gnus-harvest

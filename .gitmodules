@@ -364,9 +364,6 @@
 [submodule "site-lisp/yasnippet-drupal-mode"]
         path = site-lisp/yasnippet-drupal-mode
         url = git://gitorious.org/drupal-development-helpers/yasnippet-drupal-mode.git
-[submodule "site-lisp/php-eldoc"]
-        path = site-lisp/php-eldoc
-        url = https://github.com/zenozeng/php-eldoc.git
 [submodule "override/tramp"]
 	path = override/tramp
 	url = https://github.com/jwiegley/tramp.git

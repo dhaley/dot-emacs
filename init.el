@@ -1305,19 +1305,11 @@ Subexpression references can be used (\1, \2, etc)."
        'apache-mode
        'applescript-mode
        'buffer-move
-       ;; 'color-theme
-       'css-mode
-       'eshell-info
-       ;; 'jira
        'key-chord
-       'lorem-ipsum
-       'pcache
        'rainbow-mode
        'smarter-compile
-       ;; 'smex
        'switch-window
        'window-number
-       ;; 'zenburn-theme
        ))
 
 ;; (package-refresh-contents)
@@ -3987,6 +3979,7 @@ at the beginning of line, if already there."
 (defalias 'bb  'bbdb)
 (defalias 'bc  'bbdb-create)
 (defalias 'cc 'calc)
+(defalias 'gc 'gnus-summary-catchup-to-here)
 (defalias 'delete-matching-lines 'flush-lines)
 (defalias 'delete-non-matching-lines 'keep-lines)
 (defalias 'dml 'delete-matching-lines)
@@ -4677,6 +4670,39 @@ end end))))))
                              "-xml" "-i" "-wrap" "0" "-omit" "-q")))
 
     (bind-key "C-H" 'tidy-xml-buffer nxml-mode-map)))
+
+
+;; ;;;_ , o-blog
+
+(use-package o-blog
+  :commands (o-blog-publish
+             o-blog-tangle-publish-and-view)
+  :config
+  (progn
+    (defvar o-blog-local-site "~/Sites/dev")
+    (defvar o-blog-out-dir "out")
+    (defvar o-blog-local-url-index "http://127.0.0.1/~username/dev/index.html")
+
+    (defun o-blog-publish ()
+      (interactive)
+      "publish blog locally"
+      (org-publish-blog buffer-file-name)
+      (if (file-exists-p o-blog-local-site)
+          (delete-directory o-blog-local-site t))
+      (copy-directory
+       (format "%s%s" default-directory o-blog-out-dir) o-blog-local-site))
+
+    (defun o-blog-tangle-publish-and-view ()
+      (interactive)
+      "tangle template  and style files in current buffer, publish blog locally
+and view local index.html url"
+      (org-babel-tangle-file buffer-file-name)
+      (o-blog-publish)
+      (browse-url o-blog-local-url-index)))
+
+  :bind (("C-c C-v ," . o-blog-publish)
+         ("C-c C-v ." . o-blog-tangle-publish-and-view)))
+
 
 ;; ;;;_ , org-mode
 ;;
