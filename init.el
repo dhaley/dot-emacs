@@ -1317,6 +1317,21 @@ Subexpression references can be used (\1, \2, etc)."
 
 
 
+(use-package eldoc
+  :defer t
+  :init
+  (use-package eldoc-extension
+    :disabled t
+    :defer t
+    :init
+    (add-hook 'emacs-lisp-mode-hook
+              #'(lambda () (require 'eldoc-extension)) t))
+
+  :config
+  (eldoc-add-command 'paredit-backward-delete
+                     'paredit-close-round))
+
+
 ;;;_ , el-get
 
 (use-package el-get
@@ -2530,7 +2545,6 @@ The output appears in the buffer `*Async Shell Command*'."
 
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
-
     (require 'doxymacs)
     (add-hook 'php-mode-hook
               '(lambda ()
@@ -2542,6 +2556,7 @@ The output appears in the buffer `*Async Shell Command*'."
                  ;; (php-electric-mode)
                  (doxymacs-mode 1)
                  (doxymacs-font-lock)
+                 (turn-on-eldoc-mode)
                  ))
 
 
@@ -4091,21 +4106,6 @@ at the beginning of line, if already there."
           :diminish elisp-slime-nav-mode)
 
         (use-package edebug)
-
-        (use-package eldoc
-          :diminish eldoc-mode
-          :defer t
-          :init
-          (use-package eldoc-extension
-            :disabled t
-            :defer t
-            :init
-            (add-hook 'emacs-lisp-mode-hook
-                      #'(lambda () (require 'eldoc-extension)) t))
-
-          :config
-          (eldoc-add-command 'paredit-backward-delete
-                             'paredit-close-round))
 
         (use-package cldoc
           :diminish cldoc-mode)
