@@ -379,3 +379,6 @@
 [submodule "site-lisp/emacs-window-layout"]
 	path = site-lisp/emacs-window-layout
 	url = https://github.com/kiwanami/emacs-window-layout.git
+[submodule "site-lisp/tags-view"]
+	path = site-lisp/tags-view
+	url = https://github.com/markhepburn/tags-view.git

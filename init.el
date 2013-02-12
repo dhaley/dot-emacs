@@ -1050,7 +1050,7 @@ while being able to go back to the previous split of windows in the frame simply
             (message "Word pushed to kill ring")))
       (kill-ring-save (region-beginning) (region-end)))))
 
-(bind-key "M-w" 'smart-copy)
+;; (bind-key "M-w" 'kill-ring-save)
 
 ;; Functions (load all files in defuns-dir)
 (setq defuns-dir (expand-file-name "defuns" dotfiles-dir))
@@ -2411,8 +2411,7 @@ The output appears in the buffer `*Async Shell Command*'."
 ;;;_ , doxymacs
 
 (use-package doxymacs
-  :disabled t
-  :load-path "site-lisp/doxymacs/lisp/")
+  :load-path "~/.emacs.d/site-lisp/doxymacs-1.8.0/lisp")
 
 ;;;_ , dvc
 
@@ -2532,6 +2531,7 @@ The output appears in the buffer `*Async Shell Command*'."
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
 
+    (require 'doxymacs)
     (add-hook 'php-mode-hook
               '(lambda ()
                  (outline-minor-mode)
@@ -2540,6 +2540,8 @@ The output appears in the buffer `*Async Shell Command*'."
                  (imenu-add-menubar-index)
                  (subword-mode t)
                  ;; (php-electric-mode)
+                 (doxymacs-mode 1)
+                 (doxymacs-font-lock)
                  ))
 
 
@@ -2563,6 +2565,39 @@ The output appears in the buffer `*Async Shell Command*'."
     (bind-key "C-8 o <" 'outline-promote)
     (bind-key "C-8 o >" 'outline-demote)
     (bind-key "C-8 o m" 'outline-insert-heading)
+
+    (defun my-php-return ()
+      "Advanced C-m for PHP doc multiline comments.
+Inserts `*' at the beggining of the new line if
+unless return was pressed outside the comment"
+      (interactive)
+      (setq last (point))
+      (setq is-inside
+            (if (search-backward "*/" nil t)
+                ;; there are some comment endings - search forward
+                (if (search-forward "/*" last t)
+                    't
+                  'nil)
+              ;; it's the only comment - search backward
+              (goto-char last)
+              (if (search-backward "/*" nil t)
+                  't
+                'nil
+                )
+              )
+            )
+      ;; go to last char position
+      (goto-char last)
+      ;; the point is inside some comment, insert `*'
+      (if is-inside
+          (progn
+            (insert "\n*")
+            (indent-for-tab-command))
+        ;; else insert only new-line
+        (insert "\n")))
+    (add-hook 'php-mode-hook (lambda ()
+                               (local-set-key "\r" 'my-php-return)))
+
     (use-package php-completion-mode
       :commands php-completion-mode))
   )
@@ -2641,8 +2676,10 @@ The output appears in the buffer `*Async Shell Command*'."
   (progn
     (require 'php-extras)
     (require 'etags)
+    (require 'tags-view)
     (require 'smart-dash)
     (require 'projectile)
+
     (add-hook 'drupal-mode-hook
               '(lambda ()
                  (yas-minor-mode 1)
@@ -3572,38 +3609,6 @@ at the beginning of line, if already there."
       (grep-apply-setting
        'grep-find-command
        '("find . -type f -print0 | xargs -P4 -0 egrep -nH -e " . 52)))))
-
-;;;_ , gtags
-
-(use-package gtags
-  :commands gtags-mode
-  :diminish gtags-mode
-  :config
-  (progn
-    (defun my-gtags-or-semantic-find-tag ()
-      (interactive)
-      (if (and (fboundp 'semantic-active-p)
-               (funcall #'semantic-active-p))
-          (call-interactively #'semantic-complete-jump)
-        (call-interactively #'gtags-find-tag)))
-
-    (bind-key "M-." 'my-gtags-or-semantic-find-tag gtags-mode-map)
-
-    (bind-key "C-c t ." 'gtags-find-rtag)
-    (bind-key "C-c t f" 'gtags-find-file)
-    (bind-key "C-c t p" 'gtags-parse-file)
-    (bind-key "C-c t g" 'gtags-find-with-grep)
-    (bind-key "C-c t i" 'gtags-find-with-idutils)
-    (bind-key "C-c t s" 'gtags-find-symbol)
-    (bind-key "C-c t r" 'gtags-find-rtag)
-    (bind-key "C-c t v" 'gtags-visit-rootdir)
-
-    (bind-key "<mouse-2>" 'gtags-find-tag-from-here gtags-mode-map)
-
-    (use-package helm-gtags
-      :bind ("M-T" . helm-gtags-select)
-      :config
-      (bind-key "M-," 'helm-gtags-resume gtags-mode-map))))
 
 ;;;_ , gud
 
@@ -6478,9 +6483,8 @@ Works in Microsoft Windows, Mac OS X, Linux."
     "Sets up project variables with out having anything project specific in the
 .dir-locals.el file. "
     (interactive)
-    ;; (drupal-detect-drupal-version)
 
-    (setq site-directory (locate-dominating-file default-directory ".dir-locals.el")
+    (setq site-directory (file-truename (locate-dominating-file default-directory ".dir-locals.el"))
           tags-file-name (concat site-directory "TAGS")
           readme-file-name (concat site-directory "README.md")
           profile-name (curr-dir-project-string)
@@ -6490,7 +6494,11 @@ Works in Microsoft Windows, Mac OS X, Linux."
           profile-theme-directory (concat profile-directory "/themes/" profile-name)
           feature-directory (concat module-directory "/features")
           contrib-directory (concat module-directory "/contrib")
-          custom-directory (concat module-directory "/custom"))
+          custom-directory (concat module-directory "/custom")
+          doxymacs-doxygen-dirs `((
+                                   ,site-directory
+                                   ,(concat site-directory "doxy_tag.xml")
+                                   ,(concat "file://" site-directory "docs/html"))))
 
     (setenv "8dr" readme-file-name)
     (setenv "8ds" site-directory)

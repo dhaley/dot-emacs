@@ -187,38 +187,12 @@
  '(hippie-expand-try-functions-list (quote (yas/hippie-try-expand try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(history-delete-duplicates t)
  '(history-length 200)
- '(list-colors-sort 'hsv )
  '(ibuffer-default-display-maybe-show-predicates t)
  '(ibuffer-expert t)
  '(ibuffer-formats (quote ((mark modified read-only " " (name 16 -1) " " (size 6 -1 :right) " " (mode 16 16) " " filename) (mark " " (name 16 -1) " " filename))))
+ '(ibuffer-maybe-show-predicate (list "^\\*Completions\\*$" "^\\*nnimap" "^\\*gnus trace" "^\\*imap log" "^\\*elim" "^\\*Completions\\*$" "^\\*BBDB\\*$" "^\\.bbdb$" "^\\.newsrc-dribble$" "^\\*fsm-debug" "\\.org_archive$" "^\\*jekyll-aa\\*$" "\\.diary$" "\\*vc\\*" "^\\*w3m cache\\*$" "^\\*w3m-cookie-parse-temp\\*$" "^\\*w3m[-]work\\*$" "^\\*w3m[-]work\\*"))
  '(ibuffer-maybe-show-regexps nil)
  '(ibuffer-saved-filter-groups (quote (("default" ("Commands" (or (mode . shell-mode) (mode . eshell-mode) (mode . term-mode) (mode . compilation-mode))) ("Helm" (mode . helm-mode)) ("Magit" (or (mode . magit-status-mode) (mode . magit-log-mode))) ("Haskell" (or (mode . haskell-mode) (mode . haskell-cabal-mode) (mode . literate-haskell-mode))) ("C++" (or (mode . c-mode) (mode . c++-mode))) ("Lisp" (mode . emacs-lisp-mode)) ("Dired" (mode . dired-mode)) ("Gnus" (or (mode . message-mode) (mode . mail-mode) (mode . gnus-group-mode) (mode . gnus-summary-mode) (mode . gnus-article-mode) (name . "^\\.newsrc-dribble"))) ("Org" (or (name . "^\\*Calendar\\*$") (name . "^diary$") (mode . org-mode))) ("Emacs" (or (name . "^\\*scratch\\*$") (name . "^\\*Messages\\*$")))))))
-'(ibuffer-maybe-show-predicate
-      (list
-       ;; Gnus development version
-       "^\\*Completions\\*$"
-       "^\\*nnimap"
-       "^\\*gnus trace"
-       "^\\*imap log"
-       ;; Elim
-       "^\\*elim"
-       ;; others
-       "^\\*Completions\\*$"
-       "^\\*BBDB\\*$"
-       "^\\.bbdb$"
-       "^\\.newsrc-dribble$"
-       ;;       "^\\*magit-"        ;; magit stuff
-       "^\\*fsm-debug"     ;; jabber
-       "\\.org_archive$"   ;; orgmode archive files
-       "^\\*jekyll-aa\\*$" ;; local jekyll server
-       "\\.diary$"
-;;       "^mumamo-fetch-major-mode-setup-php-mode$"
-         "\\*vc\\*"
-         "^\\*w3m cache\\*$"
-         "^\\*w3m-cookie-parse-temp\\*$"
-         "^\\*w3m[-]work\\*$"
-         "^\\*w3m[-]work\\*"
-         ))
  '(ibuffer-show-empty-filter-groups nil)
  '(ibuffer-shrink-to-minimum-size t t)
  '(ibuffer-use-other-window t)
@@ -246,6 +220,19 @@
  '(inhibit-startup-echo-area-message "daha1836")
  '(inhibit-startup-screen t)
  '(initial-major-mode (quote fundamental-mode))
+ '(initial-scratch-message ";;_
+;; __ _,******
+;; ,-----, _ _,**
+;; | Mu! | _ ____,****
+;; ;-----; _
+;; \\ ^__^
+;; \\ (^^)\\_______
+;; ^-(..)\\ )\\/\\/^_^
+;; ||----w |
+;; __.-''*-,.,____||_____||___,_.-
+;; '' ''
+
+")
  '(initsplit-customizations-alist (quote (("\\`\\(gnus\\|nn\\|message\\|mail\\|mm-\\|smtp\\|send-mail\\|check-mail\\|spam\\|sc-\\)" "~/.emacs.d/gnus-settings.el" nil nil))))
  '(ipa-file "~/Documents/ipa")
  '(ipa-overlay-position "above")
@@ -258,6 +245,7 @@
  '(ledger-post-use-ido t)
  '(line-number-mode t)
  '(linum-format (lambda (line) (propertize (format (concat "%" (number-to-string (length (number-to-string (line-number-at-pos (point-max))))) "d ") line) (quote face) (quote linum))) t)
+ '(list-colors-sort (quote hsv))
  '(mac-pass-command-to-system nil)
  '(mac-pass-control-to-system nil)
  '(mac-wheel-button-is-mouse-2 nil)
@@ -317,8 +305,8 @@
  '(nxml-sexp-element-flag t)
  '(nxml-slash-auto-complete-flag t)
  '(offlineimap-command "offlineimap -u machineui")
+ '(org-jira-current-project "VCR" t)
  '(org-src-tab-acts-natively t)
- '(org-jira-current-project "VCR")
  '(pabbrev-idle-timer-verbose nil)
  '(package-archives (quote (("gnu" . "http://elpa.gnu.org/packages/") ("ELPA" . "http://tromey.com/elpa/") ("Marmalade" . "http://marmalade-repo.org/packages/"))))
  '(parens-require-spaces t)
@@ -398,20 +386,6 @@
  '(sc-default-cite-frame (quote ((begin (progn (sc-fill-if-different) (setq sc-tmp-nested-regexp (sc-cite-regexp "") sc-tmp-nonnested-regexp (sc-cite-regexp) sc-tmp-dumb-regexp (concat "\\(" (sc-cite-regexp "") "\\)" (sc-cite-regexp sc-citation-nonnested-root-regexp))))) ("^[    ]*$" (if sc-cite-blank-lines-p (sc-cite-line) (sc-fill-if-different ""))) ((and (looking-at "^-- ?$") (not (save-excursion (goto-char (match-end 0)) (re-search-forward "^-- ?$" nil t)))) (sc-fill-if-different "")) (sc-reference-tag-string (if (string= sc-reference-tag-string "") (list (quote continue)) nil)) (sc-tmp-dumb-regexp (sc-cite-coerce-dumb-citer)) (sc-tmp-nested-regexp (sc-add-citation-level)) (sc-tmp-nonnested-regexp (sc-cite-coerce-cited-line)) (sc-nested-citation-p (sc-add-citation-level)) (t (sc-cite-line)) (end (sc-fill-if-different "")))))
  '(sc-preferred-attribution-list nil)
  '(sc-use-only-preference-p t)
- '(initial-scratch-message "ಠ_ಠ")
- '(initial-scratch-message ";;_
-;; __ _,******
-;; ,-----, _ _,**
-;; | Mu! | _ ____,****
-;; ;-----; _
-;; \\ ^__^
-;; \\ (^^)\\_______
-;; ^-(..)\\ )\\/\\/^_^
-;; ||----w |
-;; __.-''*-,.,____||_____||___,_.-
-;; '' ''
-
-")
  '(scroll-bar-mode nil)
  '(semanticdb-default-save-directory "~/.emacs.d/data/semanticdb")
  '(send-mail-function (quote sendmail-send-it))
@@ -524,8 +498,8 @@
  '(erb-face ((t (:background nil))) t)
  '(erb-out-delim-face ((t (:inherit erb-exec-delim-face :foreground "#b58900"))) t)
  '(iedit-occurrence ((t (:inherit lazy-highlight))) t)
- '(magit-diff-add ((t (:inherit diff-added :weight normal))))
- '(magit-diff-del ((t (:inherit diff-removed :weight normal))))
+ '(magit-diff-add ((t (:inherit diff-added :weight normal))) t)
+ '(magit-diff-del ((t (:inherit diff-removed :weight normal))) t)
  '(match ((t (:inherit lazy-highlight :reverse t))))
  '(org-mode-line-clock ((t (:foreground "red" :box (:line-width -1 :style released-button)))) t)
  '(rainbow-delimiters-depth-1-face ((t (:foreground "blue"))) t)
