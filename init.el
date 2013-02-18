@@ -2752,11 +2752,7 @@ unless return was pressed outside the comment"
                                                     :user "dkh"
                                                     :type 'netrc
                                                     :port 6697))
-                           :secret))
-               ;;       (erc-tls :server "asimov.freenode.net"
-               ;;                :port 6697
-               ;;                :nick "dkh")
-               ))
+                           :secret))))
     (defun im ()
       (interactive)
       (erc :server "localhost"

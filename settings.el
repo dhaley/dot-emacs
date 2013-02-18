@@ -139,7 +139,7 @@
  '(erc-replace-alist (quote (("</?FONT>" . ""))))
  '(erc-server "asimov.freenode.net")
  '(erc-services-mode t)
- '(erc-text-matched-hook (quote (erc-log-matches erc-hide-fools my-erc-hook)) t)
+ '(erc-text-matched-hook (quote (erc-log-matches erc-hide-fools)) t)
  '(erc-track-enable-keybindings t)
  '(erc-track-exclude (quote ("*stickychan" "*status")))
  '(erc-track-exclude-types (quote ("NICK" "JOIN" "PART" "QUIT" "MODE" "301" "305" "306" "332" "333" "353" "324" "329")))

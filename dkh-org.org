@@ -5580,7 +5580,6 @@ how it behaves compared to the existing one.
 
 (setq org-export-coding-system 'utf-8)
 
-(require 'org-export)
 #+end_src
 
 To invoke the new exporter use =M-x org-export-dispatch=.
