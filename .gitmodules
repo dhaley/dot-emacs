@@ -277,9 +277,6 @@
 [submodule "site-lisp/persistent-soft"]
         path = site-lisp/persistent-soft
         url = git://github.com/rolandwalker/persistent-soft.git
-[submodule "site-lisp/proofgeneral"]
-        path = site-lisp/proofgeneral
-        url = https://github.com/emacsmirror/proofgeneral.git
 [submodule "site-lisp/agda-mode"]
         path = site-lisp/agda-mode
         url = git://github.com/jwiegley/agda-mode.git
@@ -365,20 +362,26 @@
         path = site-lisp/yasnippet-drupal-mode
         url = git://gitorious.org/drupal-development-helpers/yasnippet-drupal-mode.git
 [submodule "override/tramp"]
-	path = override/tramp
-	url = https://github.com/jwiegley/tramp.git
+        path = override/tramp
+        url = https://github.com/jwiegley/tramp.git
 [submodule "site-lisp/skewer-mode"]
-	path = site-lisp/skewer-mode
-	url = https://github.com/skeeto/skewer-mode.git
+        path = site-lisp/skewer-mode
+        url = https://github.com/skeeto/skewer-mode.git
 [submodule "site-lisp/emacs-http-server"]
-	path = site-lisp/emacs-http-server
-	url = https://github.com/skeeto/emacs-http-server.git
+        path = site-lisp/emacs-http-server
+        url = https://github.com/skeeto/emacs-http-server.git
 [submodule "site-lisp/dired-sequence"]
-	path = site-lisp/dired-sequence
-	url = https://github.com/jave/dired-sequence.git
+        path = site-lisp/dired-sequence
+        url = https://github.com/jave/dired-sequence.git
 [submodule "site-lisp/emacs-window-layout"]
-	path = site-lisp/emacs-window-layout
-	url = https://github.com/kiwanami/emacs-window-layout.git
+        path = site-lisp/emacs-window-layout
+        url = https://github.com/kiwanami/emacs-window-layout.git
 [submodule "site-lisp/tags-view"]
-	path = site-lisp/tags-view
-	url = https://github.com/markhepburn/tags-view.git
+        path = site-lisp/tags-view
+        url = https://github.com/markhepburn/tags-view.git
+[submodule "site-lisp/fold-this"]
+	path = site-lisp/fold-this
+	url = https://github.com/magnars/fold-this.el.git
+[submodule "site-lisp/smart-forward"]
+	path = site-lisp/smart-forward
+	url = https://github.com/magnars/smart-forward.el.git
