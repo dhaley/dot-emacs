@@ -872,6 +872,8 @@ Here is my refile configuration:
 (setq ido-everywhere t)
 (setq ido-max-directory-size 100000)
 (ido-mode (quote both))
+(setq ido-default-file-method 'selected-window)
+(setq ido-default-buffer-method 'selected-window)
 
 ;;;; Refile settings
 ; Exclude DONE state tasks from refile targets
@@ -3417,6 +3419,10 @@ I have put the =s= (src) prefix on the shortcuts to prevent
 abbrev-mode from trying to expand =PlantUML= when I'm typing it in a
 sentence.
 
+For convenience in activity diagrams I added =sif= and =sfor= and just
+change the labels for the synchronization bars.
+
+
 #+begin_src emacs-lisp :tangle yes
 ;; Enable abbrev-mode
 (add-hook 'org-mode-hook (lambda () (abbrev-mode 1)))
@@ -4510,8 +4516,8 @@ Most of my logging is controlled by the global =org-todo-keywords=
 My logging settings are set as follows:
 #+begin_src emacs-lisp :tangle yes
 (setq org-log-done (quote time))
-(setq org-log-state-notes-insert-after-drawers t)
-(setq org-log-into-drawer nil)
+(setq org-log-into-drawer t)
+(setq org-log-state-notes-insert-after-drawers nil)
 #+end_src
 
 My =org-todo-keywords= are set as follows:
@@ -4528,19 +4534,11 @@ This adds a log entry whenever a task moves to any of the following states:
 - to =HOLD= status
 - to =CANCELLED= status (with a note) or out of =CANCELLED= status
 
-I keep clock times in the =LOGBOOK= drawer to keep my tasks
-uncluttered.  I have moved my state change notes outside the =LOGBOOK=
-drawer so they can be included in exports to other formats.
-
-If a task is WAITING then the reason why it is waiting is near the top
-of the task details.  From the agenda simply hitting =SPC= on the task will
-reveal the LOGBOOK drawer.
-
-I like to see state changes in my exports by default
-but these can be excluded by export options easily.  State change
-notes and inactive timestamps are normally exported by default since
-the note without the inactive timestamp is not very useful.
-
+I keep clock times and states in the =LOGBOOK= drawer to keep my tasks
+uncluttered.  If a task is WAITING then the reason for why it is
+waiting is near the top of the LOGBOOK and unfolding the LOGBOOK
+drawer provides that information.  From the agenda simply hitting
+=SPC= on the task will reveal the LOGBOOK drawer.
 ** Limiting time spent on tasks
 :PROPERTIES:
 :CUSTOM_ID: LimitingTimeSpentOnTasks
@@ -4958,13 +4956,11 @@ insert the inactive timestamp anywhere on demand.
 (global-set-key (kbd "<f9> t") 'bh/insert-inactive-timestamp)
 #+end_src
 
-Timestamps can be selectively exported to other document formats using
-export options.  By default I enable including the timestamps since
-this is easy to override at the subtree and document levels using export
-options.
+To prevent the timestamps from being exported in documents I use the following
+setting
 
 #+begin_src emacs-lisp :tangle yes
-(setq org-export-with-timestamps t)
+(setq org-export-with-timestamps nil)
 #+end_src
 ** Return follows links
 :PROPERTIES:
@@ -5444,7 +5440,7 @@ since they are now projects and not tasks.
   (let ((mystate (or (and (fboundp 'org-state)
                           state)
                      (nth 2 (org-heading-components)))))
-    (when (equal mystate "NEXT")
+    (when mystate
       (save-excursion
         (while (org-up-heading-safe)
           (when (member (nth 2 (org-heading-components)) (list "NEXT"))
@@ -5552,7 +5548,7 @@ from my manager.  In this case I mark my tasks with the priorities
 from the external source just to track the values and force the agenda
 to display tasks in the priority order.
 
-I disable the priority setting keys in org-mode using
+I use priorities A-E where tasks without a specific priority are lowest priority E.
 #+begin_src emacs-lisp :tangle yes
 (setq org-enable-priority-commands t)
 (setq org-default-priority ?E)
@@ -5632,6 +5628,24 @@ I use =utf-8= as the default coding system for all of my org files.
 (prefer-coding-system 'utf-8)
 (set-charset-priority 'unicode)
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+#+end_src
+
+** Keep clock durations in hours
+:PROPERTIES:
+:CUSTOM_ID: ClockDurationsNoDays
+:END:
+
+The default for clock durations has changed to include days which is
+24 hours.  At work I like to think of a day as 6 hours of work (the
+rest of the time is lost in meetings and other overhead on average) so
+displaying clock durations in days doesn't make sense to me.
+
+The following setting displays clock durations (from =C-c C-x C-d= in
+hours and minutes.
+
+#+begin_src emacs-lisp :tangle yes
+(setq org-time-clocksum-format
+      '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
 #+end_src
 * Things I Don't Use (Anymore)
 :PROPERTIES:
