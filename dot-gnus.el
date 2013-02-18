@@ -16,7 +16,7 @@
 (gnus-delay-initialize)
 (spam-initialize)
 
-
+(bbdb-initialize 'gnus 'message)
 
 (defvar use-spam-filtering nil)
 

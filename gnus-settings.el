@@ -13,8 +13,7 @@
  '(gnus-agent-mark-unread-after-downloaded nil)
  '(gnus-agent-synchronize-flags t)
  '(gnus-alias-default-identity "CU")
- '(gnus-alias-identity-alist (quote (("CU" "" "\"Damon Haley\"
-<damon.haley@colorado.edu>" "University of Colorado" (("X-URL" . "http://dashboard.colorado.edu")) "" "~/git/.emacs.d/sig/cu.sig") ("VI" "" "\"Damon Haley\" <dkh@member.fsf.org>" "Vinyl Island University" nil "" "~/git/.emacs.d/sig/vi.sig") ("Haley" "" "\"Damon K. Haley\" <dhaley@warpmail.net>" "Haley's Comet" nil "" "~/git/.emacs.d/sig/haley.sig") ("LSD" "" "vinylisl@sdf.lonestar.org" "Peace Love & Understanding" (("X-URL" . "http://vinylisl.netlsd.com")) "" "~/git/.emacs.d/sig/lsd.sig"))))
+ '(gnus-alias-identity-alist (quote (("CU" "" "\"Damon Haley\" <damon.haley@colorado.edu>" "University of Colorado" (("X-URL" . "http://dashboard.colorado.edu")) "" "~/git/.emacs.d/sig/cu.sig") ("VI" "" "\"Damon Haley\" <dkh@member.fsf.org>" "Vinyl Island University" nil "" "~/git/.emacs.d/sig/vi.sig") ("Haley" "" "\"Damon K. Haley\" <dhaley@warpmail.net>" "Haley's Comet" nil "" "~/git/.emacs.d/sig/haley.sig") ("LSD" "" "vinylisl@sdf.lonestar.org" "Peace Love & Understanding" (("X-URL" . "http://vinylisl.netlsd.com")) "" "~/git/.emacs.d/sig/lsd.sig"))))
 '(gnus-alias-identity-rules (quote (
 ("Emacs Mailing Lists" ("To" "emacs" current) "VI")
 ("Emacs Newsgroups" ("Newsgroups" "emacs" current) "VI")
@@ -36,7 +35,7 @@
 ")
  '(gnus-group-mode-hook (quote (gnus-topic-mode gnus-agent-mode hl-line-mode)))
  '(gnus-group-use-permanent-levels t)
- '(gnus-harvest-sender-alist (quote ((".*@\\(cu\\|colorado\\|ti\\)\\.edu" . damon\.haley@colorado\.edu) (".*@fsf\\.org" . dkh@member\.fsf\.org))))
+ '(gnus-harvest-sender-alist (quote ((".*@\\(cu\\|colorado\\)\\.edu" . damon\.haley@colorado\.edu)(".*@fsf\\.org" . dkh@member\.fsf\.org))))
  '(gnus-home-directory "~/git/gnus/")
  '(gnus-ignored-from-addresses "\\(damon\\.haley\\|dhaley\\|dkh\\)\\(-[^@]+\\)?@\\(colorado\\.edu\\|\\(hushmail\\|ssl\\-mail\\)\\.com\\|member\\.fsf\\.org\\)")
  ;; '(gnus-ignored-from-addresses
@@ -130,7 +129,7 @@
  '(message-sendmail-envelope-from (quote header))
  '(message-sent-hook (quote (my-gnus-score-followup)))
  '(message-setup-hook (quote (gnus-alias-determine-identity gnus-harvest-set-from message-check-recipients (lambda nil (bbdb-mail-aliases t)))))
- '(message-signature-separator "^-- *$")
+'(message-signature-separator "^-- *$")
  '(message-subscribed-address-functions (quote (gnus-find-subscribed-addresses)))
  '(message-x-completion-alist (quote (("\\([rR]esent-\\|[rR]eply-\\)?[tT]o:\\|[bB]?[cC][cC]:" . gnus-harvest-find-address) ((if (boundp (quote message-newgroups-header-regexp)) message-newgroups-header-regexp message-newsgroups-header-regexp) . message-expand-group))))
  '(mm-attachment-override-types (quote ("text/x-vcard" "application/pkcs7-mime" "application/x-pkcs7-mime" "application/pkcs7-signature" "application/x-pkcs7-signature" "image/.*")))
