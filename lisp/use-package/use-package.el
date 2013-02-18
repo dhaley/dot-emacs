@@ -127,6 +127,25 @@
 ;; loaded, but wait until after I've opened a Haskell file before loading
 ;; "inf-haskell.el" and "hs-lint.el".
 ;;
+;; Another similar option to `:init' is `:idle'. Like `:init' this always run,
+;; however, it does so when Emacs is idle at some time in the future after
+;; load. This is particularly useful for convienience minor modes which can be
+;; slow to load. For instance, in this case, I want Emacs to always use
+;; `global-pabbrev-mode'. `:commands' creates an appropriate autoload; `:idle'
+;; will run this command at some point in the future. If you start Emacs and
+;; beginning typing straight-away, loading will happen eventually.
+;;
+;; (use-package pabbrev
+;;   :commands global-pabbrev-mode
+;;   :idle (global-pabbrev-mode))
+;;
+;; Idle functions are run in the order in which they are evaluated. If you
+;; have many, it may take sometime for all to run. `use-package' will always
+;; tell you if there is an error in the form which can otherwise be difficult
+;; to debug. It may tell you about functions being eval'd, depending on the
+;; value of `use-package-verbose'. Other good candidates for `:idle' are
+;; `yasnippet', `auto-complete' and `autopair'.
+;;
 ;; The `:bind' keyword takes either a cons or a list of conses:
 ;;
 ;;   (use-package hi-lock
@@ -193,7 +212,7 @@
 ;; if you have that installed.  It's purpose is to remove strings from your
 ;; mode-line that would otherwise always be there and provide no useful
 ;; information.  It is invoked with the `:diminish' keyword, which is passed
-;; the minor mode symbol:
+;; either the minor mode symbol, or a cons of the symbol and a replacement string:
 ;;
 ;;   (use-package abbrev
 ;;     :diminish abbrev-mode
@@ -276,6 +295,12 @@
   :type 'boolean
   :group 'use-package)
 
+(defcustom use-package-minimum-reported-time 0.01
+  "Minimal load time that will be reported"
+  :type 'number
+  :group 'use-package
+  )
+
 (defmacro with-elapsed-timer (text &rest forms)
   `(let ((now ,(if use-package-verbose
                    '(current-time))))
@@ -286,7 +311,7 @@
        ,(when use-package-verbose
           `(let ((elapsed
                   (float-time (time-subtract (current-time) now))))
-             (if (> elapsed 0.01)
+             (if (> elapsed use-package-minimum-reported-time)
                  (message "%s...done (%.3fs)" ,text elapsed)
                (message "%s...done" ,text)))))))
 
@@ -314,13 +339,83 @@
                                     :url (match-string 1))))))))
     args))
 
+(defvar use-package-idle-timer nil)
+(defvar use-package-idle-forms nil)
+
+(defun use-package-start-idle-timer ()
+  "Ensure that the idle timer is running"
+  (unless use-package-idle-timer
+    (setq use-package-idle-timer
+          (run-with-idle-timer
+           3 t
+           'use-package-idle-eval))))
+
+(defun use-package-init-on-idle (form)
+  "Add a new form to the idle queue"
+  (use-package-start-idle-timer)
+  (if use-package-idle-forms
+      (add-to-list 'use-package-idle-forms
+                   form t)
+    (setq use-package-idle-forms (list form))
+    ))
+
+(defun use-package-idle-eval()
+  "Start to eval idle-commands from the idle queue"
+  (let ((next (pop use-package-idle-forms)))
+    (if next
+        (progn
+          (when use-package-verbose
+            (message "use-package idle:%s" next))
+
+          (condition-case e
+              (funcall next)
+            (error
+             (message
+              "Failure on use-package idle. Form: %s, Error: %s"
+              next e)))
+	  ;; recurse after a bit
+          (when (sit-for 3)
+	    (use-package-idle-eval)))
+      ;; finished (so far!)
+      (cancel-timer use-package-idle-timer)
+      (setq use-package-idle-timer nil))))
+
+(defun use-package-ensure-elpa (package)
+  (when (not (package-installed-p package))
+    (package-install package)))
+
+
 (defmacro use-package (name &rest args)
+"Use a package with configuration options.
+
+For full documentation. please see commentary.
+
+  (use-package package-name
+     :keyword option)
+
+:init Code to run when `use-package' form evals.
+:bind Perform key bindings, and define autoload for bound
+      commands.
+:commands Define autoloads for given commands.
+:mode Form to be added to `auto-mode-alist'.
+:interpreter Form to be added to `auto-interpreter-alist'.
+:defer Defer loading of package -- automatic
+       if :commands, :bind, :mode or :interpreter are used.
+:config Runs if and when package loads.
+:if Conditional loading.
+:disabled Ignore everything.
+:defines Define vars to silence byte-compiler.
+:load-path Add to `load-path' before loading.
+:diminish Support for diminish package (if it's installed).
+:idle adds a form to run on an idle timer
+"
   (let* ((commands (plist-get args :commands))
          (pre-init-body (plist-get args :pre-init))
          (init-body (plist-get args :init))
          (config-body (plist-get args :config))
          (diminish-var (plist-get args :diminish))
          (defines (plist-get args :defines))
+         (idle-body (plist-get args :idle))
          (keybindings )
          (mode-alist )
          (interpreter-alist )
@@ -341,19 +436,44 @@
          (name-string (if (stringp name) name (symbol-name name)))
          (name-symbol (if (stringp name) (intern name) name)))
 
+    ;; force this immediately -- one off cost
     (unless (plist-get args :disabled)
+      (let* ((ensure (plist-get args :ensure))
+             (package-name
+              (or (and (eq ensure t)
+                       name)
+                  ensure)))
+
+        (when package-name
+          (use-package-ensure-elpa package-name)))
+
+
       (if diminish-var
           (setq config-body
                 `(progn
                    ,config-body
                    (ignore-errors
                      ,@(if (listp diminish-var)
-                           (mapcar (lambda (var) `(diminish (quote ,var)))
-                                   diminish-var)
+                           (if (listp (cdr diminish-var))
+                               (mapcar (lambda (var)
+                                           (if (listp var)
+                                               `(diminish (quote ,(car var)) ,(cdr var))
+                                               `(diminish (quote ,var))))
+                                diminish-var)
+                               `((diminish (quote ,(car diminish-var)) ,(cdr diminish-var)))
+                           )
                          `((diminish (quote ,diminish-var))))))))
 
       (if (and commands (symbolp commands))
           (setq commands (list commands)))
+
+
+      (when idle-body
+        (setq init-body
+              `(progn
+                 (use-package-init-on-idle (lambda () ,idle-body))
+                   ,init-body)))
+
 
       (flet ((init-for-commands
               (func sym-or-list)
@@ -455,10 +575,12 @@
                    ,init-body
                    ,(unless (null config-body)
                       `(eval-after-load ,name-string
-                         '(if ,requires-test
-                              (with-elapsed-timer
-                                  ,(format "Configuring package %s" name-string)
-                                ,config-body))))
+                         (quote
+                           (if ,requires-test
+                               ,(macroexpand-all
+                                  `(with-elapsed-timer
+                                       ,(format "Configuring package %s" name-string)
+                                     ,config-body))))))
                    t))
             `(if (and ,(or predicate t)
                       ,requires-test)
