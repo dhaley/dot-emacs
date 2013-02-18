@@ -41,6 +41,76 @@
 (defvar sp-keymap (make-sparse-keymap)
   "Keymap used for `smartparens-mode'.")
 
+(defvar sp-paredit-bindings '(
+                              ("C-M-f" . sp-forward-sexp) ;; navigation
+                              ("C-M-b" . sp-backward-sexp)
+                              ("C-M-u" . sp-backward-up-sexp)
+                              ("C-M-d" . sp-down-sexp)
+                              ("C-M-p" . sp-backward-down-sexp)
+                              ("C-M-n" . sp-up-sexp)
+                              ("M-s" . sp-splice-sexp) ;; depth-changing commands
+                              ("M-<up>" . sp-splice-sexp-killing-backward)
+                              ("M-<down>" . sp-splice-sexp-killing-forward)
+                              ("M-r" . sp-splice-sexp-killing-around)
+                              ("C-)" . sp-forward-slurp-sexp) ;; barf/slurp
+                              ("C-<right>" . sp-forward-slurp-sexp)
+                              ("C-}" . sp-forward-barf-sexp)
+                              ("C-<left>" . sp-forward-barf-sexp)
+                              ("C-(" . sp-backward-slurp-sexp)
+                              ("C-M-<left>" . sp-backward-slurp-sexp)
+                              ("C-{" . sp-backward-barf-sexp)
+                              ("C-M-<right>" . sp-backward-barf-sexp)
+                              ("M-S" . sp-split-sexp) ;; misc
+                              )
+  "Alist containing the default paredit bindings to corresponding
+smartparens functions.")
+
+;;;###autoload
+(defun sp-use-paredit-bindings ()
+  "Initiate `sp-keymap' with paredit-compatible bindings for
+corresponding functions provided by smartparens.  See variable
+`sp-paredit-bindings'."
+  (interactive)
+  (--each sp-paredit-bindings
+    (define-key sp-keymap (read-kbd-macro (car it)) (cdr it))))
+
+(defvar sp-smartparens-bindings '(
+                                  ("C-M-f" . sp-forward-sexp)
+                                  ("C-M-b" . sp-backward-sexp)
+                                  ("C-M-d" . sp-down-sexp)
+                                  ("C-M-a" . sp-backward-down-sexp)
+                                  ("C-S-a" . sp-beginning-of-sexp)
+                                  ("C-S-d" . sp-end-of-sexp)
+                                  ("C-M-e" . sp-up-sexp)
+                                  ("C-M-u" . sp-backward-up-sexp)
+                                  ("C-M-n" . sp-next-sexp)
+                                  ("C-M-p" . sp-previous-sexp)
+                                  ("C-M-k" . sp-kill-sexp)
+                                  ("M-<delete>" . sp-unwrap-sexp)
+                                  ("M-<backspace>" . sp-backward-unwrap-sexp)
+                                  ("C-<right>" . sp-forward-slurp-sexp)
+                                  ("C-<left>" . sp-forward-barf-sexp)
+                                  ("C-M-<left>" . sp-backward-slurp-sexp)
+                                  ("C-M-<right>" . sp-backward-barf-sexp)
+                                  ("M-D" . sp-splice-sexp)
+                                  ("C-M-<delete>" . sp-splice-sexp-killing-forward)
+                                  ("C-M-<backspace>" . sp-splice-sexp-killing-backward)
+                                  ("C-S-<backspace>" . sp-splice-sexp-killing-around)
+                                  ("C-]" . sp-select-next-thing-exchange)
+                                  ("C-M-]" . sp-select-next-thing)
+                                  ("M-F" . sp-forward-symbol)
+                                  ("M-B" . sp-backward-symbol)
+                                  )
+  "Alist containing the default smartparens bindings.")
+
+;;;###autoload
+(defun sp-use-smartparens-bindings ()
+  "Initiate `sp-keymap' with smartparens bindings for navigation functions.
+See variable `sp-smartparens-bindings'."
+  (interactive)
+  (--each sp-smartparens-bindings
+    (define-key sp-keymap (read-kbd-macro (car it)) (cdr it))))
+
 (defvar sp-escape-char nil
   "Character used to escape quotes inside strings.")
 (make-variable-buffer-local 'sp-escape-char)
@@ -89,10 +159,8 @@ location of point before the wrapping.")
 (make-variable-buffer-local 'sp-last-inserted-characters)
 
 (defvar sp-last-wrapped-region nil
-  "List containing info about last wrapped region.  The content of the list is:
-\(start-of-the-wrapped-region end-of-the-wrapped-region
-length-of-opening-pair length-of-closing-pair\).  Start and end
-positions include the newly added wrapping pair.")
+  "Information about the last wrapped region.
+The format is the same as returned by `sp-get-sexp'.")
 (make-variable-buffer-local 'sp-last-wrapped-region)
 
 (defvar sp-point-inside-string nil
@@ -175,10 +243,10 @@ string.  After the removal, all the pairs are re-checked."
 
   (setq sp-trigger-keys (-distinct sp-trigger-keys)))
 
-(defun sp--keybinding-fallback ()
+(defun sp--keybinding-fallback (&optional key-sequence)
   "Return the fall-back command as if `smartparens-mode' were disabled."
   (let ((smartparens-mode nil)
-        (keys (this-single-command-keys)))
+        (keys (or key-sequence (this-single-command-keys))))
     (key-binding keys t)))
 
 (defun sp--update-local-pairs ()
@@ -929,7 +997,7 @@ the global list is replaced.  If you wish to both add and remove
 things with single call, use \"((:add ...) (:rem ...))\" as an
 argument.  Therefore,
 
-  :inhibit '(:add my-test)
+  :when '(:add my-test)
 
 would mean \"use the global settings for this pair, but also this
 additional test\". If no value is provided for list arguments,
@@ -1038,7 +1106,7 @@ string and the action."
 
 ;; burlywood4
 (defface sp-pair-overlay-face
-  '((t (:background "#004a5d")))
+  '((t (:inherit highlight)))
   "The face used to highlight pair overlays."
   :group 'smartparens)
 
@@ -1327,10 +1395,14 @@ would execute if smartparens-mode were disabled."
         (progn
           (setq this-command 'self-insert-command)
           (self-insert-command arg))
-      (let ((com (sp--keybinding-fallback))
-            (smartparens-mode nil))
-        (setq this-original-command com)
-        (call-interactively com)))))
+      (sp--call-fallback-command))))
+
+(defun sp--call-fallback-command ()
+  "Call the command bound to last key sequence as if SP were disabled."
+  (let ((com (sp--keybinding-fallback))
+        (smartparens-mode nil))
+    (setq this-original-command com)
+    (call-interactively com)))
 
 (defadvice self-insert-command (around self-insert-command-adviced activate)
   (setq sp-point-inside-string (sp-point-in-string))
@@ -1353,6 +1425,15 @@ would execute if smartparens-mode were disabled."
              (t
               (sp--setaction action (sp-insert-pair))
               (sp--setaction action (sp-skip-closing-pair))
+              ;; try to call the fallback function bound to this key.
+              ;; That is a function that would normally run if SP was
+              ;; inactive. TODO: should this be customizable?
+              (when (not action)
+                (let ((fb-fun (sp--keybinding-fallback)))
+                  (when (not (eq fb-fun 'self-insert-command))
+                    (delete-char -1)
+                    (sp--call-fallback-command)
+                    (setq action t))))
               ;; if nothing happened, we just inserted a character, so
               ;; set the apropriate operation.  We also need to check
               ;; for `sp--self-insert-no-escape' not to overwrite
@@ -1453,6 +1534,19 @@ are allowed in the current context.  See also
 delimiter for any pair allowed in current context."
   (regexp-opt (--mapcat (list (car it) (cdr it)) pair-list)))
 
+(defun sp--get-last-wraped-region (beg end open close)
+  "Return `sp-get-sexp' style plist about the last wrapped region.
+
+Note: this function does not retrieve the actual value of
+`sp-last-wrapped-region', it merely construct the plist from the
+provided values."
+  (let ((b (make-marker))
+        (e (make-marker)))
+    (set-marker b beg)
+    (set-marker e end)
+    (set-marker-insertion-type e t)
+    `(:beg ,b :end ,e :op ,open :cl ,close :prefix "")))
+
 (defun sp-wrap-region-init ()
   "Initialize the region wrapping."
   (when sp-autowrap-region
@@ -1508,8 +1602,12 @@ delimiter for any pair allowed in current context."
                 (setq sp-last-operation 'sp-wrap-region)
                 (setq sp-last-wrapped-region
                       (if (< p m)
-                          (list p (+ len m -1) (car active-pair) (cdr active-pair))
-                        (list m (+ len p) (car active-pair) (cdr active-pair))))
+                          (sp--get-last-wraped-region
+                           p (+ len m -1)
+                           (car active-pair) (cdr active-pair))
+                        (sp--get-last-wraped-region
+                         m (+ len p)
+                         (car active-pair) (cdr active-pair))))
                 ;; only autoescape "" pair, so it has to be one-char
                 ;; length, therefore we can handle it here
                 (when (and (equal (car active-pair) "\"")
@@ -1604,7 +1702,8 @@ delimiter for any pair allowed in current context."
                 (goto-char (+ sp-wrap-point oplen cplen)))
               ;; update info for possible following delete
               (setq sp-last-operation 'sp-wrap-region)
-              (setq sp-last-wrapped-region (list s e open-pair close-pair))
+              (setq sp-last-wrapped-region
+                    (sp--get-last-wraped-region s e open-pair close-pair))
 
               (sp--run-hook-with-args open-pair :post-handlers 'wrap))))))))
 
@@ -1805,8 +1904,8 @@ string quotes inside it.
 This is internal function and should be only called after a
 wrapping."
   (when sp-autoescape-string-quote
-    (let ((b (car sp-last-wrapped-region))
-          (e (cadr sp-last-wrapped-region))
+    (let ((b (sp-get sp-last-wrapped-region :beg))
+          (e (sp-get sp-last-wrapped-region :end))
           was-beg)
       (cond
        ((and strbound
@@ -1817,21 +1916,19 @@ wrapping."
         (save-excursion
           (goto-char b)
           (insert sp-escape-char)
-          (goto-char e)
+          (goto-char (1- e))
           (insert sp-escape-char))
         ;; update the sp-last-wrapped-region info to \" pair
-        (setq sp-last-wrapped-region (list b (+ 2 e) "\\\"" "\\\"")))
+        (setq sp-last-wrapped-region
+              (sp--get-last-wraped-region b e "\\\"" "\\\"")))
        (t
         (setq was-beg (< (point) e))
-        (let ((num 0))
-          (goto-char b)
-          (while (search-forward-regexp "\\([^\\]\\)\"" (+ e -1 num) t)
-            (setq num (1+ num))
-            (replace-match "\\1\\\\\"" t))
-          (setq sp-last-wrapped-region (list b (+ num e) "\"" "\""))
-          (if was-beg
-              (goto-char (1+ b))
-            (goto-char (+ e num)))))))))
+        (goto-char b)
+        (while (search-forward-regexp "\\([^\\]\\)\"" (1- e) t)
+          (replace-match "\\1\\\\\"" t))
+        (setq sp-last-wrapped-region
+              (sp--get-last-wraped-region b e "\"" "\""))
+        (if was-beg (goto-char (1+ b)) (goto-char e)))))))
 
 (defun sp-insert-pair ()
   "Automatically insert the closing pair if it is allowed in current context.
@@ -1896,7 +1993,7 @@ followed by word.  It is disabled by default.  See
                             (eq sp-last-operation 'sp-insert-pair)
                             (save-excursion
                               (backward-char 1)
-                              (sp--looking-back (regexp-quote open-pair) sp-max-pair-length-c))))))
+                              (sp--looking-back (regexp-quote open-pair)))))))
                  (not (run-hook-with-args-until-success
                        'sp-autoinsert-inhibit-functions
                        open-pair
@@ -1935,57 +2032,51 @@ followed by word.  It is disabled by default.  See
 
         (setq sp-last-operation 'sp-insert-pair)))))
 
-(defmacro sp--wrap-repeat-last-2 (same-only)
-  "Internal."
-  `(when sp-last-wrapped-region
-     (let* ((b (car sp-last-wrapped-region))
-            (e (cadr sp-last-wrapped-region))
-            (op (nth 2 sp-last-wrapped-region))
-            (oplen (length op))
-            (cllen (length (nth 3 sp-last-wrapped-region)))
-            (acolen (length (car active-pair)))
-            (acclen (length (cdr active-pair)))
-            (inside-region (< (point) e)))
-       (when (and ,(if same-only '(equal (car active-pair) op) t)
-                  (memq sp-last-operation '(sp-self-insert sp-wrap-region))
-                  (or (= (point) (+ b oplen acolen))
-                      (= (point) (+ e acolen))))
-         ;; TODO: this does not handle escaping of "double quote", that
-         ;; is if we repeat quote wrap after quote wrap.  I think it is
-         ;; reasonable to assume this will never happen, or very very
-         ;; rarely. (same goes for option 2)
-         (delete-char (- acolen))
-         (if inside-region
-             (progn (goto-char (+ b oplen))
-                    (insert (car active-pair))
-                    (goto-char (- (+ e acolen) cllen))
-                    (insert (cdr active-pair))
-                    (goto-char (+ b oplen acolen))
-                    (setq sp-last-wrapped-region
-                          (list (+ b oplen) (+ e acolen acclen (- cllen))
-                                (car active-pair) (cdr active-pair))))
-           (goto-char b)
-           (insert (car active-pair))
-           (goto-char (+ e acolen))
-           (insert (cdr active-pair))
-           (setq sp-last-wrapped-region
-                 (list b (+ e acolen acclen)
-                       (car active-pair) (cdr active-pair))))
-         (setq sp-last-operation 'sp-wrap-region)
-
-         (sp--run-hook-with-args (car active-pair) :post-handlers 'wrap)
-         sp-last-operation))))
-
 (defun sp--wrap-repeat-last (active-pair)
   "If the last operation was a wrap and `sp-wrap-repeat-last' is
 non-nil, repeat the wrapping with this pair around the last
 active region."
-  (cond
-   ((= 0 sp-wrap-repeat-last) nil)
-   ((= 1 sp-wrap-repeat-last)
-    (sp--wrap-repeat-last-2 t))
-   ((= 2 sp-wrap-repeat-last)
-    (sp--wrap-repeat-last-2 nil))))
+  (unless (= 0 sp-wrap-repeat-last)
+    (when sp-last-wrapped-region
+      (let* ((b (sp-get sp-last-wrapped-region :beg))
+             (e (sp-get sp-last-wrapped-region :end))
+             (op (sp-get sp-last-wrapped-region :op))
+             (oplen (length op))
+             (cllen (sp-get sp-last-wrapped-region :cl-l))
+             (acolen (length (car active-pair))))
+        (when (and
+               (cond
+                ((= 1 sp-wrap-repeat-last)
+                 (equal (car active-pair) op))
+                ((= 2 sp-wrap-repeat-last) t))
+               (memq sp-last-operation '(sp-self-insert sp-wrap-region))
+               (or (= (point) (+ b oplen acolen))
+                   (= (point) e)))
+          ;; TODO: this does not handle escaping of "double quote", that
+          ;; is if we repeat quote wrap after quote wrap.  I think it is
+          ;; reasonable to assume this will never happen, or very very
+          ;; rarely. (same goes for option 2)
+          (delete-char (- acolen))
+          (if (< (point) e)
+              (progn (goto-char (+ b oplen))
+                     (insert (car active-pair))
+                     (goto-char (- e cllen))
+                     (insert (cdr active-pair))
+                     (setq sp-last-wrapped-region
+                           (sp--get-last-wraped-region
+                            (+ b oplen) (point)
+                            (car active-pair) (cdr active-pair)))
+                     (goto-char (+ b oplen acolen)))
+            (goto-char b)
+            (insert (car active-pair))
+            (goto-char e)
+            (insert (cdr active-pair))
+            (setq sp-last-wrapped-region
+                  (sp--get-last-wraped-region
+                   b e (car active-pair) (cdr active-pair))))
+          (setq sp-last-operation 'sp-wrap-region)
+          (sp--run-hook-with-args (car active-pair) :post-handlers 'wrap)
+          sp-last-operation)))))
 
 (defun sp-skip-closing-pair ()
   "If point is inside an inserted pair, and the user only moved forward
@@ -2062,32 +2153,28 @@ is remove the just added wrapping."
     (if (and sp-autodelete-wrap
              (eq sp-last-operation 'sp-wrap-region))
         (let ((p (point))
-              (s (nth 0 sp-last-wrapped-region))
-              (e (nth 1 sp-last-wrapped-region))
-              (o (length (nth 2 sp-last-wrapped-region)))
-              (c (length (nth 3 sp-last-wrapped-region))))
+              (b (sp-get sp-last-wrapped-region :beg))
+              (e (sp-get sp-last-wrapped-region :end))
+              (o (sp-get sp-last-wrapped-region :op-l))
+              (c (sp-get sp-last-wrapped-region :cl-l)))
           ;; if the last operation was `sp-wrap-region', and we are at
           ;; the position of either opening or closing pair, delete the
           ;; just-inserted pair
-          (cond
-           ((= p (+ s o))
+          (when (or (= p (+ b o))
+                    (= p e))
+            (insert "x") ;dummy char to account for the regularly deleted one
             (save-excursion
-              (delete-char (- (1- o)))
-              (goto-char (- e o -1))
-              (delete-char (- c)))
-            (setq sp-last-operation 'sp-delete-pair-wrap))
-           ((= p e)
-            (save-excursion
-              (delete-char (- (1- c)))
-              (goto-char s)
+              (goto-char e)
+              (delete-char (- c))
+              (goto-char b)
               (delete-char o))
-            (setq sp-last-operation 'sp-delete-pair-wrap))))
-      (let* ((p (point))
-             (inside-pair (--first (and (sp--looking-back (regexp-quote (car it)) sp-max-pair-length-c)
-                                        (looking-at (regexp-quote (cdr it))))
-                                   sp-pair-list))
-             (behind-pair (--first (sp--looking-back (regexp-quote (cdr it)) sp-max-pair-length-c) sp-pair-list))
-             (opening-pair (--first (sp--looking-back (regexp-quote (car it)) sp-max-pair-length-c) sp-pair-list)))
+            (setq sp-last-operation 'sp-delete-pair-wrap)))
+      (let ((p (point))
+            (inside-pair (--first (and (sp--looking-back (regexp-quote (car it)))
+                                       (looking-at (regexp-quote (cdr it))))
+                                  sp-pair-list))
+            (behind-pair (--first (sp--looking-back (regexp-quote (cdr it))) sp-pair-list))
+            (opening-pair (--first (sp--looking-back (regexp-quote (car it))) sp-pair-list)))
         (cond
          ;; we're just before the closing quote of a string.  If there
          ;; is an opening or closing pair behind the point, remove
@@ -2123,16 +2210,31 @@ is remove the just added wrapping."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Navigation
 
-(defun sp--looking-back (regexp &optional limit greedy)
-  "Works just like `looking-back', but LIMIT specifies how many
-characters backward we should be looking instead of a buffer
-position.  If the point is less than LIMIT chars from the start
-of the buffer, it replaces LIMIT with (point)."
-  (when (and limit
-             (< (point) limit))
-    (setq limit (point)))
-  (setq limit (or limit (point)))
-  (looking-back regexp (- (point) limit) greedy))
+(defun sp--looking-back (regexp &optional limit not-greedy)
+  "Return non-nil if text before point matches regular expression REGEXP.
+
+With optional argument LIMIT search only that many characters
+backward.  If LIMIT is nil, default to `sp-max-pair-length-c'.
+
+If optional argument NON-GREEDY is t search for any matching
+sequence, not necessarily the longest possible."
+  (setq limit (or limit sp-max-pair-length-c))
+  (let ((from (max 1 (- (point) limit)))
+        (to (point))
+        (greedy (not not-greedy))
+        has-match)
+    (set-match-data '(0 0))
+    (if greedy
+        (save-excursion
+          (goto-char from)
+          (while (and (not has-match) (< (point) to))
+            (looking-at regexp)
+            (if (= (match-end 0) to)
+                (setq has-match t)
+              (forward-char 1)))
+          has-match)
+      (save-excursion
+        (not (null (search-backward-regexp (concat "\\(?:" regexp "\\)\\=") from t)))))))
 
 (defun sp--search-backward-regexp (regexp &optional bound noerror)
   "Works just like `search-backward-regexp', but returns the
@@ -2144,7 +2246,7 @@ This is an internal function.  Only use this for searching for
 pairs!"
   (when (search-backward-regexp regexp bound noerror)
     (goto-char (match-end 0))
-    (sp--looking-back regexp sp-max-pair-length-c t)
+    (sp--looking-back regexp)
     (goto-char (match-beginning 0))))
 
 (defmacro sp--get-bounds (name docstring test)
@@ -2445,10 +2547,10 @@ returned by `sp-get-sexp'."
        ,(if back '(sp-skip-backward-to-symbol t)
           '(sp-skip-forward-to-symbol t))
        (cond
-        (,(if back '(sp--looking-back (sp--get-closing-regexp) sp-max-pair-length-c)
+        (,(if back '(sp--looking-back (sp--get-closing-regexp) nil t)
             '(looking-at (sp--get-opening-regexp)))
          (sp-get-sexp ,back))
-        (,(if back '(sp--looking-back (sp--get-opening-regexp) sp-max-pair-length-c)
+        (,(if back '(sp--looking-back (sp--get-opening-regexp) nil t)
             '(looking-at (sp--get-closing-regexp)))
          (sp-get-sexp ,back))
         ((eq (char-syntax ,(if back '(preceding-char) '(following-char))) ?\" )
@@ -2567,9 +2669,17 @@ considered balanced expressions."
   (and (listp arg) (car arg)))
 
 (defun sp--negate-argument (arg)
-  "Return the argument but negated.  If the argument is a raw
-prefix argument (a list) return a list with its car negated."
-  (if (listp arg) (list (- (car arg))) (- arg)))
+  "Return the argument ARG but negated.
+
+If the argument is a raw prefix argument (cons num nil) return a
+list with its car negated.  If the argument is just the - symbol,
+return 1.  If the argument is nil, return -1.  Otherwise negate
+the input number."
+  (cond
+   ((sp--raw-argument-p arg) (list (- (car arg))))
+   ((eq arg '-) 1)
+   ((not arg) -1)
+   (t (- arg))))
 
 (defun sp-down-sexp (&optional arg)
   "Move forward down one level of sexp.
@@ -2729,6 +2839,7 @@ Examples.  Prefix argument is shown after the example in
      ;; kill to the end or beginning of list
      ((and raw
            (= n 4))
+      ;; TODO: simply get "next" item and bounds from that?
       (let* ((lst (sp-get-list-items))
              (last nil)
              (enc (car lst))
@@ -2761,6 +2872,9 @@ Examples.  Prefix argument is shown after the example in
         (kill-region b e)
         ;; kill useless junk whitespace.
         (append-next-kill)
+        ;; TODO: this will copy one extra space if the expression is
+        ;; at the "indent" e.g.: |..(interactive) will kill as "
+        ;; (interactive)"
         (kill-region (point)
                      (progn
                        (if (> arg 0)
@@ -2793,7 +2907,6 @@ more information, see the documentation of `sp-kill-sexp'."
                   (b (and ok (sp-get ok :beg)))
                   (e (and ok (sp-get ok :end)))
                   (ins-space 0)
-                  ,@(when (not fw-1) '((prefix-len) prefix))
                   next-thing)
              (if ok
                  (save-excursion
@@ -3011,8 +3124,8 @@ after exiting a string."
 (defmacro sp--forward-symbol-1 (fw-1)
   "Generate forward/backward symbol functions."
   (let ((goto-where (if fw-1 '(match-end 0) '(match-beginning 0)))
-        (look-at-open (if fw-1 '(looking-at open) '(sp--looking-back open sp-max-pair-length-c t)))
-        (look-at-close (if fw-1 '(looking-at close) '(sp--looking-back close sp-max-pair-length-c t))))
+        (look-at-open (if fw-1 '(looking-at open) '(sp--looking-back open)))
+        (look-at-close (if fw-1 '(looking-at close) '(sp--looking-back close))))
     `(let ((n (abs arg))
            (fw (> arg 0))
            (open (sp--get-opening-regexp))
@@ -3114,54 +3227,115 @@ N times.  This function expect positive arg."
   (let ((ok (sp-get-enclosing-sexp arg)))
     (when ok (sp--unwrap-sexp ok))))
 
-;; TODO: 1. add some sane automatic re-indentation/deletion of
-;; whitespace
-(defun sp-splice-sexp-killing-backward ()
-  "Unwrap the current list and also kill all the content between
-start of this list and the point.
+(defun sp--splice-sexp-do-killing (beg end expr &optional jump-end)
+  "Save the text in the region between BEG and END inside EXPR,
+then delete EXPR and insert the saved text.
+
+If optional argument JUPM-END is equal to the symbol 'end move
+the point after the re-inserted text."
+  (let (str p)
+    (setq str (buffer-substring-no-properties beg end))
+    (delete-region (sp-get expr :beg-prf) (sp-get expr :end))
+    (save-excursion
+      (insert str)
+      (indent-region (sp-get expr :beg-prf) (point))
+      (setq p (point)))
+    (when (eq jump-end 'end) (goto-char p))))
+
+;; The following two functions could be very simply implemented using
+;; `sp-splice-sexp-killing-around' but these are more efficient
+;; implementations.  With sufficiently big lists the difference is
+;; noticable.
+(defun sp-splice-sexp-killing-backward (&optional arg)
+  "Unwrap the current list and kill all the expressions
+between start of this list and the point.
+
+With the optional argument ARG, repeat that many times.  This
+argument should be positive number.
 
 Examples:
 
-  (foo (let ((x 5)) | (sqrt n)) bar) -> (foo | (sqrt n) bar)"
-  (interactive)
-  (let* ((ok (sp-get-enclosing-sexp 1)))
-    (when ok
-      (sp--unwrap-sexp ok)
-      (delete-region (sp-get ok :beg-prf) (point)))))
+  (foo (let ((x 5)) | (sqrt n)) bar) -> (foo | (sqrt n) bar)
 
-(defun sp-splice-sexp-killing-forward ()
-  "Unwrap the current list and also kill all the content between the
-point and the end of this list.
+  (when ok|                             |(perform-operation-1)
+    (perform-operation-1)            ->  (perform-operation-2)
+    (perform-operation-2))
+
+Note that to kill only the content and not the enclosing
+delimiters you can use \\[universal-argument] \\[sp-backward-kill-sexp].
+See `sp-kill-sexp' for more information."
+  (interactive "p")
+  (while (> arg 0)
+    (let ((ok (sp-get-enclosing-sexp 1)))
+      (if ok
+          (sp--splice-sexp-do-killing
+           (sp-get (sp-get-thing) :beg-prf)
+           (sp-get ok :end-in)
+           ok)
+        (setq arg -1)))
+    (setq arg (1- arg))))
+
+(defun sp-splice-sexp-killing-forward (&optional arg)
+  "Unwrap the current list and kill all the expressions between
+the point and the end of this list.
+
+With the optional argument ARG, repeat that many times.  This
+argument should be positive number.
 
 Examples:
 
-  (a (b c| d e) f) -> (a b c| f)"
-  (interactive)
-  (let* ((ok (sp-get-enclosing-sexp 1)))
-    (when ok
-      (sp--unwrap-sexp ok)
-      (delete-region
-       (point)
-       (sp-get ok (- :end-in :op-l :prefix-l))))))
+  (a (b c| d e) f) -> (a b c| f)
+
+Note that to kill only the content and not the enclosing
+delimiters you can use \\[universal-argument] \\[sp-kill-sexp].
+See `sp-kill-sexp' for more information."
+  (interactive "p")
+  (while (> arg 0)
+    (let ((ok (sp-get-enclosing-sexp 1)))
+      (if ok
+          (sp--splice-sexp-do-killing
+           (sp-get (sp-get-thing t) :end) ;search backward
+           (sp-get ok :beg-in)
+           ok 'end)
+        (setq arg -1)))
+    (setq arg (1- arg))))
 
 (defun sp-splice-sexp-killing-around (&optional arg)
-  "Unwrap the current list and also kill everything inside save
-for ARG next expressions.  With ARG negative N, save that many
-expressions backward.
+  "Unwrap the current list and kill everything inside except next expression.
+
+With ARG save that many next expressions.  With ARG negative -N,
+save that many expressions backward.
+
+If ARG is raw prefix argument \\[universal-argument] this function behaves exactly
+the same as `sp-splice-sexp-killing-backward'.
+
+If ARG is negative raw prefix argument \\[negative-argument] \\[universal-argument] this function
+behaves exactly the same as `sp-splice-sexp-killing-forward'.
+
+Note that the behaviour with the prefix argument seems to be
+reversed.  This is because the backward variant is much more
+common and hence deserve shorter binding.
 
 Examples:
 
   (a b |(c d) e f) -> |(c d)   ;; with arg = 1
   (a b |c d e f)   -> |c d     ;; with arg = 2
   (- (car x) |a 3) -> (car x)| ;; with arg = -1"
-  (interactive "p")
-  (setq arg (or arg 1))
-  (let ((ok (sp-get-enclosing-sexp)) str)
-    (when ok
-      (sp-select-next-thing-exchange arg)
-      (setq str (buffer-substring-no-properties (region-beginning) (region-end)))
-      (delete-region (sp-get ok :beg-prf) (sp-get ok :end))
-      (save-excursion (insert str)))))
+  (interactive "P")
+  (cond
+   ((equal arg '(4))
+    (sp-splice-sexp-killing-backward 1))
+   ((equal arg '(-4))
+    (sp-splice-sexp-killing-forward 1))
+   (t
+    (setq arg (prefix-numeric-value arg))
+    (let ((ok (sp-get-enclosing-sexp)) str)
+      (when ok
+        (sp-select-next-thing-exchange arg)
+        (sp--splice-sexp-do-killing
+         (region-beginning)
+         (region-end)
+         ok (if (> arg 0) nil 'end)))))))
 
 (defun sp-forward-whitespace ()
   "Skip forward past the whitespace characters."
@@ -3357,7 +3531,7 @@ support custom pairs."
         (if ok
             (sp-get ok (sp-show--pair-create-overlays :beg :end :op-l :cl-l))
           (sp-show--pair-create-mismatch-overlay (point) (length match))))
-       ((sp--looking-back closing sp-max-pair-length-c t)
+       ((sp--looking-back closing)
         (setq match (match-string 0))
         (setq ok (sp-get-sexp t))
         (if ok
@@ -3405,6 +3579,23 @@ support custom pairs."
   (sp-delete-pair (ad-get-arg 0)))
 (add-hook 'post-command-hook 'sp--post-command-hook-handler)
 (add-hook 'pre-command-hook 'sp--pre-command-hook-handler)
+
+(defvar sp--mc/cursor-specific-vars
+  '(
+    sp-wrap-point
+    sp-wrap-mark
+    sp-last-wrapped-region
+    sp-pair-overlay-list
+    sp-wrap-overlays
+    sp-wrap-tag-overlays
+    sp-last-operation
+    sp-previous-point
+    )
+  "A list of vars that need to be tracked on a per-cursor basis.")
+
+(eval-after-load 'multiple-cursors
+  '(dolist (it sp--mc/cursor-specific-vars)
+     (add-to-list 'mc/cursor-specific-vars it)))
 
 (provide 'smartparens)
 
