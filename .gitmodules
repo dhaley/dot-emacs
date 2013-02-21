@@ -68,8 +68,8 @@
         path = site-lisp/offlineimap
         url = https://github.com/emacsmirror/offlineimap.git
 [submodule "site-lisp/org-mac-protocol"]
-        path = site-lisp/org-mac-protocol
-        url = https://github.com/emacsmirror/org-mac-protocol.git
+	path = site-lisp/org-mac-protocol
+	url = https://github.com/claviclaws/org-mac-protocol.git
 [submodule "site-lisp/org-magit"]
         path = site-lisp/org-magit
         url = https://github.com/sigma/org-magit.git
@@ -385,3 +385,6 @@
 [submodule "site-lisp/smart-forward"]
 	path = site-lisp/smart-forward
 	url = https://github.com/magnars/smart-forward.el.git
+[submodule "site-lisp/crontab-mode"]
+	path = site-lisp/crontab-mode
+	url = https://github.com/emacsmirror/crontab-mode.git

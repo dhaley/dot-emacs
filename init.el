@@ -2264,7 +2264,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
         (unless (featurep 'runner)
           (use-package dired-x)
           ;; (use-package dired-async)
-          (use-package dired-sort-map)
+          ;; (use-package dired-sort-map)
           (use-package runner)
           (use-package dired-details-hide
             :commands dired-details-toggle)
