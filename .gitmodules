@@ -388,3 +388,6 @@
 [submodule "site-lisp/crontab-mode"]
 	path = site-lisp/crontab-mode
 	url = https://github.com/emacsmirror/crontab-mode.git
+[submodule "site-lisp/upside-down"]
+	path = site-lisp/upside-down
+	url = https://github.com/rudi/upside-down.el.git
