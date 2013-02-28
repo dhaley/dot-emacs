@@ -3,7 +3,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- ;; (check-mail-boxes (quote ("~/git/gnus/Mail/incoming/mail\\..*\\.spool")))
  '(check-mail-summary-function (quote check-mail-box-summary))
  '(gnus-activate-level 2)
  '(gnus-after-getting-new-news-hook (quote (gnus-group-list-groups gnus-group-save-newsrc gnus-display-time-event-handler)))
@@ -14,34 +13,30 @@
  '(gnus-agent-synchronize-flags t)
  '(gnus-alias-default-identity "CU")
  '(gnus-alias-identity-alist (quote (("CU" "" "\"Damon Haley\" <damon.haley@colorado.edu>" "University of Colorado" (("X-URL" . "http://dashboard.colorado.edu")) "" "~/git/.emacs.d/sig/cu.sig") ("VI" "" "\"Damon Haley\" <dkh@member.fsf.org>" "Vinyl Island University" nil "" "~/git/.emacs.d/sig/vi.sig") ("Haley" "" "\"Damon K. Haley\" <dhaley@warpmail.net>" "Haley's Comet" nil "" "~/git/.emacs.d/sig/haley.sig") ("LSD" "" "vinylisl@sdf.lonestar.org" "Peace Love & Understanding" (("X-URL" . "http://vinylisl.netlsd.com")) "" "~/git/.emacs.d/sig/lsd.sig"))))
-'(gnus-alias-identity-rules (quote (
-("Emacs Mailing Lists" ("To" "emacs" current) "VI")
-("Emacs Newsgroups" ("Newsgroups" "emacs" current) "VI")
-)))
+ '(gnus-alias-identity-rules (quote (("Emacs Mailing Lists" ("To" "emacs" current) "VI") ("Emacs Newsgroups" ("Newsgroups" "emacs" current) "VI"))))
  '(gnus-alias-override-user-mail-address t)
  '(gnus-alias-unknown-identity-rule (quote error))
  '(gnus-always-read-dribble-file t)
  '(gnus-article-date-lapsed-new-header t)
  '(gnus-article-update-date-headers nil)
  '(gnus-asynchronous t)
+ '(gnus-blocked-images nil)
  '(gnus-check-new-newsgroups nil)
  '(gnus-completing-read-function (quote gnus-ido-completing-read))
  '(gnus-default-adaptive-score-alist (quote ((gnus-dormant-mark (from 20) (subject 100)) (gnus-ticked-mark (subject 30)) (gnus-read-mark (subject 30)) (gnus-del-mark (subject -150)) (gnus-catchup-mark (subject -150)) (gnus-killed-mark (subject -1000)) (gnus-expirable-mark (from -1000) (subject -1000)))))
  '(gnus-default-article-saver (quote gnus-summary-save-in-mail))
  '(gnus-gcc-mark-as-read t)
  '(gnus-generate-tree-function (quote gnus-generate-horizontal-tree))
+ '(gnus-gravatar-properties (quote (:ascent center)))
+ '(gnus-gravatar-too-ugly gnus-ignored-from-addresses)
  '(gnus-group-default-list-level 2)
  '(gnus-group-line-format "%S%p%P%M%5y: %(%B%G%B%)
 ")
  '(gnus-group-mode-hook (quote (gnus-topic-mode gnus-agent-mode hl-line-mode)))
  '(gnus-group-use-permanent-levels t)
- '(gnus-harvest-sender-alist (quote ((".*@\\(cu\\|colorado\\)\\.edu" . damon\.haley@colorado\.edu)(".*@fsf\\.org" . dkh@member\.fsf\.org))))
+ '(gnus-harvest-sender-alist (quote ((".*@\\(cu\\|colorado\\)\\.edu" . damon\.haley@colorado\.edu) (".*@fsf\\.org" . dkh@member\.fsf\.org))))
  '(gnus-home-directory "~/git/gnus/")
  '(gnus-ignored-from-addresses "\\(damon\\.haley\\|dhaley\\|dkh\\)\\(-[^@]+\\)?@\\(colorado\\.edu\\|\\(hushmail\\|ssl\\-mail\\)\\.com\\|member\\.fsf\\.org\\)")
- ;; '(gnus-ignored-from-addresses
- ;;       "\\(vinylisl\\|dkh\\|damon\\.haley\\|dhaley\\)\\(-[^@]+\\)?@\\(colorado\
- ;; \.edu\\|\\(hushmail\\|ssl\\-mail\\)\\.com\\|\\(member\\.fsf\\|vinylisland\\|dha
- ;; ley\\)\\.org\\|public\\.gmane\\.org\\)")
  '(gnus-ignored-mime-types (quote ("application/x-pkcs7-signature" "application/ms-tnef" "text/x-vcard")))
  '(gnus-interactive-exit (quote quiet))
  '(gnus-large-newsgroup 4000)
@@ -52,11 +47,10 @@
  '(gnus-no-groups-message "No Gnus for Daemon.")
  '(gnus-novice-user nil)
  '(gnus-permanently-visible-groups "INBOX")
- '(gnus-picon-style 'right)
- '(gnus-treat-display-x-face 'head)
+ '(gnus-picon-style (quote right))
  '(gnus-read-active-file nil)
  '(gnus-read-newsrc-file nil)
- '(gnus-refer-article-method (quote (current (nnir "nnimap:Local")(nntp "Gmane" (nntp-address "news.gmane.org")))))
+ '(gnus-refer-article-method (quote (current (nnir "nnimap:Local") (nntp "Gmane" (nntp-address "news.gmane.org")))))
  '(gnus-refer-thread-use-nnir t)
  '(gnus-registry-ignored-groups (quote (("nntp" t) ("^INBOX" t))))
  '(gnus-save-killed-list nil)
@@ -64,9 +58,7 @@
  '(gnus-score-default-duration (quote p))
  '(gnus-score-expiry-days 30)
  '(gnus-select-group-hook (quote (gnus-group-set-timestamp)))
- '(gnus-select-method
-   (quote (nnimap "Local" (nnimap-stream shell) (nnimap-shell-program "/opt/local/libexec/dovecot/imap"))
-          ))
+ '(gnus-select-method (quote (nnimap "Local" (nnimap-stream shell) (nnimap-shell-program "/opt/local/libexec/dovecot/imap"))))
  '(gnus-sieve-file "~/dovecot.sieve")
  '(gnus-sieve-select-method "nnimap:Local")
  '(gnus-signature-separator (quote ("^-- $" "^-- *$" "^_____+$")))
@@ -91,8 +83,16 @@
  '(gnus-topic-display-empty-topics nil)
  '(gnus-topic-line-format "%i[ %A: %(%{%n%}%) ]%v
 ")
+ '(gnus-treat-body-boundary nil)
  '(gnus-treat-date-lapsed (quote head))
+ '(gnus-treat-display-smileys t)
+ '(gnus-treat-display-x-face (quote head))
+ '(gnus-treat-from-gravatar (quote head))
+ '(gnus-treat-from-picon (quote head))
  '(gnus-treat-hide-citation-maybe t)
+ '(gnus-treat-mail-gravatar (quote head))
+ '(gnus-treat-mail-picon nil)
+ '(gnus-treat-newsgroups-picon nil)
  '(gnus-treat-strip-cr t)
  '(gnus-treat-strip-leading-blank-lines t)
  '(gnus-treat-strip-multiple-blank-lines t)
@@ -112,16 +112,14 @@
  '(mail-sources (quote ((file :path "/var/mail/daha1836"))))
  '(mail-specify-envelope-from t)
  '(mail-user-agent (quote gnus-user-agent))
- '(message-alternative-emails
-   "\\(dhaley\\|vinylisl\\)@\\(hushmail\\|ssl\\-mail\\).com\\|\\(dkh@member\\.fsf\\|news@vinylisland\\)\\.org\\|damon\\.haley@colorado\\.edu")
+ '(message-alternative-emails "\\(dhaley\\|vinylisl\\)@\\(hushmail\\|ssl\\-mail\\).com\\|\\(dkh@member\\.fsf\\|news@vinylisland\\)\\.org\\|damon\\.haley@colorado\\.edu")
+ '(message-default-headers (concat "X-Face: \"'PJ-yb+fYF0]%?,#==_(s>`~Hw_iwG![Cc+Sq$k>S|QbU)>?}Y51$4)\\9OEt:NL.@kZIqy <UnVZ*!XnGGV:iDO$YDhK7i~$.fs%r^0LJdztkb\\6=DI6by:GdO>.L<,Nd[nsMwrN3b]os1UqBw
+" "X-Accept-Language: en-us
+" "X-Operating-System: Debian GNU/Linux
+"))
  '(message-directory "~/git/gnus/Mail/")
  '(message-fill-column 78)
  '(message-interactive t)
- '(message-default-headers (concat
-                          "X-Face: \"'PJ-yb+fYF0]%?,#==_(s>`~Hw_iwG![Cc+Sq$k>S|QbU)>?}Y51$4)\\9OEt:NL.@kZIqy <UnVZ*!XnGGV:iDO$YDhK7i~$.fs%r^0LJdztkb\\6=DI6by:GdO>.L<,Nd[nsMwrN3b]os1UqBw\n"
-                          "X-Accept-Language: en-us\n"
-                          "X-Operating-System: Debian GNU/Linux\n"
-                          ))
  '(message-mail-alias-type nil)
  '(message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
@@ -129,7 +127,7 @@
  '(message-sendmail-envelope-from (quote header))
  '(message-sent-hook (quote (my-gnus-score-followup)))
  '(message-setup-hook (quote (gnus-alias-determine-identity gnus-harvest-set-from message-check-recipients (lambda nil (bbdb-mail-aliases t)))))
-'(message-signature-separator "^-- *$")
+ '(message-signature-separator "^-- *$")
  '(message-subscribed-address-functions (quote (gnus-find-subscribed-addresses)))
  '(message-x-completion-alist (quote (("\\([rR]esent-\\|[rR]eply-\\)?[tT]o:\\|[bB]?[cC][cC]:" . gnus-harvest-find-address) ((if (boundp (quote message-newgroups-header-regexp)) message-newgroups-header-regexp message-newsgroups-header-regexp) . message-expand-group))))
  '(mm-attachment-override-types (quote ("text/x-vcard" "application/pkcs7-mime" "application/x-pkcs7-mime" "application/pkcs7-signature" "application/x-pkcs7-signature" "image/.*")))
@@ -158,14 +156,4 @@
  '(spam-report-gmane-use-article-number nil)
  '(spam-sa-learn-program "/opt/local/bin/sa-learn-5.12")
  '(spam-use-regex-headers t)
- '(spam-use-spamassassin t)
- '(gnus-treat-from-picon 'head)
- '(gnus-treat-newsgroups-picon nil)
- '(gnus-treat-mail-picon nil)
- '(gnus-treat-display-smileys t)
- '(gnus-treat-from-gravatar 'head)
- '(gnus-treat-mail-gravatar 'head)
- '(gnus-treat-body-boundary nil)    ; No body/header separator
- '(gnus-blocked-images nil)          ; HTML rendering
- '(gnus-gravatar-properties '(:ascent center))
- '(gnus-gravatar-too-ugly gnus-ignored-from-addresses))
+ '(spam-use-spamassassin t))
