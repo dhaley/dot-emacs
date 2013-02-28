@@ -1544,7 +1544,7 @@ reload abbrevs."
 ;; Tooltip Transient-Mark Winner
 
 
-(use-package ansi-colorrm
+(use-package ansi-color
   :config
   (progn
     (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
@@ -5175,6 +5175,13 @@ and view local index.html url"
 
     ;; uncomment to show sauron in the current frame
     (setq sauron-separate-frame nil)
+    (setq sauron-modules '(sauron-erc sauron-notifications))
+    (setq sauron-max-line-length nil)
+
+
+
+    ;; (global-set-key (kbd "<f5>") 'sauron-toggle-hide-show)
+    ;; (sauron-start-hidden)
 
     ;; watch for some animals
     (setq sauron-watch-patterns 'erc-keywords)
@@ -5193,7 +5200,14 @@ and view local index.html url"
     ;; John Wiegley’s alert.el has a bit of overlap with sauron; however, I’ve
     ;; added some wrapper function to make it trivial to feed sauron events
     ;; into alert. Simply adding:
-    (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)))
+    ;; (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)))
+    (add-hook 'sauron-event-added-functions
+          (lambda (origin prio msg &optional props)
+            "Raise frame and display notifications."
+            (sr-show)
+            (raise-frame)
+            (sauron-alert-el-adapter)
+            ))
 
 ;; Saveplace
 ;; - places cursor in the last place you edited file
