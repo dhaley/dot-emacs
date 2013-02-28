@@ -692,7 +692,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
   (gnus-summary-show-article)
   (gnus-summary-select-article-buffer)
   (goto-char (point-max))
-  (forward-line -2)
+  (forward-line -1)
   (rgr/browse-url)
   ;; (let ((cur (wg-name (wg-current-workgroup)))
   ;;       (prev (wg-name (wg-previous-workgroup))))
