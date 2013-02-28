@@ -5207,7 +5207,7 @@ and view local index.html url"
             (sr-show)
             (raise-frame)
             (sauron-alert-el-adapter)
-            ))
+            ))))
 
 ;; Saveplace
 ;; - places cursor in the last place you edited file

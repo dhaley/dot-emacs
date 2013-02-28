@@ -1068,15 +1068,17 @@ don't want to spend time waiting for it to be generated.
 #+begin_src emacs-lisp
 
 (add-to-list 'org-agenda-custom-commands
-             `("b" "Agenda"
+             `
+             ("b" "Agenda"
                ((agenda ""
                         ((org-agenda-time-grid nil)
-                             (org-agenda-prefix-format "[ ] %c: ")))
-)
+                             (org-agenda-prefix-format "[ ] %c: "))))
                ((org-agenda-with-colors nil)
                 (org-agenda-remove-tags t)
                 (org-agenda-sorting-strategy '(category-up todo-state-up time-up)))
-               ("~/git/dkh-org/agendas/agenda.pdf")))
+               ("~/git/dkh-org/agendas/agenda.pdf"))
+             ("t" "Agenda" sacha/org-agenda-with-tip))
+
 #+end_src
 
 My block agenda view looks like this when not narrowed to a project.
@@ -6309,9 +6311,9 @@ msgid)))
 
 (defun jump-to-org-agenda ()
   (interactive)
-  (let ((recordings-dir "~/Dropbox/iTalk Recordings"))
-    (if (directory-files recordings-dir nil "\\`[^.]")
-        (find-file recordings-dir)))
+  ;; (let ((recordings-dir "~/Dropbox/iTalk Recordings"))
+  ;;   (if (directory-files recordings-dir nil "\\`[^.]")
+  ;;       (find-file recordings-dir)))
   (let ((buf (get-buffer "*Org Agenda*"))
         wind)
     (if buf
@@ -7168,4 +7170,49 @@ Summary: %s" product component version priority severity heading) ?\n ?\n)
   (org-fit-agenda-window))
 
 
+#+end_src
+
+* visual line mode
+
+#+begin_src emacs-lisp :tangle yes
+
+(add-hook 'org-mode-hook
+          'turn-on-visual-line-mode
+          )
+
+(when (fboundp 'adaptive-wrap-prefix-mode)
+  (defun my-activate-adaptive-wrap-prefix-mode ()
+    "Toggle `visual-line-mode' and `adaptive-wrap-prefix-mode' simultaneously."
+    (if visual-line-mode
+        (adaptive-wrap-prefix-mode 1)
+      (adaptive-wrap-prefix-mode -1)))
+  (add-hook 'visual-line-mode-hook 'my-activate-adaptive-wrap-prefix-mode))
+
+#+end_src
+
+* keywiz
+
+#+begin_src emacs-lisp :tangle yes
+
+(use-package keywiz)
+(require 'keywiz)
+;; Might be good to use this in org-agenda...
+(defun sacha/random-keybinding ()
+  "Describe a random keybinding."
+  (let* ((command (keywiz-random keywiz-cached-commands))
+       (doc (documentation (car command))))
+  (concat (symbol-name (car command)) " "
+          "(" (mapconcat 'key-description (cadr command) ", ") ")"
+          (if doc
+              (concat ": " (substring doc 0 (string-match "\n" doc)))n
+            ""))))
+
+
+(defun sacha/org-agenda-with-tip (arg)
+  (org-agenda-list arg)
+  (let ((inhibit-read-only t))
+    (insert (sacha/random-keybinding) "\n")))
+
+(sacha/random-keybinding)
+(sacha/org-agenda-with-tip)
 #+end_src

@@ -296,7 +296,7 @@
  '(php-format-break-all-method-chain-links t)
  '(php-hide-show-hide-doc-blocks t)
  '(php-hide-show-ignore-extensions (quote (".phtml")))
- '(php-manual-path "/usr/local/php-manual/php-chunked-xhtml")
+ '(php-manual-path "/usr/local/php-manual/php-chunked-xhtml" t)
  '(php-parse-send-to-front (quote (("__construct" nil method public) ("init" nil method public) ("setUp" nil method public) ("tearDown" nil property public))))
  '(php-project-list (quote (("rcweb" "/Users/bzwahr/projects/rcweb" "/Users/bzwahr/.ctags/rcweb" ("/usr/local/pear/share/pear/Zend/" "/usr/local/pear/share/pear/PHPUnit/") "/Users/bzwahr/projects/rcweb/tests/phpunit.xml" ("/Users/bzwahr/projects/rcweb/tests/application/" "/Users/bzwahr/projects/rcweb/library/Biosafety/" "/Users/bzwahr/projects/rcweb/application/") (("Brian Zwahr" . "bzwahr@tamu.edu") "" "" "" "" "" "" "Biosafety" "") "" "Default") ("scheduler" "/Users/bzwahr/projects/webscheduler" "/Users/bzwahr/.ctags/webscheduler" ("/usr/local/pear/share/pear/Zend/" "/usr/local/pear/share/pear/PHPUnit/") "/Users/bzwahr/projects/webscheduler/tests/phpunit.xml" ("/Users/bzwahr/projects/webscheduler/library/Scheduler/" "/Users/bzwahr/projects/webscheduler/application/" "/Users/bzwahr/projects/webscheduler/tests/application/") (("" . "") "" "" "" "" "" "" "Scheduler" "") "Default" ""))))
  '(php-tag-arguments (quote ("--PHP-kinds=+cf" "--regex-PHP='/abstract class ([^ ]*)//c/'" "--regex-PHP='/interface ([^ ]*)//c/'" "--regex-PHP='/(public |static |abstract |protected |private )+function ([^ (]*)//f/'")))
