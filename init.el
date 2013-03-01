@@ -56,7 +56,7 @@
 ;; (when (eq system-type 'darwin)
 ;;   (require 'ls-lisp)
 ;;   (setq ls-lisp-use-insert-directory-program nil))
-
+(require 'stripe-buffer)
 
 
 (setenv "E" "~/.emacs.d")
@@ -2003,7 +2003,12 @@ reload abbrevs."
 
 (use-package csv-mode
   :comamnds csv-mode
-  :mode ("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+  :mode ("\\.[Cc][Ss][Vv]\\'" . csv-mode)
+  :init
+  (progn
+    (add-hook 'csv-mode-hook 'turn-on-stripes-mode)
+    )
+  )
 
 ;;;_ , css-mode
 (use-package css-mode
@@ -2233,194 +2238,193 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
   :config
   (use-package diff-mode-))
 
+
+
 ;;;_ , dired
 
 (use-package dired
   :defer t
   :init
   (progn
-    ;; (require 'dired-sequence)
+     (defvar mark-files-cache (make-hash-table :test #'equal))
 
-    (defvar mark-files-cache (make-hash-table :test #'equal))
+     (defun mark-similar-versions (name)
+       (let ((pat name))
+         (if (string-match "^\\(.+?\\)-[0-9._-]+$" pat)
+             (setq pat (match-string 1 pat)))
+         (or (gethash pat mark-files-cache)
+             (ignore (puthash pat t mark-files-cache))))
 
-    (defun mark-similar-versions (name)
-      (let ((pat name))
-        (if (string-match "^\\(.+?\\)-[0-9._-]+$" pat)
-            (setq pat (match-string 1 pat)))
-        (or (gethash pat mark-files-cache)
-            (ignore (puthash pat t mark-files-cache))))
+       (defun dired-mark-similar-version ()
+         (interactive)
+         (setq mark-files-cache (make-hash-table :test #'equal))
+         (dired-mark-sexp '(mark-similar-versions name)))))
 
-      (defun dired-mark-similar-version ()
-        (interactive)
-        (setq mark-files-cache (make-hash-table :test #'equal))
-        (dired-mark-sexp '(mark-similar-versions name))))
+     :config
+     (progn
+       ;; Also auto refresh dired, but be quiet about it
+       (setq global-auto-revert-non-file-buffers t)
+       (setq auto-revert-verbose nil)
 
-    :config
-    (progn
-      ;; Also auto refresh dired, but be quiet about it
-      (setq global-auto-revert-non-file-buffers t)
-      (setq auto-revert-verbose nil)
-      (defun dired-package-initialize ()
-        (unless (featurep 'runner)
-          (use-package dired-x)
-          ;; (use-package dired-async)
-          ;; (use-package dired-sort-map)
-          (use-package runner)
-          (use-package dired-details-hide
-            :commands dired-details-toggle)
+       (defun dired-package-initialize ()
+         (unless (featurep 'runner)
+           (use-package dired-x)
+           ;; (use-package dired-async)
+           ;; (use-package dired-sort-map)
+           (use-package runner)
+           (use-package dired-details-hide
+             :commands dired-details-toggle)
 
-          (bind-key "l" 'dired-up-directory dired-mode-map)
-          (bind-key "H" 'dired-details-toggle dired-mode-map)
+           (bind-key "l" 'dired-up-directory dired-mode-map)
+           (bind-key "H" 'dired-details-toggle dired-mode-map)
 
-          (defun my-dired-switch-window ()
-            (interactive)
-            (if (eq major-mode 'sr-mode)
-                (call-interactively #'sr-change-window)
-              (call-interactively #'other-window)))
+           (defun my-dired-switch-window ()
+             (interactive)
+             (if (eq major-mode 'sr-mode)
+                 (call-interactively #'sr-change-window)
+               (call-interactively #'other-window)))
 
-          ;;http://puntoblogspot.blogspot.com/2010/06/kill-buffers-illustrated-emacs.html
-          (defun kill-all-dired-buffers()
-            "Kill all dired buffers."
-            (interactive)
-            (save-excursion
-              (let((count 0))
-                (dolist(buffer (buffer-list))
-                  (set-buffer buffer)
-                  (when (equal major-mode 'dired-mode)
-                    (setq count (1+ count))
-                    (kill-buffer buffer)))
-                (message "Killed %i dired buffer(s)." count ))))
+           ;;http://puntoblogspot.blogspot.com/2010/06/kill-buffers-illustrated-emacs.html
+           (defun kill-all-dired-buffers()
+             "Kill all dired buffers."
+             (interactive)
+             (save-excursion
+               (let((count 0))
+                 (dolist(buffer (buffer-list))
+                   (set-buffer buffer)
+                   (when (equal major-mode 'dired-mode)
+                     (setq count (1+ count))
+                     (kill-buffer buffer)))
+                 (message "Killed %i dired buffer(s)." count ))))
 
-          (bind-key "<tab>" 'my-dired-switch-window dired-mode-map)
+           (bind-key "<tab>" 'my-dired-switch-window dired-mode-map)
 
-          (bind-key "M-!" 'async-shell-command dired-mode-map)
-          (unbind-key "M-G" dired-mode-map)
-          (unbind-key "M-s f" dired-mode-map)
+           (bind-key "M-!" 'async-shell-command dired-mode-map)
+           (unbind-key "M-G" dired-mode-map)
+           (unbind-key "M-s f" dired-mode-map)
 
-          (defadvice dired-omit-startup (after diminish-dired-omit activate)
-            "Make sure to remove \"Omit\" from the modeline."
-            (diminish 'dired-omit-mode) dired-mode-map)
+           (defadvice dired-omit-startup (after diminish-dired-omit activate)
+             "Make sure to remove \"Omit\" from the modeline."
+             (diminish 'dired-omit-mode) dired-mode-map)
 
-          (defadvice dired-next-line (around dired-next-line+ activate)
-            "Replace current buffer if file is a directory."
-            ad-do-it
-            (while (and  (not  (eobp)) (not ad-return-value))
-              (forward-line)
-              (setq ad-return-value(dired-move-to-filename)))
-            (when (eobp)
-              (forward-line -1)
-              (setq ad-return-value(dired-move-to-filename))))
+           (defadvice dired-next-line (around dired-next-line+ activate)
+             "Replace current buffer if file is a directory."
+             ad-do-it
+             (while (and  (not  (eobp)) (not ad-return-value))
+               (forward-line)
+               (setq ad-return-value(dired-move-to-filename)))
+             (when (eobp)
+               (forward-line -1)
+               (setq ad-return-value(dired-move-to-filename))))
 
-          (defadvice dired-previous-line (around dired-previous-line+ activate)
-            "Replace current buffer if file is a directory."
-            ad-do-it
-            (while (and  (not  (bobp)) (not ad-return-value))
-              (forward-line -1)
-              (setq ad-return-value(dired-move-to-filename)))
-            (when (bobp)
-              (call-interactively 'dired-next-line)))
+           (defadvice dired-previous-line (around dired-previous-line+ activate)
+             "Replace current buffer if file is a directory."
+             ad-do-it
+             (while (and  (not  (bobp)) (not ad-return-value))
+               (forward-line -1)
+               (setq ad-return-value(dired-move-to-filename)))
+             (when (bobp)
+               (call-interactively 'dired-next-line)))
 
-          (defvar dired-omit-regexp-orig (symbol-function 'dired-omit-regexp))
+           (defvar dired-omit-regexp-orig (symbol-function 'dired-omit-regexp))
 
-          ;; Omit files that Git would ignore
-          (defun dired-omit-regexp ()
-            (let ((file (expand-file-name ".git"))
-                  parent-dir)
-              (while (and (not (file-exists-p file))
-                          (progn
-                            (setq parent-dir
-                                  (file-name-directory
-                                   (directory-file-name
-                                    (file-name-directory file))))
-                            ;; Give up if we are already at the root dir.
-                            (not (string= (file-name-directory file)
-                                          parent-dir))))
-                ;; Move up to the parent dir and try again.
-                (setq file (expand-file-name ".git" parent-dir)))
-              ;; If we found a change log in a parent, use that.
-              (if (file-exists-p file)
-                  (let ((regexp (funcall dired-omit-regexp-orig))
-                        (omitted-files
-                         (shell-command-to-string "git clean -d -x -n")))
-                    (if (= 0 (length omitted-files))
+           ;; Omit files that Git would ignore
+           (defun dired-omit-regexp ()
+             (let ((file (expand-file-name ".git"))
+                   parent-dir)
+               (while (and (not (file-exists-p file))
+                           (progn
+                             (setq parent-dir
+                                   (file-name-directory
+                                    (directory-file-name
+                                     (file-name-directory file))))
+                             ;; Give up if we are already at the root dir.
+                             (not (string= (file-name-directory file)
+                                           parent-dir))))
+                 ;; Move up to the parent dir and try again.
+                 (setq file (expand-file-name ".git" parent-dir)))
+               ;; If we found a change log in a parent, use that.
+               (if (file-exists-p file)
+                   (let ((regexp (funcall dired-omit-regexp-orig))
+                         (omitted-files
+                          (shell-command-to-string "git clean -d -x -n")))
+                     (if (= 0 (length omitted-files))
+                         regexp
+                       (concat
                         regexp
-                      (concat
-                       regexp
-                       (if (> (length regexp) 0)
-                           "\\|" "")
-                       "\\("
-                       (mapconcat
-                        #'(lambda (str)
-                            (concat
-                             "^"
-                             (regexp-quote
-                              (substring str 13
-                                         (if (= ?/ (aref str (1- (length str))))
-                                             (1- (length str))
-                                           nil)))
-                             "$"))
-                        (split-string omitted-files "\n" t)
-                        "\\|")
-                       "\\)")))
-                (funcall dired-omit-regexp-orig)
+                        (if (> (length regexp) 0)
+                            "\\|" "")
+                        "\\("
+                        (mapconcat
+                         #'(lambda (str)
+                             (concat
+                              "^"
+                              (regexp-quote
+                               (substring str 13
+                                          (if (= ?/ (aref str (1- (length str))))
+                                              (1- (length str))
+                                            nil)))
+                              "$"))
+                         (split-string omitted-files "\n" t)
+                         "\\|")
+                        "\\)")))
+                 (funcall dired-omit-regexp-orig)
 
-                (define-key dired-mode-map [?@] 'dired-up-directory)
+                 (define-key dired-mode-map [?@] 'dired-up-directory)
 
-                )))))
+                 )))))
 
-      (eval-after-load "dired-aux"
-        '(defun dired-do-async-shell-command (command &optional arg file-list)
-           "Run a shell command COMMAND on the marked files asynchronously.
+       (eval-after-load "dired-aux"
+         '(defun dired-do-async-shell-command (command &optional arg file-list)
+            "Run a shell command COMMAND on the marked files asynchronously.
 
-Like `dired-do-shell-command' but if COMMAND doesn't end in ampersand,
-adds `* &' surrounded by whitespace and executes the command asynchronously.
-The output appears in the buffer `*Async Shell Command*'."
-           (interactive
-            (let ((files (dired-get-marked-files t current-prefix-arg)))
-              (list
-               ;; Want to give feedback whether this file or marked files are
-               ;; used:
-               (dired-read-shell-command "& on %s: " current-prefix-arg files)
-               current-prefix-arg
-               files)))
-           (unless (string-match "[ \t][*?][ \t]" command)
-             (setq command (concat command " *")))
-           (unless (string-match "&[ \t]*\\'" command)
-             (setq command (concat command " &")))
-           (dired-do-shell-command command arg file-list)))
+ Like `dired-do-shell-command' but if COMMAND doesn't end in ampersand,
+ adds `* &' surrounded by whitespace and executes the command asynchronously.
+ The output appears in the buffer `*Async Shell Command*'."
+            (interactive
+             (let ((files (dired-get-marked-files t current-prefix-arg)))
+               (list
+                ;; Want to give feedback whether this file or marked files are
+                ;; used:
+                (dired-read-shell-command "& on %s: " current-prefix-arg files)
+                current-prefix-arg
+                files)))
+            (unless (string-match "[ \t][*?][ \t]" command)
+              (setq command (concat command " *")))
+            (unless (string-match "&[ \t]*\\'" command)
+              (setq command (concat command " &")))
+            (dired-do-shell-command command arg file-list)))
 
-      (add-hook 'dired-mode-hook 'dired-package-initialize)
+       (add-hook 'dired-mode-hook 'dired-package-initialize)
 
-      (defun dired-double-jump (first-dir second-dir)
-        (interactive
-         (list (ido-read-directory-name "First directory: "
-                                        (expand-file-name "~")
-                                        nil nil "dl/")
-               (ido-read-directory-name "Second directory: "
-                                        (expand-file-name "~")
-                                        nil nil "Archives/")))
-        (dired first-dir)
-        (dired-other-window second-dir))
+       (defun dired-double-jump (first-dir second-dir)
+         (interactive
+          (list (ido-read-directory-name "First directory: "
+                                         (expand-file-name "~")
+                                         nil nil "dl/")
+                (ido-read-directory-name "Second directory: "
+                                         (expand-file-name "~")
+                                         nil nil "Archives/")))
+         (dired first-dir)
+         (dired-other-window second-dir))
 
-      (bind-key "C-c J" 'dired-double-jump)
+       (bind-key "C-c J" 'dired-double-jump)
 
-      (defun dired-back-to-top ()
-        (interactive)
-        (beginning-of-buffer)
-        (next-line 2))
+       (defun dired-back-to-top ()
+         (interactive)
+         (beginning-of-buffer)
+         (next-line 2))
 
-      (define-key dired-mode-map
-        (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
+       (define-key dired-mode-map
+         (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
 
-      (defun dired-jump-to-bottom ()
-        (interactive)
-        (end-of-buffer)
-        (next-line -1))
+       (defun dired-jump-to-bottom ()
+         (interactive)
+         (end-of-buffer)
+         (next-line -1))
 
-      (define-key dired-mode-map
-        (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
-
-      )))
+       (define-key dired-mode-map
+         (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)))
 
 ;;;_ , doxymacs
 
@@ -2550,6 +2554,17 @@ The output appears in the buffer `*Async Shell Command*'."
 
     (add-hook 'php-mode-hook
               '(lambda ()
+                 (when (require 'auto-complete nil t)
+                   (make-variable-buffer-local 'ac-sources)
+                   (add-to-list 'ac-sources 'ac-source-php-completion)
+                   ;; if you like patial match,
+                   ;; use `ac-source-php-completion-patial' instead of `ac-source-php-completion'.
+                                        ;(add-to-list 'ac-sources 'ac-source-php-completion-patial)
+                   (auto-complete-mode t))
+                 (abbrev-mode 1)
+                 (hs-minor-mode)
+                 (whitespace-mode 1)
+                 (yas/minor-mode 1)
                  (outline-minor-mode)
                  (setq outline-regexp " *\\(private funct\\|public funct\\|funct\\|class\\|#head\\)")
                  (hide-sublevels 1)
@@ -2558,8 +2573,10 @@ The output appears in the buffer `*Async Shell Command*'."
                  (doxymacs-mode 1)
                  (doxymacs-font-lock)
                  (turn-on-eldoc-mode)
+                 (which-func-mode 1)
+                 (diminish 'hs-minor-mode)
+                 (setq indicate-empty-lines t)
                  ))
-
 
     (bind-key "C-8 o n" 'outline-next-visible-heading)
     (bind-key "C-8 o p" 'outline-previous-visible-heading)
@@ -3505,34 +3522,12 @@ at the beginning of line, if already there."
   :init
   (progn
     (setq gnus-init-file (expand-file-name "dot-gnus" user-emacs-directory)
-          ;; (setq gnus-init-file "~/.emacs.d/dot-gnus.el"
-          gnus-home-directory "~/git/gnus"
-          message-directory "~/git/gnus/Mail")
+          gnus-home-directory "~/git/gnus/")
 
     (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
     (use-package eudc)
-    (use-package rgr-web)
-
-    ;; (setq message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)))))
-
-    (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
-    (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
-    (add-hook 'message-mode-hook 'orgtbl-mode 'append)
-    (add-hook 'message-mode-hook 'turn-on-flyspell 'append)
-    (add-hook 'message-mode-hook
-              '(lambda () (setq fill-column 72))
-              'append)
-    (add-hook 'message-mode-hook
-              '(lambda () (local-set-key (kbd "C-c M-o") 'org-mime-htmlize))
-              'append)
-    (add-hook 'message-mode-hook 'abbrev-mode 'footnote-mode 'turn-on-orgstruct)
-
-    (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
-    (add-hook 'message-setup-hook 'bbdb-mail-aliases) ; BBDB 3.x
-
-
-    ))
+    (use-package rgr-web)))
 
 
 ;;;_ , grep
@@ -3731,7 +3726,13 @@ at the beginning of line, if already there."
 
     (ido-ubiquitous-use-new-completing-read webjump 'webjump)
     (ido-ubiquitous-use-new-completing-read yas/expand 'yasnippet)
-    (ido-ubiquitous-use-new-completing-read yas/visit-snippet-file 'yasnippet)))
+    (ido-ubiquitous-use-new-completing-read yas/visit-snippet-file 'yasnippet)
+
+    ;; http://emacsrocks.com/e10.html
+    (defadvice ido-imenu (before push-mark activate)
+    (push-mark))
+                                                                              )
+)
 
 
 
@@ -4308,7 +4309,7 @@ at the beginning of line, if already there."
 
     (defun start-git-monitor ()
       (interactive)
-      (start-process "git-monitor" (current-buffer) "~/bin/git-monitor"))
+      (start-process "git-monitor" (current-buffer) "/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/gitmon"))
 
     ;;(add-hook 'magit-status-mode-hook 'start-git-monitor)
     ))
@@ -4396,7 +4397,9 @@ at the beginning of line, if already there."
     (add-hook 'markdown-mode-hook
               '(lambda ()
                  (setq imenu-create-index-function 'markdown-imenu-create-index)
-                 (setq imenu-generic-expression markdown-imenu-generic-expression)))))
+                 (setq imenu-generic-expression markdown-imenu-generic-expression)
+                 (turn-on-pandoc)
+                 ))))
 
 ;;;;_ , mark-multiple
 
@@ -5387,10 +5390,22 @@ and view local index.html url"
   :init
   (setq smerge-command-prefix (kbd "C-. C-.")))
 
+
+;;;_ , stripe-buffer
+
+(use-package stripe-buffer
+  :defer t
+  :init
+  (progn
+    (add-hook 'dired-mode-hook 'stripe-listify-buffer)
+    (add-hook 'org-mode-hook 'org-table-stripes-enable)
+    (add-hook 'gnus-summary-mode-hook 'stripe-listify-buffer)))
+
 ;;;_ , stopwatch
 
 (use-package stopwatch
   :bind ("<f8>" . stopwatch))
+
 
 ;;;_ , sunrise-commander
 
@@ -6590,6 +6605,10 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
     (save-excursion
       (let ((case-fold-search nil))
         (replace-pairs-region p1 p2 useMap ) ) ) ) )
+
+
+
+
 
 ;; Local Variables:
 ;;   mode: emacs-lisp

@@ -7192,7 +7192,7 @@ Summary: %s" product component version priority severity heading) ?\n ?\n)
 
 * keywiz
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle no
 
 (use-package keywiz)
 (require 'keywiz)
@@ -7215,4 +7215,26 @@ Summary: %s" product component version priority severity heading) ?\n ?\n)
 
 (sacha/random-keybinding)
 (sacha/org-agenda-with-tip)
+
+#+end_src
+
+I mainly use org-mode for a collection of TODO-lists.So I get a little annoyed when the [17/23] cookies at the parent level aren't
+updated when I remove an item.
+
+#+begin_src emacs-lisp :tangle yes
+
+(defun myorg-update-parent-cookie ()
+  (when (equal major-mode 'org-mode)
+    (save-excursion
+      (ignore-errors
+        (org-back-to-heading)
+        (org-update-parent-todo-statistics)))))
+
+(defadvice org-kill-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
+
+(defadvice kill-whole-line (after fix-cookies activate)
+  (myorg-update-parent-cookie))
+
+
 #+end_src

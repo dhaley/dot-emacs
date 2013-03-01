@@ -809,8 +809,6 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
     (setq title (if (string-equal first-date last-date) first-date (concat first-date " ... " last-date)))
     (list content title)))
 
-
-
 (provide 'dot-gnus)
 
 ;; Local Variables:

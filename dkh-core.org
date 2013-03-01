@@ -623,13 +623,6 @@ directory, select directory. Lastly the file is opened."
 
 #+end_src
 
-** Imenu
-
-#+begin_src emacs-lisp :tangle no
-
-(setq imenu-auto-rescan 't)
-
-#+end_src
 
 ** Smex
 smex-save-file is a variable defined in `smex.el'.
@@ -680,25 +673,9 @@ A list of the form (FRAME-CONFIGURATION POSITION)
 
 * Documentation
 ** Self-documentation
-*** Which func mode
 
-Which-func is a minor-mode that will add the function point is inside
-to the mode-line. This is mainly useful if you are looking at large
-functions, but it could also be nice if you use vertical
-splits. Which-func mode is built into emacs, so you have to go through
-very little work to enable it.
 
-This package prints name of function where your current point is
-located in mode line. It assumes that you work with imenu package and
-imenu--index-alist is up to date.
 
-#+begin_src emacs-lisp :tangle no
-
-(which-function-mode t)
-(setq which-func-modes t)
-(which-func-mode 1)
-
-#+end_src
 
 *** Man
 
@@ -1102,58 +1079,7 @@ the line, to capture multiline input. (This only has effect if
 
 #+end_src
 
-** General
 
-#+begin_src emacs-lisp :tangle no
-
-;; enable the use of the command `dired-find-alternate-file'
-;; without confirmation
-(put 'dired-find-alternate-file 'disabled nil)
-
-(add-hook 'dired-mode-hook
-          (lambda ()
-            (define-key dired-mode-map "b" 'my-browser-find-file)))
-
-(defun my-dired-browser-find-file ()
-  "Dired function to view a file in a web browser"
-  (interactive)
-  (browse-url (browse-url-file-url (dired-get-filename))))
-
-(add-hook 'dired-load-hook (function (lambda () (load "dired-x"))))
-
-;; (setq dired-omit-file "^\\.?#\\|^\\.$\\|^\\.\\.$")
-
-(setq dired-omit-files
-      (rx (or (seq bol (? ".") "#")         ;; emacs autosave files
-              (seq "~" eol)                 ;; backup-files
-              (seq bol "svn" eol)           ;; svn dirs
-;;              (seq ".git" eol)
-;;              (seq bol "." (not (any "."))) ;; dot-files
-;;              (seq ".pyc" eol)
-              )))
-(setq dired-omit-extensions
-      (append dired-latex-unclean-extensions
-              dired-bibtex-unclean-extensions
-              dired-texinfo-unclean-extensions))
-(add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
-
-(defun 2zip ()
-  "Zip the current file/dir in `dired'.
-If multiple files are marked, only zip the first one.
-Require unix zip commandline tool."
-  (interactive)
-  (require 'dired)
-  (let ( (fileName (elt (dired-get-marked-files) 0))  )
-    (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
-    ))
-
-(autoload 'dired-jump "dired-x" "Jump to dired corresponding current buffer.")
-(autoload 'dired-jump-other-window "dired-x" "jump to dired in other window.")
-
-
-(setq toggle-diredp-find-file-reuse-directory t)
-
-#+end_src
 
 * Custom functions
 ** Push to mark no activate

@@ -394,3 +394,12 @@
 [submodule "site-lisp/git-modes"]
 	path = site-lisp/git-modes
 	url = https://github.com/lunaryorn/git-modes.git
+[submodule "site-lisp/stripes"]
+	path = site-lisp/stripes
+	url = https://github.com/emacsmirror/stripes.git
+[submodule "site-lisp/stripe-buffer"]
+	path = site-lisp/stripe-buffer
+	url = https://github.com/sabof/stripe-buffer.git
+[submodule "site-lisp/org-protocol-github-lines"]
+	path = site-lisp/org-protocol-github-lines
+	url = https://github.com/ruediger/org-protocol-github-lines.git
