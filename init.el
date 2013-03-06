@@ -2538,10 +2538,10 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 
 (use-package php-mode
-  :diminish php-mode
   :commands php-mode
-  ;; :mode ("\\.php\\'" . php-mode)
   :init
+  (add-to-list 'auto-mode-alist '("\\.\\(php\\|inc\\)$" . php-mode))
+  :config
   (progn
     (use-package php-completion-mode
       :commands php-completion-mode)
@@ -2549,8 +2549,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
     (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
     (require 'doxymacs)
-
-    ;; (php-enable-drupal-coding-style)
+    (require 'php-extras)
 
     (add-hook 'php-mode-hook
               '(lambda ()
@@ -2632,7 +2631,8 @@ unless return was pressed outside the comment"
                                (local-set-key "\r" 'my-php-return)))
 
     (use-package php-completion-mode
-      :commands php-completion-mode)))
+      :commands php-completion-mode)
+))
 
 
 ;;;_ , projectile
@@ -2700,11 +2700,15 @@ unless return was pressed outside the comment"
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
-  :mode ("\\.\\(php\\|inc\\|module\\|test\\|install\\|theme\\|\\profile\\|\\local\\.php\\)$" . drupal-mode)
-  :interpreter ("drupal" . drupal-mode)
+  :commands drupal-mode
   :init
   (progn
-    (require 'php-extras)
+    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|module\\|test\\|install\\|theme\\|\\profile\\|\\local\\.php\\)$" . drupal-mode))
+    (autoload 'php-mode "php-mode" nil t)
+    (autoload 'css-mode "css-mode" nil t)
+    )
+:config
+  (progn
     (require 'etags)
     (require 'tags-view)
     (require 'smart-dash)
@@ -2717,12 +2721,7 @@ unless return was pressed outside the comment"
                  (projectile-on)
                  (message "I came here to do Drupal")))
 
-    (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode"
-                                        "~/.emacs.d/site-lisp/php-extras")
-
-    ;; (bind-key "C-c C-v" 'drupal-module-name)
-
-    ))
+    (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")))
 
 ;;;_ , erc
 
@@ -5179,7 +5178,11 @@ and view local index.html url"
     ;; uncomment to show sauron in the current frame
     (setq sauron-separate-frame nil)
     (setq sauron-modules '(sauron-erc sauron-notifications))
-    (setq sauron-max-line-length nil)
+    ;; (setq sauron-max-line-length nil)
+    ;; (sauron-max-line-length 200)
+    ;; 60 was a little long, and there's a lot of times I switch away quickly after
+    ;; replying.
+    (setq sauron-nick-insensitivity 5)
 
 
 
@@ -5191,7 +5194,7 @@ and view local index.html url"
     (setq sauron-watch-nicks 'erc-pals)
 
 
-    ;; events to ignore
+        ;; events to ignore
     (add-hook 'sauron-event-block-functions
               (lambda (origin prio msg &optional props)
                 (or
@@ -5210,7 +5213,49 @@ and view local index.html url"
             (sr-show)
             (raise-frame)
             (sauron-alert-el-adapter)
-            ))))
+            ))
+
+    (defun qdot/monkey-patch-sr ()
+      (interactive)
+      ;; Monkeypatching sauron's ERC hook until I write a msg string formatter for it
+      (defun sr-erc-PRIVMSG-hook-func (proc parsed)
+        "Hook function, to be called for erc-matched-hook."
+        (let* ( (me      (erc-current-nick))
+                (sender  (car (erc-parse-user (erc-response.sender parsed))))
+                (channel (car (erc-response.command-args parsed)))
+                (msg     (sr-erc-msg-clean (erc-response.contents parsed)))
+                (nw      (symbol-name (erc-network)))
+                (for-me  (string= me channel))
+                (prio
+                 (cond
+                  ((string= sender "root") 2)  ;; e.g. bitlbee stuff; low-prio
+                  (for-me                  3)  ;; private msg for me => prio 4
+                  ((string-match me msg)   3)  ;; I'm mentioned => prio 3
+                  (t       2)))  ;; default
+                (target (if (buffer-live-p (get-buffer channel))
+                            (with-current-buffer (get-buffer channel)
+                              (point-marker)))))
+          (sauron-add-event
+           'erc
+           prio
+           (concat
+            (propertize sender 'face 'sauron-highlight1-face) "@"
+            (propertize channel 'face 'sauron-highlight2-face) " on "
+            (propertize nw 'face 'sauron-highlight2-face)
+            (if (string-match "#" channel)
+                (propertize " msg" 'face 'sauron-highlight1-face)
+              (propertize " privmsg" 'face 'sauron-highlight1-face)))
+           (lexical-let* ((target-mark target)
+                          (target-buf (if for-me sender channel)))
+             (lambda ()
+               (sauron-switch-to-marker-or-buffer (or target-mark target-buf))))
+           `( :event   privmsg
+                       :sender ,sender
+                       :me     ,me
+                       :channel ,channel
+                       :msg    ,msg)))
+        nil))
+    (qdot/monkey-patch-sr)))
 
 ;; Saveplace
 ;; - places cursor in the last place you edited file

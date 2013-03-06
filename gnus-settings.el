@@ -120,6 +120,7 @@
 " "X-Operating-System: Debian GNU/Linux
 "))
  '(message-directory "~/git/gnus/Mail/")
+ '(message-default-mail-headers "Cc: \nBcc: \n")
  '(message-fill-column 78)
  '(message-interactive t)
  '(message-mail-alias-type nil)
