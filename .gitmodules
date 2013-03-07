@@ -68,8 +68,8 @@
         path = site-lisp/offlineimap
         url = https://github.com/emacsmirror/offlineimap.git
 [submodule "site-lisp/org-mac-protocol"]
-	path = site-lisp/org-mac-protocol
-	url = https://github.com/claviclaws/org-mac-protocol.git
+        path = site-lisp/org-mac-protocol
+        url = https://github.com/claviclaws/org-mac-protocol.git
 [submodule "site-lisp/org-magit"]
         path = site-lisp/org-magit
         url = https://github.com/sigma/org-magit.git
@@ -346,9 +346,6 @@
 [submodule "site-lisp/ac/auto-complete"]
         path = site-lisp/ac/auto-complete
         url = git://github.com/auto-complete/auto-complete
-[submodule "site-lisp/solarized-emacs"]
-        path = site-lisp/solarized-emacs
-        url = https://github.com/bbatsov/solarized-emacs.git
 [submodule "site-lisp/emacs-async"]
         path = site-lisp/emacs-async
         url = https://github.com/jwiegley/emacs-async.git
@@ -380,26 +377,26 @@
         path = site-lisp/tags-view
         url = https://github.com/markhepburn/tags-view.git
 [submodule "site-lisp/fold-this"]
-	path = site-lisp/fold-this
-	url = https://github.com/magnars/fold-this.el.git
+        path = site-lisp/fold-this
+        url = https://github.com/magnars/fold-this.el.git
 [submodule "site-lisp/smart-forward"]
-	path = site-lisp/smart-forward
-	url = https://github.com/magnars/smart-forward.el.git
+        path = site-lisp/smart-forward
+        url = https://github.com/magnars/smart-forward.el.git
 [submodule "site-lisp/crontab-mode"]
-	path = site-lisp/crontab-mode
-	url = https://github.com/emacsmirror/crontab-mode.git
+        path = site-lisp/crontab-mode
+        url = https://github.com/emacsmirror/crontab-mode.git
 [submodule "site-lisp/upside-down"]
-	path = site-lisp/upside-down
-	url = https://github.com/rudi/upside-down.el.git
+        path = site-lisp/upside-down
+        url = https://github.com/rudi/upside-down.el.git
 [submodule "site-lisp/git-modes"]
-	path = site-lisp/git-modes
-	url = https://github.com/lunaryorn/git-modes.git
+        path = site-lisp/git-modes
+        url = https://github.com/lunaryorn/git-modes.git
 [submodule "site-lisp/stripes"]
-	path = site-lisp/stripes
-	url = https://github.com/emacsmirror/stripes.git
+        path = site-lisp/stripes
+        url = https://github.com/emacsmirror/stripes.git
 [submodule "site-lisp/stripe-buffer"]
-	path = site-lisp/stripe-buffer
-	url = https://github.com/sabof/stripe-buffer.git
+        path = site-lisp/stripe-buffer
+        url = https://github.com/sabof/stripe-buffer.git
 [submodule "site-lisp/org-protocol-github-lines"]
-	path = site-lisp/org-protocol-github-lines
-	url = https://github.com/ruediger/org-protocol-github-lines.git
+        path = site-lisp/org-protocol-github-lines
+        url = https://github.com/ruediger/org-protocol-github-lines.git
