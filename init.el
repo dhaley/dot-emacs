@@ -5176,7 +5176,8 @@ and view local index.html url"
   (progn
 
     ;; uncomment to show sauron in the current frame
-    (setq sauron-separate-frame nil)
+    ;; (setq sauron-separate-frame nil)
+    (setq sauron-separate-frame 't)
     (setq sauron-modules '(sauron-erc sauron-notifications))
     ;; (setq sauron-max-line-length nil)
     ;; (sauron-max-line-length 200)
@@ -6590,10 +6591,8 @@ Works in Microsoft Windows, Mac OS X, Linux."
 
   (setq projectile-project-compilation-commands
         (format "phpcs --report=emacs --standard=Drupal %s" (buffer-file-name)))
-
-  (add-to-list 'projectile-globally-ignored-directories '("/includes" "/misc" "/modules" "/scripts" "/themes"))
-  (add-to-list 'projectile-globally-ignored-files '(".htaccess" "authorize.php" "cron.php" "index.php" "install.php" "robots.txt" "update.php" "web.config" "xmlrpc.php"))
-
+  ;; use native indexing such as .gitignore
+  (setq projectile-use-native-indexing 't)
   (setq projectile-tags-command "~/bin/etags_drupal.sh")
 
   (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
