@@ -196,9 +196,6 @@
 [submodule "site-lisp/ruby-mode"]
         path = site-lisp/ruby-mode
         url = https://github.com/jwiegley/ruby-mode.git
-[submodule "site-lisp/org-jira"]
-        path = site-lisp/org-jira
-        url = https://github.com/baohaojun/org-jira
 [submodule "site-lisp/erc-hl-nicks"]
         path = site-lisp/erc-hl-nicks
         url = https://github.com/leathekd/erc-hl-nicks
@@ -401,5 +398,5 @@
         path = site-lisp/org-protocol-github-lines
         url = https://github.com/ruediger/org-protocol-github-lines.git
 [submodule "site-lisp/emacs-color-theme-solarized"]
-	path = site-lisp/emacs-color-theme-solarized
-	url = https://github.com/sellout/emacs-color-theme-solarized.git
+        path = site-lisp/emacs-color-theme-solarized
+        url = https://github.com/sellout/emacs-color-theme-solarized.git
