@@ -2405,11 +2405,6 @@ ICQ, therefore i quickly hacked up this one:
 
 
 
-(define-key flyspell-mode-map (kbd "C-+") 'flyspell-check-previous-highlighted-word)
-(define-key flyspell-mode-map (kbd "C-#") 'flyspell-auto-correct-previous-word)
-(define-key flyspell-mode-map (kbd "S-<f2>") 'ispell-word)
-(define-key flyspell-mode-map (kbd "C-<f2>") 'flyspell-auto-correct-previous-word)
-
 (setq synonyms-file "~/.emacs.d/thesaurus/mthesaur.txt")
 (setq synonyms-cache-file "~/.emacs.d/thesaurus/syn.cache")
 (setq synonyms-match-more-flag nil)

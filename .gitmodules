@@ -400,3 +400,6 @@
 [submodule "site-lisp/org-protocol-github-lines"]
         path = site-lisp/org-protocol-github-lines
         url = https://github.com/ruediger/org-protocol-github-lines.git
+[submodule "site-lisp/emacs-color-theme-solarized"]
+	path = site-lisp/emacs-color-theme-solarized
+	url = https://github.com/sellout/emacs-color-theme-solarized.git
