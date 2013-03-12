@@ -216,6 +216,7 @@
 (put 'narrow-to-region 'disabled nil)   ; Let narrowing work
 (put 'set-goal-column  'disabled nil)
 (put 'upcase-region    'disabled nil)   ; Let upcasing work
+(put 'scroll-left 'disabled nil)
 
 ;; To use YASnippet as a non-global minor mode, replace `(yas-global-mode 1)` with
 (require 'yasnippet)
@@ -1192,18 +1193,6 @@ Delimiters are paired characters:
 (global-set-key (kbd "H-*") 'select-text-in-quote)
 
 
-;; ***********
-;; compilation
-;; ***********
-(defun colorize-compilation-buffer ()
-  (toggle-read-only)
-  (unless (fboundp 'ansi-color-apply-on-region)
-    (require 'ansi-color))
-  (when (fboundp 'ansi-color-apply-on-region)
-    (ansi-color-apply-on-region (point-min) (point-max)))
-  (toggle-read-only))
-
-
 ;; **********
 ;; re-buidler
 ;; **********
@@ -1429,127 +1418,6 @@ reload abbrevs."
 (use-package apache-mode
   :mode ("\\(\\.htaccess$\\|\\.conf$\\)" . apache-mode)
   )
-
-
-;;;_ , ansi-term
-
-;; (use-package ansi-term
-;;   :defer t
-;;   :init
-;;   (progn
-
-;;     ;;     ;; ;; Use variable width font faces in current buffer
-;;     ;;     (defun my-buffer-face-mode-variable ()
-;;     ;;       ;;   "Set font to a variable width (proportional) fonts in current buffer"
-;;     ;;       (interactive)
-;;     ;;       (setq buffer-face-mode-face '(:family "Menlo For Powerline" :height 100))
-;;     ;;       (text-scale-adjust 1)
-;;     ;;       (buffer-face-mode))
-
-;;     (setq system-uses-terminfo nil)
-;;     ;; When you use this code, note that dabbrev-completion is C-x /, and yanking is C-y.
-
-
-;;     (add-hook 'term-mode-hook
-;;               '(lambda ()
-;;                  (linum-mode 0)
-;;                  (term-set-escape-char ?\C-z)
-;;                  (term-set-escape-char ?\C-x)
-;;                  (define-key term-raw-map "\C-c" 'term-interrupt-subjob)
-;;                  (define-key term-raw-map (kbd "M-x") 'execute-extended-command)
-;;                  (define-key term-raw-escape-map "/"
-;;                    (lambda ()
-;;                      (interactive)
-;;                      (let ((beg (point)))
-;;                        (dabbrev-expand nil)
-;;                        (kill-region beg (point)))
-;;                      (term-send-raw-string (substring-no-properties (current-kill 0)))))
-;;                  (setq autopair-dont-activate t)
-;;                  (setq ac-auto-start nil)
-;;                  (visual-line-mode -1)
-;;                  ;; (my-buffer-face-mode-variable)
-;;                  ))
-
-;; (add-hook 'term-load-hook
-;;   (lambda()
-;;     (define-key term-raw-map (kbd "M-J") 'windmove-left)
-;;     (define-key term-raw-map (kbd "M-L") 'windmove-right)
-;;     (define-key term-raw-map (kbd "M-I") 'windmove-up)
-;;     (define-key term-raw-map (kbd "M-K") 'windmove-down)
-;;     (define-key term-raw-map (kbd "M-F") 'toggle-maximize-buffer)
-;;     ))
-
-
-;;     (defun my-term-paste (&optional string)
-;;       (interactive)
-;;       (process-send-string
-;;        (get-buffer-process (current-buffer))
-;;        (if string string (current-kill 0))))
-
-;;     (defun my-term-pasteboard-paste ()
-;;       (interactive)
-;;       (process-send-string
-;;        (get-buffer-process (current-buffer))
-;;        (ns-get-pasteboard)))
-
-;;     (add-hook 'term-exec-hook '(lambda ()
-;;                                  (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)
-;;                                  (goto-address-mode)
-;;                                  (define-key term-raw-map (kbd "C-y") 'my-term-paste)
-;;                                  (define-key term-raw-map (kbd "s-v") 'my-term-pasteboard-paste)
-;;                                  ))
-
-;;     (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
-;;       (if (memq (process-status proc) '(signal exit))
-;;           (let ((buffer (process-buffer proc)))
-;;             ad-do-it
-;;             (kill-buffer buffer))
-;;         ad-do-it))
-;;     (ad-activate 'term-sentinel)
-
-;;     (defvar my-term-shell "/usr/local/bin/zsh")
-;;     (defadvice ansi-term (before force-bash)
-;;       (interactive (list my-term-shell)))
-;;     (ad-activate 'ansi-term)
-
-;;     (setenv "PATH" (shell-command-to-string "echo $PATH"))
-
-;;     (defun visit-ansi-term ()
-;;       (interactive)
-;;       "Creates an ansi-term and switches to it.  If a buffer with name already exists, we simply switch to it."
-;;       (let ((buffer-of-name (get-buffer (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))
-;;             ;;        (default-directory "/home/www")
-;;             (term-cmd "/bin/zsh")
-;;             )
-;;         (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
-;;                (switch-to-buffer buffer-of-name))
-;;               ( t
-;;                 (progn
-;;                   (ansi-term term-cmd)
-;;                                         ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
-;;                   (rename-buffer  (concat "*ansi-term-" (wg-name (wg-current-workgroup)))))))))))
-
-;; Enabled minor modes: Abbrev Auto-Composition Auto-Compression Auto-Encryption
-;; Blink-Cursor Change-Cursor Column-Number Delete-Selection *Diff-Auto-Refine
-;; File-Name-Shadow Font-Lock Global-Auto-Complete *Global-Auto-Revert
-;; Global-Font-Lock *Helm-Match-Plug-in *Icomplete *Ido-Everywhere *Ido-Hacks
-;; *Ido-Ubiquitous Line-Number Mac-Mouse-Wheel Menu-Bar Mouse-Wheel
-;; Override-Global Pretty-Control-L Recentf Shell-Dirtrack Temp-Buffer-Resize
-;; Tooltip Transient-Mark Winner
-
-;; Enabled minor modes: Abbrev Auto-Composition Auto-Compression Auto-Encryption
-;; Blink-Cursor Change-Cursor Column-Number Delete-Selection File-Name-Shadow
-;; Font-Lock Global-Auto-Complete Global-Font-Lock Line-Number Mac-Mouse-Wheel
-;; Menu-Bar Mouse-Wheel Override-Global Recentf Shell-Dirtrack Temp-Buffer-Resize
-;; Tooltip Transient-Mark Winner
-
-
-(use-package ansi-color
-  :config
-  (progn
-    (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-    (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-    ))
 
 
 ;;;_ , ascii
@@ -2007,6 +1875,7 @@ reload abbrevs."
   :init
   (progn
     (add-hook 'csv-mode-hook 'turn-on-stripes-mode)
+    (add-hook 'csv-mode-hook 'whitespace-mode)
     )
   )
 
@@ -2372,7 +2241,9 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
                  (define-key dired-mode-map [?@] 'dired-up-directory)
 
-                 )))))
+                 )))
+           (stripe-listify-buffer)
+           (setq cursor-type t)))
 
        (eval-after-load "dired-aux"
          '(defun dired-do-async-shell-command (command &optional arg file-list)
@@ -2564,9 +2435,10 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                  (hs-minor-mode)
                  (whitespace-mode 1)
                  (yas/minor-mode 1)
-                 (outline-minor-mode)
-                 (setq outline-regexp " *\\(private funct\\|public funct\\|funct\\|class\\|#head\\)")
-                 (hide-sublevels 1)
+                 (hs-minor-mode 1)
+                 ;; (outline-minor-mode)
+                 ;; (setq outline-regexp " *\\(private funct\\|public funct\\|funct\\|class\\|#head\\)")
+                 ;; (hide-sublevels 1)
                  (imenu-add-menubar-index)
                  (subword-mode t)
                  (doxymacs-mode 1)
@@ -2576,27 +2448,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                  (diminish 'hs-minor-mode)
                  (setq indicate-empty-lines t)
                  ))
-
-    (bind-key "C-8 o n" 'outline-next-visible-heading)
-    (bind-key "C-8 o p" 'outline-previous-visible-heading)
-    (bind-key "C-8 o i" 'show-children)
-    (bind-key "C-8 o s" 'show-subtree)
-    (bind-key "C-8 o d" 'hide-subtree)
-    (bind-key "C-8 o u" 'outline-up-heading)
-    (bind-key "C-8 o f" 'outline-forward-same-level)
-    (bind-key "C-8 o b" 'outline-backward-same-level)
-    (bind-key "C-8 o t" 'hide-body)
-    (bind-key "C-8 o a" 'show-all)
-    (bind-key "C-8 o c" 'hide-entry)
-    (bind-key "C-8 o e" 'show-entry)
-    (bind-key "C-8 o l" 'hide-leaves)
-    (bind-key "C-8 o k" 'show-branches)
-    (bind-key "C-8 o q" 'hide-sublevels)    (bind-key "C-8 o o" 'hide-other)
-    (bind-key "C-8 o ^" 'outline-move-subtree-up)
-    (bind-key "C-8 o v" 'outline-move-subtree-down)
-    (bind-key "C-8 o <" 'outline-promote)
-    (bind-key "C-8 o >" 'outline-demote)
-    (bind-key "C-8 o m" 'outline-insert-heading)
 
     (defun my-php-return ()
       "Advanced C-m for PHP doc multiline comments.
@@ -2759,12 +2610,12 @@ unless return was pressed outside the comment"
     (defun irc ()
       (interactive)
 
-      (erc-tls :server "asimov.freenode.net"
+      (erc-tls :server "irc.freenode.net"
                :port 6697
                :nick "dkh"
                :password (funcall
                           (plist-get
-                           (car (auth-source-search :host "asimov.freenode.net"
+                           (car (auth-source-search :host "irc.freenode.net"
                                                     :user "dkh"
                                                     :type 'netrc
                                                     :port 6697))
@@ -2794,6 +2645,7 @@ unless return was pressed outside the comment"
     (defun create-new-erc-frames ()
       (interactive)
       (switch-to-bitlbee)
+      ;; (sauron-start-hidden)
       (sauron-toggle-hide-show)
       (switch-to-buffer-other-frame "#drupal-colorado")
       (switch-to-buffer-other-frame "#emacs")
@@ -2811,8 +2663,8 @@ unless return was pressed outside the comment"
     (erc-track-mode 1)
 
     (use-package erc-alert)
-    ;; (use-package erc-highlight-nicknames)
-    (use-package erc-hl-nicks)
+    (use-package erc-highlight-nicknames)
+    ;; (use-package erc-hl-nicks)
     (use-package erc-patch)
 
     ;; For bitlbee - not very useful unless jabber icons would populate
@@ -3270,27 +3122,7 @@ at the beginning of line, if already there."
                    ;; (or (getenv "CDPATH") (setenv "CDPATH" ".:~:~/.emacs.d:~/data:~/data/releases"))
                    (make-local-variable 'project-name)
                    (local-set-key "\C-c\C-q" 'eshell-kill-process)
-                   (local-set-key "\C-c\C-k" 'compile))))
-
-    ))
-
-;; eshell
-(eval-after-load 'esh-opt
-  '(progn
-     ;; we need this to override visual commands
-     (require 'em-term)
-     ;; If I try to SSH from an eshell, launch it in ansi-term instead
-     (add-to-list 'eshell-visual-commands "ssh")))
-
-;; If you want to use it with [[Eshell]], try the following to remove escape sequences from the output:
-
-(add-hook 'eshell-preoutput-filter-functions
-          'ansi-color-filter-apply)
-
-;;The following will add colors, but its very slow. Don't try it on /dev or similar huge directories:
-
-(add-hook 'eshell-preoutput-filter-functions
-          'ansi-color-apply)
+                   (local-set-key "\C-c\C-k" 'compile))))))
 
 (use-package esh-toggle
   :requires eshell
@@ -3359,6 +3191,13 @@ at the beginning of line, if already there."
          ("C-c i k" . ispell-kill-ispell)
          ("C-c i m" . ispell-message)
          ("C-c i r" . ispell-region)))
+
+(use-package flyspell
+  :bind (("C-c i b" . flyspell-buffer)
+         ("C-c i f" . flyspell-mode))
+  :config
+  (define-key flyspell-mode-map [(control ?.)] nil))
+
 
 ;;;_ , flycheck
 
@@ -3476,24 +3315,6 @@ at the beginning of line, if already there."
 (use-package highlight-tail
   :commands highlight-tail-mode)
 
-
-(use-package nyan-mode
-  ;; :if (and
-  ;;      (not degrade-p-looks)
-  ;;      (not degrade-p-terminal)
-  ;;      (not degrade-p-noninteractive))
-  :disabled t
-  :commands nyan-mode
-  :init
-  (progn (nyan-mode 1)))
-
-
-
-(use-package flyspell
-  :bind (("C-c i b" . flyspell-buffer)
-         ("C-c i f" . flyspell-mode))
-  :config
-  (define-key flyspell-mode-map [(control ?.)] nil))
 
 ;;;_ , fold-dwim
 
@@ -3632,6 +3453,7 @@ at the beginning of line, if already there."
 
 (use-package hl-line
   :bind ("M-o h" . hl-line-mode)
+  :init (setq cursor-type 't)
   :config
   (use-package hl-line+))
 
@@ -4565,8 +4387,20 @@ end end))))))
     (require 'term)
 
     (defadvice term-process-pager (after term-process-rebind-keys activate)
-      (define-key term-pager-break-map  "\177" 'term-pager-back-page))))
+      (define-key term-pager-break-map  "\177" 'term-pager-back-page))
 
+(defun my-term-paste (&optional string)
+  (interactive)
+  (process-send-string
+   (get-buffer-process (current-buffer))
+   (if string string (current-kill 0))))
+
+(add-hook 'term-exec-hook '(lambda ()
+                             (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)
+                             (goto-address-mode)
+                             (define-key term-raw-map (kbd "C-y") 'my-term-paste)
+                             ))
+(setenv "PATH" (shell-command-to-string "echo $PATH"))))
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
@@ -4873,7 +4707,10 @@ and view local index.html url"
 
 (use-package outline-mode
   :diminish outline-mode
-  :commands outline-mode)
+  :commands outline-mode
+  :config
+  (eval-after-load "outline" '(require 'foldout))
+  )
 
 
 ;;;_ , pabbrev
@@ -5174,47 +5011,30 @@ and view local index.html url"
          ("C-. R" . sauron-clear))
   :init
   (progn
-
-    ;; uncomment to show sauron in the current frame
-    ;; (setq sauron-separate-frame nil)
-    (setq sauron-separate-frame 't)
-    (setq sauron-modules '(sauron-erc sauron-notifications))
-    ;; (setq sauron-max-line-length nil)
-    ;; (sauron-max-line-length 200)
-    ;; 60 was a little long, and there's a lot of times I switch away quickly after
-    ;; replying.
-    (setq sauron-nick-insensitivity 5)
-
-
-
-    ;; (global-set-key (kbd "<f5>") 'sauron-toggle-hide-show)
-    ;; (sauron-start-hidden)
-
-    ;; watch for some animals
-    (setq sauron-watch-patterns 'erc-keywords)
-    (setq sauron-watch-nicks 'erc-pals)
-
-
-        ;; events to ignore
+    (setq
+     sauron-hide-mode-line t
+     sauron-watch-nicks erc-pals
+     sauron-watch-patterns erc-keywords
+     sauron-separate-frame nil
+     sauron-modules '(sauron-erc sauron-notifications)
+     sauron-max-line-length 200
+     ;; 60 was a little long, and there's a lot of times I switch away quickly after replying.
+    sauron-nick-insensitivity 5)
+    )
+  :config
+  (progn
+    ;; events to ignore
     (add-hook 'sauron-event-block-functions
               (lambda (origin prio msg &optional props)
                 (or
                  (string-match "^*** Users" msg)))) ;; filter out IRC spam
 
-    )
-  :config
-  (progn
-    ;; John Wiegley’s alert.el has a bit of overlap with sauron; however, I’ve
-    ;; added some wrapper function to make it trivial to feed sauron events
-    ;; into alert. Simply adding:
-    ;; (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)))
     (add-hook 'sauron-event-added-functions
-          (lambda (origin prio msg &optional props)
-            "Raise frame and display notifications."
-            (sr-show)
-            (raise-frame)
-            (sauron-alert-el-adapter)
-            ))
+              (lambda (origin prio msg &optional props)
+                "Raise frame and display notifications."
+                (sr-show)
+                (raise-frame)
+                (sauron-alert-el-adapter)))
 
     (defun qdot/monkey-patch-sr ()
       (interactive)
@@ -5256,7 +5076,8 @@ and view local index.html url"
                        :channel ,channel
                        :msg    ,msg)))
         nil))
-    (qdot/monkey-patch-sr)))
+    ;; (qdot/monkey-patch-sr)
+))
 
 ;; Saveplace
 ;; - places cursor in the last place you edited file
@@ -5371,7 +5192,6 @@ and view local index.html url"
 
     ;; (ad-activate 'shell)
 
-
     (defun comint-delchar-or-eof-or-kill-buffer (arg)
       (interactive "p")
       (if (null (get-buffer-process (current-buffer)))
@@ -5381,7 +5201,10 @@ and view local index.html url"
     (add-hook 'shell-mode-hook
               (lambda ()
                 (define-key shell-mode-map
-                  (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)))))
+                  (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)
+                (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+                (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)))))
+
 ;;;_ , smart-compile
 
 (use-package smart-compile
@@ -5443,9 +5266,7 @@ and view local index.html url"
   :defer t
   :init
   (progn
-    (add-hook 'dired-mode-hook 'stripe-listify-buffer)
-    (add-hook 'org-mode-hook 'org-table-stripes-enable)
-    (add-hook 'gnus-summary-mode-hook 'stripe-listify-buffer)))
+    (add-hook 'org-mode-hook 'org-table-stripes-enable)))
 
 ;;;_ , stopwatch
 
@@ -6332,7 +6153,7 @@ $0"))))
   (setq ls-lisp-use-insert-directory-program nil))
 
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized-emacs")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
 
 (defun bw-toggle-solarized ()
   "Toggles between solarized light and dark"
@@ -6608,7 +6429,6 @@ Works in Microsoft Windows, Mac OS X, Linux."
              (?e (file . "~/git/.emacs.d/eshell/alias"))
              (?g (file . "~/.emacs.d/gnus-settings.el"))
              (?G (file . "~/.emacs.d/dot-gnus.el"))
-             (?i (file . "~/.emacs.d/init.el"))
              (?b (file . "~/git/dkh-org/doc/keybindings.org"))
              (?o (file . "~/.emacs.d/dkh-org.org"))
              (?s (file . "~/.emacs.d/settings.el"))
