@@ -291,8 +291,8 @@ want to use in the modeline *in lieu of* the original.")
 ;;   C-<capital letter>
 ;;   M-<capital letter>
 ;;
-;;   A-<anything>
-;;   M-A-<anything>
+;;   H-<anything>
+;;   M-H-<anything>
 ;;
 ;; Single-letter bindings still available:
 ;;   C- ,'";:?<>|!#$%^&*`~ <tab>
@@ -583,9 +583,9 @@ If no file is associated, just close buffer without prompt for save."
 (bind-key "C-^" 'isearch-edit-string isearch-mode-map)
 (bind-key "C-i" 'isearch-complete isearch-mode-map)
 
-;;;_  . A-?
+;;;_  . H-?
 
-(define-key key-translation-map (kbd "A-TAB") (kbd "C-TAB"))
+(define-key key-translation-map (kbd "H-TAB") (kbd "C-TAB"))
 
 ;;;_ , ctl-x-map
 
@@ -1500,7 +1500,7 @@ reload abbrevs."
     (ac-set-trigger-key "TAB")
     (setq ac-use-menu-map t)
 
-    (bind-key "A-M-?" 'ac-last-help)
+    (bind-key "H-M-?" 'ac-last-help)
     (unbind-key "C-s" ac-completing-map)))
 
 ;;;_ , autopair
@@ -1861,7 +1861,7 @@ reload abbrevs."
 ;;;_ , copy-code
 
 (use-package copy-code
-  :bind ("A-M-W" . copy-code-as-rtf))
+  :bind ("H-M-W" . copy-code-as-rtf))
 
 ;;;_ , crosshairs
 
@@ -2042,7 +2042,7 @@ reload abbrevs."
   :disabled t
   :commands (iflipb-next-buffer iflipb-previous-buffer)
   :bind (("S-<tab>" . my-iflipb-next-buffer)
-         ("A-S-<tab>" . my-iflipb-previous-buffer))
+         ("H-S-<tab>" . my-iflipb-previous-buffer))
   :init
   (progn
     (defvar my-iflipb-auto-off-timeout-sec 2)
@@ -2241,9 +2241,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
                  (define-key dired-mode-map [?@] 'dired-up-directory)
 
-                 )))
-           (stripe-listify-buffer)
-           (setq cursor-type t)))
+                 )))))
 
        (eval-after-load "dired-aux"
          '(defun dired-do-async-shell-command (command &optional arg file-list)
@@ -2266,7 +2264,12 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
               (setq command (concat command " &")))
             (dired-do-shell-command command arg file-list)))
 
-       (add-hook 'dired-mode-hook 'dired-package-initialize)
+       (add-hook 'dired-mode-hook '(lambda ()
+                                     (dired-package-initialize)
+                                     (hl-line-mode 1)
+                                     (stripe-listify-buffer)
+                                     (setq cursor-type t)
+                                     ))
 
        (defun dired-double-jump (first-dir second-dir)
          (interactive
@@ -2554,7 +2557,7 @@ unless return was pressed outside the comment"
   :commands drupal-mode
   :init
   (progn
-    (add-to-list 'auto-mode-alist '("\\.\\(inc\\|module\\|test\\|install\\|theme\\|\\profile\\|\\local\\.php\\)$" . drupal-mode))
+    (add-to-list 'auto-mode-alist '("\\.\\(php\\|inc\\|module\\|test\\|install\\|theme\\|\\profile\\|\\local\\.php\\)$" . drupal-mode))
     (autoload 'php-mode "php-mode" nil t)
     (autoload 'css-mode "css-mode" nil t)
     )
@@ -2564,6 +2567,7 @@ unless return was pressed outside the comment"
     (require 'tags-view)
     (require 'smart-dash)
     (require 'projectile)
+
 
     (add-hook 'drupal-mode-hook
               '(lambda ()
@@ -3810,7 +3814,6 @@ at the beginning of line, if already there."
 (defalias 'sh 'shell)
 (defalias 'sl 'sort-lines)
 (defalias 'ssm 'shell-script-mode)
-(defalias 'tc 'dkh/toggle-chrome)
 (defalias 'td 'toggle-debug-on-error)
 (defalias 'tm 'text-mode)
 (defalias 'vbm 'visual-basic-mode)
@@ -4227,100 +4230,6 @@ at the beginning of line, if already there."
 (use-package mark-multiple
   :load-path "mark-multiple")
 
-;;;_ , merlin
-
-(defun merlin-record-times ()
-  (interactive)
-  (require 'rx)
-  (let* ((text (buffer-substring-no-properties (line-beginning-position)
-                                               (line-end-position)))
-         (regex
-          (rx (and string-start (0+ space)
-                   (group (and (= 2 num) ?/ (= 2 num) ?/ (= 2 num)
-                               space (= 2 num) ?: (= 2 num) space
-                               (in "AP") ?M)) (1+ space)
-                               (group (and (= 2 num) ?/ (= 2 num) ?/ (= 2 num)
-                                           space (= 2 num) ?: (= 2 num) space
-                                           (in "AP") ?M)) (1+ space)
-                                           (? (and (group ?*) (1+ space)))
-                                           (group (1+ (or digit (in ".hms"))))
-                                           (1+ space) (group (1+ nonl)) string-end))))
-    (if (string-match regex text)
-        (let ((start (match-string 1 text))
-              (end (match-string 2 text))
-              (cleared (match-string 3 text))
-              (duration (match-string 4 text)) commodity
-              (account (match-string 5 text)))
-          (when (string-match "\\([0-9.]+\\)\\([mhs]\\)" duration)
-            (setq commodity (match-string 2 duration)
-                  duration (match-string 1 duration))
-            (cond ((string= commodity "h")
-                   (setq commodity "hours"))
-                  ((string= commodity "m")
-                   (setq commodity "minutes"))
-                  ((string= commodity "s")
-                   (setq commodity "seconds"))))
-          (if (string-match "\\([0-9.][0-9.a-z]+\\)" account)
-              (setq account (match-string 1 account)))
-          (do-applescript
-           (format
-            "
-tell application \"Merlin\"
-  activate
-
-  set act to 0
-
-  set listActivity to every activity of first document
-  repeat with oneActivity in listActivity
-    if subtitle of oneActivity is \"%s\" then
-      set act to oneActivity
-      exit repeat
-    end if
-  end repeat
-
-  if act is 0 then
-    set myselection to selected object of main window of first document as list
-
-    if (count of myselection) is 0 then
-      display dialog \"Please select activity to set time for\" buttons {\"OK\"}
-    else
-      set act to beginning of myselection
-    end if
-  end if
-
-  if act is 0 or (class of act is project) or (is milestone of act is true) then
-    display dialog \"Cannot locate activity for %s\" buttons {\"OK\"}
-  else
-    tell act
-      if ((class is not project) and (is milestone is not true)) then
-        set actual start date to (date \"%s\")
-        set given actual work to {amount:%s, unit:%s, floating:false, ¬
-            relative error:0}
-        if %s then
-          set actual end date to (date \"%s\")
-          delete last actuals reporting date
-
-          set given remaining work to {amount:0, unit:hours, floating:false, ¬
-              relative error:0}
-        else
-          delete actual end date
-          set last actuals reporting date to (date \"%s\")
-
-          -- set theReturnedItems to (display dialog \"Enter remaining hours for \" ¬
-          --     with title \"Given Remaining Work\" with icon stop ¬
-          --     default answer \"\" buttons {\"OK\", \"Cancel\"} default button 1)
-          -- set theAnswer to the text returned of theReturnedItems
-          -- set theButtonName to the button returned of theReturnedItems
-          --
-          -- set given remaining work to {amount:(theAnswer as number), unit:hours, ¬
-          --        floating:false, relative error:0}
-        end if
-      end if
-    end tell
-  end if
-end tell" account account start duration commodity (if cleared "true" "false")
-end end))))))
-
 ;;;_ , mudel
 
 (use-package mudel
@@ -4666,7 +4575,8 @@ and view local index.html url"
     ))
 
 (use-package org-jira
-  :load-path ("~/.emacs.d/override/emacs-soap-client" "~/.emacs.d/site-lisp/org-jira")
+  :load-path ("~/.emacs.d/override/org-jira")
+  ;; :load-path ("~/.emacs.d/override/org-mode/contrib/lisp/")
   :commands (org-jira-create-issue org-jira-get-issue)
   :bind (
          ("C-8 j G" . org-jira-get-subtasks)
@@ -4693,7 +4603,8 @@ and view local index.html url"
 
     (setq jira-users
           (list
-           (cons "Administrator" "webcom")
+           (cons "Unassigned" "")
+           (cons "Erin Corsin" "erin")
            (cons "Matt Tucker" "matt")
            (cons "Kevin Crafts" "kevin")
            (cons "Damon Haley" "daha1836")
@@ -5211,8 +5122,8 @@ and view local index.html url"
   :commands smart-compile
   :bind (
          ;;         ("C-c c" . smart-compile)
-         ("A-n"   . next-error)
-         ("A-p"   . previous-error))
+         ("H-n"   . next-error)
+         ("H-p"   . previous-error))
   :init
   (progn
     (defun show-compilation ()
@@ -5431,7 +5342,7 @@ and view local index.html url"
 ;;;_ , textexpander
 
 (when (= 0 (call-process "using-textexpander"))
-  (bind-key "A-v" 'scroll-down)
+  (bind-key "H-v" 'scroll-down)
   (bind-key "M-v" 'yank))
 
 
@@ -5463,7 +5374,7 @@ and view local index.html url"
   :commands (w3m-search w3m-find-file)
   :bind (("C-. u"   . w3m-browse-url)
          ("C-. U"   . w3m-browse-url-new-session)
-         ("C-. A-u" . w3m-browse-chrome-url-new-session)
+         ("C-. H-u" . w3m-browse-chrome-url-new-session)
          )
   :init
   (progn
@@ -5553,9 +5464,9 @@ and view local index.html url"
   end tell"))))
         (w3m-browse-url (substring url 1 (1- (length url))) t)))
 
-    (bind-key "A-M-e" 'goto-emacswiki)
-    (bind-key "A-M-g" 'w3m-search)
-    (bind-key "A-M-w" 'wikipedia-query))
+    (bind-key "H-M-e" 'goto-emacswiki)
+    (bind-key "H-M-g" 'w3m-search)
+    (bind-key "H-M-w" 'wikipedia-query))
 
   :config
   ;; (eval-after-load "w3m"

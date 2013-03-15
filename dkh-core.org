@@ -1096,33 +1096,7 @@ the line, to capture multiline input. (This only has effect if
 
 #+end_src
 
-** Toggle Chrome
 
-#+begin_src emacs-lisp :tangle no
-
-(defun dkh/toggle-chrome ()
-  "Show/hide toolbar and menubar."
-  (interactive)
-  (menu-bar-mode)
-  (when (window-system)
-    (tool-bar-mode)))
-
-#+end_src
-
-** Handle MS-Word
-
-#+begin_src emacs-lisp :tangle no
-
-;; this seems to enable MS-Word documents
- (defun mm-inline-msword (handle)
-   (let (text)
-     (with-temp-buffer
-       (mm-insert-part handle)
-       (call-process-region (point-min) (point-max) "antiword" t t nil "-")
-       (setq text (buffer-string)))
-     (mm-insert-inline handle text)))
-
-#+end_src
 
 ** Switch or start
 

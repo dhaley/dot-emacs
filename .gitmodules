@@ -400,3 +400,6 @@
 [submodule "site-lisp/emacs-color-theme-solarized"]
         path = site-lisp/emacs-color-theme-solarized
         url = https://github.com/sellout/emacs-color-theme-solarized.git
+[submodule "override/org-jira"]
+	path = override/org-jira
+	url = https://github.com/baohaojun/org-jira
