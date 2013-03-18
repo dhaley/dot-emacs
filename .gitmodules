@@ -115,9 +115,6 @@
 [submodule "site-lisp/bm"]
         path = site-lisp/bm
         url = https://github.com/joodland/bm.git
-[submodule "site-lisp/lua-mode"]
-        path = site-lisp/lua-mode
-        url = https://github.com/immerrr/lua-mode.git
 [submodule "site-lisp/emacs-quickrun"]
         path = site-lisp/emacs-quickrun
         url = https://github.com/syohex/emacs-quickrun.git
@@ -401,5 +398,5 @@
         path = site-lisp/emacs-color-theme-solarized
         url = https://github.com/sellout/emacs-color-theme-solarized.git
 [submodule "override/org-jira"]
-	path = override/org-jira
-	url = https://github.com/baohaojun/org-jira
+        path = override/org-jira
+        url = https://github.com/baohaojun/org-jira
