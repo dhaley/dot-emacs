@@ -118,8 +118,7 @@
                  (hl-spotlight-mode 1)
                  (centered-cursor-mode 1)
                  (visual-line-mode 1)
-                 (setq cursor-type t)
-))
+                 (setq cursor-type t)))
 
 
 (defun my-message-header-setup-hook ()

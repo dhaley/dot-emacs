@@ -473,6 +473,8 @@ improved by many.."
 (bind-key "M-H" 'mark-paragraph)
 (bind-key "M-D" 'mark-defun)
 
+(bind-key "M-T" 'tags-search)
+
 (bind-key "M-g c" 'goto-char)
 (bind-key "M-g l" 'goto-line)
 
@@ -728,7 +730,18 @@ If no file is associated, just close buffer without prompt for save."
     (kill-line arg)
     (goto-char here)))
 
+(bind-key "C-c c" 'compile)
 (bind-key "C-c d" 'delete-current-line)
+
+(defun reset-dns ()
+  (interactive)
+  (message "Resetting DNS...")
+  (shell-command "cleardns")
+  (shell-command "launchctl unload ~/Library/LaunchAgents/mac.pdnsd.plist")
+  (shell-command "launchctl load ~/Library/LaunchAgents/mac.pdnsd.plist")
+  (message "Resetting DNS...done"))
+
+(bind-key "C-c D" 'reset-dns)
 
 (bind-key "C-c e E" 'elint-current-buffer)
 
@@ -3983,12 +3996,6 @@ at the beginning of line, if already there."
              Lorem-ipsum-insert-list)
   )
 
-;;;_ , lua-mode
-
-(use-package lua-mode
-  :mode ("\\.lua\\'" . lua-mode)
-  :interpreter ("lua" . lua-mode))
-
 ;;;_ , lusty-explorer
 
 (use-package lusty-explorer
@@ -5116,28 +5123,31 @@ and view local index.html url"
                 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
                 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)))))
 
+
 ;;;_ , smart-compile
 
-(use-package smart-compile
-  :commands smart-compile
-  :bind (
-         ;;         ("C-c c" . smart-compile)
-         ("H-n"   . next-error)
-         ("H-p"   . previous-error))
-  :init
-  (progn
-    (defun show-compilation ()
-      (interactive)
-      (let ((compile-buf
-             (catch 'found
-               (dolist (buf (buffer-list))
-                 (if (string-match "\\*compilation\\*" (buffer-name buf))
-                     (throw 'found buf))))))
-        (if compile-buf
-            (switch-to-buffer-other-window compile-buf)
-          (call-interactively 'compile))))
+(defun show-compilation ()
+  (interactive)
+  (let ((compile-buf
+         (catch 'found
+           (dolist (buf (buffer-list))
+             (if (string-match "\\*compilation\\*" (buffer-name buf))
+                 (throw 'found buf))))))
+    (if compile-buf
+        (switch-to-buffer-other-window compile-buf)
+      (call-interactively 'compile))))
 
-    (bind-key "M-O" 'show-compilation)))
+(bind-key "M-O" 'show-compilation)
+
+
+(use-package smart-compile
+  :disabled t
+  :commands smart-compile
+  :bind (("C-c c" . smart-compile)
+         ("A-n"   . next-error)
+         ("A-p"   . previous-error)))
+
+
 
 (use-package smartparens
   :commands (smartparens-mode
@@ -5341,10 +5351,11 @@ and view local index.html url"
 
 ;;;_ , textexpander
 
-(when (= 0 (call-process "using-textexpander"))
+;; (when (= 0 (call-process "using-textexpander"))
   (bind-key "H-v" 'scroll-down)
-  (bind-key "M-v" 'yank))
-
+  (bind-key "H-v" 'yank)
+  ;; (bind-key "M-v" 'scroll-down)
+;; )
 
 ;;;_ , vkill
 
