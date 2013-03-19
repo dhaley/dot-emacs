@@ -65,40 +65,6 @@ if it is a script.
 
 #+end_src
 
-** artbollocks
-
-#+begin_src emacs-lisp :tangle no
-
-(if (require 'artbollocks-mode nil t)
-    (progn
-      (setq weasel-words-regex
-            (concat "\\b" (regexp-opt
-                           '("one of the"
-                             "should"
-                             "just"
-                             "sort of"
-                             "a lot"
-                             "probably"
-                             "maybe"
-                             "perhaps"
-                             "I think"
-                             "really"
-                             "pretty"
-                             "maybe"
-                             "nice"
-                             "action"
-                             "utilize"
-                             "leverage") t) "\\b"))
-      ;; Fix a bug in the regular expression to catch repeated words
-      (setq lexical-illusions-regex "\\b\\(\\w+\\)\\W+\\(\\1\\)\\b")
-      ;; Don't show the art critic words, or at least until I figure
-      ;; out my own jargon
-      (setq artbollocks nil)
-      (add-hook 'org-capture-mode-hook 'artbollocks-mode)
-
-      ))
-
-#+end_src
 
 
 ** Kill Ring
@@ -309,31 +275,6 @@ matching one will be automatically closed by electric-pair-mode.
 
 #+end_src
 
-** org Jira
-
-#+begin_src emacs-lisp
-
-(add-to-list 'load-path (concat user-emacs-directory "elpa/jira-0.3.3"))
-
-(require 'jira)
-(setq jira-url "https://cuboulder.atlassian.net//rpc/xmlrpc")
-
-
-;; you need make sure whether the "/jira" at the end is
-;; necessary or not, see discussion at the end of this page
-
-
-(add-to-list 'load-path "~/.emacs.d/site-lisp/org-jira")
-(require 'org-jira)
-(setq jiralib-url "https://cuboulder.atlassian.net")
-;; jiralib is not explicitly required, since org-jira will load it.
-
-(setq org-jira-working-dir "~/git/dkh-org/.org-jira")
-
-
-
-
-#+end_src
 
 * Navigation (Driving the car)
 ** Ibuffer

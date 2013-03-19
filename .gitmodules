@@ -67,9 +67,6 @@
 [submodule "site-lisp/offlineimap"]
         path = site-lisp/offlineimap
         url = https://github.com/emacsmirror/offlineimap.git
-[submodule "site-lisp/org-mac-protocol"]
-        path = site-lisp/org-mac-protocol
-        url = https://github.com/claviclaws/org-mac-protocol.git
 [submodule "site-lisp/org-magit"]
         path = site-lisp/org-magit
         url = https://github.com/sigma/org-magit.git
@@ -400,3 +397,6 @@
 [submodule "override/org-jira"]
         path = override/org-jira
         url = https://github.com/baohaojun/org-jira
+[submodule "site-lisp/artbollocks-mode"]
+        path = site-lisp/artbollocks-mode
+        url = https://github.com/sachac/artbollocks-mode.git
