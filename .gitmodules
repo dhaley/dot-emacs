@@ -400,3 +400,9 @@
 [submodule "site-lisp/artbollocks-mode"]
         path = site-lisp/artbollocks-mode
         url = https://github.com/sachac/artbollocks-mode.git
+[submodule "site-lisp/org-mac-protocol"]
+	path = site-lisp/org-mac-protocol
+	url = https://github.com/MassimoLauria/org-mac-protocol.git
+[submodule "site-lisp/org-mac-link-grabber"]
+	path = site-lisp/org-mac-link-grabber
+	url = https://github.com/alander/org-mac-link-grabber.git
