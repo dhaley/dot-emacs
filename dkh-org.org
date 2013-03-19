@@ -244,15 +244,16 @@ Here is my current =org-agenda-files= setup.
     (setq org-agenda-files org-user-agenda-files)
 
 (setq org-agenda-files (quote (
-                                    "~/git/dkh-org/todo.org"
-                                    "~/git/dkh-org/refile.org"
-                                    ;;                                    "~/git/dkh-org/.org-jira/FIT.org"
-                                    "~/git/dkh-org/.org-jira/AFROTC.org"
-                                    "~/git/dkh-org/.org-jira/CUPRE.org"
-                                    "~/git/dkh-org/.org-jira/CS.org"
-                                    "~/git/dkh-org/.org-jira/FAC.org"
-                                    "~/git/dkh-org/.org-jira/VCR.org"
-                                    "~/git/dkh-org/.org-jira/SUP.org"
+                                    "~/Documents/Tasks/todo.org"
+                                    "~/Documents/Tasks/refile.org"
+                                    ;;                                    "~/Documents/Tasks/.org-jira/FIT.org"
+                                    "~/Documents/Tasks/.org-jira/AFROTC.org"
+                                    "~/Documents/Tasks/.org-jira/CUPRE.org"
+                                    "~/Documents/Tasks/.org-jira/CS.org"
+                                    "~/Documents/Tasks/.org-jira/FAC.org"
+                                    "~/Documents/Tasks/.org-jira/VCR.org"
+                                    "~/Documents/Tasks/.org-jira/SUP.org"
+                                    "~/Documents/Tasks/.org-jira/SHAKE.org"
                                     ))))
 #+end_src
 
@@ -674,8 +675,8 @@ and pick the appropriate capture task.
 Here is my setup for org-capture
 
 #+begin_src emacs-lisp :tangle yes
-(setq org-directory "~/git/dkh-org")
-(setq org-default-notes-file "~/git/dkh-org/refile.org")
+(setq org-directory "~/Documents/Tasks")
+(setq org-default-notes-file "~/Documents/Tasks/refile.org")
 
 (require 'org-exchange-capture)
 
@@ -686,19 +687,17 @@ Here is my setup for org-capture
 
 ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, and org-protocol
 (setq org-capture-templates
-      (quote (("t" "todo" entry (file "~/git/dkh-org/refile.org")
+      (quote (("t" "todo" entry (file "~/Documents/Tasks/refile.org")
                "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("r" "respond" entry (file "~/git/dkh-org/refile.org")
+              ("r" "respond" entry (file "~/Documents/Tasks/refile.org")
                "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-              ("n" "note" entry (file "~/git/dkh-org/refile.org")
+              ("n" "note" entry (file "~/Documents/Tasks/refile.org")
                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("j" "Journal" entry (file+datetree "~/git/dkh-org/diary.org")
-               "* %?\n%U\n" :clock-in t :clock-resume t)
-              ("w" "org-protocol" entry (file "~/git/dkh-org/refile.org")
+              ("w" "org-protocol" entry (file "~/Documents/Tasks/refile.org")
                "* TODO Review %c\n%U\n" :immediate-finish t)
-              ("p" "Phone call" entry (file "~/git/dkh-org/refile.org")
+              ("p" "Phone call" entry (file "~/Documents/Tasks/refile.org")
                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-              ("h" "Habit" entry (file "~/git/dkh-org/refile.org")
+              ("h" "Habit" entry (file "~/Documents/Tasks/refile.org")
                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
 #+end_src
 
@@ -709,7 +708,7 @@ Here is my setup for org-capture
              ("u"
               "Task: Read this URL"
               entry
-              (file+headline "~/git/dkh-org/urls.org" "Articles To Read")
+              (file+headline "~/Documents/Tasks/urls.org" "Articles To Read")
               ,(concat "* TODO Read article: '%:description'\nURL: %c\n\n")
               :empty-lines 1
               :immediate-finish t))
@@ -719,7 +718,7 @@ Here is my setup for org-capture
              ("W"
               "Capture web snippet"
               entry
-              (file+headline "~/git/dkh-org/learn-emacs.org" "Emacs mastery")
+              (file+headline "~/Documents/Tasks/learn-emacs.org" "Emacs mastery")
               ,(concat "* Fact: '%:description'        :"
                        (format "%s" org-drill-question-tag)
                        ":\n:PROPERTIES:\n:DATE_ADDED: %u\n:SOURCE_URL: %c\n:END:\n\n%i\n%?\n")
@@ -729,7 +728,7 @@ Here is my setup for org-capture
 
 (add-to-list 'org-capture-templates
              `
-             ("s" "secure" entry (file+datetree+prompt "~/git/dkh-org/secure.org.gpg")
+             ("s" "secure" entry (file+datetree+prompt "~/Documents/Tasks/secure.org.gpg")
               "* %(format-time-string \"%H:%M\") %^{Entry} %^G\n%i%?"))
 
 
@@ -2244,7 +2243,7 @@ followed by the phone-call related lookup functions.
 ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, and org-protocol
 (setq org-capture-templates
       (quote (...
-              ("p" "Phone call" entry (file "~/git/dkh-org/refile.org")
+              ("p" "Phone call" entry (file "~/Documents/Tasks/refile.org")
                "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
               ...)))
 #+end_src
@@ -3847,7 +3846,7 @@ you're not supposed to be working.
 
 #+begin_src emacs-lisp :tangle yes
 (setq org-agenda-include-diary nil)
-(setq org-agenda-diary-file "~/git/dkh-org/diary.org")
+(setq org-agenda-diary-file "~/Documents/Tasks/diary.org")
 #+end_src
 
 The diary file keeps =date-tree= entries created by the capture mode
@@ -3857,7 +3856,7 @@ want to clock during interruptions.
 I don't use a =~/diary= file anymore.  That is just there as a
 zero-length file to keep Emacs happy.  I use org-mode's diary
 functions instead.  Inserting entries with =i= in the emacs agenda
-creates date entries in the =~/git/dkh-org/diary.org= file.
+creates date entries in the =~/Documents/Tasks/diary.org= file.
 
 I include holidays from the calendar in my =todo.org= file as follows:
 #+begin_src org :exports src
@@ -4656,7 +4655,8 @@ These are my settings for habit tracking.
                           org-mew
                           org-mhe
                           org-protocol
-                          org-mac-protocol
+                          ;; org-mac-protocol
+                          org-mac-link-grabber
                           org-rmail
                           org-vm
                           org-wl
@@ -4888,6 +4888,7 @@ org-protocol and creates a single org-protocol capture template as
 described in Capture Templates.
 #+begin_src emacs-lisp :tangle yes
 (require 'org-protocol)
+(require 'org-mac-link-grabber)
 #+end_src
 The bulk of the setup is in the Firefox application so that C-M-r on a
 page in Firefox will trigger the org-protocol capture template with
@@ -6181,8 +6182,8 @@ exit $retval
 
 (setq
 
-;; org-publish-timestamp-directory "~/git/dkh-org/.org-timestamps/"
-;; org-publish-write-cache-file "~/git/dkh-org/.org-timestamps/inherit-org-info-js.cache"
+;; org-publish-timestamp-directory "~/Documents/Tasks/.org-timestamps/"
+;; org-publish-write-cache-file "~/Documents/Tasks/.org-timestamps/inherit-org-info-js.cache"
 ;; org-publish-use-timestamps-flag nil
 ;; org-export-html-with-timestamp t
 )
@@ -6721,27 +6722,12 @@ This can be 0 for immediate, or a floating point value.")
                 ?\n)
       (insert ":OUTPUT:\n"))))
 
+
       #+end_src
 
 
 #+begin_src emacs-lisp :tangle yes
 
-
-(defun org-maybe-remember (&optional done)
-  (interactive "P")
-  (if (string= (buffer-name) "*Remember*")
-      (call-interactively 'org-ctrl-c-ctrl-c)
-    (if (null done)
-        (call-interactively 'org-remember)
-      (let ((org-capture-templates
-             '((110 "* STARTED %?
-- State \"STARTED\"    %U
-SCHEDULED: %t
-:PROPERTIES:
-:ID:       %(shell-command-to-string \"uuidgen\"):CREATED:  %U
-:END:" "~/Documents/Tasks/todo.txt" "Inbox"))))
-        (org-remember))))
-  (set-fill-column 72))
 
 (defun org-inline-note ()
   (interactive)
@@ -7065,8 +7051,9 @@ Summary: %s" product component version priority severity heading) ?\n ?\n)
 
 #+end_src
 
-    #+begin_src emacs-lisp :tangle no
+*** jwiegley's keybindings
 
+#+begin_src emacs-lisp :tangle yes
 (bind-key "C-c x b"
           (lambda (bug)
             (interactive "sBug: ")
@@ -7103,7 +7090,6 @@ Summary: %s" product component version priority severity heading) ?\n ?\n)
 #+end_src
 
 #+begin_src emacs-lisp :tangle yes
-
 (eval-when-compile
   (defvar yas/trigger-key)
   (defvar yas/keymap)
@@ -7125,7 +7111,6 @@ Summary: %s" product component version priority severity heading) ?\n ?\n)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-
 ;;;_  . org-agenda-mode
 
 (let ((map org-agenda-mode-map))
@@ -7233,5 +7218,161 @@ updated when I remove an item.
 (defadvice kill-whole-line (after fix-cookies activate)
   (myorg-update-parent-cookie))
 
+
+#+end_src
+
+
+
+* org-capture
+** artbollocks
+
+#+begin_src emacs-lisp :tangle yes
+
+(if (require 'artbollocks-mode nil t)
+    (progn
+      (setq weasel-words-regex
+            (concat "\\b" (regexp-opt
+                           '("one of the"
+                             "should"
+                             "just"
+                             "sort of"
+                             "a lot"
+                             "probably"
+                             "maybe"
+                             "perhaps"
+                             "I think"
+                             "really"
+                             "pretty"
+                             "maybe"
+                             "nice"
+                             "action"
+                             "utilize"
+                             "leverage") t) "\\b"))
+      ;; Fix a bug in the regular expression to catch repeated words
+      (setq lexical-illusions-regex "\\b\\(\\w+\\)\\W+\\(\\1\\)\\b")
+      ;; Don't show the art critic words, or at least until I figure
+      ;; out my own jargon
+      (setq artbollocks nil)
+      (add-hook 'org-capture-mode-hook 'artbollocks-mode)
+
+      ))
+
+#+end_src
+
+
+#+begin_src emacs-lisp :tangle no
+
+;; org-capture
+  (add-hook 'org-capture-mode-hook
+            (lambda ()(select-frame-set-input-focus (selected-frame))))
+
+#+end_src
+
+** More templates
+
+[2013-03-19 Tue 10:48]
+#+begin_src emacs-lisp :tangle yes
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Org Capture template configuration
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; support functions
+
+(defun org-build-note-webpage ()
+  "Define the structure of a capture note for an external link"
+  (let ((title (plist-get org-store-link-plist :description))
+        (link  (plist-get org-store-link-plist :link))
+        (time  (format-time-string "[%Y-%m-%d %a]" (current-time)))
+        (text  (plist-get org-store-link-plist :initial))
+        output)
+    (with-temp-buffer
+      (insert (concat
+               "* “" title "” :webpage:\n"
+               "  "  time "\n\n"
+               "  %?\n\n"
+               "  --- Source: [[" link "][" title "]]" "\n\n  "))
+      ;;(set-fill-prefix)
+      (insert text)
+      (set-fill-column 70)
+      (fill-paragraph 'full)
+      (setq output (buffer-string)))
+    output))
+
+(defun org-build-note-gmail ()
+  "Define the structure of a capture note for an gmail link"
+  (let ((title (plist-get org-store-link-plist :description))
+        (link  (plist-get org-store-link-plist :link))
+        (time  (format-time-string "[%Y-%m-%d %a]" (current-time)))
+        (text  (plist-get org-store-link-plist :initial))
+        msgid
+        output)
+    ;; Get the message ID
+    (setq msgid (save-match-data
+                  (string-match "\/\\([0-9a-f]*\\)\$" link)
+                  (match-string 1 link)))
+    ;; Build the template
+    (with-temp-buffer
+      (insert (concat
+               "* “" title "” :mail:\n"
+               "  "  time "\n\n"
+               "  %?\n\n"
+               "  --- Source: [[gmail:" msgid "][link to message]]" "\n\n  "))
+      ;;(set-fill-prefix)
+      (insert text)
+      (set-fill-column 70)
+      (fill-paragraph 'full)
+      (setq output (buffer-string)))
+    output))
+
+(defun org-build-note-auto ()
+  "Define the structure of a capture note for an gmail link"
+  (let ((link  (plist-get org-store-link-plist :link)))
+    ;; Get the message ID
+    (cond ((string-match "^https?://mail\\.google\\.com/mail" (plist-get org-store-link-plist :link))
+           (org-build-note-gmail))
+          (t
+           (org-build-note-webpage)))
+     ))
+
+
+;; Normally my private (and translated) configuration is used.
+;; (when (not (boundp 'org-capture-templates))
+;;   (setq org-capture-templates
+;;         '(
+;;           ;; task
+;;           ("t" "task" entry (file "agenda.org")
+;;            "* TODO ⌚ %?\n  %U\n\n  %i\n\n")
+;;           ;; meeting and events
+;;           ("e" "event" entry (file "agenda.org")
+;;            "* %?\n  WHEN %^t\n  %i\n\n")
+;;           ;; notebook
+;;           ("n" "note" entry (file "notebook.org")
+;;            "* %?\n  %U\n  %i\n  %a\n\n")
+;;           ;; org-capture from the web
+;;           ("w" "webpage" entry (file "agenda.org") "%(org-build-note-auto)")
+;;           ("y" "macprotocol" entry (file "agenda.org") "%(org-build-note-auto)")
+;;           )))
+
+(setq org-default-capture-template "t")
+
+;; Url abbreviation (and search engine)
+(setq org-link-abbrev-alist
+      '(("gmail"   . "https://mail.google.com/mail/u/0/#all/%s")
+        ("google"  . "http://www.google.com/search?q=%s")
+        ("map"     . "http://maps.google.com/maps?q=%s")
+        ))
+
+#+end_src
+
+#+begin_src emacs-lisp :tangle yes
+(add-to-list 'org-capture-templates
+             `
+             ("j" "Journal" entry (file+datetree "~/Documents/Tasks/diary.org")
+              "* %?%^G\n Entered on %T\n   %i\n"
+              :clock-in t
+              :clock-resume t))
+
+;;              ("j" "Journal" entry (file+datetree "~/Documents/Tasks/diary.org")
+;;               "* %?\n%U\n" :clock-in t :clock-resume t)
 
 #+end_src

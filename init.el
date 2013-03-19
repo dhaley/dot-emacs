@@ -60,7 +60,6 @@
 
 
 (setenv "E" "~/.emacs.d")
-(setenv "O" "~/git/dkh-org")
 (setenv "S" "~/git/src")
 (setenv "D" "~/data")
 
@@ -2826,7 +2825,8 @@ FORM => (eval FORM)."
   "Returns current project as a string, or the empty string if
 PWD is not in a project"
   (interactive)
-  (let ((project-root-dir (locate-dominating-file default-directory ".site_name")))
+  ;; (let ((project-root-dir (locate-dominating-file default-directory ".site_name")))
+  (let ((project-root-dir (locate-dominating-file default-directory "current")))
     (let ((path (split-string project-root-dir "/")))     ; path as list
       (car (last (nbutlast path 1)))
       )
@@ -4605,7 +4605,7 @@ and view local index.html url"
     ;; (require 'org-jira)
     (setq jiralib-url "https://cuboulder.atlassian.net")
     ;; jiralib is not explicitly required, since org-jira will load it.
-    (setq org-jira-working-dir "~/git/dkh-org/.org-jira")
+    (setq org-jira-working-dir "~/Documents/Tasks/.org-jira")
     (setq org-jira-current-project "VCR")
 
     (setq jira-users
@@ -6352,9 +6352,8 @@ Works in Microsoft Windows, Mac OS X, Linux."
              (?g (file . "~/.emacs.d/gnus-settings.el"))
              (?G (file . "~/.emacs.d/dot-gnus.el"))
              (?b (file . "~/git/dkh-org/doc/keybindings.org"))
-             (?o (file . "~/.emacs.d/dkh-org.org"))
              (?s (file . "~/.emacs.d/settings.el"))
-             (?t (file . "~/git/dkh-org/todo.org"))
+             (?t (file . "~/Documents/Tasks/todo.org"))
              (?u (file . "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el"))
              (?v (file . "~/.emacs.d/dkh-core.org"))
              (?z (file . "~/.zshrc"))
