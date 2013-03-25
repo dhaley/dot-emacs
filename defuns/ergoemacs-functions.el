@@ -281,17 +281,17 @@ See also: `ergoemacs-compact-uncompact-block'"
 This command is similar to a toggle of `fill-paragraph'.
 When there is a text selection, act on the region."
   (interactive)
-  
+
   ;; This command symbol has a property “'stateIsCompact-p”.
   (let (currentStateIsCompact (bigFillColumnVal 4333999) (deactivate-mark nil))
-    
+
     (save-excursion
       ;; Determine whether the text is currently compact.
       (setq currentStateIsCompact
             (if (eq last-command this-command)
                 (get this-command 'stateIsCompact-p)
               (if (> (- (line-end-position) (line-beginning-position)) fill-column) t nil) ) )
-      
+
       (if (region-active-p)
           (if currentStateIsCompact
               (fill-region (region-beginning) (region-end))
@@ -301,7 +301,7 @@ When there is a text selection, act on the region."
             (fill-paragraph nil)
           (let ((fill-column bigFillColumnVal))
             (fill-paragraph nil)) ) )
-      
+
       (put this-command 'stateIsCompact-p (if currentStateIsCompact nil t)))))
 
 (defun ergoemacs-shrink-whitespaces ()
@@ -321,7 +321,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
     (save-excursion
       ;; todo: might consider whitespace as defined by syntax table, and also consider whitespace chars in unicode if syntax table doesn't already considered it.
       (setq cursor-point (point))
-      
+
       (setq spaceTabNeighbor-p (if (or (looking-at " \\|\t") (looking-back " \\|\t")) t nil) )
       (move-beginning-of-line 1) (setq line-begin-pos (point) )
       (move-end-of-line 1) (setq line-end-pos (point) )
@@ -329,19 +329,19 @@ Calling this command 3 times will always result in no whitespaces around cursor.
       ;;       (re-search-forward "\n$") (setq line-end-pos (point) )
       (setq line-has-meat-p (if (< 0 (count-matches "[[:graph:]]" line-begin-pos line-end-pos)) t nil) )
       (goto-char cursor-point)
-      
+
       (skip-chars-backward "\t ")
       (setq space-or-tab-begin (point))
-      
+
       (skip-chars-backward "\t \n")
       (setq whitespace-begin (point))
-      
+
       (goto-char cursor-point)
       (skip-chars-forward "\t ")
       (setq space-or-tab-end (point))
       (skip-chars-forward "\t \n")
       (setq whitespace-end (point)))
-    
+
     (if line-has-meat-p
         (let (deleted-text)
           (when spaceTabNeighbor-p
@@ -351,7 +351,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
             ;; different that a simple whitespace
             (if (not (string= deleted-text " "))
                 (insert " "))))
-      
+
       (progn
         ;; (delete-region whitespace-begin whitespace-end)
         ;; (insert "\n")
@@ -368,7 +368,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
         (setq p1 (region-beginning) p2 (region-end))
       (let ((bds (bounds-of-thing-at-point 'word) ) )
         (setq p1 (car bds) p2 (cdr bds)) ) )
-    
+
     (when (not (eq last-command this-command))
       (save-excursion
         (goto-char p1)
@@ -379,7 +379,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
          ((looking-at "[[:lower:]]") (put this-command 'state "all lower"))
          ((looking-at "[[:upper:]]") (put this-command 'state "all caps") )
          (t (put this-command 'state "all lower") ) ) ) )
-    
+
     (cond
      ((string= "all lower" (get this-command 'state))
       (upcase-initials-region p1 p2) (put this-command 'state "init caps"))
@@ -454,19 +454,18 @@ Emacs buffers are those whose name starts with *."
 ;; This custome kill buffer is close-current-buffer.
 
 (defun ergoemacs-open-in-external-app ()
-  "Open the current file or dired marked files in external app.
-Works in Microsoft Windows, Mac OS X, Linux."
+  "Open the current file or dired marked files in external app."
   (interactive)
   (let ( doIt
          (myFileList
           (cond
            ((string-equal major-mode "dired-mode") (dired-get-marked-files))
            (t (list (buffer-file-name))) ) ) )
-    
+
     (setq doIt (if (<= (length myFileList) 5)
                    t
                  (y-or-n-p "Open more than 5 files?") ) )
-    
+
     (when doIt
       (cond
        ((string-equal system-type "windows-nt")
@@ -478,14 +477,16 @@ Works in Microsoft Windows, Mac OS X, Linux."
         (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList) ) ) ) ) )
 
 (defun ergoemacs-open-in-desktop ()
-  "Open the current file in desktop.
-Works in Microsoft Windows, Mac OS X, Linux."
+  "Show current file in desktop (OS's file manager)."
   (interactive)
   (cond
    ((string-equal system-type "windows-nt")
     (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" default-directory t t)))
    ((string-equal system-type "darwin") (shell-command "open ."))
-   ((string-equal system-type "gnu/linux") (shell-command "xdg-open ."))) )
+   ((string-equal system-type "gnu/linux")
+    (let ((process-connection-type nil)) (start-process "" nil "xdg-open" "."))
+    ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. ⁖ with nautilus
+    ) ))
 
 (defvar ergoemacs-recently-closed-buffers (cons nil nil) "A list of recently closed buffers. The max number to track is controlled by the variable recently-closed-buffers-max.")
 (defvar ergoemacs-recently-closed-buffers-max 30 "The maximum length for recently-closed-buffers.")
@@ -503,33 +504,33 @@ A emacs buffer is one who's name starts with *.
 Else it is a user buffer."
   (interactive)
   (let (emacsBuff-p isEmacsBufferAfter)
-    
+
     (setq emacsBuff-p (if (string-match "^*" (buffer-name)) t nil) )
-    
+
     (if (string= major-mode "minibuffer-inactive-mode")
         nil ; if minibuffer, do nothing
-      (progn 
+      (progn
         ;; offer to save buffers that are non-empty and modified, even for non-file visiting buffer. (because kill-buffer does not offer to save buffers that are not associated with files)
         (when (and (buffer-modified-p)
                    (not emacsBuff-p)
                    (not (string-equal major-mode "dired-mode"))
-                   (if (equal (buffer-file-name) nil) 
+                   (if (equal (buffer-file-name) nil)
                        (if (string-equal "" (save-restriction (widen) (buffer-string))) nil t)
                      t))
           (if (y-or-n-p (format "Buffer %s modified; Do you want to save?" (buffer-name)))
               (save-buffer)
             (set-buffer-modified-p nil)))
-        
+
         ;; save to a list of closed buffer
         (when (not (equal buffer-file-name nil))
           (setq ergoemacs-recently-closed-buffers
                 (cons (cons (buffer-name) (buffer-file-name)) ergoemacs-recently-closed-buffers))
           (when (> (length ergoemacs-recently-closed-buffers) ergoemacs-recently-closed-buffers-max)
             (setq ergoemacs-recently-closed-buffers (butlast ergoemacs-recently-closed-buffers 1))))
-        
+
         ;; close
         (kill-buffer (current-buffer))
-        
+
         ;; if emacs buffer, switch to a user buffer
         (if (string-match "^*" (buffer-name))
             (setq isEmacsBufferAfter t)

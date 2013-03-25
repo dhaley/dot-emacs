@@ -65,16 +65,6 @@
 
 ;; Keybonds
 
-(global-set-key [(hyper a)] 'mark-whole-buffer)
-(global-set-key [(hyper v)] 'yank)
-;; (global-set-key [(hyper c)] 'kill-ring-save)
-(global-set-key [(hyper s)] 'save-buffer)
-(global-set-key [(hyper l)] 'goto-line)
-(global-set-key [(hyper w)]
-                (lambda () (interactive) (delete-window)))
-;; (global-set-key [(hyper z)] 'undo)
-
-
 ;; mac switch meta key
 (defun mac-switch-meta nil
   "switch meta between Option and Command"
@@ -376,6 +366,7 @@ want to use in the modeline *in lieu of* the original.")
 (bind-key "<H-up>" 'enlarge-window)
 (bind-key "<H-backspace>" 'scroll-down-command)
 (bind-key "H-f" 'new-frame)
+(bind-key "C-H-f" 'make-frame-invisible)
 
 (defun grab-email-my ()
   "Grab the next email in the buffer
@@ -647,6 +638,19 @@ If no file is associated, just close buffer without prompt for save."
   (find-alternate-file filename))
 
 (bind-key "C-x C-v" 'find-alternate-file-with-sudo)
+
+
+(defun djcb-find-file-as-root ()
+  "Like `ido-find-file, but automatically edit the file with
+root-privileges (using tramp/sudo), if the file is not writable by
+user."
+  (interactive)
+  (let ((file (ido-read-file-name "Edit as root: ")))
+    (unless (file-writable-p file)
+      (setq file (concat "/sudo:root@localhost:" file)))
+    (find-file file)))
+;; or some other keybinding...
+(global-set-key (kbd "C-x F") 'djcb-find-file-as-root)
 
 
 ;; http://www.emacswiki.org/emacs/ElispCookbook
@@ -6391,9 +6395,16 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
       (let ((case-fold-search nil))
         (replace-pairs-region p1 p2 useMap ) ) ) ) )
 
-
-
-
+(require 'random-quote)
+;; http://blog.makezine.com/2011/04/08/the-awesome-button/
+(defun awesome-button ()
+  " Insert random string from .quotes file"
+  (interactive)
+  (let ((random-quote (pick-random-quote)))
+    (kill-new random-quote 't)
+    (message random-quote)
+    ))
+(bind-key "H-a" 'awesome-button)
 
 ;; Local Variables:
 ;;   mode: emacs-lisp

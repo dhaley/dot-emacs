@@ -5516,7 +5516,7 @@ creating documents with spelling errors.
 
 #+begin_src emacs-lisp :tangle yes
 ;; flyspell mode for spell checking everywhere
-(add-hook 'org-mode-hook 'turn-on-flyspell 'append)
+;; (add-hook 'org-mode-hook 'turn-on-flyspell 'append)
 
 ;; Disable C-c [ and C-c ] and C-c ; in org-mode
 (add-hook 'org-mode-hook
