@@ -31,9 +31,6 @@
 [submodule "override/bbdb"]
         path = override/bbdb
         url = git://git.savannah.nongnu.org/bbdb.git
-[submodule "override/org-mode"]
-        path = override/org-mode
-        url = git://orgmode.org/org-mode.git
 [submodule "site-lisp/ace-jump-mode"]
         path = site-lisp/ace-jump-mode
         url = https://github.com/winterTTr/ace-jump-mode.git
@@ -401,8 +398,8 @@
         path = site-lisp/artbollocks-mode
         url = https://github.com/sachac/artbollocks-mode.git
 [submodule "site-lisp/org-mac-protocol"]
-	path = site-lisp/org-mac-protocol
-	url = https://github.com/MassimoLauria/org-mac-protocol.git
+        path = site-lisp/org-mac-protocol
+        url = https://github.com/MassimoLauria/org-mac-protocol.git
 [submodule "site-lisp/org-mac-link-grabber"]
-	path = site-lisp/org-mac-link-grabber
-	url = https://github.com/alander/org-mac-link-grabber.git
+        path = site-lisp/org-mac-link-grabber
+        url = https://github.com/alander/org-mac-link-grabber.git
