@@ -403,3 +403,6 @@
 [submodule "site-lisp/org-mac-link-grabber"]
         path = site-lisp/org-mac-link-grabber
         url = https://github.com/alander/org-mac-link-grabber.git
+[submodule "override/org-mode"]
+	path = override/org-mode
+	url = git://orgmode.org/org-mode.git

@@ -254,6 +254,9 @@ want to use in the modeline *in lieu of* the original.")
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
+(setq coding-system-for-read 'utf-8)
+(setq coding-system-for-write 'utf-8)
+
 ;; backwards compatibility as default-buffer-file-coding-system
 ;; is deprecated in 23.2.
 (if (boundp 'buffer-file-coding-system)
@@ -1068,6 +1071,18 @@ while being able to go back to the previous split of windows in the frame simply
       (kill-ring-save (region-beginning) (region-end)))))
 
 ;; (bind-key "M-w" 'kill-ring-save)
+
+(defun smart-open-line ()
+  "Insert an empty line after the current line.
+Position the cursor at its beginning, according to the current mode."
+  (interactive)
+  (move-end-of-line nil)
+  (open-line 1)
+  (forward-line 1)
+  (indent-according-to-mode))
+
+(global-set-key [(shift return)] 'smart-open-line)
+
 
 ;; Functions (load all files in defuns-dir)
 (setq defuns-dir (expand-file-name "defuns" dotfiles-dir))
@@ -2654,6 +2669,7 @@ unless return was pressed outside the comment"
                        :secret))))
     (add-hook 'after-init-hook 'im)
     (add-hook 'after-init-hook 'irc)
+    ;; (add-hook 'after-init-hook 'create-new-erc-frames)
     )
 
   :config
@@ -2665,8 +2681,8 @@ unless return was pressed outside the comment"
     (defun create-new-erc-frames ()
       (interactive)
       (switch-to-bitlbee)
-      ;; (sauron-start-hidden)
-      (sauron-toggle-hide-show)
+      (sauron-start-hidden)
+      ;; (sauron-toggle-hide-show)
       (switch-to-buffer-other-frame "#drupal-colorado")
       (switch-to-buffer-other-frame "#emacs")
       )
@@ -2832,9 +2848,7 @@ PWD is not in a project"
   ;; (let ((project-root-dir (locate-dominating-file default-directory ".site_name")))
   (let ((project-root-dir (locate-dominating-file default-directory "current")))
     (let ((path (split-string project-root-dir "/")))     ; path as list
-      (car (last (nbutlast path 1)))
-      )
-    ))
+      (car (last (nbutlast path 1))))))
 
 
 ;;;_ , eshell
@@ -6355,7 +6369,6 @@ Works in Microsoft Windows, Mac OS X, Linux."
              (?e (file . "~/git/.emacs.d/eshell/alias"))
              (?g (file . "~/.emacs.d/gnus-settings.el"))
              (?G (file . "~/.emacs.d/dot-gnus.el"))
-             (?b (file . "~/git/dkh-org/doc/keybindings.org"))
              (?s (file . "~/.emacs.d/settings.el"))
              (?t (file . "~/Documents/Tasks/todo.org"))
              (?u (file . "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el"))
@@ -6405,6 +6418,8 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
     (message random-quote)
     ))
 (bind-key "H-a" 'awesome-button)
+
+
 
 ;; Local Variables:
 ;;   mode: emacs-lisp

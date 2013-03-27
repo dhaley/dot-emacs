@@ -589,22 +589,6 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
     (define-key gnus-article-mode-map [(control ?c) (control ?o)]
       'gnus-article-browse-urls)))
 
-;; (defun gnus-group-read-group-no-prompt ()
-;;   "Read news in this newsgroup and don't prompt.
-;;                                 Use the value of `gnus-large-newsgroup'."
-;;   (interactive)
-;;   (gnus-group-read-group gnus-large-newsgroup))
-
-
-;; some comfort keys to scroll article in other window when in summary window
-(define-key gnus-summary-mode-map [(up)] (lambda() (interactive) (scroll-other-window -1)))
-(define-key gnus-summary-mode-map [(down)] (lambda() (interactive) (scroll-other-window 1)))
-
-;; thread navigation
-;; (define-key gnus-summary-mode-map [(control down)] 'gnus-summary-next-thread)
-;; (define-key gnus-summary-mode-map [(control up)] 'gnus-summary-prev-thread)
-
-
 (define-key gnus-summary-mode-map (kbd ">") 'gnus-summary-show-thread)
 (define-key gnus-summary-mode-map (kbd "<") 'gnus-summary-hide-thread)
 
@@ -636,23 +620,6 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
         (regexp-opt '("User-Agent" "X-Mailer" "Newsreader" "X-Newsreader") t)
         ":.*Gnus.*")
        nil 'gnus-server-opened))
-
-
-;; (remove-hook 'gnus-article-prepare-hook 'bbdb-mua-display-sender)
-
-
-; (gnus-add-configuration
-;  '(article
-;    (horizontal 1.0
-;                (group 0.25)
-;                (vertical 1.0
-;                          (summary 0.16 point)
-;                          (article 1.0)
-;                          ("*BBDB*" 6))
-;                )))
-;
-
-
 
  (eval-after-load "gnus-art"
   '(progn

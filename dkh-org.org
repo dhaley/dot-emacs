@@ -1075,7 +1075,7 @@ don't want to spend time waiting for it to be generated.
                ((org-agenda-with-colors nil)
                 (org-agenda-remove-tags t)
                 (org-agenda-sorting-strategy '(category-up todo-state-up time-up)))
-               ("~/git/dkh-org/agendas/agenda.pdf"))
+               ("~/Documents/agendas/agenda.pdf"))
              ("t" "Agenda" sacha/org-agenda-with-tip))
 
 #+end_src
@@ -6268,6 +6268,10 @@ msgid)))
 (require 'ob-emacs-lisp)
 (require 'ob-sh)
 (require 'async)
+
+(require 'org-devonthink)
+(require 'org-debbugs)
+
 
 #+end_src
 
