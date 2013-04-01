@@ -796,12 +796,6 @@ can't afford to forget this little thing that just came up.
 So what do I do?  Hit =C-M-r= to start capture mode and select =t=
 since it's a new task and I get a buffer like this:
 
-#+begin_src org :exports src
-,* TODO
-  [2010-08-05 Thu 21:06]
-  [[file:~/git/dkh-org-mode-doc/org-mode.org::*Capture%20Tasks%20is%20all%20about%20being%20FAST][Capture Tasks is all about being FAST]]
-#+end_src
-
 Enter the details of the TODO item and =C-c C-c= to file it away in
 refile.org and go right back to what I'm really working on secure in
 the knowledge that that item isn't going to get lost and I don't have
@@ -2040,37 +2034,8 @@ have to call someone about something that would have a =FARM= tag but
 I can do that at home on my lunch break.  I don't physically have to
 be at the farm to make the call.
 
+
 #+begin_src emacs-lisp :tangle yes
-; Tags with fast selection keys
-(setq org-tag-alist (quote ((:startgroup)
-                            ("@errand" . ?e)
-                            ("@office" . ?o)
-                            ("@home" . ?H)
-                            ("@farm" . ?f)
-                            (:endgroup)
-                            ("PHONE" . ?p)
-                            ("WAITING" . ?w)
-                            ("HOLD" . ?h)
-                            ("PERSONAL" . ?P)
-                            ("WORK" . ?W)
-                            ("FARM" . ?F)
-                            ("ORG" . ?O)
-                            ("NORANG" . ?N)
-                            ("crypt" . ?E)
-                            ("MARK" . ?M)
-                            ("NOTE" . ?n)
-                            ("BZFLAG" . ?B)
-                            ("CANCELLED" . ?c)
-                            ("FLAGGED" . ??))))
-
-; Allow setting single tags without the menu
-(setq org-fast-tag-selection-single-key (quote expert))
-
-; For tag searches ignore tasks with scheduled and deadline dates
-(setq org-agenda-tags-todo-honor-ignore-options t)
-#+end_src
-
-#+begin_src emacs-lisp
 
 (setq org-tag-alist (quote ((:startgroup)
                             ("@errand" . ?e)
@@ -2091,6 +2056,12 @@ be at the farm to make the call.
                             ("KGNU" . ?B)
                             ("CANCELLED" . ?c)
                             ("FLAGGED" . ??))))
+
+; Allow setting single tags without the menu
+(setq org-fast-tag-selection-single-key (quote expert))
+
+; For tag searches ignore tasks with scheduled and deadline dates
+(setq org-agenda-tags-todo-honor-ignore-options t)
 
 #+end_src
 ** Filetags
@@ -3096,162 +3067,7 @@ Here's my publishing setup:
 ; doc          - http://doc.norang.ca/
 ; org-mode-doc - http://doc.norang.ca/org-mode.html and associated files
 ; org          - miscellaneous todo lists for publishing
-(setq org-publish-project-alist
-      ;
-      ; http://www.norang.ca/  (norang website)
-      ; norang-org are the org-files that generate the content
-      ; norang-extra are images and css files that need to be included
-      ; norang is the top-level project that gets published
-      (quote (("norang-org"
-               :base-directory "~/git/www.norang.ca"
-               :publishing-directory "/ssh:www-data@www:~/www.norang.ca/htdocs"
-               :recursive t
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function org-publish-org-to-html
-               :style-include-default nil
-               :section-numbers nil
-               :table-of-contents nil
-               :style "<link rel=\"stylesheet\" href=\"norang.css\" type=\"text/css\" />"
-               :author-info nil
-               :creator-info nil)
-              ("norang-extra"
-               :base-directory "~/git/www.norang.ca/"
-               :publishing-directory "/ssh:www-data@www:~/www.norang.ca/htdocs"
-               :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
-               :publishing-function org-publish-attachment
-               :recursive t
-               :author nil)
-              ("norang"
-               :components ("norang-org" "norang-extra"))
-              ;
-              ; http://doc.norang.ca/  (norang website)
-              ; doc-org are the org-files that generate the content
-              ; doc-extra are images and css files that need to be included
-              ; doc is the top-level project that gets published
-              ("doc-org"
-               :base-directory "~/git/doc.norang.ca/"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs"
-               :recursive nil
-               :section-numbers nil
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function (org-publish-org-to-html org-publish-org-to-org)
-               :style-include-default nil
-               :style "<link rel=\"stylesheet\" href=\"/org.css\" type=\"text/css\" />"
-               :author-info nil
-               :creator-info nil)
-              ("doc-extra"
-               :base-directory "~/git/doc.norang.ca/"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs"
-               :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
-               :publishing-function org-publish-attachment
-               :recursive nil
-               :author nil)
-              ("doc"
-               :components ("doc-org" "doc-extra"))
-              ("doc-private-org"
-               :base-directory "~/git/doc.norang.ca/private"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs/private"
-               :recursive nil
-               :section-numbers nil
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function (org-publish-org-to-html org-publish-org-to-org)
-               :style-include-default nil
-               :style "<link rel=\"stylesheet\" href=\"/org.css\" type=\"text/css\" />"
-               :auto-sitemap t
-               :sitemap-filename "index.html"
-               :sitemap-title "Norang Private Documents"
-               :sitemap-style "tree"
-               :author-info nil
-               :creator-info nil)
-              ("doc-private-extra"
-               :base-directory "~/git/doc.norang.ca/private"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs/private"
-               :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
-               :publishing-function org-publish-attachment
-               :recursive nil
-               :author nil)
-              ("doc-private"
-               :components ("doc-private-org" "doc-private-extra"))
-              ;
-              ; Miscellaneous pages for other websites
-              ; org are the org-files that generate the content
-              ("org-org"
-               :base-directory "~/git/dkh-org/"
-               :publishing-directory "/ssh:www-data@www:~/org"
-               :recursive t
-               :section-numbers nil
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function org-publish-org-to-html
-               :style-include-default nil
-               :style "<link rel=\"stylesheet\" href=\"/org.css\" type=\"text/css\" />"
-               :author-info nil
-               :creator-info nil)
-              ;
-              ; http://doc.norang.ca/  (norang website)
-              ; org-mode-doc-org this document
-              ; org-mode-doc-extra are images and css files that need to be included
-              ; org-mode-doc is the top-level project that gets published
-              ; This uses the same target directory as the 'doc' project
-              ("org-mode-doc-org"
-               :base-directory "~/git/dkh-org-mode-doc/"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs"
-               :recursive t
-               :section-numbers nil
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function (org-publish-org-to-html org-publish-org-to-org)
-               :plain-source t
-               :htmlized-source t
-               :style-include-default nil
-               :style "<link rel=\"stylesheet\" href=\"/org.css\" type=\"text/css\" />"
-               :author-info nil
-               :creator-info nil)
-              ("org-mode-doc-extra"
-               :base-directory "~/git/dkh-org-mode-doc/"
-               :publishing-directory "/ssh:www-data@www:~/doc.norang.ca/htdocs"
-               :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
-               :publishing-function org-publish-attachment
-               :recursive t
-               :author nil)
-              ("org-mode-doc"
-               :components ("org-mode-doc-org" "org-mode-doc-extra"))
-              ;
-              ; http://doc.norang.ca/  (norang website)
-              ; org-mode-doc-org this document
-              ; org-mode-doc-extra are images and css files that need to be included
-              ; org-mode-doc is the top-level project that gets published
-              ; This uses the same target directory as the 'doc' project
-              ("tmp-org"
-               :base-directory "/tmp/publish/"
-               :publishing-directory "/ssh:www-data@www:~/www.norang.ca/htdocs/tmp"
-               :recursive t
-               :section-numbers nil
-               :table-of-contents nil
-               :base-extension "org"
-               :publishing-function (org-publish-org-to-html org-publish-org-to-org)
-               :style "<link rel=\"stylesheet\" href=\"http://doc.norang.ca/org.css\" type=\"text/css\" />"
-               :plain-source t
-               :htmlized-source t
-               :style-include-default nil
-               :auto-sitemap t
-               :sitemap-filename "index.html"
-               :sitemap-title "Test Publishing Area"
-               :sitemap-style "tree"
-               :author-info t
-               :creator-info t)
-              ("tmp-extra"
-               :base-directory "/tmp/publish/"
-               :publishing-directory "/ssh:www-data@www:~/www.norang.ca/htdocs/tmp"
-               :base-extension "css\\|pdf\\|png\\|jpg\\|gif"
-               :publishing-function org-publish-attachment
-               :recursive t
-               :author nil)
-              ("tmp"
-               :components ("tmp-org" "tmp-extra")))))
+
 
 ; I'm lazy and don't want to remember the name of the project to publish when I modify
 ; a file that is part of a project.  So this function saves the file, and publishes
@@ -4075,8 +3891,6 @@ automagically when the task is marked done.
 Add the following to your =.emacs=
 
 #+begin_src emacs-lisp :tangle no
-(add-to-list 'load-path (expand-file-name "~/git/dkh-org-mode/contrib/lisp"))
-
 (require 'org-checklist)
 #+end_src
 
@@ -4085,9 +3899,9 @@ Add the following to your =.emacs=
 ;; can override the document path by setting your path in the variable
 ;; org-mode-user-contrib-lisp-path
 ;;
-(if (boundp 'org-mode-user-contrib-lisp-path)
-    (add-to-list 'load-path org-mode-user-contrib-lisp-path)
-  (add-to-list 'load-path (expand-file-name "~/git/dkh-org-mode/contrib/lisp")))
+;; (if (boundp 'org-mode-user-contrib-lisp-path)
+;;     (add-to-list 'load-path org-mode-user-contrib-lisp-path)
+;;   (add-to-list 'load-path (expand-file-name "~/git/dkh-org-mode/contrib/lisp")))
 
 (require 'org-checklist)
 #+end_src
@@ -5110,7 +4924,7 @@ up emacs to find the info files from git before the regular (out of
 date) system versions.
 
 #+begin_src emacs-lisp :tangle yes
-(add-to-list 'Info-default-directory-list "~/git/dkh-org-mode/doc")
+;;(add-to-list 'Info-default-directory-list "~/git/dkh-org-mode/doc")
 #+end_src
 ** Prefer future dates or not?
 :PROPERTIES:
