@@ -1389,7 +1389,8 @@ reload abbrevs."
 ;;;_ , ace-jump-mode
 
 (use-package ace-jump-mode
-  :bind ("C-. C-s" . ace-jump-mode))
+  :bind (("C-. C-s" . ace-jump-mode)
+         ("M-h" . ace-jump-mode)))
 
 ;;;_ , agda
 
@@ -2762,6 +2763,7 @@ FORM => (eval FORM)."
       (erc-cmd-DEOP (format "%s" (erc-current-nick))))
 
     (defun erc-cmd-KICKBAN (nick &rest reason)
+      (erc-cmd-OPME)
       (setq reason (mapconcat #'identity reason " "))
       (and (string= reason "")
            (setq reason nil))
@@ -2770,7 +2772,8 @@ FORM => (eval FORM)."
                                 (erc-default-target)
                                 nick
                                 (or reason
-                                    "Kicked (kickban)"))))
+                                    "Kicked (kickban)")))
+      (erc-cmd-DEOPME))
 
     (defun erc-cmd-UNTRACK (&optional target)
       "Add TARGET to the list of target to be tracked."
@@ -4131,6 +4134,7 @@ at the beginning of line, if already there."
   :config
   (progn
     (setenv "GIT_PAGER" "")
+    (unbind-key "M-h" magit-mode-map)
     (unbind-key "M-s" magit-mode-map)
 
     (add-hook 'magit-log-edit-mode-hook
@@ -4141,9 +4145,15 @@ at the beginning of line, if already there."
     (require 'magit-topgit)
     (require 'rebase-mode)
 
-    (defun start-git-monitor ()
+    (defvar magit-git-monitor-process nil)
+    (make-variable-buffer-local 'magit-git-monitor-process)
+
+        (defun start-git-monitor ()
       (interactive)
-      (start-process "git-monitor" (current-buffer) "/opt/local/Library/Frameworks/Python.framework/Versions/2.7/bin/gitmon"))
+      (unless magit-git-monitor-process
+        (setq magit-git-monitor-process
+              (start-process "git-monitor" (current-buffer) "git-monitor"
+                             "-d" (expand-file-name default-directory)))))
 
     ;;(add-hook 'magit-status-mode-hook 'start-git-monitor)
     ))
@@ -4661,7 +4671,7 @@ and view local index.html url"
     (bind-key "M-)" 'paredit-close-round paredit-mode-map)
 
     (bind-key "M-k" 'paredit-raise-sexp paredit-mode-map)
-    (bind-key "M-h" 'mark-containing-sexp paredit-mode-map)
+;;    (bind-key "M-h" 'mark-containing-sexp paredit-mode-map)
     (bind-key "M-I" 'paredit-splice-sexp paredit-mode-map)
 
     (unbind-key "M-r" paredit-mode-map)
@@ -4720,7 +4730,8 @@ and view local index.html url"
     (add-hook 'allout-mode-hook
               #'(lambda ()
                   (bind-key "M-k" 'paredit-raise-sexp allout-mode-map)
-                  (bind-key "M-h" 'mark-containing-sexp allout-mode-map)))))
+;;                  (bind-key "M-h" 'mark-containing-sexp allout-mode-map)
+))))
 
 ;;;_ , paren
 
