@@ -254,8 +254,6 @@ want to use in the modeline *in lieu of* the original.")
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
-(setq coding-system-for-read 'utf-8)
-(setq coding-system-for-write 'utf-8)
 
 ;; backwards compatibility as default-buffer-file-coding-system
 ;; is deprecated in 23.2.
@@ -641,19 +639,6 @@ If no file is associated, just close buffer without prompt for save."
   (find-alternate-file filename))
 
 (bind-key "C-x C-v" 'find-alternate-file-with-sudo)
-
-
-(defun djcb-find-file-as-root ()
-  "Like `ido-find-file, but automatically edit the file with
-root-privileges (using tramp/sudo), if the file is not writable by
-user."
-  (interactive)
-  (let ((file (ido-read-file-name "Edit as root: ")))
-    (unless (file-writable-p file)
-      (setq file (concat "/sudo:root@localhost:" file)))
-    (find-file file)))
-;; or some other keybinding...
-(global-set-key (kbd "C-x F") 'djcb-find-file-as-root)
 
 
 ;; http://www.emacswiki.org/emacs/ElispCookbook
@@ -2451,7 +2436,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
     (use-package php-completion-mode
       :commands php-completion-mode)
 
-    (setq php-manual-path "~/git/.emacs.d/php/php-chunked-xhtml/")
+    (setq php-manual-path "~/Documents/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
     (require 'doxymacs)
     (require 'php-extras)
@@ -5329,14 +5314,14 @@ and view local index.html url"
 ;; Tramp mode: allow me to SSH to hosts and edit as sudo like:
 ;; C-x C-f /sudo:example.com:/etc/something-owned-by-root
 ;; from: http://www.gnu.org/software/tramp/#Multi_002dhops
-(use-package tramp
-  :config
-  (progn
-    (setq tramp-default-method "ssh")
-    (add-to-list 'tramp-default-proxies-alist
-                 '(nil "\\`root\\'" "/ssh:%h:"))
-    (add-to-list 'tramp-default-proxies-alist
-                 '((regexp-quote (system-name)) nil nil))))
+;; (use-package tramp
+;;   :config
+;;   (progn
+;;     (setq tramp-default-method "ssh")
+;;     (add-to-list 'tramp-default-proxies-alist
+;;                  '(nil "\\`root\\'" "/ssh:%h:"))
+;;     (add-to-list 'tramp-default-proxies-alist
+;;                  '((regexp-quote (system-name)) nil nil))))
 
 
 ;; https://github.com/anthracite/emacs-config/blob/master/init.el
@@ -6136,18 +6121,6 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
   (internal-show-cursor nil (not (internal-show-cursor-p)))
   )
 
-
-
-(unless running-alternate-emacs
-  ;; (org-babel-load-file "~/.emacs.d/dkh-core.org")
-  ;;;_. Load some private settings
-  (org-babel-load-file "~/git/.emacs.d/dkh-private.org")
-  )
-
-
-
-
-
 (defun byte-compile-current-buffer ()
   "`byte-compile' current buffer if it's emacs-lisp-mode and compiled file exists."
   (interactive)
@@ -6163,7 +6136,7 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;;; Ignore .DS_Store files with ido mode
 (add-to-list 'ido-ignore-files "\\.DS_Store")
 ;; # FIXME: this is to ignore Dropbox "Icon" files that seem to be
-;; "Icon", but I can't figure out how to ignore that.
+;; "Icon", but I can't figure out how to ignore that.
 (add-to-list 'ido-ignore-files "Icon")
 
 ;; toggle-input-method
@@ -6201,16 +6174,16 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 
 ;; (setenv "GPG_AGENT_INFO" "~/.gnupg/S.gpg-agent")
 
-(defun offlineimap-get-password (host port)
-  (let* ((netrc (netrc-parse (expand-file-name "~/git/.emacs.d/.autinfo.gpg")))
-         (hostentry (netrc-machine netrc host port port)))
-    (when hostentry (netrc-get hostentry "password"))))
+;; (defun offlineimap-get-password (host port)
+;;   (let* ((netrc (netrc-parse (expand-file-name "~/Documents/.autinfo.gpg")))
+;;          (hostentry (netrc-machine netrc host port port)))
+;;     (when hostentry (netrc-get hostentry "password"))))
 
-(setq
- epa-file-cache-passphrase-for-symmetric-encryption t
- user-full-name "Damon Haley"
- user-mail-address "damon.haley@colorado.edu"
- )
+;; (setq
+;;  epa-file-cache-passphrase-for-symmetric-encryption t
+;;  user-full-name "Damon Haley"
+;;  user-mail-address "damon.haley@colorado.edu"
+;;  )
 
 
 (defalias 'list-matching-lines 'occur)
@@ -6362,11 +6335,8 @@ Works in Microsoft Windows, Mac OS X, Linux."
 ;; Registers
 
 (dolist (r `(
-             (?P (file . "~/git/.emacs.d/dkh-private.org"))
              (?O (file . "~/.emacs.d/dkh-org.org"))
-             (?R (file-query "~/git/.emacs.d/.secret/.passwd.gpg" 3490 3499))
-             (?a (file . "~/git/.emacs.d/.abbrev_defs"))
-             (?e (file . "~/git/.emacs.d/eshell/alias"))
+             (?a (file . "~/.emacs.d/.abbrev_defs"))
              (?g (file . "~/.emacs.d/gnus-settings.el"))
              (?G (file . "~/.emacs.d/dot-gnus.el"))
              (?s (file . "~/.emacs.d/settings.el"))

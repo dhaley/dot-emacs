@@ -469,64 +469,6 @@ matching one will be automatically closed by electric-pair-mode.
 
 ** Find file as root function(s)
 
-#+begin_src emacs-lisp :tangle no
-
-(defun find-file-as-root ()
-  "Find a file as root."
-  (interactive)
-  (let* ((parsed (when (tramp-tramp-file-p default-directory)
-                   (coerce (tramp-dissect-file-name default-directory)
-                           'list)))
-         (default-directory
-           (if parsed
-               (apply 'tramp-make-tramp-file-name
-                      (append '("sudo" "root") (cddr parsed)))
-             (tramp-make-tramp-file-name "sudo" "root" "localhost"
-                                         default-directory))))
-    (call-interactively 'find-file)))
-
-(defun toggle-alternate-file-as-root (&optional filename)
-  "Toggle between the current file as the default user and as root."
-  (interactive)
-  (let* ((filename (or filename (buffer-file-name)))
-         (parsed (when (tramp-tramp-file-p filename)
-                   (coerce (tramp-dissect-file-name filename)
-                           'list))))
-    (unless filename
-      (error "No file in this buffer."))
-
-    (find-alternate-file
-     (if (equal '("sudo" "root") (butlast parsed 2))
-         ;; As non-root
-         (if (or
-              (string= "localhost" (nth 2 parsed))
-              (string= (system-name) (nth 2 parsed)))
-             (car (last parsed))
-           (apply 'tramp-make-tramp-file-name
-                  (append (list tramp-default-method nil) (cddr parsed))))
-
-       ;; As root
-       (if parsed
-           (apply 'tramp-make-tramp-file-name
-                  (append '("sudo" "root") (cddr parsed)))
-         (tramp-make-tramp-file-name "sudo" nil nil filename))))))
-
-(defun th-find-file-sudo (file)
-  "Opens FILE with root privileges."
-  (interactive "F")
-  (set-buffer (find-file (concat "/sudo::" file))))
-
-(defadvice find-file (around th-find-file activate)
-  "Open FILENAME using tramp's sudo method if it's read-only."
-  (if (and (not (file-writable-p (ad-get-arg 0)))
-       (not (file-remote-p (ad-get-arg 0)))
-       (y-or-n-p (concat "File "
-                 (ad-get-arg 0)
-                 " is read-only.  Open it as root? ")))
-      (th-find-file-sudo (ad-get-arg 0))
-    ad-do-it))
-
-#+end_src
 
 ** filecache
 
