@@ -54,7 +54,7 @@
         (unless once (nconc args '("-d" "900")))
         (setq fetchmail-process
               (apply #'start-process procname buf
-                     "/opt/local/bin/fetchmail" "-d" "900" "-N" extra-args)))
+                     "/usr/local/bin/fetchmail" "-d" "900" "-N" extra-args)))
       (message "Starting Fetchmail...done"))))
 
 (defun safely-kill-process (name &optional signal verb)
