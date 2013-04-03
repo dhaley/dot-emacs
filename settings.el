@@ -143,7 +143,7 @@
  '(eudc-inline-expansion-format (quote ("%s <%s>" name email)))
  '(eudc-options-file "~/.emacs.d/.eudc-options")
  '(eval-expr-print-function (quote pp))
- '(exec-path (quote ("/Users/daha1836/bin" "/usr/local/bin" "/usr/local/opt/git/share/git-core" "/usr/bin" "/bin" "/usr/local/sbin" "/usr/sbin" "/sbin" "/usr/X11R6/bin")))
+ '(exec-path (quote ("/Applications/MAMP/bin/php/php5.3.13/bin" "/Users/daha1836/bin" "/usr/local/bin" "/usr/local/sbin" "/usr/local/opt/git/share/git-core" "/usr/bin" "/bin" "/usr/local/sbin" "/usr/sbin" "/sbin" "/usr/X11R6/bin")))
  '(fill-column 78)
  '(find-ls-subdir-switches "-alh")
  '(flyspell-abbrev-p nil)
