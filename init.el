@@ -2323,11 +2323,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 (use-package doxymacs
   :load-path "~/.emacs.d/site-lisp/doxymacs-1.8.0/lisp")
 
-;;;_ , dvc
-
-(use-package dvc-autoloads
-  :load-path "site-lisp/dvc/lisp/")
-
 ;;;_ , ediff
 
 (use-package ediff
@@ -2441,7 +2436,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
     (setq php-manual-path "~/Documents/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
     (require 'doxymacs)
-    (require 'php-extras)
+;;    (require 'php-extras)
 
     (add-hook 'php-mode-hook
               '(lambda ()
@@ -2506,7 +2501,6 @@ unless return was pressed outside the comment"
       :commands php-completion-mode)
 ))
 
-
 ;;;_ , projectile
 
 (use-package projectile
@@ -2566,7 +2560,6 @@ unless return was pressed outside the comment"
     (key-chord-define-global ";g" 'magit-status)
 
     ))
-
 
 
 ;;;_ , drupal-mode
@@ -2654,7 +2647,7 @@ unless return was pressed outside the comment"
                                                 :type 'netrc
                                                 :port 6667))
                        :secret))))
-    (add-hook 'after-init-hook 'im)
+    ;; (add-hook 'after-init-hook 'im)
     (add-hook 'after-init-hook 'irc)
     ;; (add-hook 'after-init-hook 'create-new-erc-frames)
     )
@@ -3230,20 +3223,6 @@ at the beginning of line, if already there."
               "site-lisp/flycheck/deps/s.el")
   :init
   (progn
-
-    ;; overriding php-phpcs to set Drupal standard
-    ;;     (flycheck-declare-checker php-phpcs-drupal
-    ;;       "A PHP syntax checker using PHP_CodeSniffer.
-
-    ;; See URL `http://pear.php.net/package/PHP_CodeSniffer/'."
-    ;;       ;; :command '("phpcs" "--report=emacs" source)
-    ;;       :command '("phpcs" "--standard=Drupal" "--report=emacs" source)
-    ;;       :error-patterns
-    ;;       '(("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): error - \\(?4:.*\\)" error)
-    ;;         ("\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): warning - \\(?4:.*\\)" warning))
-    ;;       :modes '(php-mode php+-mode)
-    ;;       :next-checkers '(php))
-
     (flycheck-declare-checker xmllint
       "xmllint checker"
       :command '("xmllint" "--noout" "--postvalid" source)
@@ -3282,42 +3261,42 @@ at the beginning of line, if already there."
 
     (push 'clang++-ledger flycheck-checkers)
 
-    (defun my-flycheck-show-error-in-window ()
-      (interactive)
-      (flycheck-cancel-error-display-timer)
-      (when flycheck-mode
-        (let ((buf (get-buffer-create "*Flycheck Info*"))
-              (message (car (flycheck-overlay-messages-at (point)))))
-          (with-current-buffer buf
-            (delete-region (point-min) (point-max))
-            (insert message))
-          (display-buffer buf)
-          (fit-window-to-buffer (get-buffer-window buf)))))
+    ;; (defun my-flycheck-show-error-in-window ()
+    ;;   (interactive)
+    ;;   (flycheck-cancel-error-display-timer)
+    ;;   (when flycheck-mode
+    ;;     (let ((buf (get-buffer-create "*Flycheck Info*"))
+    ;;           (message (car (flycheck-overlay-messages-at (point)))))
+    ;;       (with-current-buffer buf
+    ;;         (delete-region (point-min) (point-max))
+    ;;         (insert message))
+    ;;       (display-buffer buf)
+    ;;       (fit-window-to-buffer (get-buffer-window buf)))))
 
-    (defun flycheck-show-error-at-point ()
-      "Show the first error message at point in minibuffer."
-      (interactive)
-      (flycheck-cancel-error-display-timer)
-      (when flycheck-mode
-        (if (flycheck-may-show-message)
-            (let* ((buf (get-buffer-create "*Flycheck Info*"))
-                   (wind (get-buffer-window buf))
-                   (message (car (flycheck-overlay-messages-at (point)))))
-              (if message
-                  (if (> (length (split-string message "\n")) 8)
-                      (my-flycheck-show-error-in-window)
-                    (if wind (delete-window wind))
-                    (message "%s" message))
-                (message nil)))
-          ;; Try again if the minibuffer is busy at the moment
-          (flycheck-show-error-at-point-soon))))
+    ;; (defun flycheck-show-error-at-point ()
+    ;;   "Show the first error message at point in minibuffer."
+    ;;   (interactive)
+    ;;   (flycheck-cancel-error-display-timer)
+    ;;   (when flycheck-mode
+    ;;     (if (flycheck-may-show-message)
+    ;;         (let* ((buf (get-buffer-create "*Flycheck Info*"))
+    ;;                (wind (get-buffer-window buf))
+    ;;                (message (car (flycheck-overlay-messages-at (point)))))
+    ;;           (if message
+    ;;               (if (> (length (split-string message "\n")) 8)
+    ;;                   (my-flycheck-show-error-in-window)
+    ;;                 (if wind (delete-window wind))
+    ;;                 (message "%s" message))
+    ;;             (message nil)))
+    ;;       ;; Try again if the minibuffer is busy at the moment
+    ;;       (flycheck-show-error-at-point-soon))))
 
-    (defun my-flycheck-mode-hook ()
-      (bind-key "M-?" 'my-flycheck-show-error-in-window flycheck-mode-map)
-      (bind-key "M-p" 'previous-error flycheck-mode-map)
-      (bind-key "M-n" 'next-error flycheck-mode-map))
+    ;; (defun my-flycheck-mode-hook ()
+    ;;   (bind-key "M-?" 'my-flycheck-show-error-in-window flycheck-mode-map)
+    ;;   (bind-key "M-p" 'previous-error flycheck-mode-map)
+    ;;   (bind-key "M-n" 'next-error flycheck-mode-map))
 
-    (add-hook 'flycheck-mode-hook 'my-flycheck-mode-hook)
+;;    (add-hook 'flycheck-mode-hook 'my-flycheck-mode-hook)
 
     (add-hook 'prog-mode-hook 'flycheck-mode)
     (add-hook 'nxml-mode-hook 'flycheck-mode)
@@ -3328,7 +3307,7 @@ at the beginning of line, if already there."
   :config
   (progn
     ;; (use-package flymake-cursor)
-    (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
+;;    (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
     (defalias 's-collapse-whitespace 'identity)))
 
 
@@ -5183,7 +5162,7 @@ and view local index.html url"
     (hook-into-modes #'smartparens-mode '(
                                           text-mode-hook
                                           ruby-mode-hook
-                                          php-mode-hook
+                                          ;; php-mode-hook
                                           python-mode-hook
                                           sh-mode-hook))))
 
@@ -6342,7 +6321,8 @@ Works in Microsoft Windows, Mac OS X, Linux."
   (setq projectile-tags-command "~/bin/etags_drupal.sh")
 
   (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
-  (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep))
+  (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep)
+  )
 
 ;; Registers
 
