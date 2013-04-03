@@ -157,6 +157,7 @@
 ;;;_ , Load customization settings
 
 (defvar running-alternate-emacs nil)
+
 (if (string-match (concat "/Applications/\\(Misc/\\)?"
                           "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
                   invocation-directory)
@@ -188,8 +189,7 @@
 
   (load (expand-file-name "settings" user-emacs-directory)))
 
-(defvar running-alternate-emacs nil)
-
+;;;_ , Enable C-8 prefix
 
 (defvar workgroups-preload-map)
 (define-prefix-command 'workgroups-preload-map)
@@ -3347,7 +3347,7 @@ at the beginning of line, if already there."
     (setq gnus-init-file (expand-file-name "dot-gnus" user-emacs-directory)
           gnus-home-directory "~/git/gnus/")
 
-    (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
+    ;; (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
     (use-package eudc)
     (use-package rgr-web)))
