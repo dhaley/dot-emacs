@@ -437,6 +437,7 @@ improved by many.."
 
 (bind-key "M-[" 'align-code)
 (bind-key "M-`" 'other-frame)
+(bind-key "M-RET" 'other-frame)
 
 (bind-key "M-j" 'delete-indentation-forward)
 (bind-key "M-J" 'delete-indentation)
@@ -2584,7 +2585,7 @@ unless return was pressed outside the comment"
     (require 'tags-view)
     (require 'smart-dash)
     (require 'projectile)
-
+    (require 'drupal-spell)
 
     (add-hook 'drupal-mode-hook
               '(lambda ()
@@ -5403,7 +5404,7 @@ and view local index.html url"
          )
   :init
   (progn
-    (setq w3m-command "/opt/local/bin/w3m")
+    (setq w3m-command "/usr/local/bin/w3m")
 
     (setq w3m-session-file "~/Documents/w3m-session")
 

@@ -40,9 +40,8 @@
 
         ;; Packages located elsewhere on the system...
         ;; "~/src/ledger/lisp/"
-
-        "/opt/local/share/doc/git-core/contrib/emacs/"
-        "/opt/local/share/texmf-texlive-dist/doc/latex/latex2e-help-texinfo/"
+        "/usr/local/share/doc/git-core/contrib/emacs/"
+        ;;"/opt/local/share/texmf-texlive-dist/doc/latex/latex2e-help-texinfo/"
         )))
 
 (let ((cl-p load-path))
