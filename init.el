@@ -2361,9 +2361,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 
 (use-package php-mode
-  :commands php-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.\\(php\\|inc\\)$" . php-mode))
   :config
   (progn
     (use-package php-completion-mode
@@ -2497,12 +2494,9 @@ unless return was pressed outside the comment"
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
-  :commands drupal-mode
   :init
   (progn
-    (add-to-list 'auto-mode-alist '("\\.\\(php\\|inc\\|module\\|test\\|install\\|theme\\|\\profile\\|\\local\\.php\\)$" . drupal-mode))
-    (autoload 'php-mode "php-mode" nil t)
-    (autoload 'css-mode "css-mode" nil t)
+    (add-to-list 'auto-mode-alist '("\\.\\(inc\\)$" . php-mode))
     )
 :config
   (progn
