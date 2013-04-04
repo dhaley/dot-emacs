@@ -9,90 +9,7 @@
 
 (load (expand-file-name "load-path" (file-name-directory load-file-name)))
 
-(defconst *is-a-mac*
-  (eq system-type 'darwin)
-  "Is this running on OS X?")
-(defconst *is-carbon-emacs*
-  (and *is-a-mac* (eq window-system 'mac))
-  "Is this the Carbon port of Emacs?")
-(defconst *is-cocoa-emacs*
-  (and *is-a-mac* (eq window-system 'ns))
-  "Is this the Cocoa version of Emacs?")
-(defconst *is-linux*
-  (eq system-type 'gnu/linux)
-  "Is this running on Linux?")
-
-(defconst user-cache-directory
-  (file-truename "~/.cache/emacs-user-cache"))
-
-;; These should always exist
-(make-directory user-cache-directory t)
-
-
-;; Set path to .emacs.d
-(setq dotfiles-dir (file-name-directory
-                    (or (buffer-file-name) load-file-name)))
-
-
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-
-;; If you find that Emacs on OSX fails to pick up the same $PATH setting
-;; that you get in command line shells, instead defaulting to an
-;; impoverished default that doesn’t include (for instance) anything
-;; installed via MacPorts:
-
-(add-hook 'after-init-hook
-          #'(lambda ()
-              (setenv "PATH"
-                      (with-temp-buffer
-                        (call-process "/bin/bash"
-                                      nil (list (current-buffer) nil) nil
-                                      "-l" "-c" "printf %s \"$PATH\"")
-                        (buffer-string)))))
-
-;; Fix ls problems
-
-;; (when (eq system-type 'darwin)
-;;   (require 'ls-lisp)
-;;   (setq ls-lisp-use-insert-directory-program nil))
-(require 'stripe-buffer)
-
-
-(setenv "E" "~/.emacs.d")
-(setenv "S" "~/git/src")
-(setenv "D" "~/data")
-
-;; Keybonds
-
-;; mac switch meta key
-(defun mac-switch-meta nil
-  "switch meta between Option and Command"
-  (interactive)
-  (if (eq mac-option-modifier nil)
-      (progn
-        (setq mac-option-modifier 'meta)
-        (setq mac-command-modifier 'hyper)
-        )
-    (progn
-      (setq mac-option-modifier nil)
-      (setq mac-command-modifier 'meta)
-      )
-    )
-  )
-
-(mac-switch-meta)
-
-;; you can also bind the Function-key to Hyper.  Without losing the ability to
-;; change the volume or pause/play - those will still work.
-
-                                        ;(setq mac-command-modifier 'meta)
-                                        ;(setq mac-option-modifier 'super)
-(setq mac-function-modifier 'hyper)
-
-
 (require 'use-package)
-
 (eval-when-compile
   (setq use-package-verbose (null byte-compile-current-file)))
 
@@ -162,7 +79,6 @@
                           "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
                   invocation-directory)
 
-
     (let ((settings (with-temp-buffer
                       (insert-file-contents
                        (expand-file-name "settings.el" user-emacs-directory))
@@ -189,13 +105,6 @@
 
   (load (expand-file-name "settings" user-emacs-directory)))
 
-;;;_ , Enable C-8 prefix
-
-(defvar workgroups-preload-map)
-(define-prefix-command 'workgroups-preload-map)
-
-(bind-key "C-8" 'workgroups-preload-map)
-
 ;;;_ , Enable disabled commands
 
 (put 'downcase-region  'disabled nil)   ; Let downcasing work
@@ -206,6 +115,41 @@
 (put 'set-goal-column  'disabled nil)
 (put 'upcase-region    'disabled nil)   ; Let upcasing work
 (put 'scroll-left 'disabled nil)
+
+
+
+;; mac switch meta key
+(defun mac-switch-meta nil
+  "switch meta between Option and Command"
+  (interactive)
+  (if (eq mac-option-modifier nil)
+      (progn
+        (setq mac-option-modifier 'meta)
+        (setq mac-command-modifier 'hyper)
+        )
+    (progn
+      (setq mac-option-modifier nil)
+      (setq mac-command-modifier 'meta)
+      )
+    )
+  )
+(mac-switch-meta)
+
+;; you can also bind the Function-key to Hyper.  Without losing the ability to
+;; change the volume or pause/play - those will still work.
+
+                                        ;(setq mac-command-modifier 'meta)
+                                        ;(setq mac-option-modifier 'super)
+(setq mac-function-modifier 'hyper)
+
+
+
+;;;_ , Enable C-8 prefix
+
+(defvar workgroups-preload-map)
+(define-prefix-command 'workgroups-preload-map)
+
+(bind-key "C-8" 'workgroups-preload-map)
 
 ;; To use YASnippet as a non-global minor mode, replace `(yas-global-mode 1)` with
 (require 'yasnippet)
@@ -1069,6 +1013,9 @@ Position the cursor at its beginning, according to the current mode."
 
 (global-set-key [(shift return)] 'smart-open-line)
 
+;; Set path to .emacs.d
+(setq dotfiles-dir (file-name-directory
+                    (or (buffer-file-name) load-file-name)))
 
 ;; Functions (load all files in defuns-dir)
 (setq defuns-dir (expand-file-name "defuns" dotfiles-dir))
@@ -2282,6 +2229,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
               (setq command (concat command " &")))
             (dired-do-shell-command command arg file-list)))
 
+       (require 'stripe-buffer)
        (add-hook 'dired-mode-hook '(lambda ()
                                      (dired-package-initialize)
                                      (hl-line-mode 1)
@@ -2402,26 +2350,14 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
     (bind-key "C-. C-=" 'emms-player-mplayer-volume-up)))
 
 
-(use-package pcache
-  :defer t
-  :init
-  (progn
-    (setq
-     pcache-directory
-     (let ((dir (expand-file-name "pcache/" user-cache-directory)))
-       (make-directory dir t)
-       dir))))
-
 (use-package truthy
   :commands (truthy
              truthy-s
              truthy-l))
 
 
-
 (use-package conf-mode
   :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
-
 
 
 (use-package php-mode
@@ -2436,25 +2372,21 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
     (setq php-manual-path "~/Documents/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
     (require 'doxymacs)
-;;    (require 'php-extras)
+    ;; (require 'php-extras)
 
     (add-hook 'php-mode-hook
               '(lambda ()
-                 (when (require 'auto-complete nil t)
-                   (make-variable-buffer-local 'ac-sources)
-                   (add-to-list 'ac-sources 'ac-source-php-completion)
-                   ;; if you like patial match,
-                   ;; use `ac-source-php-completion-patial' instead of `ac-source-php-completion'.
-                                        ;(add-to-list 'ac-sources 'ac-source-php-completion-patial)
-                   (auto-complete-mode t))
+                 ;; (when (require 'auto-complete nil t)
+                 ;;   (make-variable-buffer-local 'ac-sources)
+                 ;;   (add-to-list 'ac-sources 'ac-source-php-completion)
+                 ;;   ;; if you like patial match,
+                 ;;   ;; use `ac-source-php-completion-patial' instead of `ac-source-php-completion'.
+                 ;;                        ;(add-to-list 'ac-sources 'ac-source-php-completion-patial)
+                 ;;   (auto-complete-mode t))
                  (abbrev-mode 1)
-                 (hs-minor-mode)
                  (whitespace-mode 1)
                  (yas/minor-mode 1)
                  (hs-minor-mode 1)
-                 ;; (outline-minor-mode)
-                 ;; (setq outline-regexp " *\\(private funct\\|public funct\\|funct\\|class\\|#head\\)")
-                 ;; (hide-sublevels 1)
                  (imenu-add-menubar-index)
                  (subword-mode t)
                  (doxymacs-mode 1)
@@ -2647,7 +2579,7 @@ unless return was pressed outside the comment"
                                                 :type 'netrc
                                                 :port 6667))
                        :secret))))
-    ;; (add-hook 'after-init-hook 'im)
+    (add-hook 'after-init-hook 'im)
     (add-hook 'after-init-hook 'irc)
     ;; (add-hook 'after-init-hook 'create-new-erc-frames)
     )
@@ -5162,7 +5094,7 @@ and view local index.html url"
     (hook-into-modes #'smartparens-mode '(
                                           text-mode-hook
                                           ruby-mode-hook
-                                          ;; php-mode-hook
+                                          php-mode-hook
                                           python-mode-hook
                                           sh-mode-hook))))
 
@@ -6184,7 +6116,7 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 (defalias 'td 'toggle-debug-on-error)
 
 ;; Allow "y or n" instead of "yes or no"
-;; (fset 'yes-or-no-p 'y-or-n-p)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 (require 'switch-window)
 

@@ -272,8 +272,8 @@
         path = site-lisp/pandoc-mode
         url = git://github.com/joostkremers/pandoc-mode.git
 [submodule "site-lisp/php-extras"]
-        path = site-lisp/php-extras
-        url = https://github.com/arnested/php-extras.git
+	path = site-lisp/php-extras
+	url = https://github.com/arnested/php-extras.git
 [submodule "site-lisp/rainbow-delimiters"]
         path = site-lisp/rainbow-delimiters
         url = https://github.com/jlr/rainbow-delimiters.git
