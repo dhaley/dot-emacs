@@ -163,10 +163,12 @@
     (paredit-mode . " π")
     (eldoc-mode . "ℯ")
     (abbrev-mode . "")
+    (drupal-mode . "💧")
     ;; Major modes
     (lisp-interaction-mode . "λ")
     (hi-lock-mode . "")
     (python-mode . "Py")
+    (php-mode . "💧")
     (emacs-lisp-mode . "EL")
     (nxhtml-mode . "nx"))
   "Alist for `clean-mode-line'.
@@ -2369,7 +2371,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
     (setq php-manual-path "~/Documents/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
     (require 'doxymacs)
-    ;; (require 'php-extras)
+    ;; (use-package php-extras)
 
     (add-hook 'php-mode-hook
               '(lambda ()
@@ -2386,8 +2388,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                  (hs-minor-mode 1)
                  (imenu-add-menubar-index)
                  (subword-mode t)
-                 (doxymacs-mode 1)
-                 (doxymacs-font-lock)
                  (turn-on-eldoc-mode)
                  (which-func-mode 1)
                  (diminish 'hs-minor-mode)
@@ -2498,7 +2498,7 @@ unless return was pressed outside the comment"
   (progn
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\)$" . php-mode))
     )
-:config
+  :config
   (progn
     (require 'etags)
     (require 'tags-view)
@@ -2510,9 +2510,9 @@ unless return was pressed outside the comment"
               '(lambda ()
                  (yas-minor-mode 1)
                  (setq yas-extra-modes 'drupal-mode)
-                 (projectile-on)
-                 (message "I came here to do Drupal")))
-
+                 (doxymacs-mode 1)
+                 (doxymacs-font-lock)
+                 (projectile-on)))
     (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")))
 
 ;;;_ , erc
@@ -6193,10 +6193,17 @@ Works in Microsoft Windows, Mac OS X, Linux."
         feature-directory (concat module-directory "/features")
         contrib-directory (concat module-directory "/contrib")
         custom-directory (concat module-directory "/custom")
+        uri (concat "ww/" profile-name)
         doxymacs-doxygen-dirs `((
                                  ,site-directory
                                  ,(concat site-directory "doxy_tag.xml")
                                  ,(concat "file://" site-directory "docs/html"))))
+  (defun drush-uli-to-string ()
+    " Provide dynamically derived uri for drush uli"
+    (interactive)
+    (cd site-directory)
+    (kill-new (shell-command-to-string (concat "drush --uri=" uri " uli"))))
+  (bind-key "C-8 d e" `drush-uli-to-string)
 
   (setenv "8dr" readme-file-name)
   (setenv "8ds" site-directory)
@@ -6217,7 +6224,6 @@ Works in Microsoft Windows, Mac OS X, Linux."
   (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
   (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
   (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory)))
-
 
   (require 'find-file-in-project)
   ;; Function to create new functions that look for a specific pattern
