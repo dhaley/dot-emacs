@@ -72,7 +72,7 @@
  '(gnus-subscribe-newsgroup-method (quote gnus-subscribe-topics))
  '(gnus-sum-thread-tree-single-indent "  ")
  '(gnus-summary-expunge-below -100)
- '(gnus-summary-line-format "%«%U%R %uS %ur %»%(%*%-14,14f   %1«%B%s%»%)
+ '(gnus-summary-line-format "%«%U%R %uS %ur %»%(%-14,14f   %1«%B%*%s%»%)
 ")
  '(gnus-summary-mark-below -100)
  '(gnus-summary-pick-line-format "%U%R %uS %ur %(%*%-14,14f  %B%s%)

@@ -163,14 +163,18 @@
     (paredit-mode . " π")
     (eldoc-mode . "ℯ")
     (abbrev-mode . "")
+    ;; (doxymacs-mode . "💭")
     (drupal-mode . "💧")
+    (erc-mode . "😸")
+    ;; (flycheck-mode . "💀")
     ;; Major modes
     (lisp-interaction-mode . "λ")
     (hi-lock-mode . "")
     (python-mode . "Py")
-    (php-mode . "💧")
-    (emacs-lisp-mode . "EL")
-    (nxhtml-mode . "nx"))
+    ;; (php-mode . "ρ")
+    (emacs-lisp-mode . "∈")
+    (nxhtml-mode . "η"))
+
   "Alist for `clean-mode-line'.
 
 When you add a new element to the alist, keep in mind that you
@@ -2271,6 +2275,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , doxymacs
 
 (use-package doxymacs
+  :diminish doxymacs-mode
   :load-path "~/.emacs.d/site-lisp/doxymacs-1.8.0/lisp")
 
 ;;;_ , ediff
@@ -5831,6 +5836,7 @@ and view local index.html url"
   :mode ("\\.ya?ml\\'" . yaml-mode))
 
 ;;;_ , yasnippet
+
 
 (use-package yasnippet
   ;; :if (not noninteractive)
