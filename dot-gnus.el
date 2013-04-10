@@ -114,10 +114,10 @@
 (add-hook 'gnus-summary-mode-hook
               '(lambda ()
                  (hl-line-mode 1)
-                 (stripe-listify-buffer)
+                 ;; (stripe-listify-buffer)
                  (hl-spotlight-mode 1)
-                 (centered-cursor-mode 1)
-                 (visual-line-mode 1)
+                 ;; (centered-cursor-mode 1)
+                 ;; (visual-line-mode 1)
                  (setq cursor-type t)))
 
 
