@@ -11,7 +11,9 @@
 
 (define-abbrev-table 'asdf-mode-abbrev-table '())
 
-(define-abbrev-table 'awk-mode-abbrev-table '())
+(define-abbrev-table 'awk-mode-abbrev-table
+  '(
+   ))
 
 (define-abbrev-table 'bbdb-mode-abbrev-table '())
 
@@ -33,9 +35,13 @@
 
 (define-abbrev-table 'bsh-script-mode-abbrev-table '())
 
-(define-abbrev-table 'c++-mode-abbrev-table '())
+(define-abbrev-table 'c++-mode-abbrev-table
+  '(
+   ))
 
-(define-abbrev-table 'c-mode-abbrev-table '())
+(define-abbrev-table 'c-mode-abbrev-table
+  '(
+   ))
 
 (define-abbrev-table 'calculator-mode-abbrev-table '())
 
@@ -411,7 +417,6 @@
     ("cxan" "can" nil 0)
     ("danceing" "dancing" nil 0)
     ("dcument" "document" nil 0)
-    ("docs" "documents" nil 0)
     ("deatils" "details" nil 0)
     ("decison" "decision" nil 0)
     ("decisons" "decisions" nil 0)
@@ -421,6 +426,7 @@
     ("definatley" "definitely" nil 0)
     ("definded" "defined" nil 0)
     ("delimna" "dilemma" nil 0)
+    ("delta" "δ" nil 1)
     ("dependances" "dependencies" nil 0)
     ("deptartment" "department" nil 0)
     ("desicion" "decision" nil 0)
@@ -472,6 +478,7 @@
     ("distribusion" "distribution" nil 0)
     ("distrubution" "distribution" nil 0)
     ("divsion" "division" nil 0)
+    ("docs" "documents" nil 0)
     ("docuement" "documents" nil 0)
     ("docuemnt" "document" nil 0)
     ("documetn" "document" nil 0)
@@ -1145,7 +1152,6 @@
     ("yuor" "your" nil 1)
    ))
 
-
 (define-abbrev-table 'gnus-article-edit-mode-abbrev-table '())
 
 (define-abbrev-table 'gnus-sticky-article-mode-abbrev-table '())
@@ -1178,7 +1184,9 @@
 
 (define-abbrev-table 'jabber-console-mode-abbrev-table '())
 
-(define-abbrev-table 'java-mode-abbrev-table '())
+(define-abbrev-table 'java-mode-abbrev-table
+  '(
+   ))
 
 (define-abbrev-table 'jde-mode-abbrev-table '())
 
@@ -1250,7 +1258,9 @@
 
 (define-abbrev-table 'nxml-mode-abbrev-table '())
 
-(define-abbrev-table 'objc-mode-abbrev-table '())
+(define-abbrev-table 'objc-mode-abbrev-table
+  '(
+   ))
 
 (define-abbrev-table 'occur-edit-mode-abbrev-table '())
 
@@ -1289,6 +1299,8 @@
 
 (define-abbrev-table 'package-menu-mode-abbrev-table '())
 
+(define-abbrev-table 'pandoc-@-mode-abbrev-table '())
+
 (define-abbrev-table 'perl-mode-abbrev-table '())
 
 (define-abbrev-table 'php+-mode-abbrev-table '())
@@ -1299,7 +1311,9 @@
     ("8o" "$output .= \"" nil 4)
    ))
 
-(define-abbrev-table 'pike-mode-abbrev-table '())
+(define-abbrev-table 'pike-mode-abbrev-table
+  '(
+   ))
 
 (define-abbrev-table 'plain-tex-mode-abbrev-table '())
 
@@ -1363,6 +1377,8 @@
 
 (define-abbrev-table 'tabulated-list-mode-abbrev-table '())
 
+(define-abbrev-table 'tags-history-mode-abbrev-table '())
+
 (define-abbrev-table 'tar-mode-abbrev-table '())
 
 (define-abbrev-table 'term-mode-abbrev-table '())
@@ -1373,24 +1389,38 @@
 
 (define-abbrev-table 'text-mode-abbrev-table
   '(
+    ("^2" "²" nil 0)
+    ("^3" "³" nil 0)
+    ("almost0" "≈" nil 0)
+    ("alpha0" "α" nil 0)
     ("anger_symbol" "💢" nil 0)
     ("angry_face" "😠" nil 0)
     ("anguished_face" "😧" nil 0)
+    ("animals" "🐭 🐮 🐍 🐵 🐞" nil 0)
+    ("any0" "∀" nil 0)
+    ("app" "application" nil 4)
+    ("apps" "applications" nil 1)
     ("astonished_face" "😲" nil 0)
     ("athletic_shoe" "👟" nil 0)
     ("baby" "👶" nil 0)
     ("baby_angel" "👼" nil 0)
+    ("bbq" "barbecue" nil 3)
     ("beating_heart" "💓" nil 0)
+    ("beta0" "β" nil 0)
     ("bikini" "👙" nil 0)
     ("blue_heart" "💙" nil 0)
+    ("bookm" "bookmarks" nil 0)
     ("boy" "👦" nil 0)
     ("bride_with_veil" "👰" nil 0)
     ("briefcase" "💼" nil 0)
     ("broken_heart" "💔" nil 0)
-    ("busts_in_silhouette" "👥" nil 0)
     ("bust_in_silhouette" "👤" nil 0)
+    ("busts_in_silhouette" "👥" nil 0)
+    ("c0" "©" nil 0)
+    ("cat" "😸" nil 0)
     ("cat_face_with_tears_of_joy" "😹" nil 0)
     ("cat_face_with_wry_smile" "😼" nil 0)
+    ("chi" "Chisya" nil 0)
     ("clapping_hands_sign" "👏" nil 0)
     ("closed_umbrella" "🌂" nil 0)
     ("collision_symbol" "💥" nil 0)
@@ -1401,8 +1431,13 @@
     ("crown" "👑" nil 0)
     ("crying_cat_face" "😿" nil 0)
     ("crying_face" "😢" nil 0)
+    ("da" "Damon" nil 2)
     ("dancer" "💃" nil 0)
     ("dash_symbol" "💨" nil 0)
+    ("def" "definitely" nil 0)
+    ("deg0" "℃" nil 0)
+    ("delta0" "δ" nil 0)
+    ("dir" "directory" nil 4)
     ("disappointed_but_relieved_face" "😥" nil 0)
     ("disappointed_face" "😞" nil 0)
     ("dizzy_face" "😵" nil 0)
@@ -1410,8 +1445,10 @@
     ("dress" "👗" nil 0)
     ("droplet" "💧" nil 0)
     ("drupal" "💧" nil 0)
-    ("delta0" "δ" nil 0)
     ("ear" "👂" nil 0)
+    ("elm0" "∈" nil 0)
+    ("epsilon0" "ε" nil 0)
+    ("eta0" "η" nil 0)
     ("expressionless_face" "😑" nil 0)
     ("extraterrestrial_alien" "👽" nil 0)
     ("eyeglasses" "👓" nil 0)
@@ -1420,7 +1457,6 @@
     ("face_savouring_delicious_food" "😋" nil 0)
     ("face_screaming in_fear" "😱" nil 0)
     ("face_throwing_a_kiss" "😘" nil 0)
-    ("face_without_mouth" "😶" nil 0)
     ("face_with_cold_sweat" "😓" nil 0)
     ("face_with_look_of_triumph" "😤" nil 0)
     ("face_with_medical_mask" "😷" nil 0)
@@ -1432,11 +1468,11 @@
     ("face_with_stuck-out_tongue_and_tightly-closed_eyes" "😝" nil 0)
     ("face_with_stuck-out_tongue_and_winking_eye" "😜" nil 0)
     ("face_with_tears_of_joy" "😂" nil 0)
+    ("face_without_mouth" "😶" nil 0)
     ("family" "👪" nil 0)
     ("fangs" "😺 😸 😻 😽 😼 🙀 😿 😹 😾" nil 1)
-    ("question" "🙋" nil 0)
-    ("animals" "🐭 🐮 🐍 🐵 🐞" nil 0)
     ("fearful_face" "😨" nil 0)
+    ("fil" "file system" nil 0)
     ("fire" "🔥" nil 0)
     ("first quarter moon with face" "🌛" nil 0)
     ("fisted_hand_sign" "👊" nil 0)
@@ -1460,34 +1496,40 @@
     ("handbag" "👜" nil 0)
     ("happy_person_raising_one_hand" "🙋" nil 0)
     ("hear-no-evil_monkey" "🙉" nil 0)
-    ("hearts" "👼 👶 💝 💛 💕 💖 😍 😻 💞 💜 ❤ 💘 💗 💑 💔 💙 💓" nil 0)
+    ("heart0" "♥" nil 0)
     ("heart_with_arrow" "💘" nil 0)
+    ("hearts" "👼 👶 💝 💛 💕 💖 😍 😻 💞 💜 ❤ 💘 💗 💑 💔 💙 💓" nil 0)
     ("heavy_black_heart" "❤" nil 0)
     ("high-heeled_shoe" "👠" nil 0)
     ("hushed_face" "😯" nil 0)
     ("imp" "👿" nil 0)
+    ("inf0" "∞" nil 0)
     ("infinity" "∞" nil 0)
     ("information_desk_person" "💁" nil 0)
+    ("int0" "∫" nil 0)
     ("japanese_goblin" "👺" nil 0)
     ("japanese_ogre" "👹" nil 0)
+    ("jdoll" "🎎" nil 1)
     ("jeans" "👖" nil 0)
     ("kimono" "👘" nil 0)
     ("kiss" "💏" nil 0)
+    ("kiss_mark" "💋" nil 0)
     ("kissing_cat_face_with_closed_eyes" "😽" nil 0)
     ("kissing_face" "😗" nil 0)
     ("kissing_face_with_closed_eyes" "😚" nil 0)
     ("kissing_face_with_smiling_eyes" "😙" nil 0)
-    ("kiss_mark" "💋" nil 0)
     ("last quarter moon with face" "🌜" nil 0)
     ("lipstick" "💄" nil 0)
     ("loudly_crying_face" "😭" nil 0)
     ("love_hotel" "🏩" nil 0)
     ("love_letter" "💌" nil 0)
-    ("man" "👨" nil 0)
-    ("mans_shoe" "👞" nil 0)
+    ("maint" "maintenance" nil 1)
+    ("man" "👨" nil 1)
     ("man_and_woman_holding_hands" "👫" nil 0)
     ("man_with_gua_pi_mao" "👲" nil 0)
     ("man_with_turban" "👳" nil 0)
+    ("mans_shoe" "👞" nil 0)
+    ("mig" "migrated" nil 0)
     ("moons" "🌚 🌛 🌜🌝" nil 1)
     ("mouth" "👄" nil 0)
     ("nail_polish" "💅" nil 0)
@@ -1495,6 +1537,7 @@
     ("neutral_face" "😐" nil 0)
     ("new moon with face" "🌚" nil 0)
     ("nose" "👃" nil 0)
+    ("notis0" "≠" nil 0)
     ("ok_hand_sign" "👌" nil 0)
     ("older_man" "👴" nil 0)
     ("older_woman" "👵" nil 0)
@@ -1509,17 +1552,25 @@
     ("person_with_folded_hands" "🙏" nil 0)
     ("person_with_pouting_face" "🙎" nil 0)
     ("pile of poo" "💩" nil 0)
+    ("pine" "🎍" nil 0)
     ("police_officer" "👮" nil 0)
+    ("poo" "💩" nil 0)
     ("pouch" "👝" nil 0)
     ("pouting_cat_face" "😾" nil 0)
     ("pouting_face" "😡" nil 0)
     ("princess" "👸" nil 0)
+    ("privs" "privileges" nil 1)
     ("purple_heart" "💜" nil 0)
     ("purse" "👛" nil 0)
+    ("question" "🙋" nil 0)
     ("raised_fist" "✊" nil 0)
     ("raised_hand" "✋" nil 0)
+    ("rec" "recommend" nil 1)
+    ("rel" "relevant" nil 0)
     ("relieved_face" "😌" nil 0)
     ("revolving_hearts" "💞" nil 0)
+    ("rheart" "💝" nil 0)
+    ("rho0" "ρ" nil 3)
     ("ribbon" "🎀" nil 0)
     ("ring" "💍" nil 0)
     ("runner" "🏃" nil 0)
@@ -1546,10 +1597,13 @@
     ("speak-no-evil_monkey" "🙊" nil 0)
     ("speech_balloon" "💬" nil 0)
     ("splashing_sweet_symbol" "💦" nil 0)
+    ("suff" "sufficient" nil 0)
     ("t-shirt" "👕" nil 0)
+    ("thnx" "Thanks and let me know if you have any questions." nil 3)
     ("thought_balloon" "💭" nil 0)
     ("thumbs_ up_sign" "👍" nil 0)
     ("thumbs_down_sign" "👎" nil 0)
+    ("tib" "This is because" nil 0)
     ("tired_face" "😫" nil 0)
     ("tongue" "👅" nil 0)
     ("top_hat" "🎩" nil 0)
@@ -1557,6 +1611,7 @@
     ("two_men_holding_hands" "👬" nil 0)
     ("two_women_holding_hands" "👭" nil 0)
     ("unamused_face" "😒" nil 0)
+    ("unf" "unfortunately" nil 1)
     ("victory_hand" "✌" nil 0)
     ("waving_hand_sign" "👋" nil 0)
     ("weary_cat_face" "🙀" nil 0)
@@ -1568,55 +1623,15 @@
     ("white_up_pointing_backhand_index" "👆" nil 0)
     ("white_up_pointing_index" "☝" nil 0)
     ("winking_face" "😉" nil 0)
-    ("woman" "👩" nil 0)
+    ("woman" "👩" nil 1)
+    ("woman_with_bunny_ears" "👯" nil 0)
     ("womans_boots" "👢" nil 0)
     ("womans_clothes" "👚" nil 0)
     ("womans_hat" "👒" nil 0)
     ("womans_sandal" "👡" nil 0)
-    ("woman_with_bunny_ears" "👯" nil 0)
     ("worried_face" "😟" nil 0)
-    ("yellow_heart" "💛" nil 0)
-    ("^2" "²" nil 0)
-    ("^3" "³" nil 0)
-    ("almost0" "≈" nil 0)
-    ("alpha0" "α" nil 0)
-    ("any0" "∀" nil 0)
-    ("app" "application" nil 4)
-    ("apps" "applications" nil 1)
-    ("bbq" "barbecue" nil 3)
-    ("beta0" "β" nil 0)
-    ("bookm" "bookmarks" nil 0)
-    ("c0" "©" nil 0)
-    ("cat" "😸" nil 0)
-    ("chi" "Chisya" nil 0)
-    ("da" "Damon" nil 2)
-    ("def" "definitely" nil 0)
-    ("deg0" "℃" nil 0)
-    ("delta0" "δ" nil 0)
-    ("dir" "directory" nil 4)
-    ("elm0" "∈" nil 0)
-    ("epsilon0" "ε" nil 0)
-    ("eta0" "η" nil 0)
-    ("fil" "file system" nil 0)
-    ("heart0" "♥" nil 0)
-    ("inf0" "∞" nil 0)
-    ("int0" "∫" nil 0)
-    ("jdoll" "🎎" nil 1)
-    ("maint" "maintenance" nil 1)
-    ("mig" "migrated" nil 0)
-    ("notis0" "≠" nil 0)
-    ("pine" "🎍" nil 0)
-    ("poo" "💩" nil 0)
-    ("privs" "privileges" nil 1)
-    ("rec" "recommend" nil 1)
-    ("rel" "relevant" nil 0)
-    ("rheart" "💝" nil 0)
-    ("rho0" "ρ" nil 3)
-    ("suff" "sufficient" nil 0)
-    ("thnx" "Thanks and let me know if you have any questions." nil 3)
-    ("tib" "This is because" nil 0)
-    ("unf" "unfortunately" nil 1)
     ("wygac" "when you get a chance" nil 0)
+    ("yellow_heart" "💛" nil 0)
     ("yest" "yesterday" nil 0)
    ))
 
@@ -1667,3 +1682,4 @@
 (define-abbrev-table 'xmtn-log-edit-mode-abbrev-table '())
 
 (define-abbrev-table 'yaml-mode-abbrev-table '())
+
