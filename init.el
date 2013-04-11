@@ -164,8 +164,8 @@
     (eldoc-mode . "ℯ")
     (abbrev-mode . "")
     ;; (doxymacs-mode . "💭")
-    (drupal-mode . "💧")
-    (erc-mode . "😸")
+    ;; (drupal-mode . "💧")
+    ;; (erc-mode . "😸")
     ;; (flycheck-mode . "💀")
     ;; Major modes
     (lisp-interaction-mode . "λ")
@@ -1845,10 +1845,13 @@ reload abbrevs."
   :mode ("\\.[Cc][Ss][Vv]\\'" . csv-mode)
   :init
   (progn
-    (add-hook 'csv-mode-hook 'turn-on-stripes-mode)
-    (add-hook 'csv-mode-hook 'whitespace-mode)
-    )
-  )
+    (add-hook 'csv-mode-hook
+              '(lambda ()
+                 ;; (stripe-listify-buffer)
+                 (whitespace-mode 1)
+                 (orgtbl-mode 1)
+                 (stripe-org-tables-enable)
+))))
 
 ;;;_ , css-mode
 (use-package css-mode
@@ -2368,6 +2371,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 
 (use-package php-mode
+  :diminish php-mode
   :config
   (progn
     (use-package php-completion-mode
@@ -2499,6 +2503,7 @@ unless return was pressed outside the comment"
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
+  :diminish drupal-mode
   :init
   (progn
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\)$" . php-mode))
@@ -2527,9 +2532,9 @@ unless return was pressed outside the comment"
   :if running-alternate-emacs
   :init
   (progn
-
     (defun setup-irc-environment ()
       (interactive)
+
       (set-frame-font
        "-*-Lucida Grande-normal-normal-normal-*-*-*-*-*-p-0-iso10646-1" nil
        nil)
@@ -2542,6 +2547,7 @@ unless return was pressed outside the comment"
             erc-fill-prefix "          "
             erc-fill-column 88
             erc-insert-timestamp-function 'erc-insert-timestamp-left)
+
       (set-input-method "Agda")
 
       (defun reset-erc-track-mode ()
@@ -2585,37 +2591,13 @@ unless return was pressed outside the comment"
 
   :config
   (progn
-    (require 'sauron)
-    ;; turn on abbrevs
-    (abbrev-mode 1)
-
-    (defun create-new-erc-frames ()
-      (interactive)
-      (switch-to-bitlbee)
-      (sauron-start-hidden)
-      ;; (sauron-toggle-hide-show)
-      (switch-to-buffer-other-frame "#drupal-colorado")
-      (switch-to-buffer-other-frame "#emacs")
-      )
-
-    ;; (frame-configuration-to-register REGISTER &optional ARG)
-    ;; (set-register "E"  (list (current-frame-configuration) (point-marker)))
-    (bind-key "H-E" 'create-new-erc-frames)
-
-    ;; add abbrevs
-    (abbrev-table-put erc-mode-abbrev-table :parents (list text-mode-abbrev-table))
-    (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))
 
     (erc-track-minor-mode 1)
     (erc-track-mode 1)
 
     (use-package erc-alert)
     (use-package erc-highlight-nicknames)
-    ;; (use-package erc-hl-nicks)
     (use-package erc-patch)
-
-    ;; For bitlbee - not very useful unless jabber icons would populate
-    (require 'erc-nicklist)
 
     (use-package erc-yank
       :init
@@ -2752,7 +2734,28 @@ FORM => (eval FORM)."
         (if (looking-at
              "^<root> System message: Message from unknown participant \\([^:]+\\):")
             (replace-match "<\\1>"))))
-    (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)))
+    (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
+
+    ;; (require 'sauron)
+    ;; turn on abbrevs
+    (abbrev-mode 1)
+
+    (defun create-new-erc-frames ()
+      (interactive)
+      (switch-to-bitlbee)
+      (sauron-start-hidden)
+      ;; (sauron-toggle-hide-show)
+      (switch-to-buffer-other-frame "#drupal-colorado")
+      (switch-to-buffer-other-frame "#emacs")
+      )
+
+    ;; (frame-configuration-to-register REGISTER &optional ARG)
+    ;; (set-register "E"  (list (current-frame-configuration) (point-marker)))
+    (bind-key "H-E" 'create-new-erc-frames)
+
+    ;; add abbrevs
+    (abbrev-table-put erc-mode-abbrev-table :parents (list text-mode-abbrev-table))
+    (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))))
 
 (defun curr-dir-project-string ()
   "Returns current project as a string, or the empty string if
@@ -4067,7 +4070,12 @@ at the beginning of line, if already there."
                              "-d" (expand-file-name default-directory)))))
 
     ;;(add-hook 'magit-status-mode-hook 'start-git-monitor)
+
     ))
+
+
+(use-package github-browse-file
+  :bind ("H-o" . github-browse-file))
 
 ;;;_ , markdown-mode
 
@@ -4848,10 +4856,9 @@ and view local index.html url"
 ;; Sauron
 
 (use-package sauron
-  :load-path "~/.emacs.d/site-lisp/sauron"
   :if running-alternate-emacs
-  :bind (("C-. s" . sauron-toggle-hide-show)
-         ("C-. R" . sauron-clear))
+  :bind (("C-c s" . sauron-toggle-hide-show)
+         ("C-c t" . sauron-clear))
   :init
   (progn
     (setq
@@ -4919,8 +4926,8 @@ and view local index.html url"
                        :channel ,channel
                        :msg    ,msg)))
         nil))
-    ;; (qdot/monkey-patch-sr)
-))
+    (sr-hide)
+  ))
 
 ;; Saveplace
 ;; - places cursor in the last place you edited file
@@ -6319,6 +6326,8 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
     ))
 (bind-key "H-a" 'awesome-button)
 
+;; no need to type a space after comma
+(global-set-key (kbd ",") (lambda() (interactive) (insert ", ")))
 
 
 ;; Local Variables:
