@@ -2749,6 +2749,9 @@ FORM => (eval FORM)."
 
     ;; add abbrevs
     (abbrev-table-put erc-mode-abbrev-table :parents (list text-mode-abbrev-table))
+    (use-package window-number)
+    (window-number-mode)
+    (window-number-meta-mode)
     (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))))
 
 (defun curr-dir-project-string ()
