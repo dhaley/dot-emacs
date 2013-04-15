@@ -30,6 +30,9 @@
  '(auto-save-interval 1024)
  '(backup-directory-alist (quote (("/Volumes/Files/" . "/Volumes/Files/.backups") ("\\(recentf\\|archive/sent\\)" . "/tmp") (".*" . "~/.emacs.d/backups"))))
  '(backward-delete-char-untabify-method (quote untabify))
+ '(battery-load-critical 7)
+ '(battery-load-low 25)
+ '(battery-mode-line-format "#%b %p %t")
  '(bbdb-default-country "")
  '(bbdb-file "~/Documents/.bbdb")
  '(bbdb-message-caching-enabled nil)
@@ -59,6 +62,7 @@
  '(compilation-context-lines 10)
  '(compilation-scroll-output t)
  '(compilation-skip-threshold 2)
+ '(cpu-usage-format "%A %C0 %C1")
  '(current-language-environment "UTF-8")
  '(custom-buffer-done-function (quote kill-buffer))
  '(custom-file "/Users/daha1836/.emacs.d/settings.el")
@@ -103,6 +107,7 @@
  '(enable-recursive-minibuffers t)
  '(erc-auto-query (quote frame))
  '(erc-autoawayo-message "I'm at the cappuccino bar(after %i seconds of idle-time)")
+ '(erc-autojoin-channels-alist (quote (("freenode.net" "#drupal-colorado" "#emacs") ("localhost" "#twitter_bitlbee" "#chat_001" "#chat_000" "#wwwng" "#ucomm" "&bitlbee"))))
  '(erc-autojoin-timing (quote ident))
  '(erc-fill-function (quote erc-fill-variable))
  '(erc-fill-static-center 12)
@@ -216,7 +221,22 @@
  '(magit-completing-read-function (quote magit-ido-completing-read))
  '(magit-process-popup-time 15)
  '(make-backup-file-name-function (quote my-make-backup-file-name))
+ '(memory-usage-format "%R %F %S")
  '(moccur-following-mode-toggle nil)
+ '(mode-line-format (quote ("-" mode-line-mule-info (:eval (cond (buffer-read-only (propertize "%%%%" (quote face) (quote my-yellow-face) (quote help-echo) "Buffer is read-only." (quote mouse-face) (quote mode-line-highlight))) ((buffer-modified-p) (propertize "**" (quote face) (quote my-red-face) (quote help-echo) "Buffer has been modified." (quote mouse-face) (quote mode-line-highlight))) (t (propertize "--" (quote help-echo) "Buffer is unmodified." (quote mouse-face) (quote mode-line-highlight))))) (:eval (propertize "%@" (quote help-echo) (concat "Default directory is: " default-directory) (quote mouse-face) (quote mode-line-highlight))) "  " (:eval (let ((file-name (buffer-file-name))) (if file-name (let ((state-face (assoc (vc-state file-name) my-vc-alist)) (revision (vc-working-revision file-name)) (backend (vc-backend file-name))) (propertize (concat "%b" (when revision (concat " [" revision "]"))) (quote face) (caddr state-face) (quote mouse-face) (quote mode-line-highlight) (quote help-echo) (concat file-name "
+" (if backend (concat "Version controlled by " (symbol-name backend) "
+" "Status: " (cadr state-face)) "Not version controlled.")))) "%b"))) "  " mode-line-position "%[[" (:eval (let ((name (if (stringp mode-name) mode-name (car mode-name))) (rest (when (listp mode-name) (cdr mode-name)))) (cons (propertize name (quote face) (quote my-important-face) (quote help-echo) buffer-file-coding-system) rest))) minor-mode-alist "%]]" (:eval (let* ((battery (split-string battery-mode-line-string)) (battery-level (string-to-number (cadr battery))) (battery-icon (if my-battery-status-image (propertize "⚡" (quote display) my-battery-status-image) "⚡"))) (unless (string= (cadr battery) "N/A") (propertize (concat " " battery-icon (cadr battery) "%%") (quote face) (caddr (assoc (cond ((string= (car battery) "#+") "#+") ((<= battery-level battery-load-critical) "#!") ((<= battery-level battery-load-low) "#-") (t (car battery))) my-battery-status-alist)) (quote help-echo) (format "Battery status: %s
+Time remaining: %sh" (cadr (assoc (car battery) my-battery-status-alist)) (caddr battery)) (quote mouse-face) (quote mode-line-highlight))))) (:eval (let* ((load (mapcar (lambda (x) (/ x 100.0)) (load-average))) (load5 (cadr load)) (load-icon (if my-load-average-image (propertize "S" (quote display) my-load-average-image) "S"))) (propertize (concat " " load-icon (number-to-string load5)) (quote face) (cond ((>= load5 my-load-average-threshold) (quote my-red-face)) ((>= load5 (/ my-load-average-threshold 2.0)) (quote my-yellow-face))) (quote help-echo) (format (concat "Average system load:
+" "1 minute: %s
+" "5 minutes: %s
+" "15 minutes: %s") (car load) (cadr load) (caddr load)) (quote mouse-face) (quote mode-line-highlight)))) (:eval (let ((net (split-string network-speed-mode-line-string "#")) (net-icon (if my-network-load-image (propertize "⇅" (quote display) my-network-load-image) "⇅"))) (propertize (concat " " net-icon (nth 5 net)) (quote help-echo) (format (concat "Interface: %s
+" "Received bytes: %s
+" "Transmitted bytes: %s
+" "Download speed: %s
+" "Upload speed: %s") (car net) (nth 1 net) (nth 2 net) (nth 3 net) (nth 4 net)) (quote mouse-face) (quote mode-line-highlight)))) (:eval (propertize (concat " " (if my-uptime-image (propertize "⌛" (quote display) my-uptime-image) "⌛") (emacs-uptime "%h:%.2m")) (quote help-echo) (concat (format-time-string "Date: %Y-%m-%d
+Time: %H:%M:%S
+") (emacs-uptime "Emacs uptime: %H, %M
+") (format-seconds "System uptime: %H, %M" (- (float-time (current-time)) (string-to-number (shell-command-to-string "cat /proc/stat | awk '{if(NR == 6) print $2}'"))))) (quote mouse-face) (quote mode-line-highlight))))))
  '(modelinepos-column-limit 80)
  '(mouse-wheel-mode -1)
  '(mudel-mode-hook (quote (mudel-add-scroll-to-bottom)))
@@ -224,6 +244,9 @@
  '(multi-term-program "/usr/bin/screen")
  '(multi-term-program-switches "-DR")
  '(multi-term-scroll-show-maximum-output t)
+ '(network-speed-format-string "%NI#%RB#%TB#%RX#%TX#%AX")
+ '(network-speed-precision 1)
+ '(network-speed-update-interval 5)
  '(next-line-add-newlines nil)
  '(ns-alternate-modifier (quote alt))
  '(ns-command-modifier (quote meta))
@@ -350,19 +373,19 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(completions-common-part ((t (:inherit default :foreground "red"))))
- '(diff-added ((((background dark)) (:foreground "#FFFF9B9BFFFF")) (t (:foreground "DarkGreen"))) t)
- '(diff-changed ((((background dark)) (:foreground "Yellow")) (t (:foreground "MediumBlue"))) t)
+ '(diff-added ((((background dark)) (:foreground "#FFFF9B9BFFFF")) (t (:foreground "DarkGreen"))))
+ '(diff-changed ((((background dark)) (:foreground "Yellow")) (t (:foreground "MediumBlue"))))
  '(diff-context ((((background dark)) (:foreground "White")) (t (:foreground "Black"))))
- '(diff-file-header ((((background dark)) (:foreground "Cyan" :background "Black")) (t (:foreground "Red" :background "White"))) t)
- '(diff-header ((((background dark)) (:foreground "Cyan")) (t (:foreground "Red"))) t)
+ '(diff-file-header ((((background dark)) (:foreground "Cyan" :background "Black")) (t (:foreground "Red" :background "White"))))
+ '(diff-header ((((background dark)) (:foreground "Cyan")) (t (:foreground "Red"))))
  '(diff-index ((((background dark)) (:foreground "Magenta")) (t (:foreground "Green"))))
  '(diff-nonexistent ((((background dark)) (:foreground "#FFFFFFFF7474")) (t (:foreground "DarkBlue"))))
- '(diff-refine-change ((t (:inherit diff-refine-change :background nil))) t)
+ '(diff-refine-change ((t (:inherit diff-refine-change :background nil))))
  '(diredp-compressed-file-suffix ((t (:foreground "#7b68ee"))) t)
  '(diredp-ignored-file-name ((t (:foreground "#aaaaaa"))) t)
  '(erb-face ((t (:background nil))) t)
  '(erb-out-delim-face ((t (:inherit erb-exec-delim-face :foreground "#b58900"))) t)
- '(erc-timestamp-face ((t (:foreground "dark violet"))))
+ '(erc-timestamp-face ((t (:foreground "dark violet"))) t)
  '(iedit-occurrence ((t (:inherit lazy-highlight))) t)
  '(magit-diff-add ((t (:inherit diff-added :weight normal))))
  '(magit-diff-del ((t (:inherit diff-removed :weight normal))))

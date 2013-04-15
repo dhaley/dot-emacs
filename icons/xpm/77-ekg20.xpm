@@ -1,0 +1,30 @@
+/* XPM */
+static char *_7_ekg20[] = {
+/* columns rows colors chars-per-pixel */
+"24 20 4 1 ",
+"  c #437943794379",
+". c #443E443E443E",
+"X c #450B450B450B",
+"o c None",
+/* pixels */
+"ooooooooo..ooooooooooooo",
+"oooooooo...ooooooooooooo",
+"oooooooo...ooooooooooooo",
+"oooooooo....oooooooooooo",
+"oooooooo...ooooooooooooo",
+"ooooooo.....oooooooooooo",
+"ooooooo.....oooooooooooo",
+"ooooooo..o..oo.ooooooooo",
+"oooooo...o..oo..oooooooo",
+"oooooo..oo..oo..oooooooo",
+"oooooo..oo..oo...ooooooo",
+"oooooo..oo..o....ooooooo",
+"ooooo...oo..o.....ooo..o",
+"ooo....ooo.....o........",
+"ooo....ooo.....o........",
+"ooooooooooo...oooooooooo",
+"oooooooooo....oooooooooo",
+"ooooooooooo...oooooooooo",
+"ooooooooooo...oooooooooo",
+"ooooooooooo..ooooooooooo"
+};

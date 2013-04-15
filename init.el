@@ -163,15 +163,11 @@
     (paredit-mode . " π")
     (eldoc-mode . "ℯ")
     (abbrev-mode . "")
-    ;; (doxymacs-mode . "💭")
-    ;; (drupal-mode . "💧")
-    ;; (erc-mode . "😸")
-    ;; (flycheck-mode . "💀")
     ;; Major modes
     (lisp-interaction-mode . "λ")
     (hi-lock-mode . "")
     (python-mode . "Py")
-    ;; (php-mode . "ρ")
+    (php-mode . "ρ")
     (emacs-lisp-mode . "∈")
     (nxhtml-mode . "η"))
 
@@ -210,9 +206,6 @@ want to use in the modeline *in lieu of* the original.")
 (if (boundp 'buffer-file-coding-system)
     (setq-default buffer-file-coding-system 'utf-8)
   (setq default-buffer-file-coding-system 'utf-8))
-
-;; Treat clipboard input as UTF-8 string first; compound text next, etc.
-(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 
 
@@ -2086,7 +2079,8 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , dired
 
 (use-package dired
-  :defer t
+  ;; :defer t
+  :bind ("C-x C-j" . dired-jump)
   :init
   (progn
      (defvar mark-files-cache (make-hash-table :test #'equal))
@@ -5704,24 +5698,6 @@ and view local index.html url"
 (bind-key "H-;" 'windmove-left-without-errors)
 (bind-key "H-[" 'windmove-up-without-errors)
 
-(use-package  framemove)
-;;   (framemove-default-keybindings)
-;;
-;; If you want to integrate framemove and windmove
-;; You can omit the call to 'framemove-default-keybindings
-;; And instead do:
-;;    (require 'framemove)
-;;(windmove-default-keybindings)
-(setq framemove-hook-into-windmove t)
-
-(bind-key "M-<up>" 'fm-up-frame)
-(bind-key "M-<down>" 'fm-down-frame)
-(bind-key "M-<left>" 'fm-left-frame)
-(bind-key "M-<right>" 'fm-right-frame)
-
-(bind-key "M-S-<up>" 'fm-next-frame)
-
-
 (use-package wgrep
   :commands (wgrep-setup))
 
@@ -6329,6 +6305,10 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
 ;; no need to type a space after comma
 (global-set-key (kbd ",") (lambda() (interactive) (insert ", ")))
 
+(use-package my-modeline
+  :if (not running-alternate-emacs)
+  ;; :defer t
+  )
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
