@@ -229,11 +229,7 @@
 Time remaining: %sh" (cadr (assoc (car battery) my-battery-status-alist)) (caddr battery)) (quote mouse-face) (quote mode-line-highlight))))) (:eval (let* ((load (mapcar (lambda (x) (/ x 100.0)) (load-average))) (load5 (cadr load)) (load-icon (if my-load-average-image (propertize "S" (quote display) my-load-average-image) "S"))) (propertize (concat " " load-icon (number-to-string load5)) (quote face) (cond ((>= load5 my-load-average-threshold) (quote my-red-face)) ((>= load5 (/ my-load-average-threshold 2.0)) (quote my-yellow-face))) (quote help-echo) (format (concat "Average system load:
 " "1 minute: %s
 " "5 minutes: %s
-" "15 minutes: %s") (car load) (cadr load) (caddr load)) (quote mouse-face) (quote mode-line-highlight)))) (:eval (let ((net (split-string network-speed-mode-line-string "#")) (net-icon (if my-network-load-image (propertize "⇅" (quote display) my-network-load-image) "⇅"))) (propertize (concat " " net-icon (nth 5 net)) (quote help-echo) (format (concat "Interface: %s
-" "Received bytes: %s
-" "Transmitted bytes: %s
-" "Download speed: %s
-" "Upload speed: %s") (car net) (nth 1 net) (nth 2 net) (nth 3 net) (nth 4 net)) (quote mouse-face) (quote mode-line-highlight)))) (:eval (propertize (concat " " (if my-uptime-image (propertize "⌛" (quote display) my-uptime-image) "⌛") (emacs-uptime "%h:%.2m")) (quote help-echo) (concat (format-time-string "Date: %Y-%m-%d
+" "15 minutes: %s") (car load) (cadr load) (caddr load)) (quote mouse-face) (quote mode-line-highlight)))) (:eval (propertize (concat " " (if my-uptime-image (propertize "⌛" (quote display) my-uptime-image) "⌛") (emacs-uptime "%h:%.2m")) (quote help-echo) (concat (format-time-string "Date: %Y-%m-%d
 Time: %H:%M:%S
 ") (emacs-uptime "Emacs uptime: %H, %M
 ") (format-seconds "System uptime: %H, %M" (- (float-time (current-time)) (string-to-number (shell-command-to-string "cat /proc/stat | awk '{if(NR == 6) print $2}'"))))) (quote mouse-face) (quote mode-line-highlight))))))
