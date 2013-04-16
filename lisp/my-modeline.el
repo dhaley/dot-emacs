@@ -11,12 +11,11 @@
 
 ;;; Code:
 
-(setq network-speed-interface-list (if (string= (shell-command-to-string "ifconfig | grep en1") "")
-                                           '("en0")
-                                         '("en1")))
+(setq network-speed-interface-list (if (string= (shell-command-to-string "netstat -bi | grep -v Ibytes | grep 'en1' | head -n 1") "") '("en0") '("en1")))
+
 
 (display-battery-mode t)
-(network-speed-start)
+;; (network-speed-start)
 (cpu-usage-start)
 (memory-usage-start)
 
