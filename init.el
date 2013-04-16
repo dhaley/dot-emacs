@@ -6030,16 +6030,6 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
   (internal-show-cursor nil (not (internal-show-cursor-p)))
   )
 
-(defun byte-compile-current-buffer ()
-  "`byte-compile' current buffer if it's emacs-lisp-mode and compiled file exists."
-  (interactive)
-  (when (and (eq major-mode 'emacs-lisp-mode)
-             (file-exists-p (byte-compile-dest-file buffer-file-name)))
-    (byte-compile-file buffer-file-name)))
-
-(add-hook 'after-save-hook 'byte-compile-current-buffer)
-
-
 ;; OS X Specific configuration
 
 ;;; Ignore .DS_Store files with ido mode
@@ -6311,7 +6301,7 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
 (use-package my-modeline
   :if (not running-alternate-emacs)
   ;; :defer t
-  )
+)
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
