@@ -1840,7 +1840,6 @@ reload abbrevs."
   (progn
     (add-hook 'csv-mode-hook
               '(lambda ()
-                 ;; (stripe-listify-buffer)
                  (whitespace-mode 1)
                  (orgtbl-mode 1)
                  (stripe-org-tables-enable)
@@ -2211,26 +2210,26 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
                  )))))
 
-       (eval-after-load "dired-aux"
-         '(defun dired-do-async-shell-command (command &optional arg file-list)
-            "Run a shell command COMMAND on the marked files asynchronously.
+       ;; (eval-after-load "dired-aux"
+       ;;   '(defun dired-do-async-shell-command (command &optional arg file-list)
+       ;;      "Run a shell command COMMAND on the marked files asynchronously.
 
- Like `dired-do-shell-command' but if COMMAND doesn't end in ampersand,
- adds `* &' surrounded by whitespace and executes the command asynchronously.
- The output appears in the buffer `*Async Shell Command*'."
-            (interactive
-             (let ((files (dired-get-marked-files t current-prefix-arg)))
-               (list
-                ;; Want to give feedback whether this file or marked files are
-                ;; used:
-                (dired-read-shell-command "& on %s: " current-prefix-arg files)
-                current-prefix-arg
-                files)))
-            (unless (string-match "[ \t][*?][ \t]" command)
-              (setq command (concat command " *")))
-            (unless (string-match "&[ \t]*\\'" command)
-              (setq command (concat command " &")))
-            (dired-do-shell-command command arg file-list)))
+ ;; Like `dired-do-shell-command' but if COMMAND doesn't end in ampersand,
+ ;; adds `* &' surrounded by whitespace and executes the command asynchronously.
+ ;; The output appears in the buffer `*Async Shell Command*'."
+ ;;            (interactive
+ ;;             (let ((files (dired-get-marked-files t current-prefix-arg)))
+ ;;               (list
+ ;;                ;; Want to give feedback whether this file or marked files are
+ ;;                ;; used:
+ ;;                (dired-read-shell-command "& on %s: " current-prefix-arg files)
+ ;;                current-prefix-arg
+ ;;                files)))
+ ;;            (unless (string-match "[ \t][*?][ \t]" command)
+ ;;              (setq command (concat command " *")))
+ ;;            (unless (string-match "&[ \t]*\\'" command)
+ ;;              (setq command (concat command " &")))
+ ;;            (dired-do-shell-command command arg file-list)))
 
        (require 'stripe-buffer)
        (add-hook 'dired-mode-hook '(lambda ()
@@ -2501,6 +2500,7 @@ unless return was pressed outside the comment"
   :init
   (progn
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\)$" . php-mode))
+    (add-to-list 'auto-mode-alist '("\\.\\(profile\\)$" . php-mode))
     )
   :config
   (progn
@@ -2664,7 +2664,6 @@ FORM => (eval FORM)."
       (erc-cmd-DEOP (format "%s" (erc-current-nick))))
 
     (defun erc-cmd-KICKBAN (nick &rest reason)
-      (erc-cmd-OPME)
       (setq reason (mapconcat #'identity reason " "))
       (and (string= reason "")
            (setq reason nil))
@@ -2673,8 +2672,7 @@ FORM => (eval FORM)."
                                 (erc-default-target)
                                 nick
                                 (or reason
-                                    "Kicked (kickban)")))
-      (erc-cmd-DEOPME))
+                                    "Kicked (kickban)"))))
 
     (defun erc-cmd-UNTRACK (&optional target)
       "Add TARGET to the list of target to be tracked."
@@ -3558,8 +3556,8 @@ at the beginning of line, if already there."
 
   :config
   (progn
-    (defadvice info-setup (after load-info+ activate)
-      (use-package info+))
+    ;; (defadvice info-setup (after load-info+ activate)
+    ;;   (use-package info+))
 
     (defadvice Info-exit (after remove-info-window activate)
       "When info mode is quit, remove the window."
@@ -4660,13 +4658,10 @@ and view local index.html url"
     :init
     (show-paren-mode 1)))
 
-(use-package page-break-lines
-  :commands (turn-on-page-break-lines-mode
-             global-page-break-lines-mode)
-  :init
-  (progn
-    ;; (hook-into-modes #'turn-on-page-break-lines-mode my-prog-mode-hooks)
-    ))
+;;;_ , page-break-lines
+
+;; (use-package page-break-lines
+;;   :diminish page-break-lines)
 
 ;;;_ , per-window-point
 
@@ -5116,7 +5111,10 @@ and view local index.html url"
   :defer t
   :init
   (progn
-    (add-hook 'org-mode-hook 'org-table-stripes-enable)))
+    ;; (setq stripe-hl-line)
+    (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
+    ;; (add-hook 'org-mode-hook 'org-table-stripes-enable)
+))
 
 ;;;_ , stopwatch
 
@@ -5254,7 +5252,6 @@ and view local index.html url"
 ;;;;_ , twittering-mode
 
 (use-package twittering-mode
-  :load-path "twittering-mode"
   :commands twit
   :config
   (progn
@@ -5262,7 +5259,7 @@ and view local index.html url"
           twittering-timer-interval 150
           twittering-number-of-tweets-on-retrieval 100
           Twittering-use-ssl t
-          twittering-use-master-password nil
+          twittering-use-master-password t
           twittering-scroll-mode t
           twittering-initial-timeline-spec-string '(":home"
                                                     ":replies"
@@ -5303,8 +5300,8 @@ and view local index.html url"
   (setq vkill-show-all-processes t))
 
 (use-package rgr-web
-  ;;  :commands
-  :load-path "~/.emacs.d/lisp/"
+  :if (not running-alternate-emacs)
+  ;; :load-path "~/.emacs.d/lisp/"
   :bind (("<f4>" . rgr/browse-url)
          ))
 
@@ -5716,53 +5713,21 @@ and view local index.html url"
     (bind-key "M-N" 'winner-redo)
     (bind-key "M-P" 'winner-undo)))
 
-;;;_ , dkh-web.el
-
 ;;;_ , workgroups
 
 (use-package workgroups
   :diminish workgroups-mode
-  :commands wg-switch-to-index-1
   :if (not noninteractive)
   :init
   (progn
-    (bind-key "C-8" 'wg-switch-to-index-1 workgroups-preload-map)
-    (bind-key "0" 'wg-switch-to-index-0 workgroups-preload-map)
-    (bind-key " 1" 'wg-switch-to-index-1 workgroups-preload-map)
-    (bind-key " 2" 'wg-switch-to-index-2 workgroups-preload-map)
-    (bind-key " 3" 'wg-switch-to-index-3 workgroups-preload-map)
-    (bind-key " 4" 'wg-switch-to-index-4 workgroups-preload-map)
-    (bind-key " 5" 'wg-switch-to-index-5 workgroups-preload-map)
-    (bind-key " 6" 'wg-switch-to-index-6 workgroups-preload-map)
-    (bind-key " 7" 'wg-switch-to-index-7 workgroups-preload-map)
-    (bind-key " 8" 'wg-switch-to-index-8 workgroups-preload-map)
-    (bind-key " 9" 'wg-switch-to-index-9 workgroups-preload-map)
-
-    (bind-key "C-8 e" 'dkh-eshell-macs)
-
-    (bind-key "C-8 a" 'visit-ansi-term)
-
-    )
-
-  :config
-  (progn
     (workgroups-mode 1)
-    (let ((workgroups-file (expand-file-name "workgroups" user-emacs-directory)))
 
-      (if running-alternate-emacs
-          (progn
-            (setq wg-file "/Users/daha1836/.emacs.d/data-alt/workgroups")
-            (wg-load "/Users/daha1836/.emacs.d/data-alt/workgroups"))
-        (if (file-readable-p workgroups-file)
-            (wg-load workgroups-file))))
+    (let ((workgroups-file (expand-file-name "workgroups" user-data-directory)))
+      (if (file-readable-p workgroups-file)
+          (wg-load workgroups-file)))
 
-    (require 'powerline)
-    (powerline-default)
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
-    (bind-key "\\" 'toggle-input-method wg-map)
-    )
-  )
-
+    (bind-key "\\" 'toggle-input-method wg-map)))
 
 ;;;_ , wrap-region
 
@@ -6179,7 +6144,10 @@ Works in Microsoft Windows, Mac OS X, Linux."
         doxymacs-doxygen-dirs `((
                                  ,site-directory
                                  ,(concat site-directory "doxy_tag.xml")
-                                 ,(concat "file://" site-directory "docs/html"))))
+                                 ,(concat "file://" site-directory "docs/html")))
+        drupal-rootdir site-directory)
+
+
   (defun drush-uli-to-string ()
     " Provide dynamically derived uri for drush uli"
     (interactive)
@@ -6189,6 +6157,7 @@ Works in Microsoft Windows, Mac OS X, Linux."
 
   (setenv "8dr" readme-file-name)
   (setenv "8ds" site-directory)
+  (setenv "DRUPAL_ROOT" site-directory)
   (setenv "8dp" profile-directory)
   (setenv "8dT" theme-directory)
   (setenv "8dt" profile-theme-directory)
@@ -6300,7 +6269,7 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
 
 (use-package my-modeline
   :if (not running-alternate-emacs)
-  ;; :defer t
+  :defer t
 )
 
 ;; Local Variables:
