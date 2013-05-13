@@ -36,7 +36,6 @@
         "override/gnus/lisp/"
         "override/org-mode/contrib/lisp/"
         "override/org-mode/lisp/"
-        "override/tramp/lisp/"
 
         ;; Packages located elsewhere on the system...
         ;; "~/src/ledger/lisp/"

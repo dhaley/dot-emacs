@@ -5234,20 +5234,6 @@ and view local index.html url"
                 (nth 1 entry)
               5)))))))
 
-;; setup tramp mode
-;; Tramp mode: allow me to SSH to hosts and edit as sudo like:
-;; C-x C-f /sudo:example.com:/etc/something-owned-by-root
-;; from: http://www.gnu.org/software/tramp/#Multi_002dhops
-;; (use-package tramp
-;;   :config
-;;   (progn
-;;     (setq tramp-default-method "ssh")
-;;     (add-to-list 'tramp-default-proxies-alist
-;;                  '(nil "\\`root\\'" "/ssh:%h:"))
-;;     (add-to-list 'tramp-default-proxies-alist
-;;                  '((regexp-quote (system-name)) nil nil))))
-
-
 ;; https://github.com/anthracite/emacs-config/blob/master/init.el
 ;;;;_ , twittering-mode
 
