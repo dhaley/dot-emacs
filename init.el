@@ -6272,6 +6272,11 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
   :defer t
 )
 
+;; http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
+;; (bind-key "C-<tab>" 'mode-line-other-buffer)
+(bind-key "C-<escape>" 'mode-line-other-buffer)
+
+
 ;; Local Variables:
 ;;   mode: emacs-lisp
 ;;   mode: allout
