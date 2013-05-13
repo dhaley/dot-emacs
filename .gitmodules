@@ -272,8 +272,8 @@
         path = site-lisp/pandoc-mode
         url = git://github.com/joostkremers/pandoc-mode.git
 [submodule "site-lisp/php-extras"]
-	path = site-lisp/php-extras
-	url = https://github.com/arnested/php-extras.git
+        path = site-lisp/php-extras
+        url = https://github.com/arnested/php-extras.git
 [submodule "site-lisp/rainbow-delimiters"]
         path = site-lisp/rainbow-delimiters
         url = https://github.com/jlr/rainbow-delimiters.git
@@ -404,17 +404,14 @@
         path = site-lisp/highlight-indentation
         url = git://github.com/jorgenschaefer/Highlight-Indentation-for-Emacs.git
 [submodule "site-lisp/gimme-cat"]
-	path = site-lisp/gimme-cat
-	url = https://github.com/afroisalreadyinu/gimme-cat.git
+        path = site-lisp/gimme-cat
+        url = https://github.com/afroisalreadyinu/gimme-cat.git
 [submodule "site-lisp/mode-line-stats"]
-	path = site-lisp/mode-line-stats
-	url = https://github.com/Idorobots/mode-line-stats.git
+        path = site-lisp/mode-line-stats
+        url = https://github.com/Idorobots/mode-line-stats.git
 [submodule "site-lisp/github-issues"]
-	path = site-lisp/github-issues
-	url = git://github.com/inkel/github-issues.el.git
+        path = site-lisp/github-issues
+        url = git://github.com/inkel/github-issues.el.git
 [submodule "site-lisp/org-present"]
-	path = site-lisp/org-present
-	url = https://github.com/rlister/org-present.git
-[submodule "site-lisp/shm"]
-	path = site-lisp/shm
-	url = http://chrisdone.com/shm.git
+        path = site-lisp/org-present
+        url = https://github.com/rlister/org-present.git
