@@ -22,8 +22,7 @@ released.
 #+end_example
 
 * How To Use This Document
- :PROPERTIES:
- :CUSTOM_ID: HowToUseThisDocument
+:CUSTOM_ID: HowToUseThisDocument
 
 This document assumes you've had some exposure to org-mode already so
 concepts like the agenda, capture mode, etc.  won't be completely
@@ -142,7 +141,8 @@ The following setup in my .emacs enables =org-mode= for most buffers.
 =org-mode= is the default mode for =.org=, =.org_archive=, and =.txt=
 files.
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 ;;;
 ;;; Org Mode
 ;;;
@@ -156,7 +156,8 @@ files.
 (global-set-key "\C-cb" 'org-iswitchb)
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes :exports none
+#+header: :tangle yes
+#+begin_src emacs-lisp :exports none
 ;; The following setting is different from the document so that you
 ;; can override the document path by setting your path in the variable
 ;; org-mode-user-lisp-path
@@ -239,13 +240,15 @@ See Publishing and Exporting for more details.
 :END:
 
 Here is my current =org-agenda-files= setup.
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 (setq org-agenda-files (quote ("~/git/org"
                                "~/git/org/client1"
                                "~/git/client2")))
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes :exports none
+#+header: :tangle yes
+#+begin_src emacs-lisp :exports none
 ;; The following setting is different from the document so that you
 ;; can override the document org-agenda-files by setting your
 ;; org-agenda-files in the variable org-user-agenda-files
@@ -2220,7 +2223,8 @@ is based on.
 Below is the partial capture template showing the phone call template
 followed by the phone-call related lookup functions.
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, and org-protocol
 (setq org-capture-templates
       (quote (...
@@ -3613,7 +3617,8 @@ The clock modeline time is also shown with a reverse background.
           'append)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 ;; The following custom-set-faces create the highlights
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
@@ -3900,11 +3905,13 @@ automagically when the task is marked done.
 
 Add the following to your =.emacs=
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 (require 'org-checklist)
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes :exports none
+#+header: :tangle yes
+#+begin_src emacs-lisp :exports none
 ;; The following setting is different from the document so that you
 ;; can override the document path by setting your path in the variable
 ;; org-mode-user-contrib-lisp-path
@@ -4347,7 +4354,8 @@ My logging settings are set as follows:
 
 My =org-todo-keywords= are set as follows:
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/@)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE"))))
@@ -4730,7 +4738,8 @@ mainly for replacing short strings or initials with full names for
 people during meeting notes.  I now use =abbrev-mode-= for this and
 no longer need this setting.
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 (setq require-final-newline nil)
 #+end_src
 
@@ -4780,7 +4789,8 @@ This keeps an automatic record of when tasks are created which I find very usefu
 I also have a short cut key defined to invoke this function on demand so that I can
 insert the inactive timestamp anywhere on demand.
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 (global-set-key (kbd "<f9> t") 'bh/insert-inactive-timestamp)
 #+end_src
 
@@ -4950,7 +4960,8 @@ in the agenda with =b= so this isn't really an issue for me anymore.
 
 To make org-mode prefer the current year when entering dates I set
 the following variable:
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 (setq org-read-date-prefer-future nil)
 #+end_src
 
@@ -5079,7 +5090,8 @@ post of the org-mode mailing list.  I actually use M-x a lot now
 because IDO completion is so easy.
 
 Here's the smex setup I use
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.emacs.d"))
 (require 'smex)
 (smex-initialize)
@@ -5542,7 +5554,8 @@ I can edit the predefined snippets.  I unpacked the yasnippet software
 in my =~/.emacs.d/plugins= directory, renamed =yasnippet0.5.10= to
 =yasnippet= and added the following setup in my =.emacs=:
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/plugins"))
 
 (require 'yasnippet)
@@ -5661,7 +5674,8 @@ This helps me keep track of things that are in progress.
 
 Here's the setup I use to propagate =STARTED= to parent tasks:
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 ;; Mark parent tasks as started
 (defvar bh/mark-parent-tasks-started nil)
 
@@ -6053,7 +6067,8 @@ exit $retval
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 
 (defadvice org-open-at-point (around org-open-at-point-choose-browser activate)
   (let ((browse-url-browser-function
@@ -6069,7 +6084,8 @@ exit $retval
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 
 (org-add-link-type "mac-outlook" 'org-mac-outlook-open)
 
@@ -6114,7 +6130,8 @@ msgid)))
 
 ** mo functions
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 
 (defun org-find-top-category (&optional pos)
   (let ((cat
@@ -6235,7 +6252,8 @@ To use this function, add it to `org-agenda-finalize-hook':
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 
 (add-hook 'org-finalize-agenda-hook 'org-agenda-add-overlays)
 
@@ -6444,7 +6462,8 @@ This can be 0 for immediate, or a floating point value.")
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 
 (defalias 'archive-done-tasks 'org-my-archive-done-tasks)
 
@@ -6483,7 +6502,8 @@ This can be 0 for immediate, or a floating point value.")
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 
 (defalias 'sort-done-tasks 'org-my-sort-done-tasks)
 
@@ -6815,7 +6835,8 @@ Summary: %s" product component version priority severity heading) ?\n ?\n)
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 
 ;;;_  . keybindings
 
@@ -6938,7 +6959,8 @@ Summary: %s" product component version priority severity heading) ?\n ?\n)
 
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 ;;;_  . org-agenda-mode
 
 (let ((map org-agenda-mode-map))
@@ -7002,7 +7024,8 @@ Summary: %s" product component version priority severity heading) ?\n ?\n)
 
 * keywiz
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 
 (use-package keywiz)
 (require 'keywiz)
@@ -7088,7 +7111,8 @@ updated when I remove an item.
 #+end_src
 
 
-#+begin_src emacs-lisp :tangle no
+#+header: :tangle no
+#+begin_src emacs-lisp
 
 ;; org-capture
   (add-hook 'org-capture-mode-hook
