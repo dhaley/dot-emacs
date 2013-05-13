@@ -409,3 +409,12 @@
 [submodule "site-lisp/mode-line-stats"]
 	path = site-lisp/mode-line-stats
 	url = https://github.com/Idorobots/mode-line-stats.git
+[submodule "site-lisp/github-issues"]
+	path = site-lisp/github-issues
+	url = git://github.com/inkel/github-issues.el.git
+[submodule "site-lisp/org-present"]
+	path = site-lisp/org-present
+	url = https://github.com/rlister/org-present.git
+[submodule "site-lisp/shm"]
+	path = site-lisp/shm
+	url = http://chrisdone.com/shm.git
