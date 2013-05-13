@@ -1,6 +1,6 @@
 #+TITLE: Org Mode - Organize Your Life In Plain Text!
 #+LANGUAGE:  en
-#+AUTHOR: Bernt Hansen (IRC:Thumper_ on freenode)
+#+AUTHOR: Bernt Hansen (IRC: BerntH on freenode)
 #+EMAIL: bernt@norang.ca
 #+OPTIONS:   H:3 num:t   toc:3 \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:nil
 #+OPTIONS:   TeX:t LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
@@ -14,6 +14,16 @@
 
 Org-mode is a fabulous organizational tool originally built by Carsten
 Dominik that operates on plain text files.  Org-mode is part of Emacs.
+
+#+begin_example
+The source for this document works with org-mode up to version 7.9.4.
+The code in this document will be updated to 8.0 as soon as it is
+released.
+#+end_example
+
+* How To Use This Document
+ :PROPERTIES:
+ :CUSTOM_ID: HowToUseThisDocument
 
 This document assumes you've had some exposure to org-mode already so
 concepts like the agenda, capture mode, etc.  won't be completely
