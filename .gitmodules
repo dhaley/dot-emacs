@@ -415,3 +415,12 @@
 [submodule "site-lisp/org-present"]
         path = site-lisp/org-present
         url = https://github.com/rlister/org-present.git
+[submodule "site-lisp/magit-review"]
+	path = site-lisp/magit-review
+	url = git://gitorious.org/magit-review/magit-review.git
+[submodule "lib/emacs-request"]
+	path = lib/emacs-request
+	url = git://github.com/tkf/emacs-request.git
+[submodule "lib/emacs-web"]
+	path = lib/emacs-web
+	url = git://github.com/nicferrier/emacs-web.git
