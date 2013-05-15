@@ -380,6 +380,9 @@ improved by many.."
 
 (bind-key "M-[" 'align-code)
 (bind-key "M-`" 'other-frame)
+(bind-key "C-<tab>" 'other-frame)
+
+
 (bind-key "M-RET" 'other-frame)
 
 (bind-key "M-j" 'delete-indentation-forward)
@@ -3309,8 +3312,11 @@ at the beginning of line, if already there."
     (use-package grep-ed)
 
     (grep-apply-setting 'grep-command "egrep -nH -e ")
-    (if nil
-        (grep-apply-setting 'grep-find-command '("gf -e " . 7))
+    (if t
+        (progn
+          (setq-default grep-first-column 1)
+          (grep-apply-setting 'grep-find-command
+                              '("ag --noheading --column " . 25)))
       (grep-apply-setting
        'grep-find-command
        '("find . -type f -print0 | xargs -P4 -0 egrep -nH -e " . 52)))))
@@ -4043,6 +4049,11 @@ at the beginning of line, if already there."
   :config
   (progn
     (setenv "GIT_PAGER" "")
+
+    (use-package magit-review
+      :commands magit-review
+      :config (require 'json))
+
     (unbind-key "M-h" magit-mode-map)
     (unbind-key "M-s" magit-mode-map)
 
