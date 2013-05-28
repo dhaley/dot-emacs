@@ -12,7 +12,7 @@
  '(org-agenda-diary-file "~/Documents/Tasks/diary.org")
  '(org-agenda-dim-blocked-tasks nil)
  '(org-agenda-exporter-settings (quote ((org-agenda-write-buffer-name "Damon's VC-Rsrch/Dean-Grad Agenda"))))
- '(org-agenda-files (quote ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/refile.org" "~/Documents/Tasks/.org-jira/AFROTC.org" "~/Documents/Tasks/.org-jira/CUPRE.org" "~/Documents/Tasks/.org-jira/CS.org" "~/Documents/Tasks/.org-jira/FAC.org" "~/Documents/Tasks/.org-jira/VCR.org" "~/Documents/Tasks/.org-jira/SUP.org" "~/Documents/Tasks/.org-jira/SHAKE.org")))
+ '(org-agenda-files (quote ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/refile.org" "~/Documents/Tasks/.org-jira/AFROTC.org" "~/Documents/Tasks/.org-jira/CUPRE.org" "~/Documents/Tasks/.org-jira/CS.org" "~/Documents/Tasks/.org-jira/FAC.org" "~/Documents/Tasks/.org-jira/VCR.org" "~/Documents/Tasks/.org-jira/SUP.org" "~/Documents/Tasks/.org-jira/SHAKE.org" "~/Documents/Tasks/from-mobile.org")))
  '(org-agenda-insert-diary-extract-time t)
  '(org-agenda-log-mode-items (quote (closed state)))
  '(org-agenda-persistent-filter t)
@@ -25,7 +25,7 @@
  '(org-agenda-tags-column -102)
  '(org-agenda-tags-todo-honor-ignore-options t)
  '(org-agenda-text-search-extra-files (quote (agenda-archives)))
- '(org-agenda-time-grid (quote ((daily today remove-match) "----------------" (900 1100 1300 1500 1700))))
+ '(org-agenda-time-grid (quote ((daily today remove-match) #("----------------" 0 16 (org-heading t)) (900 1100 1300 1500 1700))))
  '(org-agenda-window-setup (quote current-window))
  '(org-archive-location "%s_archive::* Archived Tasks")
  '(org-babel-results-keyword "results")
@@ -136,3 +136,9 @@
  '(org-use-speed-commands t)
  '(org-use-sub-superscripts nil)
  '(org-yank-adjusted-subtrees t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-mode-line-clock ((t (:foreground "red" :box (:line-width -1 :style released-button)))) t))
