@@ -12,7 +12,7 @@
  '(org-agenda-diary-file "~/Documents/Tasks/diary.org")
  '(org-agenda-dim-blocked-tasks nil)
  '(org-agenda-exporter-settings (quote ((org-agenda-write-buffer-name "Damon's VC-Rsrch/Dean-Grad Agenda"))))
- '(org-agenda-files (quote ("~/Documents/Tasks/todo.org" "~/Documents/Tasks/refile.org" "~/Documents/Tasks/.org-jira/AFROTC.org" "~/Documents/Tasks/.org-jira/CUPRE.org" "~/Documents/Tasks/.org-jira/CS.org" "~/Documents/Tasks/.org-jira/FAC.org" "~/Documents/Tasks/.org-jira/VCR.org" "~/Documents/Tasks/.org-jira/SUP.org" "~/Documents/Tasks/.org-jira/SHAKE.org")))
+ '(org-agenda-files (quote ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/refile.org" "~/Documents/Tasks/.org-jira/AFROTC.org" "~/Documents/Tasks/.org-jira/CUPRE.org" "~/Documents/Tasks/.org-jira/CS.org" "~/Documents/Tasks/.org-jira/FAC.org" "~/Documents/Tasks/.org-jira/VCR.org" "~/Documents/Tasks/.org-jira/SUP.org" "~/Documents/Tasks/.org-jira/SHAKE.org")))
  '(org-agenda-insert-diary-extract-time t)
  '(org-agenda-log-mode-items (quote (closed state)))
  '(org-agenda-persistent-filter t)
