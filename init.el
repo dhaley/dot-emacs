@@ -6189,7 +6189,7 @@ Works in Microsoft Windows, Mac OS X, Linux."
              (?g (file . "~/.emacs.d/gnus-settings.el"))
              (?G (file . "~/.emacs.d/dot-gnus.el"))
              (?s (file . "~/.emacs.d/settings.el"))
-             (?t (file . "~/Documents/Tasks/todo.org"))
+             (?t (file . "~/Documents/Tasks/todo.txt"))
              (?u (file . "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el"))
              (?v (file . "~/.emacs.d/dkh-core.org"))
              (?z (file . "~/.zshrc"))
