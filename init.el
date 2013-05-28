@@ -3277,7 +3277,7 @@ at the beginning of line, if already there."
   :init
   (progn
     (setq gnus-init-file (expand-file-name "dot-gnus" user-emacs-directory)
-          gnus-home-directory "~/git/gnus/")
+          gnus-home-directory "~/Messages/Gnus/")
 
     ;; (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
     (use-package org-mime)
@@ -6184,7 +6184,7 @@ Works in Microsoft Windows, Mac OS X, Linux."
 ;; Registers
 
 (dolist (r `(
-             (?O (file . "~/.emacs.d/dkh-org.org"))
+             (?O (file . "~/.emacs.d/dot-org.org"))
              (?a (file . "~/.emacs.d/.abbrev_defs"))
              (?g (file . "~/.emacs.d/gnus-settings.el"))
              (?G (file . "~/.emacs.d/dot-gnus.el"))
@@ -6250,6 +6250,32 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
 ;; (bind-key "C-<tab>" 'mode-line-other-buffer)
 (bind-key "C-<escape>" 'mode-line-other-buffer)
 
+(defun smarter-move-beginning-of-line (arg)
+  "Move point back to indentation of beginning of line.
+
+Move point to the first non-whitespace character on this line.
+If point is already there, move to the beginning of the line.
+Effectively toggle between the first non-whitespace character and
+the beginning of the line.
+
+If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+point reaches the beginning or end of the buffer, stop there."
+  (interactive "^p")
+  (setq arg (or arg 1))
+
+  ;; Move lines first
+  (when (/= arg 1)
+    (let ((line-move-visual nil))
+      (forward-line (1- arg))))
+
+  (let ((orig-point (point)))
+    (back-to-indentation)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))
+
+;; remap C-a to `smarter-move-beginning-of-line'
+(global-set-key [remap move-beginning-of-line]
+                'smarter-move-beginning-of-line)
 
 ;; Local Variables:
 ;;   mode: emacs-lisp

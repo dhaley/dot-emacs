@@ -37,7 +37,7 @@
  '(gnus-group-mode-hook (quote (gnus-topic-mode gnus-agent-mode hl-line-mode)))
  '(gnus-group-use-permanent-levels t)
  '(gnus-harvest-sender-alist (quote ((".*@\\(cu\\|colorado\\)\\.edu" . damon\.haley@colorado\.edu) (".*@fsf\\.org" . dkh@member\.fsf\.org))))
- '(gnus-home-directory "~/git/gnus/")
+ '(gnus-home-directory "~/Messages/Gnus/")
  '(gnus-ignored-from-addresses "\\(damon\\.haley\\|dhaley\\|dkh\\)\\(-[^@]+\\)?@\\(colorado\\.edu\\|\\(hushmail\\|ssl\\-mail\\)\\.com\\|member\\.fsf\\.org\\)")
  '(gnus-ignored-mime-types (quote ("application/x-pkcs7-signature" "application/ms-tnef" "text/x-vcard")))
  '(gnus-interactive-exit (quote quiet))
@@ -125,7 +125,7 @@
  '(message-default-mail-headers "Cc:
 Bcc:
 ")
- '(message-directory "~/git/gnus/Mail/")
+ '(message-directory "~/Messages/Gnus/Mail/")
  '(message-fill-column 78)
  '(message-interactive t)
  '(message-mail-alias-type nil)

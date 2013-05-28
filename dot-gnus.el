@@ -101,7 +101,7 @@
     (defadvice shutdown-fetchmail (after stop-mail-after-fetchmail activate)
       (async-start
        (lambda ()
-         (call-process (expand-file-name "~/git/gnus/Mail/manage-mail/stop-mail")))
+         (call-process (expand-file-name "~/Messages/manage-mail/stop-mail")))
        (lambda (ret)
          (do-applescript "tell application \"Notify\" to quit"))))))
 
