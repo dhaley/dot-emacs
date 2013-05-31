@@ -3041,51 +3041,60 @@ at the beginning of line, if already there."
                          "(no branch)"))
                   "] ")))
 
-      ;; (eshell/export "EPOCROOT=\\Paragon\\")
-
-      ;; http://permalink.gmane.org/gmane.emacs.devel/107713
-      ;; (defadvice cd (around dir-locals-on-cd activate)
-      ;;    "Apply the variables defined in .dir-locals.el when changing
-      ;;  into and outof a directory in eshell."
-      ;;    ;; clean up old variables
-      ;;    (while file-local-variables-alist
-      ;;      (let ((x (pop file-local-variables-alist)))
-      ;;        (kill-local-variable x)))
-      ;;    ;; cd
-      ;;    ad-do-it
-      ;;    ;; run hack-dir-local-variables w/o buffer-file-name
-      ;;    (let ((variables-file (dir-locals-find-file default-directory))
-      ;;         (class nil)
-      ;;         (dir-name nil))
-      ;;      (cond
-      ;;       ((stringp variables-file)
-      ;;        (setq dir-name (file-name-directory default-directory))
-      ;;        (setq class (dir-locals-read-from-file variables-file)))
-      ;;       ((consp variables-file)
-      ;;        (setq dir-name (car variables-file))
-      ;;        (setq class (cdr variables-file))))
-      ;;      (when class
-      ;;        (let ((variables
-      ;;              (dir-locals-collect-variables
-      ;;               (dir-locals-get-class-variables class) dir-name nil)))
-      ;;         (when variables
-      ;;           (hack-local-variables-filter variables dir-name)))))
-      ;;    ;; apply file-local-variables to buffer
-      ;;    (while file-local-variables-alist
-      ;;      (let ((x (pop file-local-variables-alist)))
-      ;;        (if (consp x)
-      ;;            (set (car x) (cdr x))
-      ;;          (kill-local-variable x)))))
-
-
-
       (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
       (add-hook 'eshell-mode-hook
                 '(lambda ()
                    ;; (or (getenv "CDPATH") (setenv "CDPATH" ".:~:~/.emacs.d:~/data:~/data/releases"))
                    (make-local-variable 'project-name)
                    (local-set-key "\C-c\C-q" 'eshell-kill-process)
-                   (local-set-key "\C-c\C-k" 'compile))))))
+                   (local-set-key "\C-c\C-k" 'compile))))
+
+    ;; http://www.masteringemacs.org/articles/2012/01/16/pcomplete-context-sensitive-completion-emacs/
+    ;;**** Git Completion
+
+    (defun pcmpl-git-commands ()
+      "Return the most common git commands by parsing the git output."
+      (with-temp-buffer
+        (call-process-shell-command "git" nil (current-buffer) nil "help" "--all")
+        (goto-char 0)
+        (search-forward "available git commands in")
+        (let (commands)
+          (while (re-search-forward
+                  "^[[:blank:]]+\\([[:word:]-.]+\\)[[:blank:]]*\\([[:word:]-.]+\\)?"
+                  nil t)
+            (push (match-string 1) commands)
+            (when (match-string 2)
+              (push (match-string 2) commands)))
+          (sort commands #'string<))))
+
+    (defconst pcmpl-git-commands (pcmpl-git-commands)
+      "List of `git' commands.")
+
+    (defvar pcmpl-git-ref-list-cmd "git for-each-ref refs/ --format='%(refname)'"
+      "The `git' command to run to get a list of refs.")
+
+    (defun pcmpl-git-get-refs (type)
+      "Return a list of `git' refs filtered by TYPE."
+      (with-temp-buffer
+        (insert (shell-command-to-string pcmpl-git-ref-list-cmd))
+        (goto-char (point-min))
+        (let ((ref-list))
+          (while (re-search-forward (concat "^refs/" type "/\\(.+\\)$") nil t)
+            (add-to-list 'ref-list (match-string 1)))
+          ref-list)))
+
+    (defun pcomplete/git ()
+      "Completion for `git'."
+      ;; Completion for the command argument.
+      (pcomplete-here* pcmpl-git-commands)
+      (cond
+       ((pcomplete-match (regexp-opt '("add" "rm" "mv")) 1)
+        (while (pcomplete-here (pcomplete-entries))))
+       ((pcomplete-match "help" 1)
+        (pcomplete-here* pcmpl-git-commands))
+       ;; provide branch completion for the command `checkout'.
+       ((pcomplete-match "checkout" 1)
+        (pcomplete-here* (pcmpl-git-get-refs "heads")))))))
 
 (use-package esh-toggle
   :requires eshell
