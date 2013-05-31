@@ -17,14 +17,7 @@
 
 (require 'org-drill)
 
-(use-package org-habit
-  :diminish org-habit)
-
-
 (define-key org-mode-map (kbd "C-c k") 'org-cut-subtree)
-
-(setq org-export-with-section-numbers nil)
-(setq org-html-include-timestamps nil)
 
 (defun sacha/org-export-subtree-as-html-fragment ()
   (interactive)
@@ -35,9 +28,39 @@
 
 ;;
 ;; Standard key bindings
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
+
+(bind-key "<f5>"  'bh/org-todo)
+(bind-key "<S-f5>" 'bh/widen)
+(bind-key "<f7>" 'bh/set-truncate-lines)
+(bind-key "<f8>" 'org-cycle-agenda-files)
+(bind-key "<f9> <f9>" 'bh/show-org-agenda)
+(bind-key "<f9> b" 'bbdb)
+(bind-key "<f9> c" 'calendar)
+(bind-key "<f9> f" 'boxquote-insert-file)
+(bind-key "<f9> g" 'gnus)
+(bind-key "<f9> h" 'bh/hide-other)
+(bind-key "<f9> n" 'org-narrow-to-subtree)
+(bind-key "<f9> W" 'widen)
+(bind-key "<f9> u" 'bh/narrow-up-one-level)
+(bind-key "<f9> I" 'bh/punch-in)
+(bind-key "<f9> O" 'bh/punch-out)
+(bind-key "<f9> o" 'bh/make-org-scratch)
+(bind-key "<f9> r" 'boxquote-region)
+(bind-key "<f9> s" 'bh/switch-to-scratch)
+(bind-key "<f9> t" 'bh/insert-inactive-timestamp)
+(bind-key "<f9> T" 'tabify)
+(bind-key "<f9> U" 'untabify)
+(bind-key "<f9> v" 'visible-mode)
+(bind-key "<f9> SPC" 'bh/clock-in-last-task)
+(bind-key "C-<f9>" 'previous-buffer)
+(bind-key "M-<f9>" 'org-toggle-inline-images)
+(bind-key "C-x n r" 'narrow-to-region)
+(bind-key "C-<f10>" 'next-buffer)
+(bind-key "<f11>" 'org-clock-goto)
+(bind-key "C-<f11>" 'org-clock-in)
+(bind-key "C-s-<f12>" 'bh/save-then-publish)
+
 
 
 ;; Custom Key Bindings
@@ -71,62 +94,12 @@
   (interactive)
   (switch-to-buffer "*scratch*"))
 
-
-
-
-
-(setq org-use-fast-todo-selection t)
-
-
 (require 'org-exchange-capture)
 
 ;; I use C-M-r to start capture mode
 (global-set-key (kbd "C-M-r") 'org-capture)
 ;; I use C-c r to start capture mode when using SSH from my Android phone
 (global-set-key (kbd "C-c r") 'org-capture)
-
-;; Capture templates for: TODO tasks, Notes, appointments, phone calls, and org-protocol
-(setq org-capture-templates
-      (quote (("t" "todo" entry (file "~/Documents/Tasks/refile.org")
-               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("r" "respond" entry (file "~/Documents/Tasks/refile.org")
-               "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-              ("n" "note" entry (file "~/Documents/Tasks/refile.org")
-               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-              ("w" "org-protocol" entry (file "~/Documents/Tasks/refile.org")
-               "* TODO Review %c\n%U\n" :immediate-finish t)
-              ("p" "Phone call" entry (file "~/Documents/Tasks/refile.org")
-               "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-              ("h" "Habit" entry (file "~/Documents/Tasks/refile.org")
-               "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
-
-(add-to-list 'org-capture-templates
-             `
-             ("u"
-              "Task: Read this URL"
-              entry
-              (file+headline "~/Documents/Tasks/urls.org" "Articles To Read")
-              ,(concat "* TODO Read article: '%:description'\nURL: %c\n\n")
-              :empty-lines 1
-              :immediate-finish t))
-
-(add-to-list 'org-capture-templates
-             `
-             ("W"
-              "Capture web snippet"
-              entry
-              (file+headline "~/Documents/Tasks/learn-emacs.org" "Emacs mastery")
-              ,(concat "* Fact: '%:description'        :"
-                       (format "%s" org-drill-question-tag)
-                       ":\n:PROPERTIES:\n:DATE_ADDED: %u\n:SOURCE_URL: %c\n:END:\n\n%i\n%?\n")
-              :empty-lines 1
-              :immediate-finish t))
-
-
-(add-to-list 'org-capture-templates
-             `
-             ("s" "secure" entry (file+datetree+prompt "~/Documents/Tasks/secure.org.gpg")
-              "* %(format-time-string \"%H:%M\") %^{Entry} %^G\n%i%?"))
 
 ;; Remove empty LOGBOOK drawers on clock out
 (defun bh/remove-empty-drawer-on-clock-out ()
@@ -136,17 +109,6 @@
     (org-remove-empty-drawer-at "LOGBOOK" (point))))
 
 (add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
-
-
-
-
-
-; Use IDO for both buffer and file completion and ido-everywhere to t
-(setq ido-everywhere t)
-(setq ido-max-directory-size 100000)
-(ido-mode (quote both))
-(setq ido-default-file-method 'selected-window)
-(setq ido-default-buffer-method 'selected-window)
 
 ;;;; Refile settings
 ; Exclude DONE state tasks from refile targets
@@ -176,29 +138,6 @@
 ;; Resume clocking task when emacs is restarted
 (org-clock-persistence-insinuate)
 ;;
-;; Show lot sof clocking history so it's easy to pick items off the C-F11 list
-(setq org-clock-history-length 36)
-;; Resume clocking task on clock-in if the clock is open
-(setq org-clock-in-resume t)
-;; Change tasks to NEXT when clocking in
-(setq org-clock-in-switch-to-state 'bh/clock-in-to-next)
-;; Separate drawers for clocking and logs
-(setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
-;; Save clock data and state changes and notes in the LOGBOOK drawer
-(setq org-clock-into-drawer t)
-;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
-(setq org-clock-out-remove-zero-time-clocks t)
-;; Clock out when moving task to a done state
-(setq org-clock-out-when-done t)
-;; Save the running clock and all clock history when exiting Emacs, load it on startup
-(setq org-clock-persist t)
-;; Do not prompt to resume an active clock
-(setq org-clock-persist-query-resume nil)
-;; Enable auto clock resolution for finding open clocks
-(setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
-;; Include current clocking task in clock reports
-(setq org-clock-report-include-clocking-task t)
-
 (setq bh/keep-clock-running nil)
 
 (defun bh/clock-in-to-next (kw)
@@ -317,10 +256,6 @@ A prefix arg forces clock in of the default task."
       (org-clock-in nil))))
 
 
-
-
-;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
-(setq org-clock-out-remove-zero-time-clocks t)
 
 
 (require 'bbdb)
@@ -558,8 +493,6 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
         nil
       next-headline)))
 
-(setq org-archive-mark-done nil)
-
 (defun bh/skip-non-archivable-tasks ()
   "Skip trees that are not available for archiving"
   (save-restriction
@@ -580,8 +513,6 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
                 next-headline ; Has a date in this month or last month, skip it
               nil))  ; available to archive
         (or next-headline (point-max))))))
-
-(setq org-plantuml-jar-path "~/java/plantuml.jar")
 
 (add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
 
@@ -606,26 +537,6 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
          (plantuml . t)
          (latex . t))))
 
-
-; Use fundamental mode when editing plantuml blocks with C-c '
-(add-to-list 'org-src-lang-modes (quote ("plantuml" . fundamental)))
-
-;; Don't enable this because it breaks access to emacs from my Android phone
-(setq org-startup-with-inline-images nil)
-
-; experimenting with docbook exports - not finished
-(setq org-export-docbook-xsl-fo-proc-command "fop %s %s")
-(setq org-export-docbook-xslt-proc-command "xsltproc --output %s /usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl %s")
-;
-; Inline images in HTML instead of producting links to the image
-(setq org-export-html-inline-images t)
-; Do not use sub or superscripts - I currently don't need this functionality in my documents
-(setq org-export-with-sub-superscripts nil)
-(setq org-export-html-style-include-default nil)
-; Do not generate internal css formatting for HTML exports
-(setq org-export-htmlize-output-type (quote css))
-; Export with LaTeX fragments
-(setq org-export-with-LaTeX-fragments t)
 
 ; List of projects
 ; norang       - http://www.norang.ca/
@@ -854,8 +765,6 @@ so change the default 'F' binding in the agenda to allow both"
           '(lambda () (org-defkey org-agenda-mode-map "V" 'bh/view-next-project))
           'append)
 
-(setq org-show-entry-below (quote ((default))))
-
 (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
           'append)
@@ -881,34 +790,6 @@ so change the default 'F' binding in the agenda to allow both"
 (add-hook 'org-agenda-mode-hook
           '(lambda () (hl-line-mode 1))
           'append)
-
-;; Keep tasks with dates on the global todo lists
-(setq org-agenda-todo-ignore-with-date nil)
-
-;; Keep tasks with deadlines on the global todo lists
-(setq org-agenda-todo-ignore-deadlines nil)
-
-;; Keep tasks with scheduled dates on the global todo lists
-(setq org-agenda-todo-ignore-scheduled nil)
-
-;; Keep tasks with timestamps on the global todo lists
-(setq org-agenda-todo-ignore-timestamp nil)
-
-
-(setq org-agenda-include-diary nil)
-
-
-
-;; Show all future entries for repeating tasks
-(setq org-agenda-repeating-timestamp-show-all t)
-
-;; Show all agenda dates - even if they are empty
-(setq org-agenda-show-all-dates t)
-
-;; Start the weekly agenda on Monday
-(setq org-agenda-start-on-weekday 1)
-
-
 
 ;;
 ;; Agenda sorting functions
@@ -1010,24 +891,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (require 'org-checklist)
 
-(setq org-hide-leading-stars nil)
-
-(setq org-insert-heading-respect-content nil)
-
-(setq org-reverse-note-order nil)
-
-
-
-
-(setq org-table-export-default-format "orgtbl-to-csv")
-
-
-
-
-(setq org-log-state-notes-insert-after-drawers nil)
-
-(setq org-clock-sound "/usr/local/lib/tngchime.wav")
-
 
 
 (run-at-time "06:00" 86400 '(lambda () (setq org-habit-show-habits t)))
@@ -1043,8 +906,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (require 'org-protocol)
 (require 'org-mac-link-grabber)
-
-(setq require-final-newline t)
 
 (defun bh/insert-inactive-timestamp ()
   (interactive)
@@ -1081,10 +942,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
         (kill-ring-save (point-min) (point-max))))))
 
 
-(setq org-tags-match-list-sublevels t)
-
-(setq org-cycle-include-plain-lists t)
-
 (defun bh/mark-next-parent-tasks-todo ()
   "Visit each parent task and change NEXT states to TODO"
   (let ((mystate (or (and (fboundp 'org-state)
@@ -1098,9 +955,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (add-hook 'org-after-todo-state-change-hook 'bh/mark-next-parent-tasks-todo 'append)
 (add-hook 'org-clock-in-hook 'bh/mark-next-parent-tasks-todo 'append)
-
-(setq org-startup-folded t)
-
 
 (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
 (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
@@ -1137,32 +991,8 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (org-mark-subtree)
   (org-mime-subtree))
 
-(setq org-enable-priority-commands t)
-
-(setq org-e-html-inline-images t)
-(setq org-e-html-style-extra "<link rel=\"stylesheet\" href=\"http://doc.norang.ca/org.css\" type=\"text/css\" />")
-(setq org-e-html-style-include-default nil)
-(setq org-e-html-xml-declaration
-      (quote
-       (("was-html" . "")
-        ("html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
-        ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))))
-(setq org-e-latex-listings t)
-(setq org-e-html-style-include-scripts nil)
-(setq org-e-html-validation-link nil)
-
-
-(setq org-src-preserve-indentation nil)
-(setq org-edit-src-content-indentation 0)
-
-(setq org-catch-invisible-edits 'error)
-
-(setq org-export-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (set-charset-priority 'unicode)
-(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
-
-(setq org-odd-levels-only nil)
 
 (defun bh/clock-in-bzflagt-task ()
   (interactive)
@@ -1175,19 +1005,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
     (org-clock-out))
 
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
-
-(setq org-plantuml-jar-path nil)
-
-; experimenting with docbook exports - not finished
-(setq org-export-docbook-xsl-fo-proc-command "fop %s %s")
-  ; Inline images in HTML instead of producting links to the image
-  ; Do not use sub or superscripts - I currently don't need this functionality in my documents
-  (setq org-export-with-sub-superscripts nil)
-  ; Use org.css from the norang website for export document stylesheets
-  ; Do not generate internal css formatting for HTML exports
-  ; Export with LaTeX fragments
-  (setq org-export-with-LaTeX-fragments t)
-
 
 
 (defun org-link-to-named-task ()
@@ -1605,37 +1422,6 @@ end tell" (match-string 1))))
           (t
            (org-build-note-webpage)))
      ))
-
-
-;; Normally my private (and translated) configuration is used.
-;; (when (not (boundp 'org-capture-templates))
-;;   (setq org-capture-templates
-;;         '(
-;;           ;; task
-;;           ("t" "task" entry (file "agenda.org")
-;;            "* TODO ⌚ %?\n  %U\n\n  %i\n\n")
-;;           ;; meeting and events
-;;           ("e" "event" entry (file "agenda.org")
-;;            "* %?\n  WHEN %^t\n  %i\n\n")
-;;           ;; notebook
-;;           ("n" "note" entry (file "notebook.org")
-;;            "* %?\n  %U\n  %i\n  %a\n\n")
-;;           ;; org-capture from the web
-;;           ("w" "webpage" entry (file "agenda.org") "%(org-build-note-auto)")
-;;           ("y" "macprotocol" entry (file "agenda.org") "%(org-build-note-auto)")
-;;           )))
-
-(setq org-default-capture-template "t")
-
-(add-to-list 'org-capture-templates
-             `
-             ("j" "Journal" entry (file+datetree "~/Documents/Tasks/diary.org")
-              "* %?%^G\n Entered on %T\n   %i\n"
-              :clock-in t
-              :clock-resume t))
-
-;;              ("j" "Journal" entry (file+datetree "~/Documents/Tasks/diary.org")
-;;               "* %?\n%U\n" :clock-in t :clock-resume t)
 
 (provide 'dot-org)
 
