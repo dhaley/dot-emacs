@@ -96,11 +96,6 @@
 
 (require 'org-exchange-capture)
 
-;; I use C-M-r to start capture mode
-(global-set-key (kbd "C-M-r") 'org-capture)
-;; I use C-c r to start capture mode when using SSH from my Android phone
-(global-set-key (kbd "C-c r") 'org-capture)
-
 ;; Remove empty LOGBOOK drawers on clock out
 (defun bh/remove-empty-drawer-on-clock-out ()
   (interactive)
