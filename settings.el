@@ -392,7 +392,7 @@
  '(helm-visible-mark ((t (:background "#d1f5ae"))))
  '(iedit-occurrence ((t (:inherit lazy-highlight))) t)
  '(ledger-register-pending-face ((t (:weight bold))) t)
- '(lusty-match-face ((t (:inherit helm-match))))
+ '(lusty-match-face ((t (:inherit helm-match))) t)
  '(magit-branch-face ((((class color) (background light)) (:foreground "Blue"))) t)
  '(magit-diff-add ((t (:inherit diff-added :weight normal))))
  '(magit-diff-del ((t (:inherit diff-removed :weight normal))))
