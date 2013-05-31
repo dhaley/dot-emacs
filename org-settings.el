@@ -13,30 +13,84 @@
  '(org-agenda-dim-blocked-tasks nil)
  '(org-agenda-exporter-settings (quote ((org-agenda-write-buffer-name "Damon's VC-Rsrch/Dean-Grad Agenda"))))
  '(org-agenda-files (quote ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/refile.org" "~/Documents/Tasks/.org-jira/AFROTC.org" "~/Documents/Tasks/.org-jira/CUPRE.org" "~/Documents/Tasks/.org-jira/CS.org" "~/Documents/Tasks/.org-jira/FAC.org" "~/Documents/Tasks/.org-jira/VCR.org" "~/Documents/Tasks/.org-jira/SUP.org" "~/Documents/Tasks/.org-jira/SHAKE.org" "~/Documents/Tasks/from-mobile.org")))
+ '(org-agenda-include-diary nil)
  '(org-agenda-insert-diary-extract-time t)
  '(org-agenda-log-mode-items (quote (closed state)))
  '(org-agenda-persistent-filter t)
+ '(org-agenda-repeating-timestamp-show-all t)
+ '(org-agenda-show-all-dates t)
  '(org-agenda-skip-additional-timestamps-same-entry t)
  '(org-agenda-skip-deadline-if-done t)
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-skip-timestamp-if-done t)
  '(org-agenda-sorting-strategy (quote ((agenda habit-down time-up user-defined-up priority-down effort-up category-keep) (todo category-up priority-down effort-up) (tags category-up priority-down effort-up) (search category-up))))
  '(org-agenda-span (quote day))
+ '(org-agenda-start-on-weekday 1)
  '(org-agenda-tags-column -102)
  '(org-agenda-tags-todo-honor-ignore-options t)
  '(org-agenda-text-search-extra-files (quote (agenda-archives)))
  '(org-agenda-time-grid (quote ((daily today remove-match) #("----------------" 0 16 (org-heading t)) (900 1100 1300 1500 1700))))
+ '(org-agenda-todo-ignore-with-date nil)
  '(org-agenda-window-setup (quote current-window))
  '(org-archive-location "%s_archive::* Archived Tasks")
  '(org-babel-results-keyword "results")
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
+ '(org-capture-templates (quote (("j" "Journal" entry (file+datetree "~/Documents/Tasks/diary.org") "* %?%^G
+ Entered on %T
+   %i
+" :clock-in t :clock-resume t) ("s" "secure" entry (file+datetree+prompt "~/Documents/Tasks/secure.org.gpg") "* %(format-time-string \"%H:%M\") %^{Entry} %^G
+%i%?") ("W" "Capture web snippet" entry (file+headline "~/Documents/Tasks/learn-emacs.org" "Emacs mastery") "* Fact: '%:description'        :drill:
+:PROPERTIES:
+:DATE_ADDED: %u
+:SOURCE_URL: %c
+:END:
+
+%i
+%?
+" :immediate-finish t :empty-lines 1) ("u" "Task: Read this URL" entry (file+headline "~/Documents/Tasks/urls.org" "Articles To Read") "* TODO Read article: '%:description'
+URL: %c
+
+" :immediate-finish t :empty-lines 1) ("t" "todo" entry (file "~/Documents/Tasks/refile.org") "* TODO %?
+%U
+%a
+" :clock-in t :clock-resume t) ("r" "respond" entry (file "~/Documents/Tasks/refile.org") "* NEXT Respond to %:from on %:subject
+SCHEDULED: %t
+%U
+%a
+" :immediate-finish t :clock-in t :clock-resume t) ("n" "note" entry (file "~/Documents/Tasks/refile.org") "* %? :NOTE:
+%U
+%a
+" :clock-in t :clock-resume t) ("w" "org-protocol" entry (file "~/Documents/Tasks/refile.org") "* TODO Review %c
+%U
+" :immediate-finish t) ("p" "Phone call" entry (file "~/Documents/Tasks/refile.org") "* PHONE %? :PHONE:
+%U" :clock-in t :clock-resume t) ("h" "Habit" entry (file "~/Documents/Tasks/refile.org") "* NEXT %?
+%U
+%a
+SCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")
+:PROPERTIES:
+:STYLE: habit
+:REPEAT_TO_STATE: NEXT
+:END:
+"))))
  '(org-catch-invisible-edits (quote error))
+ '(org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+ '(org-clock-history-length 36)
+ '(org-clock-in-resume t)
+ '(org-clock-in-switch-to-state (quote bh/clock-in-to-next))
+ '(org-clock-into-drawer t)
+ '(org-clock-out-remove-zero-time-clocks t)
+ '(org-clock-out-when-done t)
+ '(org-clock-persist t)
+ '(org-clock-persist-query-resume nil)
+ '(org-clock-report-include-clocking-task t)
+ '(org-clock-sound "/usr/local/lib/tngchime.wav")
  '(org-clone-delete-id t)
  '(org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10Confidence(Confidence) %10CLOCKSUM")
  '(org-completion-use-ido t)
  '(org-confirm-babel-evaluate nil)
  '(org-crypt-disable-auto-save nil)
  '(org-crypt-key "F0B66B40")
+ '(org-cycle-include-plain-lists t)
  '(org-cycle-separator-lines 0)
  '(org-deadline-warning-days 30)
  '(org-default-notes-file "~/Documents/Tasks/refile.org")
@@ -46,6 +100,7 @@
  '(org-drawers (quote ("PROPERTIES" "LOGBOOK")))
  '(org-edit-src-content-indentation 0)
  '(org-emphasis-alist (quote (("*" bold "<b>" "</b>") ("/" italic "<i>" "</i>") ("_" underline "<span style=\"text-decoration:underline;\">" "</span>") ("=" org-code "<code>" "</code>" verbatim) ("~" org-verbatim "<code>" "</code>" verbatim))))
+ '(org-enable-priority-commands t)
  '(org-enforce-todo-dependencies t)
  '(org-export-allow-BIND t)
  '(org-export-html-inline-images t)
@@ -54,12 +109,15 @@
  '(org-export-html-xml-declaration (quote (("html" . "") ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>") ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))))
  '(org-export-htmlize-output-type (quote css))
  '(org-export-latex-listings t)
+ '(org-export-with-section-numbers nil)
  '(org-export-with-timestamps nil)
  '(org-fast-tag-selection-single-key (quote expert))
  '(org-file-apps (quote ((auto-mode . emacs) ("\\.mm\\'" . system) ("\\.x?html?\\'" . system) ("\\.pdf\\'" . system))))
  '(org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00") ("Confidence_ALL" . "low medium high") ("STYLE_ALL" . "habit"))))
  '(org-habit-graph-column 50)
+ '(org-hide-leading-stars nil)
  '(org-id-method (quote uuidgen))
+ '(org-insert-heading-respect-content nil)
  '(org-link-abbrev-alist (quote (("gmail" . "https://mail.google.com/mail/u/0/#all/%s") ("google" . "http://www.google.com/search?q=%s") ("map" . "http://maps.google.com/maps?q=%s"))))
  '(org-link-frame-setup (quote ((vm . vm-visit-folder) (gnus . org-gnus-no-new-news) (file . find-file))))
  '(org-link-mailto-program (quote (compose-mail "%a" "%s")))
@@ -67,6 +125,7 @@
  '(org-list-demote-modify-bullet (quote (("+" . "-") ("*" . "-") ("1." . "-") ("1)" . "-"))))
  '(org-log-done (quote time))
  '(org-log-into-drawer t)
+ '(org-log-state-notes-insert-after-drawers nil)
  '(org-lowest-priority 69)
  '(org-mobile-agendas (quote ("Z")))
  '(org-mobile-directory "~/Dropbox/Apps/MobileOrg")
@@ -74,13 +133,17 @@
  '(org-mobile-files-exclude-regexp "\\(TODO\\(-.*\\)?\\)\\'")
  '(org-mobile-inbox-for-pull "~/Documents/Tasks/from-mobile.org")
  '(org-modules (quote (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-jsinfo org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-mac-link-grabber org-rmail org-vm org-wl org-w3m)))
+ '(org-odd-levels-only nil)
  '(org-outline-path-complete-in-steps nil)
+ '(org-plantuml-jar-path nil)
  '(org-refile-allow-creating-parent-nodes (quote confirm))
  '(org-refile-target-verify-function (quote bh/verify-refile-target))
  '(org-refile-targets (quote ((nil :maxlevel . 9) (org-agenda-files :maxlevel . 9))))
  '(org-refile-use-outline-path t)
  '(org-remove-highlights-with-change nil)
  '(org-return-follows-link t)
+ '(org-reverse-note-order nil)
+ '(org-show-entry-below t)
  '(org-show-following-heading t)
  '(org-show-hierarchy-above t)
  '(org-show-siblings (quote ((default))))
@@ -88,8 +151,11 @@
  '(org-special-ctrl-k t)
  '(org-speed-commands-user (quote (("0" . ignore) ("1" . ignore) ("2" . ignore) ("3" . ignore) ("4" . ignore) ("5" . ignore) ("6" . ignore) ("7" . ignore) ("8" . ignore) ("9" . ignore) ("a" . ignore) ("d" . ignore) ("h" . bh/hide-other) ("i" progn (forward-char 1) (call-interactively (quote org-insert-heading-respect-content))) ("k" . org-kill-note-or-show-branches) ("l" . ignore) ("m" . ignore) ("q" . bh/show-org-agenda) ("r" . ignore) ("s" . org-save-all-org-buffers) ("w" . org-refile) ("x" . ignore) ("y" . ignore) ("z" . org-add-note) ("A" . ignore) ("B" . ignore) ("E" . ignore) ("F" . bh/restrict-to-file-or-follow) ("G" . ignore) ("H" . ignore) ("J" . org-clock-goto) ("K" . ignore) ("L" . ignore) ("M" . ignore) ("N" . bh/narrow-to-org-subtree) ("P" . bh/narrow-to-org-project) ("Q" . ignore) ("R" . ignore) ("S" . ignore) ("T" . bh/org-todo) ("U" . bh/narrow-up-one-org-level) ("V" . ignore) ("W" . bh/widen) ("X" . ignore) ("Y" . ignore) ("Z" . ignore))))
  '(org-src-fontify-natively t)
+ '(org-src-preserve-indentation nil)
  '(org-src-window-setup (quote current-window))
+ '(org-startup-folded t)
  '(org-startup-indented t)
+ '(org-startup-with-inline-images nil)
  '(org-structure-template-alist (quote (("s" "#+begin_src ?
 
 #+end_src" "<src lang=\"?\">
@@ -128,11 +194,13 @@
  '(org-stuck-projects (quote ("" nil nil "")))
  '(org-tag-alist (quote ((:startgroup) ("@errand" . 101) ("@office" . 111) ("@home" . 72) (:endgroup) ("PHONE" . 112) ("WAITING" . 119) ("HOLD" . 104) ("PERSONAL" . 80) ("WORK" . 87) ("SOCO" . 70) ("ORG" . 79) ("BLOG" . 78) ("crypt" . 69) ("MARK" . 77) ("NOTE" . 110) ("KGNU" . 66) ("CANCELLED" . 99) ("FLAGGED" . 63))))
  '(org-tags-exclude-from-inheritance (quote ("crypt")))
+ '(org-tags-match-list-sublevels t)
  '(org-time-clocksum-format (quote (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
  '(org-todo-keyword-faces (quote (("TODO" :foreground "red" :weight bold) ("NEXT" :foreground "blue" :weight bold) ("DONE" :foreground "forest green" :weight bold) ("WAITING" :foreground "orange" :weight bold) ("HOLD" :foreground "magenta" :weight bold) ("CANCELLED" :foreground "forest green" :weight bold) ("PHONE" :foreground "forest green" :weight bold))))
  '(org-todo-keywords (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)") (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE"))))
  '(org-todo-state-tags-triggers (quote (("CANCELLED" ("CANCELLED" . t)) ("WAITING" ("WAITING" . t)) ("HOLD" ("WAITING" . t) ("HOLD" . t)) (done ("WAITING") ("HOLD")) ("TODO" ("WAITING") ("CANCELLED") ("HOLD")) ("NEXT" ("WAITING") ("CANCELLED") ("HOLD")) ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
  '(org-treat-S-cursor-todo-selection-as-state-change nil)
+ '(org-use-fast-todo-selection t)
  '(org-use-speed-commands t)
  '(org-use-sub-superscripts nil)
  '(org-yank-adjusted-subtrees t))
