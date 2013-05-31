@@ -23,6 +23,8 @@
  '(gnus-auto-center-summary (quote vertical))
  '(gnus-auto-subscribed-groups "^nntp+news.gmane.org")
  '(gnus-blocked-images nil)
+ '(gnus-calendar-org-capture-file "~/Documents/Tasks/todo.txt")
+ '(gnus-calendar-org-capture-headline (quote ("Appointments")))
  '(gnus-check-new-newsgroups nil)
  '(gnus-completing-read-function (quote gnus-ido-completing-read))
  '(gnus-default-adaptive-score-alist (quote ((gnus-dormant-mark (from 20) (subject 100)) (gnus-ticked-mark (subject 30)) (gnus-read-mark (subject 30)) (gnus-del-mark (subject -150)) (gnus-catchup-mark (subject -150)) (gnus-killed-mark (subject -1000)) (gnus-expirable-mark (from -1000) (subject -1000)))))
