@@ -1198,9 +1198,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (defun jump-to-org-agenda ()
   (interactive)
-  ;; (let ((recordings-dir "~/Dropbox/iTalk Recordings"))
-  ;;   (if (directory-files recordings-dir nil "\\`[^.]")
-  ;;       (find-file recordings-dir)))
+  (let ((recordings-dir "~/Dropbox/Dropvox"))
+    (if (directory-files recordings-dir nil "\\`[^.]")
+        (find-file recordings-dir)))
   (let ((buf (get-buffer "*Org Agenda*"))
         wind)
     (if buf
