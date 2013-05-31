@@ -3094,7 +3094,12 @@ at the beginning of line, if already there."
         (pcomplete-here* pcmpl-git-commands))
        ;; provide branch completion for the command `checkout'.
        ((pcomplete-match "checkout" 1)
-        (pcomplete-here* (pcmpl-git-get-refs "heads")))))))
+        (pcomplete-here* (pcmpl-git-get-refs "heads"))
+
+
+
+)))))
+
 
 (use-package esh-toggle
   :requires eshell
@@ -6157,7 +6162,32 @@ Works in Microsoft Windows, Mac OS X, Linux."
 
   (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
   (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep)
-  )
+
+  ;;**** Drush Completion
+  (defun pcmpl-drush-commands ()
+          "Return the most common drush commands by parsing the drush output."
+          (with-temp-buffer
+            (call-process-shell-command "drush" nil (current-buffer) nil
+                                        "--format=export")
+            (goto-char 0)
+            (let (commands)
+              (while (re-search-forward
+                      "^[[:blank:]]+'command' => '\\([[:word:]-]\\{4,\\}\\)"
+                      nil t)
+                (push (match-string 1) commands))
+              (sort commands #'string<))))
+        (pcmpl-drush-commands)
+        (defconst pcmpl-drush-commands (pcmpl-drush-commands)
+          "List of `drush' commands.")
+        (defun pcomplete/drush ()
+          "Completion for `drush'."
+          ;; Completion for the command argument.
+          (pcomplete-here* pcmpl-drush-commands)
+          (cond
+           ((pcomplete-match "help" 1)
+            (pcomplete-here* pcmpl-drush-commands))
+           (t
+            (while (pcomplete-here (pcomplete-entries)))))))
 
 ;; Registers
 
