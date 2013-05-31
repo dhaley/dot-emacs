@@ -159,7 +159,7 @@
 
 (defvar mode-line-cleaner-alist
   `((auto-complete-mode . " α")
-    (yas/minor-mode . " υ")
+    (yas-minor-mode . " υ")
     (paredit-mode . " π")
     (eldoc-mode . "ℯ")
     (abbrev-mode . "")
@@ -2301,15 +2301,13 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
   :config
   (use-package ediff-keep))
 
-;;;_ , edit-server
+;;;_ , edit-emacs
 
 (use-package edit-server
   :if (and window-system (not running-alternate-emacs)
            (not noninteractive))
   :init
-  (progn
-    (add-hook 'after-init-hook 'server-start t)
-    (add-hook 'after-init-hook 'edit-server-start t)))
+  (edit-server-start))
 
 ;;;_ , emms
 
@@ -2389,7 +2387,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                  ;;   (auto-complete-mode t))
                  (abbrev-mode 1)
                  (whitespace-mode 1)
-                 (yas/minor-mode 1)
+                 (yas-minor-mode 1)
                  (hs-minor-mode 1)
                  (imenu-add-menubar-index)
                  (subword-mode t)
@@ -2622,6 +2620,22 @@ unless return was pressed outside the comment"
       (goto-char (point-max)))
 
     (bind-key "C-c b" 'switch-to-bitlbee)
+
+    (defcustom erc-foolish-content '()
+      "Regular expressions to identify foolish content.
+    Usually what happens is that you add the bots to
+    `erc-ignore-list' and the bot commands to this list."
+      :group 'erc
+      :type '(repeat regexp))
+
+        (defun erc-foolish-content (msg)
+      "Check whether MSG is foolish."
+      (erc-list-match erc-foolish-content msg))
+
+    (add-hook 'erc-insert-pre-hook
+              (lambda (s)
+                (when (erc-foolish-content s)
+                  (setq erc-insert-this nil))))
 
     (defun erc-cmd-SHOW (&rest form)
       "Eval FORM and send the result and the original form as:
@@ -3414,6 +3428,7 @@ at the beginning of line, if already there."
             ido-show-confirm-message)
   :init
   (ido-mode 'buffer)
+  ;; (ido-mode (quote both))
 
   :config
   (progn
@@ -3484,8 +3499,8 @@ at the beginning of line, if already there."
               ad-do-it))))
 
     (ido-ubiquitous-use-new-completing-read webjump 'webjump)
-    (ido-ubiquitous-use-new-completing-read yas/expand 'yasnippet)
-    (ido-ubiquitous-use-new-completing-read yas/visit-snippet-file 'yasnippet)
+    (ido-ubiquitous-use-new-completing-read yas-expand 'yasnippet)
+    (ido-ubiquitous-use-new-completing-read yas-visit-snippet-file 'yasnippet)
 
     ;; http://emacsrocks.com/e10.html
     (defadvice ido-imenu (before push-mark activate)
@@ -3898,7 +3913,7 @@ at the beginning of line, if already there."
         (bind-key "M-q" 'slime-reindent-defun lisp-mode-map)
         (bind-key "M-l" 'slime-selector lisp-mode-map))
 
-      (yas/minor-mode 1))
+      (yas-minor-mode 1))
 
     (hook-into-modes #'my-lisp-mode-hook lisp-mode-hooks)))
 
@@ -4356,46 +4371,7 @@ and view local index.html url"
          ("M-M"   . org-inline-note)
          ("C-c a" . org-agenda)
          ("C-c S" . org-store-link)
-         ("C-c l" . org-insert-link)
-
-         ("<f5>"  . bh/org-todo)
-         ("<S-f5>" . bh/widen)
-         ("<f7>" . bh/set-truncate-lines)
-         ("<f8>" . org-cycle-agenda-files)
-         ("<f9> <f9>" . bh/show-org-agenda)
-         ("<f9> b" . bbdb)
-         ("<f9> c" . calendar)
-         ("<f9> f" . boxquote-insert-file)
-         ("<f9> g" . gnus)
-         ("<f9> h" . bh/hide-other)
-         ("<f9> n" . org-narrow-to-subtree)
-         ("<f9> W" . widen)
-         ("<f9> u" . bh/narrow-up-one-level)
-
-         ("<f9> I" . bh/punch-in)
-         ("<f9> O" . bh/punch-out)
-
-         ("<f9> o" . bh/make-org-scratch)
-
-         ("<f9> r" . boxquote-region)
-         ("<f9> s" . bh/switch-to-scratch)
-
-         ("<f9> t" . bh/insert-inactive-timestamp)
-         ("<f9> T" . tabify)
-         ;;         ("<f9> U" . untabify)
-
-         ("<f9> v" . visible-mode)
-         ("<f9> SPC" . bh/clock-in-last-task)
-         ("C-<f9>" . previous-buffer)
-         ("M-<f9>" . org-toggle-inline-images)
-         ("C-x n r" . narrow-to-region)
-         ("C-<f10>" . next-buffer)
-         ("<f11>" . org-clock-goto)
-         ("C-<f11>" . org-clock-in)
-         ("C-s-<f12>" . bh/save-then-publish)
-         ("C-M-r" . org-capture)
-         ("C-c r" . org-capture)
-         )
+         ("C-c l" . org-insert-link))
   :init
   (progn
     (if (string-match "\\.elc\\'" load-file-name)
@@ -4826,9 +4802,9 @@ and view local index.html url"
       (bind-key "<return>" 'my-ruby-smart-return ruby-mode-map)
       (bind-key "C-h C-i" 'helm-yari ruby-mode-map)
 
-      (set (make-local-variable 'yas/fallback-behavior)
+      (set (make-local-variable 'yas-fallback-behavior)
            '(apply ruby-indent-command . nil))
-      (bind-key "<tab>" 'yas/expand-from-trigger-key ruby-mode-map))
+      (bind-key "<tab>" 'yas-expand-from-trigger-key ruby-mode-map))
 
     (add-hook 'ruby-mode-hook 'my-ruby-mode-hook)))
 
@@ -5777,7 +5753,7 @@ and view local index.html url"
   :init
   (progn
 
-    (hook-into-modes #'(lambda () (yas/minor-mode 1))
+    (hook-into-modes #'(lambda () (yas-minor-mode 1))
                      '(prog-mode-hook
                        org-mode-hook
                        ruby-mode-hook
@@ -5796,12 +5772,6 @@ and view local index.html url"
      ;; Snippet directories
      ;; yas-snippet-dirs (list (expand-file-name
      ;;                         "snippets" user-emacs-directory))
-
-
-     yas-snippet-dirs
-     '("~/.emacs.d/snippets"            ;; personal snippets
-       "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets"
-       )
      ;; Disable yasnippet prompt by default
      ;; (using auto-complete to prompt)
      yas-prompt-functions '(yas-popup-isearch-prompt
@@ -5809,16 +5779,16 @@ and view local index.html url"
                             yas-completing-prompt
                             yas-no-prompt))
 
-    (defalias 'yas/reload-all 'yas-reload-all)
-    (defalias 'yas/global-mode 'yas-global-mode)
-    (defalias 'yas/minor-mode 'yas-minor-mode)
-    (defalias 'yas/expand 'yas-expand)
-    (defalias 'yas/expand-snippet 'yas-expand-snippet)
+    ;; (defalias 'yas/reload-all 'yas-reload-all)
+    ;; (defalias 'yas/global-mode 'yas-global-mode)
+    ;; (defalias 'yas/minor-mode 'yas-minor-mode)
+    ;; (defalias 'yas/expand 'yas-expand)
+    ;; (defalias 'yas/expand-snippet 'yas-expand-snippet)
 
     )
   :config
   (progn
-    ;; (yas/initialize)
+    ;; (yas-initialize)
     ;; (bind-key "C-x y" 'yas-insert-snippet yas-minor-mode-map)
     (use-package popup
       :init
@@ -5845,34 +5815,34 @@ and view local index.html url"
 
     (yas-reload-all)
 
-    (yas/load-directory (expand-file-name "snippets/" user-emacs-directory))
+    (yas-load-directory (expand-file-name "snippets/" user-emacs-directory))
 
-    (bind-key "<tab>" 'yas/next-field-or-maybe-expand yas/keymap)
+    (bind-key "<tab>" 'yas-next-field-or-maybe-expand yas-keymap)
 
-    (defun yas/new-snippet (&optional choose-instead-of-guess)
+    (defun yas-new-snippet (&optional choose-instead-of-guess)
       (interactive "P")
-      (let ((guessed-directories (yas/guess-snippet-directories)))
+      (let ((guessed-directories (yas-guess-snippet-directories)))
         (switch-to-buffer "*new snippet*")
         (erase-buffer)
         (kill-all-local-variables)
         (snippet-mode)
-        (set (make-local-variable 'yas/guessed-modes)
+        (set (make-local-variable 'yas-guessed-modes)
              (mapcar #'(lambda (d)
-                         (intern (yas/table-name (car d))))
+                         (intern (yas-table-name (car d))))
                      guessed-directories))
         (unless (and choose-instead-of-guess
                      (not (y-or-n-p "Insert a snippet with useful headers? ")))
-          (yas/expand-snippet "\
+          (yas-expand-snippet "\
 # -*- mode: snippet -*-
 # name: $1
 # --
 $0"))))
 
-    (bind-key "C-c y TAB" 'yas/expand)
-    (bind-key "C-c y n" 'yas/new-snippet)
-    (bind-key "C-c y f" 'yas/find-snippets)
-    (bind-key "C-c y r" 'yas/reload-all)
-    (bind-key "C-c y v" 'yas/visit-snippet-file)
+    (bind-key "C-c y TAB" 'yas-expand)
+    (bind-key "C-c y n" 'yas-new-snippet)
+    (bind-key "C-c y f" 'yas-find-snippets)
+    (bind-key "C-c y r" 'yas-reload-all)
+    (bind-key "C-c y v" 'yas-visit-snippet-file)
 
     ))
 
