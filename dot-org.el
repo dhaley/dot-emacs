@@ -49,8 +49,7 @@
 (bind-key "<f9> r" 'boxquote-region)
 (bind-key "<f9> s" 'bh/switch-to-scratch)
 (bind-key "<f9> t" 'bh/insert-inactive-timestamp)
-(bind-key "<f9> T" 'tabify)
-(bind-key "<f9> U" 'untabify)
+(global-set-key (kbd "<f9> T") 'bh/toggle-insert-inactive-timestamp)
 (bind-key "<f9> v" 'visible-mode)
 (bind-key "<f9> SPC" 'bh/clock-in-last-task)
 (bind-key "C-<f9>" 'previous-buffer)
@@ -660,9 +659,10 @@ so change the default 'F' binding in the agenda to allow both"
   (interactive "p")
   (if (equal arg 4)
       (org-agenda-follow-mode)
-    (if (equal major-mode 'org-agenda-mode)
-        (bh/set-agenda-restriction-lock 4)
-      (widen))))
+    (widen)
+    (bh/set-agenda-restriction-lock 4)
+    (org-agenda-redo)
+    (beginning-of-buffer)))
 
 (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "F" 'bh/restrict-to-file-or-follow))
@@ -738,6 +738,7 @@ so change the default 'F' binding in the agenda to allow both"
   (interactive)
   (unless (marker-position org-agenda-restrict-begin)
     (goto-char (point-min))
+     (re-search-forward "Tasks to Refile")
     (setq bh/current-view-project (point)))
   (bh/widen)
   (goto-char bh/current-view-project)
@@ -902,16 +903,23 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (require 'org-protocol)
 (require 'org-mac-link-grabber)
 
+(defvar bh/insert-inactive-timestamp t)
+
+(defun bh/toggle-insert-inactive-timestamp ()
+  (interactive)
+  (setq bh/insert-inactive-timestamp (not bh/insert-inactive-timestamp))
+  (message "Heading timestamps are %s" (if bh/insert-inactive-timestamp "ON" "OFF")))
+
 (defun bh/insert-inactive-timestamp ()
   (interactive)
   (org-insert-time-stamp nil t t nil nil nil))
 
 (defun bh/insert-heading-inactive-timestamp ()
   (save-excursion
-    (org-return)
-    (org-cycle)
-    (bh/insert-inactive-timestamp)))
-
+    (when bh/insert-inactive-timestamp
+      (org-return)
+      (org-cycle)
+      (bh/insert-inactive-timestamp))))
 (add-hook 'org-insert-heading-hook 'bh/insert-heading-inactive-timestamp 'append)
 
 (custom-set-faces
@@ -988,16 +996,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (prefer-coding-system 'utf-8)
 (set-charset-priority 'unicode)
-
-(defun bh/clock-in-bzflagt-task ()
-  (interactive)
-  (bh/clock-in-task-by-id "dcf55180-2a18-460e-8abb-a9f02f0893be"))
-
-(defun bh/resume-clock ()
-  (interactive)
-  (if (marker-buffer org-clock-interrupted-task)
-        (org-clock-in))
-    (org-clock-out))
 
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
