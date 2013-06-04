@@ -430,3 +430,6 @@
 [submodule "site-lisp/flyparse"]
 	path = site-lisp/flyparse
 	url = git://github.com/jwiegley/flyparse.git
+[submodule "site-lisp/php-auto-yasnippets"]
+	path = site-lisp/php-auto-yasnippets
+	url = https://github.com/ejmr/php-auto-yasnippets.git
