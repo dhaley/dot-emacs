@@ -2371,6 +2371,15 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
     (use-package php-completion-mode
       :commands php-completion-mode)
 
+
+    (use-package php-auto-yasnippets
+      :config
+      (progn
+      (setq php-auto-yasnippet-php-program
+      "/Users/daha1836/.emacs.d/site-lisp/php-auto-yasnippets/Create-PHP-YASnippet.php")
+      (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
+      ))
+
     (setq php-manual-path "~/Documents/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
     (require 'doxymacs)
