@@ -747,10 +747,8 @@ If no file is associated, just close buffer without prompt for save."
   (set-frame-parameter (selected-frame) 'width emacs-min-width)
 
   (when running-alternate-emacs
-    ;;     (set-background-color "grey85")
-    ;;     (set-face-background 'fringe "gray80")
-    )
-  )
+        ;; (set-background-color "grey85")
+        (set-face-background 'fringe "gray80")))
 
 (if window-system
     (add-hook 'after-init-hook 'emacs-min))
@@ -1972,7 +1970,6 @@ reload abbrevs."
                            (mode . reftex-mode)))
               ("irc"
                (or
-                (name . "^\\*Sauron\\*$")
                 (mode . garak-mode)
                 (name . "^\\*Garak\\*$")
                 (mode . erc-mode)
@@ -2754,15 +2751,12 @@ FORM => (eval FORM)."
             (replace-match "<\\1>"))))
     (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
 
-    ;; (require 'sauron)
     ;; turn on abbrevs
     (abbrev-mode 1)
 
     (defun create-new-erc-frames ()
       (interactive)
       (switch-to-bitlbee)
-      (sauron-start-hidden)
-      ;; (sauron-toggle-hide-show)
       (switch-to-buffer-other-frame "#drupal-colorado")
       (switch-to-buffer-other-frame "#emacs")
       )
@@ -4831,82 +4825,6 @@ and view local index.html url"
 
     (add-hook 'ruby-mode-hook 'my-ruby-mode-hook)))
 
-;; Sauron
-
-(use-package sauron
-  :if running-alternate-emacs
-  :bind (("C-c s" . sauron-toggle-hide-show)
-         ("C-c t" . sauron-clear))
-  :init
-  (progn
-    (setq
-     sauron-hide-mode-line t
-     sauron-watch-nicks erc-pals
-     sauron-watch-patterns erc-keywords
-     sauron-separate-frame nil
-     sauron-modules '(sauron-erc sauron-notifications)
-     sauron-max-line-length 200
-     ;; 60 was a little long, and there's a lot of times I switch away quickly after replying.
-    sauron-nick-insensitivity 5)
-    )
-  :config
-  (progn
-    ;; events to ignore
-    (add-hook 'sauron-event-block-functions
-              (lambda (origin prio msg &optional props)
-                (or
-                 (string-match "^*** Users" msg)))) ;; filter out IRC spam
-
-    (add-hook 'sauron-event-added-functions
-              (lambda (origin prio msg &optional props)
-                "Raise frame and display notifications."
-                (sr-show)
-                (raise-frame)
-                (sauron-alert-el-adapter)))
-
-    (defun qdot/monkey-patch-sr ()
-      (interactive)
-      ;; Monkeypatching sauron's ERC hook until I write a msg string formatter for it
-      (defun sr-erc-PRIVMSG-hook-func (proc parsed)
-        "Hook function, to be called for erc-matched-hook."
-        (let* ( (me      (erc-current-nick))
-                (sender  (car (erc-parse-user (erc-response.sender parsed))))
-                (channel (car (erc-response.command-args parsed)))
-                (msg     (sr-erc-msg-clean (erc-response.contents parsed)))
-                (nw      (symbol-name (erc-network)))
-                (for-me  (string= me channel))
-                (prio
-                 (cond
-                  ((string= sender "root") 2)  ;; e.g. bitlbee stuff; low-prio
-                  (for-me                  3)  ;; private msg for me => prio 4
-                  ((string-match me msg)   3)  ;; I'm mentioned => prio 3
-                  (t       2)))  ;; default
-                (target (if (buffer-live-p (get-buffer channel))
-                            (with-current-buffer (get-buffer channel)
-                              (point-marker)))))
-          (sauron-add-event
-           'erc
-           prio
-           (concat
-            (propertize sender 'face 'sauron-highlight1-face) "@"
-            (propertize channel 'face 'sauron-highlight2-face) " on "
-            (propertize nw 'face 'sauron-highlight2-face)
-            (if (string-match "#" channel)
-                (propertize " msg" 'face 'sauron-highlight1-face)
-              (propertize " privmsg" 'face 'sauron-highlight1-face)))
-           (lexical-let* ((target-mark target)
-                          (target-buf (if for-me sender channel)))
-             (lambda ()
-               (sauron-switch-to-marker-or-buffer (or target-mark target-buf))))
-           `( :event   privmsg
-                       :sender ,sender
-                       :me     ,me
-                       :channel ,channel
-                       :msg    ,msg)))
-        nil))
-    (sr-hide)
-  ))
-
 ;; Saveplace
 ;; - places cursor in the last place you edited file
 (use-package saveplace
@@ -5919,27 +5837,6 @@ $0"))))
 
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
-
-(defun bw-toggle-solarized ()
-  "Toggles between solarized light and dark"
-  (interactive)
-  (cond
-   ((custom-theme-enabled-p 'solarized-dark)
-    (progn
-      (disable-theme 'solarized-dark)
-      (enable-theme 'solarized-light)))
-   ((custom-theme-enabled-p 'solarized-light)
-    (progn
-      (disable-theme 'solarized-light)
-      (enable-theme 'solarized-dark)))))
-
-;; (defadvice load-theme
-;;   (before load-theme)
-;;   (let ((theme-name (ad-get-arg 0)))
-;;     (when (or (eq theme-name 'solarized-dark)
-;;               (eq theme-name 'solarized-light)))))
-
-;; (ad-activate 'load-theme)
 
 (blink-cursor-mode 1)
 
