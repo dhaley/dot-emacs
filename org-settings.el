@@ -12,7 +12,7 @@
  '(org-agenda-diary-file "~/Documents/Tasks/diary.org")
  '(org-agenda-dim-blocked-tasks nil)
  '(org-agenda-exporter-settings (quote ((org-agenda-write-buffer-name "Damon's VC-Rsrch/Dean-Grad Agenda"))))
- '(org-agenda-files (quote ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/refile.org" "~/Documents/Tasks/.org-jira/AFROTC.org" "~/Documents/Tasks/.org-jira/CUPRE.org" "~/Documents/Tasks/.org-jira/CS.org" "~/Documents/Tasks/.org-jira/FAC.org" "~/Documents/Tasks/.org-jira/VCR.org" "~/Documents/Tasks/.org-jira/SUP.org" "~/Documents/Tasks/.org-jira/SHAKE.org" "~/Documents/Tasks/from-mobile.org")))
+ '(org-agenda-files (quote ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/refile.org" "~/Documents/Tasks/.org-jira/CYE.org" "~/Documents/Tasks/.org-jira/ENVD.org" "~/Documents/Tasks/from-mobile.org")))
  '(org-agenda-include-diary nil)
  '(org-agenda-insert-diary-extract-time t)
  '(org-agenda-log-mode-items (quote (closed state)))
@@ -35,11 +35,10 @@
  '(org-archive-location "%s_archive::* Archived Tasks")
  '(org-babel-results-keyword "results")
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
- '(org-capture-templates (quote (("j" "Journal" entry (file+datetree "~/Documents/Tasks/diary.org") "* %?%^G
+ '(org-capture-templates (quote (("#" "used by gnus-calendar-org" entry (file+olp "~/Documents/Tasks/todo.txt" "Appointments") "%i" :immediate-finish t) ("j" "Journal" entry (file+datetree "~/Documents/Tasks/diary.org") "* %?%^G
  Entered on %T
    %i
-" :clock-in t :clock-resume t) ("s" "secure" entry (file+datetree+prompt "~/Documents/Tasks/secure.org.gpg") "* %(format-time-string \"%H:%M\") %^{Entry} %^G
-%i%?") ("W" "Capture web snippet" entry (file+headline "~/Documents/Tasks/learn-emacs.org" "Emacs mastery") "* Fact: '%:description'        :drill:
+" :clock-in t :clock-resume t) ("W" "Capture web snippet" entry (file+headline "~/owncloud/learn-emacs.txt" "Emacs mastery") "* Fact: '%:description'        :drill:
 :PROPERTIES:
 :DATE_ADDED: %u
 :SOURCE_URL: %c
@@ -47,9 +46,6 @@
 
 %i
 %?
-" :immediate-finish t :empty-lines 1) ("u" "Task: Read this URL" entry (file+headline "~/Documents/Tasks/urls.org" "Articles To Read") "* TODO Read article: '%:description'
-URL: %c
-
 " :immediate-finish t :empty-lines 1) ("t" "todo" entry (file "~/Documents/Tasks/refile.org") "* TODO %?
 %U
 %a
