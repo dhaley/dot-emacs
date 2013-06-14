@@ -1444,7 +1444,7 @@
     ("dizzy_symbol" "💫" nil 0)
     ("dress" "👗" nil 0)
     ("droplet" "💧" nil 0)
-    ("drupal" "💧" nil 0)
+    (";drupal" "💧" nil 0)
     ("ear" "👂" nil 0)
     ("elm0" "∈" nil 0)
     ("epsilon0" "ε" nil 0)
@@ -1682,4 +1682,3 @@
 (define-abbrev-table 'xmtn-log-edit-mode-abbrev-table '())
 
 (define-abbrev-table 'yaml-mode-abbrev-table '())
-
