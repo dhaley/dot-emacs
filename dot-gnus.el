@@ -703,11 +703,10 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 
 (defun my-alter-summary-map ()
-  (local-set-key (kbd "<f4>") '(lambda () (interactive)
+  (local-set-key "i" '(lambda () (interactive)
                                  (gnus-goto-last-link)
                                  ))
-    ;; (local-set-key (kbd "z") '(lambda () (interactive)
-    ;;                                (gnus-summary-mark-as-read-forward)))
+  ;; (local-set-key "z" 'gnus-summary-mark-as-read-forward)
   (local-set-key ":" 'bbdb-mua-display-records)
   (local-set-key "d" [?M ?M ?e ?e down]))
 
@@ -792,6 +791,12 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
     (setq content (replace-regexp-in-string "\n\n$" "" content))
     (setq title (if (string-equal first-date last-date) first-date (concat first-date " ... " last-date)))
     (list content title)))
+
+(use-package gnus-calendar
+  :init
+  (progn
+    (gnus-calendar-setup)
+    (gnus-calendar-org-setup)))
 
 (provide 'dot-gnus)
 
