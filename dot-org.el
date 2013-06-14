@@ -16,7 +16,7 @@
 (require 'async)
 
 (require 'org-drill)
-
+(require 'org-bullets)
 (define-key org-mode-map (kbd "C-c k") 'org-cut-subtree)
 
 (defun sacha/org-export-subtree-as-html-fragment ()
@@ -1281,7 +1281,8 @@ end tell" (match-string 1))))
             (require 'yasnippet)
             (set (make-local-variable 'yas/trigger-key) [tab])
             (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-            (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)))
+            (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)
+            (org-bullets-mode 1)))
 
 (remove-hook 'kill-emacs-hook 'org-babel-remove-temporary-directory)
 
