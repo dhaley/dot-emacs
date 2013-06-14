@@ -196,16 +196,16 @@ want to use in the modeline *in lieu of* the original.")
 
 ;; Working with Coding Systems and Unicode in Emacs
 
-(prefer-coding-system 'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
+;; (prefer-coding-system 'utf-8)
+;; (set-default-coding-systems 'utf-8)
+;; (set-terminal-coding-system 'utf-8)
+;; (set-keyboard-coding-system 'utf-8)
 
 ;; backwards compatibility as default-buffer-file-coding-system
 ;; is deprecated in 23.2.
-(if (boundp 'buffer-file-coding-system)
-    (setq-default buffer-file-coding-system 'utf-8)
-  (setq default-buffer-file-coding-system 'utf-8))
+;; (if (boundp 'buffer-file-coding-system)
+;;     (setq-default buffer-file-coding-system 'utf-8)
+;;   (setq default-buffer-file-coding-system 'utf-8))
 
 
 
@@ -4038,6 +4038,10 @@ at the beginning of line, if already there."
   :bind (("C-x g" . magit-status)
          ("C-x G" . magit-status-with-prefix))
   :init
+
+  (require 'git-messenger)
+  (global-set-key (kbd "C-x v p") 'git-messenger:popup-message)
+
   (defun magit-status-with-prefix ()
     (interactive)
     (let ((current-prefix-arg '(4)))
