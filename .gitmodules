@@ -433,3 +433,21 @@
 [submodule "site-lisp/php-auto-yasnippets"]
 	path = site-lisp/php-auto-yasnippets
 	url = https://github.com/ejmr/php-auto-yasnippets.git
+[submodule "site-lisp/shift-text"]
+	path = site-lisp/shift-text
+	url = https://github.com/sabof/shift-text.git
+[submodule "site-lisp/es-lib"]
+	path = site-lisp/es-lib
+	url = https://github.com/sabof/es-lib.git
+[submodule "site-lisp/org-bullets"]
+	path = site-lisp/org-bullets
+	url = https://github.com/sabof/org-bullets.git
+[submodule "site-lisp/emacs-git-messenger"]
+	path = site-lisp/emacs-git-messenger
+	url = https://github.com/syohex/emacs-git-messenger.git
+[submodule "site-lisp/the-emacs-software-bin"]
+	path = site-lisp/the-emacs-software-bin
+	url = https://github.com/thesoftwarebin/the-emacs-software-bin.git
+[submodule "site-lisp/org-yaml"]
+	path = site-lisp/org-yaml
+	url = https://github.com/Neil-Smithline/org-yaml.git
