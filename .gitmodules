@@ -172,9 +172,6 @@
 [submodule "site-lisp/debbugs"]
         path = site-lisp/debbugs
         url = git://github.com/jwiegley/debbugs-gnu.git
-[submodule "site-lisp/auto-overlays"]
-        path = site-lisp/auto-overlays
-        url = https://github.com/emacsmirror/auto-overlays.git
 [submodule "site-lisp/swank-js"]
         path = site-lisp/swank-js
         url = https://github.com/swank-js/swank-js.git
@@ -416,38 +413,38 @@
         path = site-lisp/org-present
         url = https://github.com/rlister/org-present.git
 [submodule "site-lisp/magit-review"]
-	path = site-lisp/magit-review
-	url = git://gitorious.org/magit-review/magit-review.git
+        path = site-lisp/magit-review
+        url = git://gitorious.org/magit-review/magit-review.git
 [submodule "lib/emacs-request"]
-	path = lib/emacs-request
-	url = git://github.com/tkf/emacs-request.git
+        path = lib/emacs-request
+        url = git://github.com/tkf/emacs-request.git
 [submodule "lib/emacs-web"]
-	path = lib/emacs-web
-	url = git://github.com/nicferrier/emacs-web.git
+        path = lib/emacs-web
+        url = git://github.com/nicferrier/emacs-web.git
 [submodule "site-lisp/ical-event"]
-	path = site-lisp/ical-event
-	url = https://github.com/jtatarik/ical-event.git
+        path = site-lisp/ical-event
+        url = https://github.com/jtatarik/ical-event.git
 [submodule "site-lisp/flyparse"]
-	path = site-lisp/flyparse
-	url = git://github.com/jwiegley/flyparse.git
+        path = site-lisp/flyparse
+        url = git://github.com/jwiegley/flyparse.git
 [submodule "site-lisp/php-auto-yasnippets"]
-	path = site-lisp/php-auto-yasnippets
-	url = https://github.com/ejmr/php-auto-yasnippets.git
+        path = site-lisp/php-auto-yasnippets
+        url = https://github.com/ejmr/php-auto-yasnippets.git
 [submodule "site-lisp/shift-text"]
-	path = site-lisp/shift-text
-	url = https://github.com/sabof/shift-text.git
+        path = site-lisp/shift-text
+        url = https://github.com/sabof/shift-text.git
 [submodule "site-lisp/es-lib"]
-	path = site-lisp/es-lib
-	url = https://github.com/sabof/es-lib.git
+        path = site-lisp/es-lib
+        url = https://github.com/sabof/es-lib.git
 [submodule "site-lisp/org-bullets"]
-	path = site-lisp/org-bullets
-	url = https://github.com/sabof/org-bullets.git
+        path = site-lisp/org-bullets
+        url = https://github.com/sabof/org-bullets.git
 [submodule "site-lisp/emacs-git-messenger"]
-	path = site-lisp/emacs-git-messenger
-	url = https://github.com/syohex/emacs-git-messenger.git
+        path = site-lisp/emacs-git-messenger
+        url = https://github.com/syohex/emacs-git-messenger.git
 [submodule "site-lisp/the-emacs-software-bin"]
-	path = site-lisp/the-emacs-software-bin
-	url = https://github.com/thesoftwarebin/the-emacs-software-bin.git
+        path = site-lisp/the-emacs-software-bin
+        url = https://github.com/thesoftwarebin/the-emacs-software-bin.git
 [submodule "site-lisp/org-yaml"]
-	path = site-lisp/org-yaml
-	url = https://github.com/Neil-Smithline/org-yaml.git
+        path = site-lisp/org-yaml
+        url = https://github.com/Neil-Smithline/org-yaml.git
