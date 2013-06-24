@@ -445,3 +445,12 @@
 [submodule "site-lisp/org-yaml"]
         path = site-lisp/org-yaml
         url = https://github.com/Neil-Smithline/org-yaml.git
+[submodule "site-lisp/outshine"]
+	path = site-lisp/outshine
+	url = https://github.com/tj64/outshine.git
+[submodule "site-lisp/outorg"]
+	path = site-lisp/outorg
+	url = https://github.com/tj64/outorg.git
+[submodule "site-lisp/navi"]
+	path = site-lisp/navi
+	url = https://github.com/tj64/navi.git
