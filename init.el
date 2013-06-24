@@ -2380,7 +2380,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
     (setq php-manual-path "~/Documents/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
     (require 'doxymacs)
-    ;; (use-package php-extras)
 
     (add-hook 'php-mode-hook
               '(lambda ()
@@ -2772,12 +2771,11 @@ FORM => (eval FORM)."
     (window-number-meta-mode)
     (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))))
 
-(defun curr-dir-project-string ()
+(defun curr-dir-project-string (site-directory)
   "Returns current project as a string, or the empty string if
 PWD is not in a project"
   (interactive)
-  ;; (let ((project-root-dir (locate-dominating-file default-directory ".site_name")))
-  (let ((project-root-dir (locate-dominating-file default-directory "current")))
+  (let ((project-root-dir (locate-dominating-file site-directory "current")))
     (let ((path (split-string project-root-dir "/")))     ; path as list
       (car (last (nbutlast path 1))))))
 
@@ -5999,7 +5997,7 @@ Works in Microsoft Windows, Mac OS X, Linux."
   (setq site-directory (file-truename (locate-dominating-file default-directory ".dir-locals.el"))
         tags-file-name (concat site-directory "TAGS")
         readme-file-name (concat site-directory "README.md")
-        profile-name (curr-dir-project-string)
+        profile-name (curr-dir-project-string site-directory)
         profile-directory (concat site-directory "profiles/" profile-name)
         module-directory (concat profile-directory "/modules")
         theme-directory (concat profile-directory "/themes")
