@@ -12,7 +12,7 @@
  '(gnus-agent-mark-unread-after-downloaded nil)
  '(gnus-agent-synchronize-flags t)
  '(gnus-alias-default-identity "CU")
- '(gnus-alias-identity-alist (quote (("CU" "" "\"Damon Haley\" <damon.haley@colorado.edu>" "University of Colorado" nil "" "~/Messages/sig/cu.sig") ("VI" "" "\"Damon Haley\" <dkh@member.fsf.org>" "Vinyl Island University" nil "" "~/Messages/sig/vi.sig") ("Haley" "" "\"Damon K. Haley\" <dhaley@warpmail.net>" "Haley's Comet" nil "" "~/Messages/sig/haley.sig") ("LSD" "" "vinylisl@sdf.lonestar.org" "Peace Love & Understanding" nil "" "~/Messages/sig/lsd.sig"))))
+ '(gnus-alias-identity-alist (quote (("CU" "" "\"Damon Haley\" <damon.haley@colorado.edu>" "University of Colorado" nil "" "~/Messages/sig/cu.sig") ("VI" "" "\"Damon Haley\" <dkh@member.fsf.org>" "Vinyl Island University" nil "" "~/Messages/sig/vi.sig") ("Haley" "" "\"Damon K. Haley\" <dhaley@warpmail.net>" "Haley's Comet" nil "" "") ("LSD" "" "vinylisl@sdf.lonestar.org" "Peace Love & Understanding" nil "" "~/Messages/sig/lsd.sig"))))
  '(gnus-alias-identity-rules (quote (("Emacs Mailing Lists" ("To" "emacs" current) "VI") ("Emacs Newsgroups" ("Newsgroups" "emacs" current) "VI") ("Ledger Mailing List" ("To" "ledger-cli@googlegroups\\\\.com" current) "VI"))))
  '(gnus-alias-override-user-mail-address t)
  '(gnus-alias-unknown-identity-rule (quote error))
