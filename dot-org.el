@@ -19,6 +19,25 @@
 (require 'org-bullets)
 (define-key org-mode-map (kbd "C-c k") 'org-cut-subtree)
 
+
+
+;; If you want a different prefix key for outline-minor-mode, insert first:
+;; (defvar outline-minor-mode-prefix "\C-c") or whatever. The prefix can only
+;; be changed before outline (minor) mode is loaded. "\C-c" unfortunately
+;; conflicts with other modes, e.g. ESS and picolisp-wiki-mode.
+;; (defvar outline-minor-mode-prefix "\M-#")
+
+;; (require 'outline)
+;; (require 'outshine)
+
+;; (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+;; (add-hook 'message-mode-hook 'outline-minor-mode)
+
+;; (require 'outorg)
+;; (require 'navi-mode)
+
+
+
 (defun sacha/org-export-subtree-as-html-fragment ()
   (interactive)
   (org-export-region-as-html
@@ -40,7 +59,6 @@
 (bind-key "<f9> f" 'boxquote-insert-file)
 (bind-key "<f9> g" 'gnus)
 (bind-key "<f9> h" 'bh/hide-other)
-(bind-key "<f9> n" 'org-narrow-to-subtree)
 (bind-key "<f9> W" 'widen)
 (bind-key "<f9> u" 'bh/narrow-up-one-level)
 (bind-key "<f9> I" 'bh/punch-in)
@@ -359,6 +377,15 @@ Callers of this function already widen the buffer view."
     (setq org-tags-match-list-sublevels nil))
   nil)
 
+(defvar bh/hide-scheduled-and-waiting-next-tasks t)
+
+(defun bh/toggle-next-task-display ()
+  (interactive)
+  (setq bh/hide-scheduled-and-waiting-next-tasks (not bh/hide-scheduled-and-waiting-next-tasks))
+  (when  (equal major-mode 'org-agenda-mode)
+    (org-agenda-redo))
+  (message "%s WAITING and SCHEDULED NEXT Tasks" (if bh/hide-scheduled-and-waiting-next-tasks "Hide" "Show")))
+
 (defun bh/skip-stuck-projects ()
   "Skip trees that are not stuck projects"
   (save-restriction
@@ -491,22 +518,24 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
   "Skip trees that are not available for archiving"
   (save-restriction
     (widen)
-    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
-      ;; Consider only tasks with done todo headings as archivable candidates
-      (if (member (org-get-todo-state) org-done-keywords)
-          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
-                 (daynr (string-to-int (format-time-string "%d" (current-time))))
-                 (a-month-ago (* 60 60 24 (+ daynr 1)))
-                 (last-month (format-time-string "%Y-%m-" (time-subtract (current-time) (seconds-to-time a-month-ago))))
-                 (this-month (format-time-string "%Y-%m-" (current-time)))
-                 (subtree-is-current (save-excursion
-                                       (forward-line 1)
-                                       (and (< (point) subtree-end)
-                                            (re-search-forward (concat last-month "\\|" this-month) subtree-end t)))))
-            (if subtree-is-current
-                next-headline ; Has a date in this month or last month, skip it
-              nil))  ; available to archive
-        (or next-headline (point-max))))))
+    ;; Consider only tasks with done todo headings as archivable candidates
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max))))
+          (subtree-end (save-excursion (org-end-of-subtree t))))
+      (if (member (org-get-todo-state) org-todo-keywords-1)
+          (if (member (org-get-todo-state) org-done-keywords)
+              (let* ((daynr (string-to-int (format-time-string "%d" (current-time))))
+                     (a-month-ago (* 60 60 24 (+ daynr 1)))
+                     (last-month (format-time-string "%Y-%m-" (time-subtract (current-time) (seconds-to-time a-month-ago))))
+                     (this-month (format-time-string "%Y-%m-" (current-time)))
+                     (subtree-is-current (save-excursion
+                                           (forward-line 1)
+                                           (and (< (point) subtree-end)
+                                                (re-search-forward (concat last-month "\\|" this-month) subtree-end t)))))
+                (if subtree-is-current
+                    subtree-end ; Has a date in this month or last month, skip it
+                  nil))  ; available to archive
+            (or subtree-end (point-max)))
+        next-headline))))
 
 (add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
 
@@ -530,13 +559,6 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
          (org . t)
          (plantuml . t)
          (latex . t))))
-
-
-; List of projects
-; norang       - http://www.norang.ca/
-; doc          - http://doc.norang.ca/
-; org-mode-doc - http://doc.norang.ca/org-mode.html and associated files
-; org          - miscellaneous todo lists for publishing
 
 
 ; I'm lazy and don't want to remember the name of the project to publish when I modify
@@ -642,11 +664,14 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
 (global-set-key (kbd "<S-f5>") 'bh/widen)
 
 (defun bh/widen ()
-  (interactive)
-  (if (equal major-mode 'org-agenda-mode)
-      (org-agenda-remove-restriction-lock)
-    (widen)
-    (org-agenda-remove-restriction-lock)))
+   (interactive)
+   (if (equal major-mode 'org-agenda-mode)
+       (org-agenda-remove-restriction-lock)
+      (progn
+        (org-agenda-remove-restriction-lock)
+        (when org-agenda-sticky
+          (org-agenda-redo)))
+    (widen)))
 
 (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "W" 'bh/widen))
@@ -675,10 +700,13 @@ so change the default 'F' binding in the agenda to allow both"
 (defun bh/narrow-to-subtree ()
   (interactive)
   (if (equal major-mode 'org-agenda-mode)
-      (org-with-point-at (org-get-at-bol 'org-hd-marker)
-        (bh/narrow-to-org-subtree)
-        (save-restriction
-          (org-agenda-set-restriction-lock)))
+      (progn
+        (org-with-point-at (org-get-at-bol 'org-hd-marker)
+          (bh/narrow-to-org-subtree)
+          (save-restriction
+            (org-agenda-set-restriction-lock)))
+        (when org-agenda-sticky
+          (org-agenda-redo)))
     (bh/narrow-to-org-subtree)
     (save-restriction
       (org-agenda-set-restriction-lock))))
@@ -718,15 +746,20 @@ so change the default 'F' binding in the agenda to allow both"
     (bh/narrow-to-org-subtree)))
 
 (defun bh/narrow-to-project ()
-  (interactive)
-  (if (equal major-mode 'org-agenda-mode)
-      (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
-        (bh/narrow-to-org-project)
-        (save-restriction
-          (org-agenda-set-restriction-lock)))
-    (bh/narrow-to-org-project)
-    (save-restriction
-      (org-agenda-set-restriction-lock))))
+   (interactive)
+   (if (equal major-mode 'org-agenda-mode)
+       (progn
+         (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
+           (bh/narrow-to-org-project)
+           (save-excursion
+             (bh/find-project-task)
+             (org-agenda-set-restriction-lock)))
+         (org-agenda-redo)
+         (beginning-of-buffer))
+     (bh/narrow-to-org-project)
+     (save-restriction
+       (org-agenda-set-restriction-lock))))
+
 
 (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "P" 'bh/narrow-to-project))
@@ -734,13 +767,16 @@ so change the default 'F' binding in the agenda to allow both"
 
 (defvar bh/current-view-project nil)
 
+
 (defun bh/view-next-project ()
   (interactive)
   (unless (marker-position org-agenda-restrict-begin)
     (goto-char (point-min))
-     (re-search-forward "Tasks to Refile")
+    (re-search-forward "Tasks to Refile")
     (setq bh/current-view-project (point)))
   (bh/widen)
+  (when org-agenda-sticky
+    (org-agenda-redo))
   (goto-char bh/current-view-project)
   (forward-visible-line 1)
   (while (and (< (point) (point-max))
@@ -751,12 +787,15 @@ so change the default 'F' binding in the agenda to allow both"
     (forward-visible-line 1))
   (setq bh/current-view-project (point))
   (if (org-get-at-bol 'org-hd-marker)
-  (progn
+      (progn
+        (setq bh/hide-scheduled-and-waiting-next-tasks nil)
         (bh/narrow-to-project)
         (org-agenda-redo)
         (beginning-of-buffer))
     (beginning-of-buffer)
+    (setq bh/hide-scheduled-and-waiting-next-tasks t)
     (error "All projects viewed.")))
+
  (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "V" 'bh/view-next-project))
           'append)
@@ -805,7 +844,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
      ((bh/agenda-sort-test 'bh/is-due-deadline a b))
 
      ; late deadlines next
-     ((bh/agenda-sort-test-num 'bh/is-late-deadline '< a b))
+     ((bh/agenda-sort-test-num 'bh/is-late-deadline '> a b))
 
      ; scheduled items for today next
      ((bh/agenda-sort-test 'bh/is-scheduled-today a b))
@@ -859,7 +898,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (string-match "Deadline:" date-str))
 
 (defun bh/is-late-deadline (date-str)
-  (string-match "In *\\(-.*\\)d\.:" date-str))
+  (string-match "\\([0-9]*\\) d\. ago:" date-str))
 
 (defun bh/is-pending-deadline (date-str)
   (string-match "In \\([^-]*\\)d\.:" date-str))
@@ -897,7 +936,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (defun bh/show-org-agenda ()
   (interactive)
-  (switch-to-buffer "*Org Agenda*")
+  (if org-agenda-sticky
+      (switch-to-buffer "*Org Agenda( )*")
+    (switch-to-buffer "*Org Agenda*"))
   (delete-other-windows))
 
 (require 'org-protocol)
