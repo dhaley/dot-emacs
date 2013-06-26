@@ -264,7 +264,16 @@ want to use in the modeline *in lieu of* the original.")
 (bind-key "C-H-r" 'sacha/search-word-backward)
 (bind-key "C-H-s" 'sacha/search-word-forward)
 
-
+(defun sacha/isearch-yank-current-word ()
+  "Pull current word from buffer into search string."
+  (interactive)
+  (save-excursion
+    (skip-syntax-backward "w_")
+    (isearch-yank-internal
+     (lambda ()
+       (skip-syntax-forward "w_")
+       (point)))))
+(define-key isearch-mode-map (kbd "C-x") 'sacha/isearch-yank-current-word)
 
 (defun double-quote ()
   (interactive)
@@ -2771,11 +2780,11 @@ FORM => (eval FORM)."
     (window-number-meta-mode)
     (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))))
 
-(defun curr-dir-project-string (site-directory)
+(defun curr-dir-project-string ()
   "Returns current project as a string, or the empty string if
 PWD is not in a project"
   (interactive)
-  (let ((project-root-dir (locate-dominating-file site-directory "current")))
+  (let ((project-root-dir (locate-dominating-file default-directory "current")))
     (let ((path (split-string project-root-dir "/")))     ; path as list
       (car (last (nbutlast path 1))))))
 
@@ -5997,7 +6006,7 @@ Works in Microsoft Windows, Mac OS X, Linux."
   (setq site-directory (file-truename (locate-dominating-file default-directory ".dir-locals.el"))
         tags-file-name (concat site-directory "TAGS")
         readme-file-name (concat site-directory "README.md")
-        profile-name (curr-dir-project-string site-directory)
+        profile-name (curr-dir-project-string)
         profile-directory (concat site-directory "profiles/" profile-name)
         module-directory (concat profile-directory "/modules")
         theme-directory (concat profile-directory "/themes")
