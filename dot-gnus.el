@@ -5,8 +5,6 @@
 (require 'starttls)
 (require 'nnmairix)
 (require 'message)
-(require 'spam)
-(require 'spam-report)
 (require 'bbdb)
 (require 'bbdb-gnus)
 (require 'bbdb-message)
@@ -14,52 +12,8 @@
 
 ;;(gnus-compile)
 (gnus-delay-initialize)
-(spam-initialize)
 
 (bbdb-initialize 'gnus 'message)
-
-(defvar use-spam-filtering nil)
-
-;; Override definition from spam.el to use async.el
-(defun spam-spamassassin-register-with-sa-learn (articles spam
-                                                          &optional unregister)
-  "Register articles with spamassassin's sa-learn as spam or non-spam."
-  (if (and use-spam-filtering articles)
-      (let ((action (if unregister spam-sa-learn-unregister-switch
-                      (if spam spam-sa-learn-spam-switch
-                        spam-sa-learn-ham-switch)))
-            (summary-buffer-name (buffer-name)))
-        (with-temp-buffer
-          ;; group the articles into mbox format
-          (dolist (article articles)
-            (let (article-string)
-              (with-current-buffer summary-buffer-name
-                (setq article-string (spam-get-article-as-string article)))
-              (when (stringp article-string)
-                ;; mbox separator
-                (insert (concat "From nobody " (current-time-string) "\n"))
-                (insert article-string)
-                (insert "\n"))))
-          ;; call sa-learn on all messages at the same time, and also report
-          ;; them as SPAM to the Internet
-          (async-start
-           `(lambda ()
-              (with-temp-buffer
-                (insert ,(buffer-substring-no-properties
-                          (point-min) (point-max)))
-                (call-process-region (point-min) (point-max)
-                                     ,spam-sa-learn-program
-                                     nil nil nil "--mbox"
-                                     ,@(if spam-sa-learn-rebuild
-                                           (list action)
-                                         (list "--no-rebuild" action)))
-                (if ,spam
-                    (call-process-region (point-min) (point-max)
-                                         ,(executable-find "spamassassin-5.12")
-                                         nil nil nil "--mbox" "-r"))))
-           `(lambda (&optional ignore)
-              (message  "Finished learning messsages as %s"
-                        ,(if spam "spam" "ham"))))))))
 
 (defvar switch-to-gnus-unplugged nil)
 (defvar switch-to-gnus-run nil)
