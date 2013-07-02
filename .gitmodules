@@ -454,3 +454,9 @@
 [submodule "site-lisp/navi"]
 	path = site-lisp/navi
 	url = https://github.com/tj64/navi.git
+[submodule "site-lisp/org-jira"]
+	path = site-lisp/org-jira
+	url = https://github.com/baohaojun/org-jira.git
+[submodule "site-lisp/jira-rest"]
+	path = site-lisp/jira-rest
+	url = https://github.com/mattdeboard/jira-rest.git
