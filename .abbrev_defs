@@ -142,7 +142,11 @@
 
 (define-abbrev-table 'erc-nicklist-mode-abbrev-table '())
 
-(define-abbrev-table 'eshell-mode-abbrev-table '())
+(define-abbrev-table 'eshell-mode-abbrev-table
+'(
+        ("8de" "drush --uri=\"$uri\" uli" nil 0)
+
+))
 
 (define-abbrev-table 'finder-mode-abbrev-table '())
 
