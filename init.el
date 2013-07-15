@@ -4498,6 +4498,7 @@ and view local index.html url"
     ))
 
 (use-package org-jira
+  :load-path ("~/.emacs.d/site-lisp/org-jira")
   :commands (org-jira-create-issue org-jira-get-issue)
   :bind (
          ("C-8 j G" . org-jira-get-subtasks)
@@ -6181,3 +6182,4 @@ point reaches the beginning or end of the buffer, stop there."
 ;; End:
 
 ;;; init.el ends here
+(put 'dired-find-alternate-file 'disabled nil)
