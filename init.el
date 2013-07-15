@@ -2599,7 +2599,7 @@ unless return was pressed outside the comment"
   :config
   (progn
 
-    (erc-track-minor-mode 1)
+  (erc-track-minor-mode 1)
     (erc-track-mode 1)
 
     (use-package erc-alert)
@@ -2624,7 +2624,6 @@ unless return was pressed outside the comment"
                 (message msg))
             (message (concat "No definition found for " (upcase term)))))))
 
-
     (defun switch-to-bitlbee ()
       (interactive)
       (switch-to-buffer-other-window "&bitlbee")
@@ -2640,7 +2639,7 @@ unless return was pressed outside the comment"
       :group 'erc
       :type '(repeat regexp))
 
-        (defun erc-foolish-content (msg)
+    (defun erc-foolish-content (msg)
       "Check whether MSG is foolish."
       (erc-list-match erc-foolish-content msg))
 
@@ -2692,10 +2691,21 @@ FORM => (eval FORM)."
       "Deop myself from current channel."
       (erc-cmd-DEOP (format "%s" (erc-current-nick))))
 
+    (defun erc-cmd-BAN (nick &optional redirect whole-ip)
+      (let* ((chan (erc-default-target))
+             (who (erc-get-server-user nick))
+             (host (erc-server-user-host who))
+             (user (erc-server-user-login who)))
+        (erc-send-command
+         (format "MODE %s +b *!%s@%s%s"
+                 chan (if whole-ip "*" user) host redirect))))
+
     (defun erc-cmd-KICKBAN (nick &rest reason)
       (setq reason (mapconcat #'identity reason " "))
       (and (string= reason "")
            (setq reason nil))
+      (erc-cmd-OPME nick)
+      (sleep-for 0 250)
       (erc-cmd-BAN nick)
       (erc-send-command (format "KICK %s %s %s"
                                 (erc-default-target)
@@ -2703,21 +2713,47 @@ FORM => (eval FORM)."
                                 (or reason
                                     "Kicked (kickban)"))))
 
+    (defun erc-cmd-KICKBANIP (nick &rest reason)
+      (setq reason (mapconcat #'identity reason " "))
+      (and (string= reason "")
+           (setq reason nil))
+      (erc-cmd-OPME nick)
+      (sleep-for 0 250)
+      (erc-cmd-BAN nick nil t)
+      (erc-send-command (format "KICK %s %s %s"
+                                (erc-default-target)
+                                nick
+                                (or reason
+                                    "Kicked (kickbanip)"))))
+
+    (defun erc-cmd-KICKTROLL (nick &rest reason)
+      (setq reason (mapconcat #'identity reason " "))
+      (and (string= reason "")
+           (setq reason nil))
+      (erc-cmd-OPME nick)
+      (sleep-for 0 250)
+      (erc-cmd-BAN nick "$#haskell-ops")
+      (erc-send-command (format "KICK %s %s %s"
+                                (erc-default-target)
+                                nick
+                                (or reason
+                                    "Kicked (kicktroll)"))))
+
     (defun erc-cmd-UNTRACK (&optional target)
       "Add TARGET to the list of target to be tracked."
       (if target
           (erc-with-server-buffer
-           (let ((untracked
-                  (car (erc-member-ignore-case target erc-track-exclude))))
-             (if untracked
-                 (erc-display-line
-                  (erc-make-notice
-                   (format "%s is not currently tracked!" target))
-                  'active)
-               (add-to-list 'erc-track-exclude target)
-               (erc-display-line
-                (erc-make-notice (format "Now not tracking %s" target))
-                'active))))
+            (let ((untracked
+                   (car (erc-member-ignore-case target erc-track-exclude))))
+              (if untracked
+                  (erc-display-line
+                   (erc-make-notice
+                    (format "%s is not currently tracked!" target))
+                   'active)
+                (add-to-list 'erc-track-exclude target)
+                (erc-display-line
+                 (erc-make-notice (format "Now not tracking %s" target))
+                 'active))))
 
         (if (null erc-track-exclude)
             (erc-display-line
@@ -2735,16 +2771,16 @@ FORM => (eval FORM)."
    If no TARGET argument is specified, list contents of `erc-track-exclude'."
       (when target
         (erc-with-server-buffer
-         (let ((tracked
-                (not (car (erc-member-ignore-case target erc-track-exclude)))))
-           (if tracked
-               (erc-display-line
-                (erc-make-notice (format "%s is currently tracked!" target))
-                'active)
-             (setq erc-track-exclude (remove target erc-track-exclude))
-             (erc-display-line
-              (erc-make-notice (format "Now tracking %s" target))
-              'active)))))
+          (let ((tracked
+                 (not (car (erc-member-ignore-case target erc-track-exclude)))))
+            (if tracked
+                (erc-display-line
+                 (erc-make-notice (format "%s is currently tracked!" target))
+                 'active)
+              (setq erc-track-exclude (remove target erc-track-exclude))
+              (erc-display-line
+               (erc-make-notice (format "Now tracking %s" target))
+               'active)))))
       t)
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -6182,4 +6218,5 @@ point reaches the beginning or end of the buffer, stop there."
 ;; End:
 
 ;;; init.el ends here
+
 (put 'dired-find-alternate-file 'disabled nil)
