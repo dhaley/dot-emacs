@@ -4500,8 +4500,6 @@ and view local index.html url"
     ))
 
 (use-package org-jira
-  :load-path ("~/.emacs.d/override/org-jira")
-  ;; :load-path ("~/.emacs.d/override/org-mode/contrib/lisp/")
   :commands (org-jira-create-issue org-jira-get-issue)
   :bind (
          ("C-8 j G" . org-jira-get-subtasks)
