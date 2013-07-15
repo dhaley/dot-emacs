@@ -143,12 +143,13 @@
 (define-abbrev-table 'erc-nicklist-mode-abbrev-table '())
 
 (define-abbrev-table 'eshell-mode-abbrev-table
-'(
-        ("8de" "drush --uri=\"$uri\" uli" nil 0)
-
-))
+  '(
+    ("8de" "drush --uri=\"$uri\" uli" nil 3)
+   ))
 
 (define-abbrev-table 'finder-mode-abbrev-table '())
+
+(define-abbrev-table 'flycheck-error-list-mode-abbrev-table '())
 
 (define-abbrev-table 'fundamental-mode-abbrev-table '())
 
@@ -1393,6 +1394,7 @@
 
 (define-abbrev-table 'text-mode-abbrev-table
   '(
+    (";drupal" "💧" nil 0)
     ("^2" "²" nil 0)
     ("^3" "³" nil 0)
     ("almost0" "≈" nil 0)
@@ -1448,7 +1450,6 @@
     ("dizzy_symbol" "💫" nil 0)
     ("dress" "👗" nil 0)
     ("droplet" "💧" nil 0)
-    (";drupal" "💧" nil 0)
     ("ear" "👂" nil 0)
     ("elm0" "∈" nil 0)
     ("epsilon0" "ε" nil 0)
@@ -1686,3 +1687,4 @@
 (define-abbrev-table 'xmtn-log-edit-mode-abbrev-table '())
 
 (define-abbrev-table 'yaml-mode-abbrev-table '())
+
