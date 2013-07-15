@@ -588,11 +588,9 @@ If no file is associated, just close buffer without prompt for save."
 (bind-key "C-x C-n" 'next-line)
 
 
-(defun find-alternate-file-with-sudo (filename)
-  (interactive
-   (list (read-file-name "Find alternate file: " nil
-                         nil nil (concat "/sudo::" (buffer-file-name)))))
-  (find-alternate-file filename))
+(defun find-alternate-file-with-sudo ()
+  (interactive)
+  (find-alternate-file (concat "/sudo::" (buffer-file-name))))
 
 (bind-key "C-x C-v" 'find-alternate-file-with-sudo)
 
