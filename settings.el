@@ -222,6 +222,7 @@
  '(ledger-post-use-ido t)
  '(line-number-mode t)
  '(list-colors-sort (quote hsv))
+ '(locate-command "mdfind")
  '(mac-pass-command-to-system nil)
  '(mac-pass-control-to-system nil)
  '(mac-wheel-button-is-mouse-2 nil)
