@@ -743,6 +743,7 @@ so change the default 'F' binding in the agenda to allow both"
   (widen)
   (save-excursion
     (bh/find-project-task)
+    (org-agenda-set-restriction-lock)
     (bh/narrow-to-org-subtree)))
 
 (defun bh/narrow-to-project ()
