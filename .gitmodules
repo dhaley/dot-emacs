@@ -460,3 +460,15 @@
 [submodule "site-lisp/jira-rest"]
 	path = site-lisp/jira-rest
 	url = https://github.com/mattdeboard/jira-rest.git
+[submodule "site-lisp/auto-complete-etags"]
+	path = site-lisp/auto-complete-etags
+	url = https://github.com/whitypig/auto-complete-etags.git
+[submodule "site-lisp/git-gutter-fringe-plus"]
+	path = site-lisp/git-gutter-fringe-plus
+	url = git://github.com/nonsequitur/git-gutter-fringe-plus
+[submodule "site-lisp/git-gutter-plus"]
+	path = site-lisp/git-gutter-plus
+	url = git://github.com/nonsequitur/git-gutter-plus
+[submodule "site-lisp/fringe-helper"]
+	path = site-lisp/fringe-helper
+	url = git://github.com/nschum/fringe-helper.el
