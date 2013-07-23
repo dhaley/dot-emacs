@@ -19,6 +19,21 @@
   `(dolist (mode-hook ,modes)
      (add-hook mode-hook ,func)))
 
+
+(defvar prog-mode-hook nil)
+
+(defun prog-mode-setup ()
+  (run-hooks 'prog-mode-hook))
+
+(add-hook 'javascript-mode-hook 'prog-mode-setup)
+(add-hook 'emacs-lisp-mode-hook 'prog-mode-setup)
+(add-hook 'cperl-mode-hook 'prog-mode-setup)
+(add-hook 'python-mode-hook 'prog-mode-setup)
+(add-hook 'php-mode-hook 'prog-mode-setup)
+(add-hook 'javascript-mode-hook 'prog-mode-setup)
+(add-hook 'js-mode-hook 'prog-mode-setup)
+(add-hook 'js2-mode-hook 'prog-mode-setup)
+
 (defun system-idle-time ()
   (with-temp-buffer
     (call-process "ioreg" nil (current-buffer) nil
@@ -2387,19 +2402,11 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
     (setq php-manual-path "~/Documents/php/php-chunked-xhtml/")
     (setq php-completion-file "~/git/ewax/misc/php-completion-file")
     (require 'doxymacs)
-
+    (require 'auto-complete-etags)
+    (add-to-list 'ac-sources 'ac-source-etags)
     (add-hook 'php-mode-hook
               '(lambda ()
-                 ;; (when (require 'auto-complete nil t)
-                 ;;   (make-variable-buffer-local 'ac-sources)
-                 ;;   (add-to-list 'ac-sources 'ac-source-php-completion)
-                 ;;   ;; if you like patial match,
-                 ;;   ;; use `ac-source-php-completion-patial' instead of `ac-source-php-completion'.
-                 ;;                        ;(add-to-list 'ac-sources 'ac-source-php-completion-patial)
-                 ;;   (auto-complete-mode t))
                  (abbrev-mode 1)
-                 (whitespace-mode 1)
-                 (yas-minor-mode 1)
                  (hs-minor-mode 1)
                  (imenu-add-menubar-index)
                  (subword-mode t)
@@ -2525,7 +2532,6 @@ unless return was pressed outside the comment"
 
     (add-hook 'drupal-mode-hook
               '(lambda ()
-                 (yas-minor-mode 1)
                  (setq yas-extra-modes 'drupal-mode)
                  (doxymacs-mode 1)
                  (doxymacs-font-lock)
@@ -2704,7 +2710,7 @@ FORM => (eval FORM)."
       (setq reason (mapconcat #'identity reason " "))
       (and (string= reason "")
            (setq reason nil))
-      (erc-cmd-OPME nick)
+      (erc-cmd-OPME)
       (sleep-for 0 250)
       (erc-cmd-BAN nick)
       (erc-send-command (format "KICK %s %s %s"
@@ -2717,7 +2723,7 @@ FORM => (eval FORM)."
       (setq reason (mapconcat #'identity reason " "))
       (and (string= reason "")
            (setq reason nil))
-      (erc-cmd-OPME nick)
+      (erc-cmd-OPME)
       (sleep-for 0 250)
       (erc-cmd-BAN nick nil t)
       (erc-send-command (format "KICK %s %s %s"
@@ -2730,7 +2736,7 @@ FORM => (eval FORM)."
       (setq reason (mapconcat #'identity reason " "))
       (and (string= reason "")
            (setq reason nil))
-      (erc-cmd-OPME nick)
+      (erc-cmd-OPME)
       (sleep-for 0 250)
       (erc-cmd-BAN nick "$#haskell-ops")
       (erc-send-command (format "KICK %s %s %s"
@@ -3265,47 +3271,7 @@ at the beginning of line, if already there."
 
     (push 'clang++-ledger flycheck-checkers)
 
-    ;; (defun my-flycheck-show-error-in-window ()
-    ;;   (interactive)
-    ;;   (flycheck-cancel-error-display-timer)
-    ;;   (when flycheck-mode
-    ;;     (let ((buf (get-buffer-create "*Flycheck Info*"))
-    ;;           (message (car (flycheck-overlay-messages-at (point)))))
-    ;;       (with-current-buffer buf
-    ;;         (delete-region (point-min) (point-max))
-    ;;         (insert message))
-    ;;       (display-buffer buf)
-    ;;       (fit-window-to-buffer (get-buffer-window buf)))))
-
-    ;; (defun flycheck-show-error-at-point ()
-    ;;   "Show the first error message at point in minibuffer."
-    ;;   (interactive)
-    ;;   (flycheck-cancel-error-display-timer)
-    ;;   (when flycheck-mode
-    ;;     (if (flycheck-may-show-message)
-    ;;         (let* ((buf (get-buffer-create "*Flycheck Info*"))
-    ;;                (wind (get-buffer-window buf))
-    ;;                (message (car (flycheck-overlay-messages-at (point)))))
-    ;;           (if message
-    ;;               (if (> (length (split-string message "\n")) 8)
-    ;;                   (my-flycheck-show-error-in-window)
-    ;;                 (if wind (delete-window wind))
-    ;;                 (message "%s" message))
-    ;;             (message nil)))
-    ;;       ;; Try again if the minibuffer is busy at the moment
-    ;;       (flycheck-show-error-at-point-soon))))
-
-    ;; (defun my-flycheck-mode-hook ()
-    ;;   (bind-key "M-?" 'my-flycheck-show-error-in-window flycheck-mode-map)
-    ;;   (bind-key "M-p" 'previous-error flycheck-mode-map)
-    ;;   (bind-key "M-n" 'next-error flycheck-mode-map))
-
-;;    (add-hook 'flycheck-mode-hook 'my-flycheck-mode-hook)
-
     (add-hook 'prog-mode-hook 'flycheck-mode)
-    (add-hook 'nxml-mode-hook 'flycheck-mode)
-    (add-hook 'js2-mode-hook 'flycheck-mode)
-    (add-hook 'php-mode-hook 'flycheck-mode)
     )
 
   :config
@@ -3334,6 +3300,17 @@ at the beginning of line, if already there."
 
 (use-package gist
   :bind ("C-c G" . gist-region-or-buffer))
+
+;;;_ , git-gutter+
+
+(use-package git-gutter+
+  :diminish git-gutter+-mode
+  :config
+  (progn
+    (use-package git-gutter-fringe+
+      :config
+      (git-gutter-fr+-minimal))
+    (global-git-gutter+-mode 1)))
 
                                         ; (use-package git-commit-mode
                                         ;   :mode (("COMMIT_EDITMSG" . git-commit-mode)
@@ -5449,39 +5426,8 @@ and view local index.html url"
              whitespace-mode)
   :init
   (progn
-    ;; display only tails of lines longer than 80 columns, tabs and
-    ;; trailing whitespaces
-    ;; style information is here: http://www.emacswiki.org/emacs/WhiteSpace
-    (setq whitespace-line-column 80
-          whitespace-style '(face tabs trailing lines-tail))
-
-    (add-hook 'prog-mode-hook 'enable-whitespace-mode)
-
-    (setq modes-where-I-want-whitespace-mode-to-be-enabled
-          '(ruby-mode-hook
-            ;; javascript-mode-hook
-            ;; js-mode-hook
-            ;; css-mode-hook
-            sass-mode-hook
-            yaml-mode-hook
-            emacs-lisp-mode-hook
-            ))
-
-    (mapc (lambda (mode-hook)
-            (add-hook mode-hook 'enable-whitespace-mode))
-          modes-where-I-want-whitespace-mode-to-be-enabled)
-
-    (defun enable-whitespace-mode ()
-      (whitespace-mode 1)
-      )
-
-    ;; ;; (global-whitespace-mode t)
-    ;; ;; (setq whitespace-global-modes '(not dired-mode tar-mode))
-    ;; (setq whitespace-global-modes '(not erc-mode web-mode))
-
-    ;; (hook-into-modes 'whitespace-mode
-    ;;                  '(prog-mode-hook
-    ;;                    c-mode-common-hook))
+    (hook-into-modes 'whitespace-mode
+                     '(prog-mode-hook))
 
     (defun normalize-file ()
       (interactive)
@@ -5532,71 +5478,13 @@ and view local index.html url"
     (remove-hook 'kill-buffer-hook 'whitespace-buffer)))
 
 
-(use-package sgml-mode
-  :disabled t
-  :commands html-mode
-  :init
-  (progn
-
-    (defun skip-to-next-blank-line ()
-      (interactive)
-      (let ((inhibit-changing-match-data t))
-        (skip-syntax-forward " >")
-        (unless (search-forward-regexp "^\\s *$" nil t)
-          (goto-char (point-max)))))
-
-    (defun skip-to-previous-blank-line ()
-      (interactive)
-      (let ((inhibit-changing-match-data t))
-        (skip-syntax-backward " >")
-        (unless (search-backward-regexp "^\\s *$" nil t)
-          (goto-char (point-min)))))
-
-    (define-key html-mode-map
-      [remap forward-paragraph] 'skip-to-next-blank-line)
-    (define-key html-mode-map
-      [remap backward-paragraph] 'skip-to-previous-blank-line)
-    (add-hook 'html-mode-hook (lambda() (setq mode-name "html"))))
-
-:mode (("\\.html\\'" . html-mode)
-         ("\\.rhtml\\'" . html-mode)
-         ("\\.mustache\\'" . html-mode)))
-
-
 ;;;_ , web-mode
 
 (use-package web-mode
   :mode ("\\.tpl\\.php\\.html$" . web-mode)
   :init
   (progn
-    (defun web-mode-hook () "Hooks for Web mode."
-      ;; (setq web-mode-markup-indent-offset 2)
-      ;; (setq web-mode-css-indent-offset 2)
-      ;; (setq web-mode-code-indent-offset 2)
-      ;; (set-face-attribute 'web-mode-css-rule-face nil :foreground "Pink3")
-      ;;       Available faces:
-      ;; web-mode-doctype-face, web-mode-html-tag-face, web-mode-html-attr-name-face, web-mode-html-attr-value-face
-      ;; web-mode-css-rule-face, web-mode-css-prop-face, web-mode-css-pseudo-class-face, web-mode-css-at-rule-face
-      ;; web-mode-preprocessor-face, web-mode-string-face, web-mode-comment-face
-      ;; web-mode-variable-name-face, web-mode-function-name-face, web-mode-constant-face, web-mode-type-face, web-mode-keyword-face
-      ;; web-mode-folded-face
-      ;; (define-key web-mode-map (kbd "C-n") 'web-mode-match-tag)
-      ;; (add-to-list 'web-mode-snippets '("mydiv" "<div>" "</div>"))
-      ;; (setq web-mode-disable-autocompletion t)
-      ;; (setq web-mode-disable-css-colorization t)
-      ;;       (setq web-mode-extra-php-constants '("constant1" "constant2")) Also available : web-mode-extra-php-keywords, web-mode-extra-js-keywords, web-mode-extra-jsp-keywords, web-mode-extra-asp-keywords
-      ;; (Note: do not put this line in the hook)
-      (zencoding-mode)
-      )
-    (add-hook 'web-mode-hook 'web-mode-hook)
-
-    ;; (add-hook 'local-write-file-hooks (lambda () (delete-trailing-whitespace) nil))
-    ;; (local-set-key (kbd "RET") 'newline-and-indent)
-    ;; :mode ("\\.\\(php\\|tpl\\|\\.html\\.erb\\)$" . web-mode)
-    ;; :interpreter ("web" . web-mode)
-
     (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))
-
     ))
 
 
@@ -5724,82 +5612,20 @@ and view local index.html url"
 
 
 (use-package yasnippet
-  ;; :if (not noninteractive)
+  :if (not noninteractive)
   :diminish yas-minor-mode
-  :commands (yas-reload-all
-             yas-global-mode
-             yas-minor-mode
-             snippet-mode
-             yas-expand
-             yas-expand-snippet
-             yas-minor-mode-on
-             dired-snippets-dir)
+  :commands (yas-minor-mode yas-expand)
   :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
   :init
-  (progn
-
-    (hook-into-modes #'(lambda () (yas-minor-mode 1))
-                     '(prog-mode-hook
-                       org-mode-hook
-                       ruby-mode-hook
-                       message-mode-hook
-                       erc-mode-hook
-                       emacs-lisp-mode-hook
-                       pyhon-mode-hook
-                       coffee-mode-hook
-                       js-mode-hook
-                       js2-mode-hook
-                       actionscript-mode-hook
-                       ))
-    (setq ;; Yasnippet
-     ;; Dont print yasnippet messages
-     yas-verbosity 0
-     ;; Snippet directories
-     ;; yas-snippet-dirs (list (expand-file-name
-     ;;                         "snippets" user-emacs-directory))
-     ;; Disable yasnippet prompt by default
-     ;; (using auto-complete to prompt)
-     yas-prompt-functions '(yas-popup-isearch-prompt
-                            yas-ido-prompt
-                            yas-completing-prompt
-                            yas-no-prompt))
-
-    ;; (defalias 'yas/reload-all 'yas-reload-all)
-    ;; (defalias 'yas/global-mode 'yas-global-mode)
-    ;; (defalias 'yas/minor-mode 'yas-minor-mode)
-    ;; (defalias 'yas/expand 'yas-expand)
-    ;; (defalias 'yas/expand-snippet 'yas-expand-snippet)
-
-    )
+  (hook-into-modes #'(lambda () (yas-minor-mode 1))
+                   '(prog-mode-hook
+                     org-mode-hook
+                     ruby-mode-hook
+                     message-mode-hook
+                     gud-mode-hook
+                     erc-mode-hook))
   :config
   (progn
-    ;; (yas-initialize)
-    ;; (bind-key "C-x y" 'yas-insert-snippet yas-minor-mode-map)
-    (use-package popup
-      :init
-      (progn
-        (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
-          (when (featurep 'popup)
-            (popup-menu*
-             (mapcar
-              (lambda (choice)
-                (popup-make-item
-                 (or (and display-fn (funcall display-fn choice))
-                     choice)
-                 :value choice))
-              choices)
-             :prompt prompt
-             ;; start isearch mode immediately
-             :isearch t)))))
-
-    (defun dired-snippets-dir ()
-      "Open dired in the yas snippets dir."
-      (interactive)
-      (dired (expand-file-name
-              "snippets" user-emacs-directory)))
-
-    (yas-reload-all)
-
     (yas-load-directory (expand-file-name "snippets/" user-emacs-directory))
 
     (bind-key "<tab>" 'yas-next-field-or-maybe-expand yas-keymap)
@@ -5818,19 +5644,16 @@ and view local index.html url"
         (unless (and choose-instead-of-guess
                      (not (y-or-n-p "Insert a snippet with useful headers? ")))
           (yas-expand-snippet "\
-# -*- mode: snippet -*-
-# name: $1
-# --
-$0"))))
+  # -*- mode: snippet -*-
+  # name: $1
+  # --
+  $0"))))
 
     (bind-key "C-c y TAB" 'yas-expand)
     (bind-key "C-c y n" 'yas-new-snippet)
     (bind-key "C-c y f" 'yas-find-snippets)
     (bind-key "C-c y r" 'yas-reload-all)
-    (bind-key "C-c y v" 'yas-visit-snippet-file)
-
-    ))
-
+    (bind-key "C-c y v" 'yas-visit-snippet-file)))
 
 ;;;_ , yaoddmuse
 
@@ -6210,6 +6033,14 @@ point reaches the beginning or end of the buffer, stop there."
 ;; remap C-a to `smarter-move-beginning-of-line'
 (global-set-key [remap move-beginning-of-line]
                 'smarter-move-beginning-of-line)
+
+(defun listenv ()
+  "List all environment variables in order."
+  (interactive)
+  (switch-to-buffer-other-window "*env*")
+  (erase-buffer)
+  (insert (mapconcat 'identity process-environment "\n"))
+  (sort-lines nil (point-min) (point-max)))
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
