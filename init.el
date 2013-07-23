@@ -3313,10 +3313,6 @@ at the beginning of line, if already there."
     (global-git-gutter+-mode 1)))
 
                                         ; (use-package git-commit-mode
-                                        ;   :mode (("COMMIT_EDITMSG" . git-commit-mode)
-                                        ;          ("NOTES_EDITMSG" . git-commit-mode)
-                                        ;          ("MERGE_MSG" . git-commit-mode)
-                                        ;          ("TAG_EDITMSG" . git-commit-mode)))
 
 ;;;_ , gnus
 (use-package dot-gnus
