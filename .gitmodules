@@ -472,3 +472,6 @@
 [submodule "site-lisp/fringe-helper"]
 	path = site-lisp/fringe-helper
 	url = git://github.com/nschum/fringe-helper.el
+[submodule "site-lisp/fic-mode"]
+	path = site-lisp/fic-mode
+	url = https://github.com/lewang/fic-mode.git
