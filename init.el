@@ -3270,10 +3270,7 @@ at the beginning of line, if already there."
       :predicate '(string-match "/ledger/" (buffer-file-name)))
 
     (push 'clang++-ledger flycheck-checkers)
-
-    (add-hook 'prog-mode-hook 'flycheck-mode)
-    )
-
+    (hook-into-modes #'flycheck-mode '(prog-mode-hook)))
   :config
   (progn
     ;; (use-package flymake-cursor)
@@ -3304,6 +3301,7 @@ at the beginning of line, if already there."
 ;;;_ , git-gutter+
 
 (use-package git-gutter+
+  :commands git-gutter+-mode
   :diminish git-gutter+-mode
   :config
   (progn
@@ -3312,7 +3310,6 @@ at the beginning of line, if already there."
       (git-gutter-fr+-minimal))
     (global-git-gutter+-mode 1)))
 
-                                        ; (use-package git-commit-mode
 
 ;;;_ , gnus
 (use-package dot-gnus
@@ -4684,6 +4681,11 @@ and view local index.html url"
   :init
   (hook-into-modes 'pretty-control-l-mode '(prog-mode-hook)))
 
+;;;_ , fic-mode
+(use-package fic-mode
+  :init
+  (hook-into-modes 'fic-mode '(prog-mode-hook)))
+
 ;;;_ , ps-print
 
 (use-package ps-print
@@ -5602,7 +5604,13 @@ and view local index.html url"
 ;;;_ , yaml-mode
 
 (use-package yaml-mode
-  :mode ("\\.ya?ml\\'" . yaml-mode))
+  :mode ("\\.ya?ml\\'" . yaml-mode)
+  :init
+  (progn
+    (add-hook 'yaml-mode-hook
+              '(lambda ()
+                 (whitespace-mode 1)))))
+
 
 ;;;_ , yasnippet
 
@@ -6037,6 +6045,7 @@ point reaches the beginning or end of the buffer, stop there."
   (erase-buffer)
   (insert (mapconcat 'identity process-environment "\n"))
   (sort-lines nil (point-min) (point-max)))
+
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
