@@ -610,6 +610,9 @@ If no file is associated, just close buffer without prompt for save."
 (bind-key "C-x C-v" 'find-alternate-file-with-sudo)
 
 
+(defun mlm/locate-make-command-line (search-string)
+  (list "mdfind" "-interpret" search-string))
+
 ;; http://www.emacswiki.org/emacs/ElispCookbook
 (defun qdot/filter (condp lst)
   (delq nil
@@ -1197,26 +1200,6 @@ Subexpression references can be used (\1, \2, etc)."
           (beginning-of-buffer)
           (query-replace-regexp reg replace)))
     (message "Not in a re-builder buffer!")))
-
-;; *************
-;; sudo commands
-;; *************
-(defun sudo-shell-command (command &optional output-buffer error-buffer)
-  (interactive
-   (list
-    (read-shell-command "Shell command: " nil nil
-                        (let ((filename
-                               (cond
-                                (buffer-file-name)
-                                ((eq major-mode 'dired-mode)
-                                 (dired-get-filename nil t)))))
-                          (and filename (file-relative-name filename))))
-    current-prefix-arg
-    shell-command-default-error-buffer))
-  (shell-command
-   (concat "echo " (read-passwd "Password? ") " | sudo -S " command)
-   output-buffer
-   error-buffer))
 
 (defun make-elisp-header ()
   (interactive)
@@ -6046,6 +6029,13 @@ point reaches the beginning or end of the buffer, stop there."
   (insert (mapconcat 'identity process-environment "\n"))
   (sort-lines nil (point-min) (point-max)))
 
+;; Delete var without $
+(global-set-key(kbd "C-c DEL")
+               (lambda ()
+                 (interactive)
+                 (search-backward "$")
+                 (forward-char)
+                 (kill-word 1)))
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
