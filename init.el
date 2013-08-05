@@ -1275,20 +1275,6 @@ Subexpression references can be used (\1, \2, etc)."
 
 
 
-(use-package eldoc
-  :defer t
-  :init
-  (use-package eldoc-extension
-    :disabled t
-    :defer t
-    :init
-    (add-hook 'emacs-lisp-mode-hook
-              #'(lambda () (require 'eldoc-extension)) t))
-
-  :config
-  (eldoc-add-command 'paredit-backward-delete
-                     'paredit-close-round))
-
 
 ;;;_ , el-get
 
@@ -3817,7 +3803,7 @@ at the beginning of line, if already there."
                ("(\\(ert-deftest\\)\\>[         '(]*\\(setf[    ]+\\sw+\\|\\sw+\\)?"
                 (1 font-lock-keyword-face)
                 (2 font-lock-function-name-face
-                   nil t)))))
+                 nil t)))))
           lisp-modes)
 
     (defvar slime-mode nil)
@@ -3834,6 +3820,21 @@ at the beginning of line, if already there."
           :diminish elisp-slime-nav-mode)
 
         (use-package edebug)
+
+        (use-package eldoc
+          :diminish eldoc-mode
+          :defer t
+          :init
+          (use-package eldoc-extension
+            :disabled t
+            :defer t
+            :init
+            (add-hook 'emacs-lisp-mode-hook
+                      #'(lambda () (require 'eldoc-extension)) t))
+
+          :config
+          (eldoc-add-command 'paredit-backward-delete
+                             'paredit-close-round))
 
         (use-package cldoc
           :diminish cldoc-mode)
