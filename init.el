@@ -20,19 +20,12 @@
      (add-hook mode-hook ,func)))
 
 
-(defvar prog-mode-hook nil)
+;; (defvar prog-mode-hook nil)
 
 (defun prog-mode-setup ()
   (run-hooks 'prog-mode-hook))
 
-(add-hook 'javascript-mode-hook 'prog-mode-setup)
-(add-hook 'emacs-lisp-mode-hook 'prog-mode-setup)
-(add-hook 'cperl-mode-hook 'prog-mode-setup)
-(add-hook 'python-mode-hook 'prog-mode-setup)
 (add-hook 'php-mode-hook 'prog-mode-setup)
-(add-hook 'javascript-mode-hook 'prog-mode-setup)
-(add-hook 'js-mode-hook 'prog-mode-setup)
-(add-hook 'js2-mode-hook 'prog-mode-setup)
 
 (defun system-idle-time ()
   (with-temp-buffer
@@ -169,60 +162,6 @@
 ;; To use YASnippet as a non-global minor mode, replace `(yas-global-mode 1)` with
 (require 'yasnippet)
 (yas-reload-all)
-
-;;Hiding and replacing modeline strings with clean-mode-line
-
-(defvar mode-line-cleaner-alist
-  `((auto-complete-mode . " α")
-    (yas-minor-mode . " υ")
-    (paredit-mode . " π")
-    (eldoc-mode . "ℯ")
-    (abbrev-mode . "")
-    ;; Major modes
-    (lisp-interaction-mode . "λ")
-    (hi-lock-mode . "")
-    (python-mode . "Py")
-    (php-mode . "ρ")
-    (emacs-lisp-mode . "∈")
-    (nxhtml-mode . "η"))
-
-  "Alist for `clean-mode-line'.
-
-When you add a new element to the alist, keep in mind that you
-must pass the correct minor/major mode symbol and a string you
-want to use in the modeline *in lieu of* the original.")
-
-
-(defun clean-mode-line ()
-  (interactive)
-  (loop for cleaner in mode-line-cleaner-alist
-        do (let* ((mode (car cleaner))
-                  (mode-str (cdr cleaner))
-                  (old-mode-str (cdr (assq mode minor-mode-alist))))
-             (when old-mode-str
-               (setcar old-mode-str mode-str))
-             ;; major mode
-             (when (eq mode major-mode)
-               (setq mode-name mode-str)))))
-
-
-(add-hook 'after-change-major-mode-hook 'clean-mode-line)
-
-
-;; Working with Coding Systems and Unicode in Emacs
-
-;; (prefer-coding-system 'utf-8)
-;; (set-default-coding-systems 'utf-8)
-;; (set-terminal-coding-system 'utf-8)
-;; (set-keyboard-coding-system 'utf-8)
-
-;; backwards compatibility as default-buffer-file-coding-system
-;; is deprecated in 23.2.
-;; (if (boundp 'buffer-file-coding-system)
-;;     (setq-default buffer-file-coding-system 'utf-8)
-;;   (setq default-buffer-file-coding-system 'utf-8))
-
-
 
 ;;;_.  Keybindings
 
@@ -841,8 +780,8 @@ are in kbd format."
                (font-lock-add-keywords
                 mode (list (list (concat "\\<\\(" value " [^:\n]+\\):")
                                  1 font-lock-warning-face t))))
-           '(c-mode c++-mode emacs-lisp-mode lisp-mode
-                    python-mode perl-mode java-mode groovy-mode)))
+           '(emacs-lisp-mode lisp-mode php-mode
+                    python-mode perl-mode)))
       (set symbol value))
   :type 'string
   :group 'mail)
@@ -1458,20 +1397,6 @@ reload abbrevs."
 
     (bind-key "H-M-?" 'ac-last-help)
     (unbind-key "C-s" ac-completing-map)))
-
-;;;_ , autopair
-
-(use-package autopair
-  :disabled t ;; replaced with smartparens
-  :commands autopair-mode
-  :diminish autopair-mode
-  :init
-  (hook-into-modes #'autopair-mode '(emacs-lisp-mode-hook
-                                     text-mode-hook
-                                     js2-mode-hook
-                                     ruby-mode-hook
-                                     python-mode-hook
-                                     sh-mode-hook)))
 
 ;;;_ , autorevert
 
@@ -5002,8 +4927,6 @@ and view local index.html url"
                                           php-mode-hook
                                           python-mode-hook
                                           sh-mode-hook))))
-
-
 ;;;_ , smerge-mode
 
 (use-package smerge-mode
