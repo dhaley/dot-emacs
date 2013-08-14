@@ -421,9 +421,6 @@
 [submodule "site-lisp/ical-event"]
         path = site-lisp/ical-event
         url = https://github.com/jtatarik/ical-event.git
-[submodule "site-lisp/flyparse"]
-        path = site-lisp/flyparse
-        url = git://github.com/jwiegley/flyparse.git
 [submodule "site-lisp/php-auto-yasnippets"]
         path = site-lisp/php-auto-yasnippets
         url = https://github.com/ejmr/php-auto-yasnippets.git
@@ -446,35 +443,35 @@
         path = site-lisp/org-yaml
         url = https://github.com/Neil-Smithline/org-yaml.git
 [submodule "site-lisp/outshine"]
-	path = site-lisp/outshine
-	url = https://github.com/tj64/outshine.git
+        path = site-lisp/outshine
+        url = https://github.com/tj64/outshine.git
 [submodule "site-lisp/outorg"]
-	path = site-lisp/outorg
-	url = https://github.com/tj64/outorg.git
+        path = site-lisp/outorg
+        url = https://github.com/tj64/outorg.git
 [submodule "site-lisp/navi"]
-	path = site-lisp/navi
-	url = https://github.com/tj64/navi.git
+        path = site-lisp/navi
+        url = https://github.com/tj64/navi.git
 [submodule "site-lisp/org-jira"]
-	path = site-lisp/org-jira
-	url = https://github.com/baohaojun/org-jira.git
+        path = site-lisp/org-jira
+        url = https://github.com/baohaojun/org-jira.git
 [submodule "site-lisp/jira-rest"]
-	path = site-lisp/jira-rest
-	url = https://github.com/mattdeboard/jira-rest.git
+        path = site-lisp/jira-rest
+        url = https://github.com/mattdeboard/jira-rest.git
 [submodule "site-lisp/auto-complete-etags"]
-	path = site-lisp/auto-complete-etags
-	url = https://github.com/whitypig/auto-complete-etags.git
+        path = site-lisp/auto-complete-etags
+        url = https://github.com/whitypig/auto-complete-etags.git
 [submodule "site-lisp/git-gutter-fringe-plus"]
-	path = site-lisp/git-gutter-fringe-plus
-	url = git://github.com/nonsequitur/git-gutter-fringe-plus
+        path = site-lisp/git-gutter-fringe-plus
+        url = git://github.com/nonsequitur/git-gutter-fringe-plus
 [submodule "site-lisp/git-gutter-plus"]
-	path = site-lisp/git-gutter-plus
-	url = git://github.com/nonsequitur/git-gutter-plus
+        path = site-lisp/git-gutter-plus
+        url = git://github.com/nonsequitur/git-gutter-plus
 [submodule "site-lisp/fringe-helper"]
-	path = site-lisp/fringe-helper
-	url = git://github.com/nschum/fringe-helper.el
+        path = site-lisp/fringe-helper
+        url = git://github.com/nschum/fringe-helper.el
 [submodule "site-lisp/fic-mode"]
-	path = site-lisp/fic-mode
-	url = https://github.com/lewang/fic-mode.git
+        path = site-lisp/fic-mode
+        url = https://github.com/lewang/fic-mode.git
 [submodule "site-lisp/git-annex"]
-	path = site-lisp/git-annex
-	url = https://github.com/jwiegley/git-annex-el.git
+        path = site-lisp/git-annex
+        url = https://github.com/jwiegley/git-annex-el.git
