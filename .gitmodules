@@ -475,3 +475,6 @@
 [submodule "site-lisp/fic-mode"]
 	path = site-lisp/fic-mode
 	url = https://github.com/lewang/fic-mode.git
+[submodule "site-lisp/git-annex"]
+	path = site-lisp/git-annex
+	url = https://github.com/jwiegley/git-annex-el.git
