@@ -5279,35 +5279,35 @@ and view local index.html url"
 
 ;;;_ , windmove
 
-(setq windmove-wrap-around t)
-(windmove-default-keybindings)        ; Move between frames with Shift+arrow
-                                        ; windmove shows a stacktrace when
-                                        ; there is nothing to move to
+;; (setq windmove-wrap-around t)
+;; (windmove-default-keybindings)        ; Move between frames with Shift+arrow
+;;                                         ; windmove shows a stacktrace when
+;;                                         ; there is nothing to move to
 
 
-;; If, like me, you’re a heavy org-mode user, you’ll find that these key
-;; bindings won’t work in org-mode buffers because org-mode takes them
-;; over. Happily you can solve this by adding the line
-(setq org-replace-disputed-keys t)
+;; ;; If, like me, you’re a heavy org-mode user, you’ll find that these key
+;; ;; bindings won’t work in org-mode buffers because org-mode takes them
+;; ;; over. Happily you can solve this by adding the line
+;; (setq org-replace-disputed-keys t)
 
-(defmacro maser/swallow-errors (name f-with-error)
-  `(defun ,name ()
-     (interactive)
-     (condition-case err
-         (,f-with-error)
-       (error
-        (message "%s" (error-message-string err))))))
+;; (defmacro maser/swallow-errors (name f-with-error)
+;;   `(defun ,name ()
+;;      (interactive)
+;;      (condition-case err
+;;          (,f-with-error)
+;;        (error
+;;         (message "%s" (error-message-string err))))))
 
-(maser/swallow-errors windmove-down-without-errors windmove-down)
-(maser/swallow-errors windmove-up-without-errors windmove-up)
-(maser/swallow-errors windmove-right-without-errors windmove-right)
-(maser/swallow-errors windmove-left-without-errors windmove-left)
+;; (maser/swallow-errors windmove-down-without-errors windmove-down)
+;; (maser/swallow-errors windmove-up-without-errors windmove-up)
+;; (maser/swallow-errors windmove-right-without-errors windmove-right)
+;; (maser/swallow-errors windmove-left-without-errors windmove-left)
 
 
-(bind-key "H-'" 'windmove-right-without-errors)
-(bind-key "H-/" 'windmove-down-without-errors)
-(bind-key "H-;" 'windmove-left-without-errors)
-(bind-key "H-[" 'windmove-up-without-errors)
+;; (bind-key "H-'" 'windmove-right-without-errors)
+;; (bind-key "H-/" 'windmove-down-without-errors)
+;; (bind-key "H-;" 'windmove-left-without-errors)
+;; (bind-key "H-[" 'windmove-up-without-errors)
 
 (use-package wgrep
   :commands (wgrep-setup))
