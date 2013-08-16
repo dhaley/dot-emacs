@@ -4900,6 +4900,11 @@ and view local index.html url"
           (sr-history-push default-directory)
           (sr-beginning-of-buffer))))))
 
+;;;_ , tablegen-mode
+
+(use-package tablegen-mode
+  :mode ("\\.td\\'" . tablegen-mode))
+
 ;;;_ , texinfo
 
 (use-package texinfo
