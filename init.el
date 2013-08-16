@@ -1227,14 +1227,15 @@ Subexpression references can be used (\1, \2, etc)."
   (defvar el-get-sources nil)
 
   :config
-  (defun el-get-read-status-file ()
-    (mapcar #'(lambda (entry)
-                (cons (plist-get entry :symbol)
-                      `(status "installed" recipe ,entry)))
-            el-get-sources))
+    (progn
+    (defun el-get-read-status-file ()
+      (mapcar #'(lambda (entry)
+                  (cons (plist-get entry :symbol)
+                        `(status "installed" recipe ,entry)))
+              el-get-sources))
 
   (defalias 'el-get-init 'ignore
-    "Don't use el-get for making packages available for use."))
+    "Don't use el-get for making packages available for use.")))
 
 
 ;;;_ , abbrev
@@ -1267,8 +1268,7 @@ reload abbrevs."
 ;;;_ , ace-jump-mode
 
 (use-package ace-jump-mode
-  :bind (("C-. C-s" . ace-jump-mode)
-         ("M-h" . ace-jump-mode)))
+  :bind ("M-h" . ace-jump-mode))
 
 ;;;_ , agda
 
@@ -3167,8 +3167,7 @@ at the beginning of line, if already there."
     (hook-into-modes #'flycheck-mode '(prog-mode-hook)))
   :config
   (progn
-    ;; (use-package flymake-cursor)
-;;    (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
+    (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
     (defalias 's-collapse-whitespace 'identity)))
 
 
@@ -3204,6 +3203,11 @@ at the beginning of line, if already there."
       (git-gutter-fr+-minimal))
     (global-git-gutter+-mode 1)))
 
+
+;;;_ , git-blame
+
+(use-package git-blame
+  :commands git-blame-mode)
 
 ;;;_ , gnus
 (use-package dot-gnus
@@ -3326,8 +3330,8 @@ at the beginning of line, if already there."
 ;;;_ , hl-line
 
 (use-package hl-line
+  :commands hl-line-mode
   :bind ("M-o h" . hl-line-mode)
-  :init (setq cursor-type 't)
   :config
   (use-package hl-line+))
 
@@ -3508,7 +3512,7 @@ at the beginning of line, if already there."
           (delete-window)))))
 
 (use-package info-look
-  :commadns info-lookup-add-help)
+  :commands info-lookup-add-help)
 
 ;;;_ , indirect
 
@@ -3958,49 +3962,25 @@ at the beginning of line, if already there."
   :bind (("C-x g" . magit-status)
          ("C-x G" . magit-status-with-prefix))
   :init
+  (progn
+    (defun magit-status-with-prefix ()
+      (interactive)
+      (let ((current-prefix-arg '(4)))
+        (call-interactively 'magit-status)))
 
-  (require 'git-messenger)
-  (global-set-key (kbd "C-x v p") 'git-messenger:popup-message)
+    (defun eshell/git (&rest args)
+      (cond
+       ((or (null args)
+            (and (string= (car args) "status") (null (cdr args))))
+        (magit-status default-directory))
+       ((and (string= (car args) "log") (null (cdr args)))
+        (magit-log))
+       (t (throw 'eshell-replace-command
+                 (eshell-parse-command
+                  (concat "*" command)
+                  (eshell-stringify-list (eshell-flatten-list args)))))))
 
-  (defun magit-status-with-prefix ()
-    (interactive)
-    (let ((current-prefix-arg '(4)))
-      (call-interactively 'magit-status)))
-
-  ;; full screen magit-status
-
-  (defadvice magit-status (around magit-fullscreen activate)
-    (window-configuration-to-register :magit-fullscreen)
-    ad-do-it
-    (delete-other-windows))
-
-  (defun magit-quit-session ()
-    "Restores the previous window configuration and kills the magit buffer"
-    (interactive)
-    (kill-buffer)
-    (jump-to-register :magit-fullscreen))
-
-  (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
-
-  ;; Actual changes lost in a sea of whitespace diffs?
-
-  (defun magit-toggle-whitespace ()
-    (interactive)
-    (if (member "-w" magit-diff-options)
-        (magit-dont-ignore-whitespace)
-      (magit-ignore-whitespace)))
-
-  (defun magit-ignore-whitespace ()
-    (interactive)
-    (add-to-list 'magit-diff-options "-w")
-    (magit-refresh))
-
-  (defun magit-dont-ignore-whitespace ()
-    (interactive)
-    (setq magit-diff-options (remove "-w" magit-diff-options))
-    (magit-refresh))
-
-  (define-key magit-status-mode-map (kbd "W") 'magit-toggle-whitespace)
+    (add-hook 'magit-mode-hook 'hl-line-mode))
 
   :config
   (progn
@@ -4024,17 +4004,15 @@ at the beginning of line, if already there."
     (defvar magit-git-monitor-process nil)
     (make-variable-buffer-local 'magit-git-monitor-process)
 
-        (defun start-git-monitor ()
+    (defun start-git-monitor ()
       (interactive)
       (unless magit-git-monitor-process
         (setq magit-git-monitor-process
               (start-process "git-monitor" (current-buffer) "git-monitor"
                              "-d" (expand-file-name default-directory)))))
 
-    ;;(add-hook 'magit-status-mode-hook 'start-git-monitor)
-
+    ;; (add-hook 'magit-status-mode-hook 'start-git-monitor)
     ))
-
 
 (use-package github-browse-file
   :bind ("H-o" . github-browse-file))
@@ -4302,12 +4280,10 @@ and view local index.html url"
 
 
 ;; ;;;_ , org-mode
-;;
 
 (use-package dot-org
   :commands org-agenda-list
-  :bind (
-         ("M-C"   . jump-to-org-agenda)
+  :bind (("M-C"   . jump-to-org-agenda)
          ("M-m"   . org-smart-capture)
          ("M-M"   . org-inline-note)
          ("C-c a" . org-agenda)
@@ -4315,12 +4291,15 @@ and view local index.html url"
          ("C-c l" . org-insert-link))
   :init
   (progn
-    (if (string-match "\\.elc\\'" load-file-name)
-        (add-hook 'after-init-hook
-                  #'(lambda ()
-                      (org-agenda-list)
-                      (org-fit-agenda-window)
-                      (org-resolve-clocks))) t)))
+    (unless running-alternate-emacs
+      (run-with-idle-timer 300 t 'jump-to-org-agenda))
+
+    (unless running-alternate-emacs
+      (add-hook 'after-init-hook
+                #'(lambda ()
+                    (org-agenda-list)
+                    (org-fit-agenda-window)
+                    (org-resolve-clocks))) t)))
 
 
 (use-package org-latex
@@ -4895,7 +4874,6 @@ and view local index.html url"
 
 (bind-key "M-O" 'show-compilation)
 
-
 (use-package smart-compile
   :disabled t
   :commands smart-compile
@@ -4903,31 +4881,11 @@ and view local index.html url"
          ("A-n"   . next-error)
          ("A-p"   . previous-error)))
 
-
+;;;_ , smartparens
 
 (use-package smartparens
-  :commands (smartparens-mode
-             smartparens-global-mode
-             turn-on-smartparens-mode
-             turn-off-smartparens-mode)
-  :diminish smartparens-mode
-  :init
-  (progn
-    (setq
-     sp-ignore-modes-list
-     '(calc-mode
-       dired-mode
-       ibuffer-mode
-       minibuffer-inactive-mode
-       sr-mode
-       web-mode))
-    (hook-into-modes #'smartparens-mode '(
-                                          text-mode-hook
-                                          ruby-mode-hook
-                                          php-mode-hook
-                                          python-mode-hook
-                                          sh-mode-hook))))
-;;;_ , smerge-mode
+  :commands (smartparens-mode show-smartparens-mode)
+  :config (require 'smartparens-config))
 
 (use-package smerge-mode
   :commands (smerge-mode smerge-command-prefix)
@@ -5968,5 +5926,3 @@ point reaches the beginning or end of the buffer, stop there."
 ;; End:
 
 ;;; init.el ends here
-
-(put 'dired-find-alternate-file 'disabled nil)
