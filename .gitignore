@@ -33,3 +33,4 @@ logs/
 /workgroups
 /#dkh-core.org#
 flycheck-org-clock-save*
+.cask
