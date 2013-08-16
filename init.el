@@ -4302,6 +4302,7 @@ and view local index.html url"
                     (org-resolve-clocks))) t)))
 
 
+;;;_ , org-jira
 
 (use-package org-jira
   :load-path ("~/.emacs.d/site-lisp/org-jira")
@@ -4718,6 +4719,14 @@ and view local index.html url"
     (if window-system
         (add-hook 'after-init-hook 'session-initialize t))))
 
+;;;_ , shift-text
+(use-package shift-text
+  :commands (shfit-text-right shfit-text-left shift-text-up shift-text-down)
+  :bind (("<M-right>" . shift-text-right)
+  ("<M-left>" .  shift-text-left)
+  ("<M-up>" .  shift-text-up)
+  ("<M-down>" .  shift-text-down))
+)
 
 ;;;_ , sh-mode
 (use-package sh-mode
