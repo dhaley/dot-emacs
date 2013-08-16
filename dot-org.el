@@ -19,25 +19,6 @@
 (require 'org-bullets)
 (define-key org-mode-map (kbd "C-c k") 'org-cut-subtree)
 
-
-
-;; If you want a different prefix key for outline-minor-mode, insert first:
-;; (defvar outline-minor-mode-prefix "\C-c") or whatever. The prefix can only
-;; be changed before outline (minor) mode is loaded. "\C-c" unfortunately
-;; conflicts with other modes, e.g. ESS and picolisp-wiki-mode.
-;; (defvar outline-minor-mode-prefix "\M-#")
-
-;; (require 'outline)
-;; (require 'outshine)
-
-;; (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
-;; (add-hook 'message-mode-hook 'outline-minor-mode)
-
-;; (require 'outorg)
-;; (require 'navi-mode)
-
-
-
 (defun sacha/org-export-subtree-as-html-fragment ()
   (interactive)
   (org-export-region-as-html
