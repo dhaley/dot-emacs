@@ -1751,7 +1751,7 @@ reload abbrevs."
 
 
 (use-package csv-mode
-  :comamnds csv-mode
+  :commands csv-mode
   :mode ("\\.[Cc][Ss][Vv]\\'" . csv-mode)
   :init
   (progn

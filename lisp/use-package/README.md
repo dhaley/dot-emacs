@@ -155,7 +155,7 @@ stub in your `:init` block:
       (eval-when-compile
         (autoload 'w3m-search-escape-query-string "w3m-search")))
 
-If your package needs a directory added to the `load-path` in order load, use
+If your package needs a directory added to the `load-path` in order to load, use
 `:load-path`.  It takes a string or a list of strings.  If the path is
 relative, it will be expanded within `user-emacs-directory`:
 
@@ -168,7 +168,9 @@ Lastly, `use-package` provides built-in support for the diminish utility,
 if you have that installed.  It's purpose is to remove strings from your
 mode-line that would otherwise always be there and provide no useful
 information.  It is invoked with the `:diminish` keyword, which is passed
-the minor mode symbol:
+the minor mode symbol, a cons of the symbol and a replacement string, or
+just a replacement string in which case the minor mode symbol is guessed
+to be the package name with "-mode" at the end:
 
     (use-package abbrev
       :diminish abbrev-mode
@@ -207,7 +209,7 @@ be the same as the name of the package.
 But why would you want to use `use-package` when you have el-get?  My
 answer is that I'd like to use el-get to install and update some packages,
 but I don't want it managing configuration.  Just loading el-get -- without
-call (`el-get 'sync') -- takes a quarter second on my machine.  That's 25% of
+calling `(el-get 'sync)` -- takes a quarter second on my machine.  That's 25% of
 my load time!  `use-package` is designed for performance, so I only want to
 load el-get when it's time to install or update on of my used packages.
 
