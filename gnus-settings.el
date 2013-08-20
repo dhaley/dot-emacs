@@ -11,9 +11,9 @@
  '(gnus-agent-go-online t)
  '(gnus-agent-mark-unread-after-downloaded nil)
  '(gnus-agent-synchronize-flags t)
- '(gnus-alias-default-identity "CU")
+ '(gnus-alias-default-identity "Haley")
  '(gnus-alias-identity-alist (quote (("CU" "" "\"Damon Haley\" <damon.haley@colorado.edu>" "University of Colorado" nil "" "~/Messages/sig/cu.sig") ("VI" "" "\"Damon Haley\" <dkh@member.fsf.org>" "Vinyl Island University" nil "" "~/Messages/sig/vi.sig") ("Haley" "" "\"Damon K. Haley\" <dhaley@warpmail.net>" "Haley's Comet" nil "" "") ("LSD" "" "vinylisl@sdf.lonestar.org" "Peace Love & Understanding" nil "" "~/Messages/sig/lsd.sig"))))
- '(gnus-alias-identity-rules (quote (("Emacs Mailing Lists" ("To" "emacs" current) "VI") ("Emacs Newsgroups" ("Newsgroups" "emacs" current) "VI") ("Ledger Mailing List" ("To" "ledger-cli@googlegroups\\\\.com" current) "VI"))))
+ '(gnus-alias-identity-rules (quote (("Emacs Mailing Lists" ("To" "emacs" current) "VI") ("Emacs Newsgroups" ("Newsgroups" "emacs" current) "VI") ("Ledger Mailing List" ("To" "ledger-cli@googlegroups\\\\.com" current) "VI") ("Colorado" cu-identify "CU"))))
  '(gnus-alias-override-user-mail-address t)
  '(gnus-alias-unknown-identity-rule (quote error))
  '(gnus-always-read-dribble-file t)
@@ -120,10 +120,9 @@
  '(mail-specify-envelope-from t)
  '(mail-user-agent (quote gnus-user-agent))
  '(message-alternative-emails "\\(dhaley\\|vinylisl\\)@\\(hushmail\\|ssl\\-mail\\).com\\|\\(dkh@member\\.fsf\\|news@vinylisland\\)\\.org\\|damon\\.haley@colorado\\.edu")
- '(message-default-headers (concat "X-Face: \"'PJ-yb+fYF0]%?,#==_(s>`~Hw_iwG![Cc+Sq$k>S|QbU)>?}Y51$4)\\9OEt:NL.@kZIqy <UnVZ*!XnGGV:iDO$YDhK7i~$.fs%r^0LJdztkb\\6=DI6by:GdO>.L<,Nd[nsMwrN3b]os1UqBw
-" "X-Accept-Language: en-us
-" "X-Operating-System: Debian GNU/Linux
-"))
+ '(message-default-headers "X-Face: \"'PJ-yb+fYF0]%?,#==_(s>`~Hw_iwG![Cc+Sq$k>S|QbU)>?}Y51$4)\\9OEt:NL.@kZIqy <UnVZ*!XnGGV:iDO$YDhK7i~$.fs%r^0LJdztkb\\6=DI6by:GdO>.L<,Nd[nsMwrN3b]os1UqBw
+X-Accept-Language: en-us
+")
  '(message-default-mail-headers "Cc:
 Bcc:
 ")

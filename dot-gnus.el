@@ -430,7 +430,18 @@ is:
         (add-hook 'message-x-after-completion-functions
                   'gnus-alias-message-x-completion))
 
-    (define-key message-mode-map "\C-c\C-f\C-p" 'gnus-alias-select-identity)))
+    (define-key message-mode-map "\C-c\C-f\C-p" 'gnus-alias-select-identity)
+
+    (defun cu-identify (&optional arg)
+      "Idenfify group at point."
+      (interactive "P")
+      ;; returns either nil or non-nil.  Non-nil indicates that a match of
+      ;; whatever kind was achieved, and the specified Identity should be
+      ;; used.
+      (let ((group (save-excursion
+                     (set-buffer gnus-group-buffer)
+                     (gnus-group-group-name))))
+        (if (string-match  "^mail\\.cu\\." group) group nil)))))
 
 (use-package rs-gnus-summary
   :init
@@ -751,6 +762,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
   (progn
     (gnus-calendar-setup)
     (gnus-calendar-org-setup)))
+
 
 (provide 'dot-gnus)
 
