@@ -2281,35 +2281,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
   :diminish php-mode
   :config
   (progn
-    (use-package php-completion-mode
-      :commands php-completion-mode)
-
-
-    (use-package php-auto-yasnippets
-      :config
-      (progn
-      (setq php-auto-yasnippet-php-program
-      "/Users/daha1836/.emacs.d/site-lisp/php-auto-yasnippets/Create-PHP-YASnippet.php")
-      (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
-      ))
-
-    (setq php-manual-path "~/Documents/php/php-chunked-xhtml/")
-    (setq php-completion-file "~/git/ewax/misc/php-completion-file")
     (require 'doxymacs)
-    (require 'auto-complete-etags)
-    (add-to-list 'ac-sources 'ac-source-etags)
-    (add-hook 'php-mode-hook
-              '(lambda ()
-                 (abbrev-mode 1)
-                 (hs-minor-mode 1)
-                 (imenu-add-menubar-index)
-                 (subword-mode t)
-                 (turn-on-eldoc-mode)
-                 (which-func-mode 1)
-                 (diminish 'hs-minor-mode)
-                 (setq indicate-empty-lines t)
-                 ))
-
     (defun my-php-return ()
       "Advanced C-m for PHP doc multiline comments.
 Inserts `*' at the beggining of the new line if
@@ -2339,12 +2311,31 @@ unless return was pressed outside the comment"
             (indent-for-tab-command))
         ;; else insert only new-line
         (insert "\n")))
-    (add-hook 'php-mode-hook (lambda ()
-                               (local-set-key "\r" 'my-php-return)))
 
-    (use-package php-completion-mode
-      :commands php-completion-mode)
-))
+    (defun my-php-indent-or-complete ()
+      (interactive)
+      (let (
+      (call-interactively 'indent-according-to-mode)
+      (call-interactively 'php-complete-function))))
+
+    (defun my-php-mode-hook ()
+      (set (make-local-variable 'yas-fallback-behavior)
+           '(apply my-php-indent-or-complete . nil))
+      (bind-key "<tab>" 'yas-expand-from-trigger-key php-mode-map))
+
+    (add-hook 'php-mode-hook
+              '(lambda ()
+                 (abbrev-mode 1)
+                 (hs-minor-mode 1)
+                 (imenu-add-menubar-index)
+                 (subword-mode t)
+                 (turn-on-eldoc-mode)
+                 (which-func-mode 1)
+                 (diminish 'hs-minor-mode)
+                 (setq indicate-empty-lines t)
+                 'my-php-mode-hook
+                 (local-set-key "\r" 'my-php-return)
+                 ))))
 
 ;;;_ , projectile
 
@@ -4828,10 +4819,7 @@ and view local index.html url"
   :defer t
   :init
   (progn
-    ;; (setq stripe-hl-line)
-    (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)
-    ;; (add-hook 'org-mode-hook 'org-table-stripes-enable)
-))
+    (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)))
 
 ;;;_ , stopwatch
 
