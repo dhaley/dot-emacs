@@ -1,6 +1,20 @@
+[![Build Status](https://travis-ci.org/Fuco1/smartparens.png?branch=master)](https://travis-ci.org/Fuco1/smartparens)
+
+# News
+
+#### Experimental support for pairs with same opening and closing delimiter
+
+Smartparens now support pairs with same opening and closing delimiter! That is, pairs like `$$` in latex are now recognized as any other `sexp`. There are still some problems in modes where the delimiters serve multiple purposes, like `*` in markdown (unary list item, binary emphatic text). Use the variable `sp-navigate-consider-stringlike-sexp` to set the major modes where these should be supported. `latex-mode` is added by default.
+
+#### Experimental SGML tags support
+
+Smartparens now has fully transparent support of sgml tags (html, xml etc.). You can use all the operations on these as if they were normal paired expressions. Use the variable `sp-navigate-consider-sgml-tags` to set the major modes where tags should be supported. `html-mode` is added by default.
+
+#### Documentation moved
+
 Since the readme file spanned more than 600 lines and grew very unorganized and difficult to manage, documentation has moved to [github smartparens wiki][wiki].
 
-# The changes in commit 168 broke the backward compatibility of the configuration interface. Please, check the documentation on wiki and update your configuration.
+#### Default configuration
 
 The default configuration was moved into a separate file. If you wish to use the default configuration as a basis for your own additional customization, add:
 
@@ -8,9 +22,7 @@ The default configuration was moved into a separate file. If you wish to use the
 (require 'smartparens-config)
 ```
 
-in your configuration files (e.g. init.el) to load it.
-
-I'm very sorry for the trouble, but the new interface is much more flexible and makes it much easier to configure SP and also to add future features. Thanks for understanding.
+in your configuration files (e.g. init.el) to load it. There are also files with additional configuration for specific modes, such as `smartparens-latex.el`. The usage is similar as with the default config.
 
 # About Smartparens
 

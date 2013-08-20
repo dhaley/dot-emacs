@@ -1,6 +1,6 @@
 ;;; smartparens-config.el --- Default configuration for smartparens package
 
-;; Copyright (C) 2012 Matus Goljer
+;; Copyright (C) 2013 Matus Goljer
 
 ;; Author: Matus Goljer <matus.goljer@gmail.com>
 ;; Maintainer: Matus Goljer <matus.goljer@gmail.com>
@@ -12,18 +12,20 @@
 
 ;;; License:
 
-;; This program is free software; you can redistribute it and/or modify
+;; This file is part of Smartparens.
+
+;; Smartparens is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation, either version 3 of the License, or
 ;; (at your option) any later version.
 
-;; This program is distributed in the hope that it will be useful,
+;; Smartparens is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;; along with Smartparens.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -51,37 +53,17 @@
 
 ;; emacs is lisp hacking enviroment, so we set up some most common
 ;; lisp modes too
-(sp-with-modes '(
-                 emacs-lisp-mode
-                 inferior-emacs-lisp-mode
-                 lisp-interaction-mode
-                 scheme-mode
-                 lisp-mode
-                 eshell-mode
-                 slime-repl-mode
-                 clojure-mode
-                 common-lisp-mode
-                 )
+(sp-with-modes sp--lisp-modes
   ;; disable ', it's the quote character!
   (sp-local-pair "'" nil :actions nil)
   ;; also only use the pseudo-quote inside strings where it serve as
   ;; hyperlink.
-  (sp-local-pair "`" nil :when '(sp-in-string-p)))
+  (sp-local-pair "`" "'" :when '(sp-in-string-p)))
 
 ;; NOTE: Normally, `sp-local-pair' accepts list of modes (or a single
 ;; mode) as a first argument.  The macro `sp-with-modes' adds this
 ;; automatically.  If you want to call sp-local-pair outside this
 ;; macro, you MUST supply the major mode argument.
-
-;; markdown based modes
-(sp-with-modes '(
-                 markdown-mode
-                 gfm-mode
-                 rst-mode
-                 )
-  ;; overload the `' pair with ``, which is used for inline
-  ;; code in markdown
-  (sp-local-pair "`" "`"))
 
 ;; LaTeX modes
 (sp-with-modes '(
@@ -93,10 +75,16 @@
   ;; these pairs do not have global definition.
   (sp-local-pair "$" "$")
   (sp-local-pair "\\[" "\\]")
+  (sp-local-pair "`" "'")
   (sp-local-tag "\\b" "\\begin{_}" "\\end{_}"))
 
 ;; html modes
-(sp-local-tag '(sgml-mode html-mode) "<" "<_>" "</_>" :transform 'sp-match-sgml-tags)
+(sp-with-modes '(
+                 sgml-mode
+                 html-mode
+                 )
+  (sp-local-pair "<" ">")
+  (sp-local-tag  "<" "<_>" "</_>" :transform 'sp-match-sgml-tags))
 
 (provide 'smartparens-config)
 

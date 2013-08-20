@@ -24,6 +24,7 @@
 (Setup
  ;; Before anything has run
  (setq my-counter 1)
+ (global-set-key (kbd "C-c s") 'sp-split-sexp)
  )
 
 (Before
@@ -58,7 +59,7 @@
                      (:open "("     :close ")"     :actions (insert wrap))
                      (:open "["     :close "]"     :actions (insert wrap))
                      (:open "{"     :close "}"     :actions (insert wrap))
-                     (:open "`"     :close "'"     :actions (insert wrap))))))
+                     (:open "`"     :close "`"     :actions (insert wrap))))))
 
  ;; reset the state between scenarios to not interfere
  (setq sp-escape-char nil)
