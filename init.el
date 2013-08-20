@@ -4000,6 +4000,14 @@ at the beginning of line, if already there."
 
     (require 'magit-topgit)
     (require 'rebase-mode)
+    (require 'magit-blame)
+
+    (global-set-key (kbd "C-x v b") 'magit-blame-mode)
+    (defun magit-blame-this-file()
+      "visit file and call magit-blame-mode"
+      (interactive)
+      (magit-visit-item)
+      (magit-blame-mode))
 
     (defvar magit-git-monitor-process nil)
     (make-variable-buffer-local 'magit-git-monitor-process)
