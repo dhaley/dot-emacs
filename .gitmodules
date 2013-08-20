@@ -97,9 +97,6 @@
 [submodule "site-lisp/ghc-mod"]
         path = site-lisp/ghc-mod
         url = https://github.com/kazu-yamamoto/ghc-mod.git
-[submodule "site-lisp/auto-complete"]
-        path = site-lisp/auto-complete
-        url = https://github.com/jwiegley/auto-complete.git
 [submodule "site-lisp/git-commit-mode"]
         path = site-lisp/git-commit-mode
         url = https://github.com/jwiegley/git-commit-mode.git
