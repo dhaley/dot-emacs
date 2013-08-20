@@ -454,9 +454,6 @@
 [submodule "site-lisp/jira-rest"]
         path = site-lisp/jira-rest
         url = https://github.com/mattdeboard/jira-rest.git
-[submodule "site-lisp/auto-complete-etags"]
-        path = site-lisp/auto-complete-etags
-        url = https://github.com/whitypig/auto-complete-etags.git
 [submodule "site-lisp/git-gutter-fringe-plus"]
         path = site-lisp/git-gutter-fringe-plus
         url = git://github.com/nonsequitur/git-gutter-fringe-plus
