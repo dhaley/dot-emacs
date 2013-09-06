@@ -6,4 +6,4 @@
                        ("layout-article" "\\documentclass[twoside, 10pt, a4paper, titlepage]{article}\n\n\\usepackage[latin1]{inputenc}\n\\usepackage[T1]{fontenc}\n\\usepackage[dvips]{graphicx}\n\n\n\\title{}\n\\author{}\n\n\\begin{document}\n\n\\maketitle\n\n\n\\section{}\n\n\n\\end{document}\n" "layout-article" nil nil nil nil nil nil)))
 
 
-;;; Do not edit! File generated at Tue Feb  5 15:37:12 2013
+;;; Do not edit! File generated at Wed Sep  4 12:29:34 2013

@@ -20,4 +20,4 @@
                        ("train" "Our standard rate is \\$6000/day plus expenses.  We normally work at the\nclient's site.  Expenses include travel, lodging, meals, and any\nrepro/graphics or other supplies required for the course.  We also charge\nfor travel time at a rate of \\$800 per half day.  Where are you located?\n\nThank you,\n  John Wiegley\n  BoostPro Computing\n  http://www.boostpro.com\n" "train" nil nil nil nil nil nil)))
 
 
-;;; Do not edit! File generated at Tue Feb  5 15:37:12 2013
+;;; Do not edit! File generated at Wed Sep  4 12:29:34 2013

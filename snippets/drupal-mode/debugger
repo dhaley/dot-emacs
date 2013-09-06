@@ -17,3 +17,9 @@
 function debugger() {
   // If stopped here, step out to see who called debugger().
 }
+
+
+// This is the case I need to troubleshoot.
+$my_watch =& $form['my_element']['#default_value']; // watch just this one part of the data structure.
+watch('my_watch');
+debugger();
