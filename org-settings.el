@@ -37,39 +37,11 @@
  '(org-archive-location "%s_archive::* Archived Tasks")
  '(org-babel-results-keyword "results")
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
- '(org-capture-templates (quote (("#" "used by gnus-calendar-org" entry (file+olp "~/Documents/Tasks/todo.txt" "Appointments") "%i" :immediate-finish t) ("j" "Journal" entry (file+datetree "~/Documents/Tasks/diary.org") "* %?%^G
- Entered on %T
-   %i
-" :clock-in t :clock-resume t) ("W" "Capture web snippet" entry (file+headline "~/owncloud/learn-emacs.txt" "Emacs mastery") "* Fact: '%:description'        :drill:
-:PROPERTIES:
-:DATE_ADDED: %u
-:SOURCE_URL: %c
-:END:
-
-%i
-%?
-" :immediate-finish t :empty-lines 1) ("t" "todo" entry (file "~/Documents/Tasks/refile.org") "* TODO %?
-%U
-%a
-" :clock-in t :clock-resume t) ("r" "respond" entry (file "~/Documents/Tasks/refile.org") "* NEXT Respond to %:from on %:subject
+ '(org-capture-templates (quote (("t" "Task" entry (file+headline "~/Documents/Tasks/todo.txt" "Inbox") "* TODO %?
 SCHEDULED: %t
-%U
-%a
-" :immediate-finish t :clock-in t :clock-resume t) ("n" "note" entry (file "~/Documents/Tasks/refile.org") "* %? :NOTE:
-%U
-%a
-" :clock-in t :clock-resume t) ("w" "org-protocol" entry (file "~/Documents/Tasks/refile.org") "* TODO Review %c
-%U
-" :immediate-finish t) ("p" "Phone call" entry (file "~/Documents/Tasks/refile.org") "* PHONE %? :PHONE:
-%U" :clock-in t :clock-resume t) ("h" "Habit" entry (file "~/Documents/Tasks/refile.org") "* NEXT %?
-%U
-%a
-SCHEDULED: %(format-time-string \"<%Y-%m-%d %a .+1d/3d>\")
 :PROPERTIES:
-:STYLE: habit
-:REPEAT_TO_STATE: NEXT
-:END:
-"))))
+:ID:       %(shell-command-to-string \"uuidgen\"):CREATED:  %U
+:END:" :prepend t))))
  '(org-catch-invisible-edits (quote error))
  '(org-clock-auto-clock-resolution (quote when-no-clock-is-running))
  '(org-clock-history-length 23)
