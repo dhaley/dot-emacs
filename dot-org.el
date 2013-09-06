@@ -654,9 +654,6 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
           (org-agenda-redo)))
     (widen)))
 
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "W" 'bh/widen))
-          'append)
 
 (defun bh/restrict-to-file-or-follow (arg)
   "Set agenda restriction to 'file or with argument invoke follow mode.
@@ -670,9 +667,6 @@ so change the default 'F' binding in the agenda to allow both"
     (org-agenda-redo)
     (beginning-of-buffer)))
 
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "F" 'bh/restrict-to-file-or-follow))
-          'append)
 
 (defun bh/narrow-to-org-subtree ()
   (widen)
@@ -691,11 +685,6 @@ so change the default 'F' binding in the agenda to allow both"
     (bh/narrow-to-org-subtree)
     (save-restriction
       (org-agenda-set-restriction-lock))))
-
-(add-hook 'org-agenda-mode-hook
-
-          '(lambda () (org-defkey org-agenda-mode-map "N" 'bh/narrow-to-subtree))
-          'append)
 
 (defun bh/narrow-up-one-org-level ()
   (widen)
@@ -716,9 +705,6 @@ so change the default 'F' binding in the agenda to allow both"
         (bh/narrow-up-one-org-level))
     (bh/narrow-up-one-org-level)))
 
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "U" 'bh/narrow-up-one-level))
-          'append)
 
 (defun bh/narrow-to-org-project ()
   (widen)
@@ -743,9 +729,6 @@ so change the default 'F' binding in the agenda to allow both"
        (org-agenda-set-restriction-lock))))
 
 
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "P" 'bh/narrow-to-project))
-          'append)
 
 (defvar bh/current-view-project nil)
 
@@ -778,13 +761,6 @@ so change the default 'F' binding in the agenda to allow both"
     (setq bh/hide-scheduled-and-waiting-next-tasks t)
     (error "All projects viewed.")))
 
- (add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "V" 'bh/view-next-project))
-          'append)
-
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
-          'append)
 
 (defun bh/set-agenda-restriction-lock (arg)
   "Set restriction lock to current task subtree or file if prefix is specified"
@@ -803,12 +779,6 @@ so change the default 'F' binding in the agenda to allow both"
           (org-with-point-at pom
             (org-agenda-set-restriction-lock restriction-type))))))))
 
-;; Always hilight the current agenda line
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (hl-line-mode 1))
-          'append)
-
-;;
 ;; Agenda sorting functions
 ;;
 
@@ -900,10 +870,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (defun bh/is-scheduled-late (date-str)
   (string-match "Sched\.\\(.*\\)x:" date-str))
 
-(add-hook 'org-agenda-mode-hook
-          (lambda ()
-            (define-key org-agenda-mode-map "q" 'bury-buffer))
-          'append)
 
 
 (require 'org-checklist)
@@ -1379,6 +1345,44 @@ end tell" (match-string 1))))
             (org-bullets-mode 1)))
 
 (remove-hook 'kill-emacs-hook 'org-babel-remove-temporary-directory)
+
+;;;_  . org-agenda-mode
+
+(let ((map org-agenda-mode-map))
+  (define-key map "r" 'org-agenda-refile)
+  (define-key map " " 'org-agenda-tree-to-indirect-buffer)
+  (define-key map "Z" 'org-agenda-follow-mode))
+
+
+
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "W" 'bh/widen))
+          'append)
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "F" 'bh/restrict-to-file-or-follow))
+          'append)
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "N" 'bh/narrow-to-subtree))
+          'append)
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "U" 'bh/narrow-up-one-level))
+          'append)
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "P" 'bh/narrow-to-project))
+          'append)
+ (add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "V" 'bh/view-next-project))
+          'append)
+
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
+          'append)
+(add-hook 'org-agenda-mode-hook
+          (lambda ()
+            (define-key org-agenda-mode-map "q" 'bury-buffer))
+          'append)
+
+
 
 (defun org-fit-agenda-window ()
   "Fit the window to the buffer size."
