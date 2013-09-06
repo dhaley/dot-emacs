@@ -1759,7 +1759,7 @@ reload abbrevs."
               '(lambda ()
                  (whitespace-mode 1)
                  (orgtbl-mode 1)
-                 (stripe-org-tables-enable)
+                 (stripe-buffer-mode 1)
 ))))
 
 ;;;_ , css-mode
@@ -2150,7 +2150,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
        (require 'stripe-buffer)
        (add-hook 'dired-mode-hook '(lambda ()
                                      (dired-package-initialize)
-                                     (hl-line-mode 1)
+                                     ;; (hl-line-mode 1)
                                      (stripe-listify-buffer)
                                      (setq cursor-type t)
                                      ))
@@ -2281,6 +2281,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
   :diminish php-mode
   :config
   (progn
+    (require 'php-extras)
     (require 'doxymacs)
     (defun my-php-return ()
       "Advanced C-m for PHP doc multiline comments.
