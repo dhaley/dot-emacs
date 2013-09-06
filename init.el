@@ -787,8 +787,6 @@ are in kbd format."
   :group 'mail)
 
 
-
-
 (defun insert-user-timestamp ()
   "Insert a quick timestamp using the value of `user-initials'."
   (interactive)
@@ -1773,7 +1771,6 @@ reload abbrevs."
       '(("<return>" newline-and-indent)))
     (add-hook 'css-mode-hook
               (lambda ()
-                ;; (paredit-mode 1)
                 (rainbow-mode 1)))))
 
 (use-package cursor-chg
@@ -2150,7 +2147,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
        (require 'stripe-buffer)
        (add-hook 'dired-mode-hook '(lambda ()
                                      (dired-package-initialize)
-                                     ;; (hl-line-mode 1)
                                      (stripe-listify-buffer)
                                      (setq cursor-type t)
                                      ))
