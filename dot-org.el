@@ -890,7 +890,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
   (delete-other-windows))
 
 (require 'org-protocol)
-(require 'org-mac-link-grabber)
+(require 'org-mac-link)
 
 (defvar bh/insert-inactive-timestamp t)
 

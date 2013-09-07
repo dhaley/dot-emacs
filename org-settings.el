@@ -104,7 +104,7 @@ SCHEDULED: %t
  '(org-mobile-files (quote ("~/Documents/Tasks/todo.txt")))
  '(org-mobile-files-exclude-regexp "\\(TODO\\(-.*\\)?\\)\\'")
  '(org-mobile-inbox-for-pull "~/Documents/Tasks/from-mobile.org")
- '(org-modules (quote (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-jsinfo org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-mac-link-grabber org-rmail org-vm org-wl org-w3m)))
+ '(org-modules (quote (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-jsinfo org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-mac-link org-rmail org-vm org-wl org-w3m)))
  '(org-odd-levels-only nil)
  '(org-outline-path-complete-in-steps nil)
  '(org-plantuml-jar-path nil)
