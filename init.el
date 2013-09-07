@@ -5882,6 +5882,19 @@ point reaches the beginning or end of the buffer, stop there."
                  (forward-char)
                  (kill-word 1)))
 
+(dolist
+    (r `((?i (file . "~/.emacs.d/init.el"))
+         (?e (file . "~/.emacs.d"))
+         (?t (file . "~/Documents/Tasks/todo.txt"))
+         (?s (file . "~/.emacs.d/settings.el"))
+         (?o (file . "~/.emacs.d/dot-org.el"))
+         (?g (file . "~/.emacs.d/dot-gnus.el"))
+         (?O (file . "~/.emacs.d/org-settings.el"))
+         (?G (file . "~/.emacs.d/gnus-settings.el"))
+         ))
+  (set-register (car r) (cadr r)))
+
+
 ;; Local Variables:
 ;;   mode: emacs-lisp
 ;;   mode: allout
