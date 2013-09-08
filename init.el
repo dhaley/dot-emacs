@@ -1200,7 +1200,6 @@ Subexpression references can be used (\1, \2, etc)."
        'apache-mode
        'applescript-mode
        'buffer-move
-       'key-chord
        'rainbow-mode
        'smarter-compile
        'switch-window
@@ -2349,52 +2348,6 @@ unless return was pressed outside the comment"
 
     (bind-key "C-c h" 'helm-projectile)))
 
-(use-package key-chord
-  ;; :if (and
-  ;;      (not degrade-p-minimalism)
-  ;;      (not degrade-p-noninteractive))
-  :commands
-  (key-chord-mode
-   key-chord-define
-   key-chord-define-global)
-  :init
-  (progn
-    (setq
-     key-chord-two-keys-delay 0.05
-     key-chord-one-key-delay 0.15)
-    ;; (when (not degrade-p-terminal)
-    (key-chord-mode 1)
-    )
-  ;; )
-  :config
-  (progn
-    (mapc
-     (lambda (keyscommand)
-       (key-chord-define-global
-        (car keyscommand) (cdr keyscommand)))
-     '(;; top row shifted keys (kind of)
-       ("1j" . "!")
-       ("2j" . "'") ("2k" . "\"") ("2l" . "`")
-       ("2w" . "@") ;; note exception
-       ("3j" . "#")
-       ("4j" . "$")
-       ("5j" . "%")
-       ("6a" . "&")
-       ("7a" . "\\") ("7s" . "|") ("7d" . "/") ;; standing slashes: \ | /
-       ;; brackets: ( { [ <
-       ("8a" . "(") ("9a" . ")")
-       ("8s" . "{") ("9s" . "}")
-       ("8d" . "[") ("9d" . "]")
-       ("8f" . "<") ("9f" . ">")
-       ("0a" . "=")
-       ("+a" . "?")))
-    (key-chord-define-global ";s" 'scratch)
-    (key-chord-define-global ";d" 'delete-window)
-    (key-chord-define-global ";g" 'magit-status)
-
-    ))
-
-
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
@@ -3135,23 +3088,6 @@ at the beginning of line, if already there."
 
     (push 'jslint flycheck-checkers)
 
-    (flycheck-declare-checker clang++-ledger
-      "Clang++ checker for Ledger"
-      :command
-      '("clang++" "-Wall" "-fsyntax-only"
-        "-I/Users/johnw/Products/ledger/debug" "-I../lib"
-        "-I../lib/utfcpp/source"
-        "-I/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7"
-        "-include" "system.hh" "-c" source-inplace)
-      :error-patterns
-      '(("^\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): warning:\\s-*\\(?4:.*\\)"
-         warning)
-        ("^\\(?1:.*\\):\\(?2:[0-9]+\\):\\(?3:[0-9]+\\): error:\\s-*\\(?4:.*\\)"
-         error))
-      :modes 'c++-mode
-      :predicate '(string-match "/ledger/" (buffer-file-name)))
-
-    (push 'clang++-ledger flycheck-checkers)
     (hook-into-modes #'flycheck-mode '(prog-mode-hook)))
   :config
   (progn
