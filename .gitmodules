@@ -470,8 +470,5 @@
         path = site-lisp/git-annex
         url = https://github.com/jwiegley/git-annex-el.git
 [submodule "site-lisp/php-extras"]
-	path = site-lisp/php-extras
-	url = https://github.com/arnested/php-extras.git
-[submodule "site-lisp/ledger"]
-	path = site-lisp/ledger
-	url = git://github.com/ledger/ledger.git
+        path = site-lisp/php-extras
+        url = https://github.com/arnested/php-extras.git
