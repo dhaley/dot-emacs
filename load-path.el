@@ -38,7 +38,7 @@
         "override/org-mode/lisp/"
 
         ;; Packages located elsewhere on the system...
-        ;; "~/src/ledger/lisp/"
+        "~/Documents/github/ledger/lisp/"
         "/usr/local/share/doc/git-core/contrib/emacs/"
         )))
 
