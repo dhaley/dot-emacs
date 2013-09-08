@@ -1153,6 +1153,23 @@ To use this function, add it to `org-agenda-finalize-hook':
 (add-hook 'org-mobile-pre-pull-hook 'my-org-mobile-pre-pull-function)
 (add-hook 'org-mobile-post-push-hook 'my-org-mobile-post-push-function)
 
+(defvar my-org-wrap-region-history nil)
+
+(defun my-org-wrap-region (&optional arg)
+  (interactive "P")
+  (save-excursion
+    (goto-char (region-end))
+    (if arg
+        (insert "#+end_src\n")
+      (insert ":END:\n"))
+    (goto-char (region-beginning))
+    (if arg
+        (insert "#+begin_src "
+                (read-string "Language: " nil 'my-org-wrap-region-history)
+                ?\n)
+      (insert ":OUTPUT:\n"))))
+
+
 (defun org-inline-note ()
   (interactive)
   (switch-to-buffer-other-window "todo.txt")
