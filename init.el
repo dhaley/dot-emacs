@@ -189,46 +189,6 @@
 
 ;;;_  . H-?
 
-
-(defun sacha/search-word-backward ()
-  "Find the previous occurrence of the current word."
-  (interactive)
-  (let ((cur (point)))
-    (skip-syntax-backward "w_")
-    (goto-char
-     (if (re-search-backward (concat "\\_<" (current-word) "\\_>") nil t)
-         (match-beginning 0)
-       cur))))
-
-(defun sacha/search-word-forward ()
-  "Find the next occurrence of the current word."
-  (interactive)
-  (let ((cur (point)))
-    (skip-syntax-forward "w_")
-    (goto-char
-     (if (re-search-forward (concat "\\_<" (current-word) "\\_>") nil t)
-         (match-beginning 0)
-       cur))))
-
-(defadvice search-for-keyword (around sacha activate)
-  "Match in a case-insensitive way."
-  (let ((case-fold-search t))
-    ad-do-it))
-
-(bind-key "C-H-r" 'sacha/search-word-backward)
-(bind-key "C-H-s" 'sacha/search-word-forward)
-
-(defun sacha/isearch-yank-current-word ()
-  "Pull current word from buffer into search string."
-  (interactive)
-  (save-excursion
-    (skip-syntax-backward "w_")
-    (isearch-yank-internal
-     (lambda ()
-       (skip-syntax-forward "w_")
-       (point)))))
-(define-key isearch-mode-map (kbd "C-x") 'sacha/isearch-yank-current-word)
-
 (defun double-quote ()
   (interactive)
   (if (use-region-p)
@@ -3143,6 +3103,18 @@ at the beginning of line, if already there."
        (concat "XDEBUG_CONFIG='idekey=my-php-53' /Applications/MAMP/bin/php/php5.3.20/bin/php "
                (buffer-file-name) " &")))))
 
+
+;;;_ , highlight-symbol
+(use-package highlight-symbol
+  :init
+  (progn
+    (bind-key "C-H-r" 'highlight-symbol-prev)
+    (bind-key "C-H-s" 'highlight-symbol-next)
+    (bind-key "C-H-h" 'highlight-symbol-at-point)
+    (bind-key "C-H-q" 'highlight-symbol-query-replace)))
+
+
+;;;_ , highlight-tail
 (use-package highlight-tail
   :commands highlight-tail-mode)
 
@@ -3555,8 +3527,7 @@ at the beginning of line, if already there."
                   (set (make-local-variable 'js-indent-level) 2)))))
 
 ;;;_ , ledger
-
-(use-package "ldg-new"
+(use-package "ledger-mode"
   :commands ledger-mode
   :init
   (progn
