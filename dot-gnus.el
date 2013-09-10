@@ -409,7 +409,7 @@ is:
                (criteria . "")
                (server   . "nnimap:Local")))))
 
-    (define-key global-map [(alt meta ?f)] 'gnus-query))))
+    (define-key global-map [(hyper meta ?f)] 'gnus-query))))
 
 
 (use-package gnus-harvest

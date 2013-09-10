@@ -39,7 +39,7 @@
 
         ;; Packages located elsewhere on the system...
         "~/Documents/github/ledger/lisp/"
-        "/usr/local/share/doc/git-core/contrib/emacs/"
+        ;; "/usr/local/share/doc/git-core/contrib/emacs/"
         )))
 
 (let ((cl-p load-path))
