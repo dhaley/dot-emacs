@@ -1099,7 +1099,7 @@ To use this function, add it to `org-agenda-finalize-hook':
 (add-hook 'org-agenda-finalize-hook 'org-agenda-add-overlays)
 
 
-(autoload 'gnus-goto-article ".gnus")
+(autoload 'gnus-goto-article "dot-gnus")
 (autoload 'gnus-string-remove-all-properties "gnus-util")
 
 (defun org-my-message-open (message-id)
