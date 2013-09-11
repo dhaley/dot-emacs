@@ -5698,7 +5698,20 @@ Works in Microsoft Windows, Mac OS X, Linux."
   (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
   (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep)
 
-)
+  (defun drush-features-enabled ()
+    (interactive)
+    (setq fm (get-buffer-create "*features monitor*"))
+    (buffer-live-p fm)
+    (with-current-buffer fm
+      (goto-char (point-min))
+      (view-mode 1)
+      (stripe-buffer-mode 1)
+      (hl-line-mode 1)
+      (start-process "drush" (current-buffer) "drush"
+                     "features-list" "--status=enabled")
+      (shrink-window-if-larger-than-buffer))
+    (switch-to-buffer fm))
+  (bind-key "C-8 f l" 'drush-features-enabled))
 
 ;; Registers
 
