@@ -150,6 +150,26 @@
                                         ;(setq mac-option-modifier 'super)
 (setq mac-function-modifier 'hyper)
 
+(defvar mac-fullscreen-on  nil
+  "keep a track of mac-mouse-turn-o(n|ff)-fullscreen, assumes fullscreen is not on")
+(defun mac-toggle-fullscreen ()
+  "toggle fullscreen mode in Emacs mac (by Yamamoto Mitsuharu)"
+  (interactive)
+  ;; check we are in the emacs mac build
+  ; (when (functionp 'mac-process-hi-command)
+  (if (eq mac-fullscreen-on t)
+      (progn
+        (mac-mouse-turn-off-fullscreen t)
+        (setq mac-fullscreen-on nil)
+        )
+    (progn
+      (mac-mouse-turn-on-fullscreen t)
+      (setq mac-fullscreen-on t))))
+
+(when (and (window-system) (fboundp 'mac-mouse-turn-on-fullscreen))
+  ;; (global-set-key (kbd "<M-s-return>") 'mac-toggle-fullscreen)
+   (bind-key "C-H-f" 'mac-toggle-fullscreen)
+)
 
 
 ;;;_ , Enable C-8 prefix
@@ -233,7 +253,6 @@
 (bind-key "<H-up>" 'enlarge-window)
 (bind-key "<H-backspace>" 'scroll-down-command)
 (bind-key "H-f" 'new-frame)
-(bind-key "C-H-f" 'make-frame-invisible)
 
 (defun grab-email-my ()
   "Grab the next email in the buffer
@@ -303,8 +322,6 @@ improved by many.."
 
 (bind-key "M-[" 'align-code)
 (bind-key "M-`" 'other-frame)
-(bind-key "C-<tab>" 'other-frame)
-
 
 (bind-key "M-RET" 'other-frame)
 
