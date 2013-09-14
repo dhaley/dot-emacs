@@ -909,7 +909,8 @@ Late deadlines first, then scheduled, then non-late deadlines"
       (org-return)
       (org-cycle)
       (bh/insert-inactive-timestamp))))
-(add-hook 'org-insert-heading-hook 'bh/insert-heading-inactive-timestamp 'append)
+
+;; (add-hook 'org-insert-heading-hook 'bh/insert-heading-inactive-timestamp 'append)
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
