@@ -65,7 +65,7 @@
  '(gnus-score-default-duration (quote p))
  '(gnus-score-expiry-days 30)
  '(gnus-select-group-hook (quote (gnus-group-set-timestamp)))
- '(gnus-select-method (quote (nnimap "Local" (nnimap-stream shell) (nnimap-shell-program "/usr/local/Cellar/dovecot/2.2.5/libexec/dovecot/imap"))))
+ '(gnus-select-method (quote (nnimap "Local" (nnimap-stream shell) (nnimap-shell-program "/usr/local/opt/dovecot/libexec/dovecot/imap"))))
  '(gnus-sieve-file "~/dovecot.sieve")
  '(gnus-sieve-select-method "nnimap:Local")
  '(gnus-signature-separator (quote ("^-- $" "^-- *$" "^_____+$")))
