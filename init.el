@@ -1868,8 +1868,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
   :config
   (use-package diff-mode-))
 
-
-
 ;;;_ , dired
 
 (use-package dired
@@ -4768,6 +4766,7 @@ and view local index.html url"
 ;;;_ , sh-script
 
 (use-package sh-script
+  :defer t
   :config
   (progn
     (defvar sh-script-initialized nil)
@@ -4849,7 +4848,6 @@ and view local index.html url"
 ;;;_ , stripe-buffer
 
 (use-package stripe-buffer
-  :defer t
   :init
   (progn
     (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)))
