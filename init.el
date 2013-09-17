@@ -5560,22 +5560,32 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;; fix hostname.local stuff
 (setq system-name (car (split-string system-name "\\.")))
 
-;; Use Solarized-dark on OS X
-;; we load the theme after init because we might have changed some
-;; variables in customize
+;;;;; Theme ;;;;;
+;; Cycle through this set of themes
+(setq my-themes '(solarized-dark solarized-light zenburn wombat tango))
+
+(setq my-cur-theme nil)
+(defun cycle-my-theme ()
+  "Cycle through a list of themes, my-themes"
+  (interactive)
+  (when my-cur-theme
+    (disable-theme my-cur-theme)
+    (setq my-themes (append my-themes (list my-cur-theme))))
+  (setq my-cur-theme (pop my-themes))
+  (load-theme my-cur-theme t))
+
+;; Bind this to C-t
+(bind-key "C-H-t" 'cycle-my-theme)
 
 (if running-alternate-emacs
     (progn
       (add-hook 'after-init-hook
                 (lambda ()
-                  (load-theme 'solarized-dark t)
-                  ;; (load-theme 'solarized-light t t)
-                  )))
+                  ;; Switch to the first theme in the list above
+                  (cycle-my-theme))))
   (add-hook 'after-init-hook
             (lambda ()
-              (load-theme 'solarized-dark t) t)))
-
-
+              (cycle-my-theme) t)))
 
 
 ;; Even though we may have set the Mac OS X Terminal's Alt key as the
