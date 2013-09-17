@@ -1507,6 +1507,7 @@ reload abbrevs."
   :commands bbdb-create
   :bind ("M-B" . bbdb))
 
+;_ , bm
 (use-package bm
   :pre-init
   (progn
@@ -2135,6 +2136,7 @@ Require unix zip commandline tool."
 ;;;_ , doxymacs
 
 (use-package doxymacs
+  :commands doxymacs-mode
   :diminish doxymacs-mode
   :load-path "~/.emacs.d/site-lisp/doxymacs-1.8.0/lisp")
 
@@ -2230,7 +2232,6 @@ Require unix zip commandline tool."
   :config
   (progn
     (require 'php-extras)
-    (require 'doxymacs)
     (defun my-php-return ()
       "Advanced C-m for PHP doc multiline comments.
 Inserts `*' at the beggining of the new line if
@@ -2602,7 +2603,8 @@ FORM => (eval FORM)."
     (bind-key "H-E" 'create-new-erc-frames)
 
     ;; add abbrevs
-    (abbrev-table-put erc-mode-abbrev-table :parents (list text-mode-abbrev-table))
+    (abbrev-table-put erc-mode-abbrev-table :parents (list
+                                                      text-mode-abbrev-table))
     (use-package window-number)
     (window-number-mode)
     (window-number-meta-mode)
@@ -5577,6 +5579,30 @@ Works in Microsoft Windows, Mac OS X, Linux."
         (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList) ) ) ) ) )
 
 (bind-key "C-S-o" 'open-in-desktop)
+
+
+(defun prelude-open-with ()
+  "Simple function that allows us to open the underlying
+file of a buffer in an external program."
+  (interactive)
+  (when buffer-file-name
+    (shell-command (concat
+                    (if (eq system-type 'darwin)
+                        "open"
+                      (read-shell-command "Open current file with: "))
+                    " "
+                    buffer-file-name))))
+
+(defun prelude-google ()
+  "Googles a query or region if any."
+  (interactive)
+  (browse-url
+   (concat
+    "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
+    (url-hexify-string (if mark-active
+         (buffer-substring (region-beginning) (region-end))
+       (read-string "Google: "))))))
+
 
 ;;;; Emoji composition tests
 ;;; Regional indicators (#x1F1E6 - #x1F1FF)
