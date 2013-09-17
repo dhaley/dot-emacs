@@ -179,10 +179,6 @@
 
 (bind-key "C-8" 'workgroups-preload-map)
 
-;; To use YASnippet as a non-global minor mode, replace `(yas-global-mode 1)` with
-(require 'yasnippet)
-(yas-reload-all)
-
 ;;;_.  Keybindings
 
 ;; Main keymaps for personal bindings are:
