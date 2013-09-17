@@ -3015,6 +3015,11 @@ at the beginning of line, if already there."
     (add-hook 'text-mode-hook 'er/add-text-mode-expansions)
     ))
 
+;;;_ , features-mode
+
+(use-package feature-mode
+  :mode ("\\.feature$" . feature-mode))
+
 ;;;_ , fetchmail-mode
 
 (use-package fetchmail-mode
@@ -3125,10 +3130,10 @@ at the beginning of line, if already there."
 (use-package highlight-symbol
   :init
   (progn
-    (bind-key "C-H-r" 'highlight-symbol-prev)
-    (bind-key "C-H-s" 'highlight-symbol-next)
-    (bind-key "C-H-h" 'highlight-symbol-at-point)
-    (bind-key "C-H-q" 'highlight-symbol-query-replace)))
+    (bind-key "C-8 C-p" 'highlight-symbol-prev)
+    (bind-key "C-8 C-n" 'highlight-symbol-next)
+    (bind-key "C-8 C-h" 'highlight-symbol-at-point)
+    (bind-key "C-8 C-q" 'highlight-symbol-query-replace)))
 
 
 ;;;_ , highlight-tail
