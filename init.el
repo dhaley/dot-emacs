@@ -1669,13 +1669,6 @@ reload abbrevs."
               (lambda ()
                 (rainbow-mode 1)))))
 
-(use-package cursor-chg
-  :init
-  (progn
-    (change-cursor-mode 1)
-    (toggle-cursor-type-when-idle 1)))
-
-
 ;;;_ , ibuffer
 
 (use-package ibuffer
@@ -5444,9 +5437,8 @@ and view local index.html url"
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
 
-(blink-cursor-mode 1)
-
-(defvar blink-cursor-colors (list  "#92c48f" "#6785c5" "#be369c" "#d9ca65")
+(defvar blink-cursor-colors (list  "#b58900" "#cb4b16" "#dc322f" "#d33682"
+  "#6c71c4" "#268bd2" "#2aa198" "#859900")
   "On each blink the cursor will cycle to the next color in this list.")
 
 (setq blink-cursor-count 0)
