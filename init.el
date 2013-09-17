@@ -222,17 +222,6 @@
 
 
                                         ; gets the name of the buffer.
-(defun copy-buffer-name()
-  (interactive)
-  (let ((beg (point)))
-    (set-mark (point))
-    (insert buffer-file-name)
-    (kill-region beg (point))))
-
-                                        ; sets copy buffer name to Ctrl-c-p
-(bind-key "H-p" 'copy-buffer-name)
-
-                                        ; copies the region to a string (typically for parseing).
 (defun region-to-string ()
   (interactive)
   (buffer-substring (mark) (point)))
@@ -352,37 +341,6 @@ improved by many.."
 (bind-key "M-g c" 'goto-char)
 (bind-key "M-g l" 'goto-line)
 
-;; Move more quickly
-(global-set-key (kbd "C-S-n") (lambda () (interactive) (ignore-errors (next-line 5))))
-(global-set-key (kbd "C-S-p") (lambda () (interactive) (ignore-errors (previous-line 5))))
-(global-set-key (kbd "C-S-f") (lambda () (interactive) (ignore-errors (forward-char 5))))
-(global-set-key (kbd "C-S-b") (lambda () (interactive) (ignore-errors (backward-char 5))))
-
-
-                                        ; http://ergoemacs.org/emacs/emacs_form_feed_section_paging.html
-(defun forward-block ()
-  "Move cursor forward to next occurrence of double newline character.
-In most major modes, this is the same as `forward-paragraph', however, this command's behavior is the same regardless of syntax table."
-  (interactive)
-  (skip-chars-forward "\n")
-  (when (not (search-forward-regexp "\n[[:blank:]]*\n" nil t))
-    (goto-char (point-max)) ) )
-
-(defun backward-block ()
-  "Move cursor backward to previous occurrence of double newline char.
-See: `forward-block'"
-  (interactive)
-  (skip-chars-backward "\n")
-  (when (not (search-backward-regexp "\n[[:blank:]]*\n" nil t))
-    (goto-char (point-min))
-    )
-  )
-
-(bind-key "<C-up>" 'backward-block) ; Ctrl+↑
-(bind-key "<C-down>" 'forward-block) ; Ctrl+↓
-
-
-
 (global-set-key (vector 'remap 'goto-line) 'goto-line-with-feedback)
 
 (defun goto-line-with-feedback ()
@@ -399,9 +357,11 @@ See: `forward-block'"
   "Delete the file associated with the current buffer.
 Delete the current buffer too.
 
-A backup file is created with filename appended “~”. Existing backup file are overwritten.
+A backup file is created with filename appended “~”. Existing backup file are
+overwritten.
 
-if ΞNO-BACKUP-P is non-nil (when called with `universal-argument'), don't create backup.
+if ΞNO-BACKUP-P is non-nil (when called with `universal-argument'), don't
+create backup.
 
 If no file is associated, just close buffer without prompt for save."
   (interactive "P")
@@ -889,18 +849,11 @@ are in kbd format."
   (uniquify-region-lines (point-min) (point-max)))
 
 
-;;;_, Toggle between split windows and a single window
-
-(defun my-iswitchb-close()
-  "Open iswitchb or, if in minibuffer go to next match.  Handy way to cycle through the ring."
-  (interactive)
-  (if (window-minibuffer-p (selected-window))
-      (keyboard-escape-quit)))
-
 (defun toggle-windows-split()
   "Switch back and forth between one window and whatever split of windows we
   might have in the frame.  The idea is to maximize the current buffer,
-while being able to go back to the previous split of windows in the frame simply by calling this command again."
+while being able to go back to the previous split of windows in the frame
+simply by calling this command again."
   (interactive)
   (if (not (window-minibuffer-p (selected-window)))
       (progn
@@ -922,7 +875,8 @@ while being able to go back to the previous split of windows in the frame simply
 ;;     (shrink-window (- window-lines region-lines))))
 
 (defun smart-copy ()
-  "Copy word at point, or line if called twice, or region if transient-mark active."
+  "Copy word at point, or line if called twice, or region if transient-mark
+active."
   (interactive)
   (if (eq last-command 'smart-copy)
       (progn (kill-ring-save (line-beginning-position) (line-end-position))
@@ -951,13 +905,6 @@ Position the cursor at its beginning, according to the current mode."
 ;; Set path to .emacs.d
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
-
-;; Functions (load all files in defuns-dir)
-(setq defuns-dir (expand-file-name "defuns" dotfiles-dir))
-(dolist (file (directory-files defuns-dir t "\\w+"))
-  (when (file-regular-p file)
-    (load file)))
-
 
 ;; set the “forward button” (5th button) to close.
 (cond
@@ -1129,6 +1076,10 @@ Subexpression references can be used (\1, \2, etc)."
         (insert (make-string count ?\*))))))
 
 
+(defun untabify-buffer ()
+  (interactive)
+  (untabify (point-min) (point-max)))
+
 (defun clean-up-buffer-or-region ()
   "Untabifies, indents and deletes trailing whitespace from buffer or region."
   (interactive)
@@ -1140,6 +1091,26 @@ Subexpression references can be used (\1, \2, etc)."
     (save-restriction
       (narrow-to-region (region-beginning) (region-end))
       (delete-trailing-whitespace))))
+
+(defun cleanup-buffer-safe ()
+  "Perform a bunch of safe operations on the whitespace content of a buffer.
+Does not indent buffer, because it is used for a before-save-hook, and that
+might be bad."
+  (interactive)
+  (untabify-buffer)
+  (delete-trailing-whitespace)
+  (set-buffer-file-coding-system 'utf-8))
+
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer.
+Including indent-buffer, which should not be called automatically on save."
+  (interactive)
+  (cleanup-buffer-safe)
+  (indent-buffer))
+
+;; Various superfluous white-space. Just say no.
+(add-hook 'before-save-hook 'cleanup-buffer-safe)
+
 
 ;; Uneven application of white-space is bad, m'kay?
 (bind-key "H-N" 'clean-up-buffer-or-region)
@@ -1180,7 +1151,9 @@ Subexpression references can be used (\1, \2, etc)."
        ))
 
 ;; (package-refresh-contents)
-(dolist (package dkh-required-packages) (when (not (package-installed-p package)) (package-install package)))
+(dolist
+    (package dkh-required-packages)
+  (when (not (package-installed-p package)) (package-install package)))
 
 
 
@@ -1342,7 +1315,8 @@ reload abbrevs."
                               :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
                               :doc-spec '(("(latex2e)Concept Index" )
                                           ("(latex2e)Command Index"))))))
-  ;; (org-babel-load-file "~/git/foss/emacs-starter-kit-social-sciences/starter-kit-latex.org")
+  ;; (org-babel-load-file
+  ;; "~/git/foss/emacs-starter-kit-social-sciences/starter-kit-latex.org")
   )
 
 ;;;_ , auto-complete
@@ -1460,7 +1434,8 @@ reload abbrevs."
             ;; this does no harm)
             (set (make-local-variable 'dired-subdir-alist)
                  (list (cons default-directory (point-min-marker)))))
-          (set (make-local-variable 'dired-subdir-switches) find-ls-subdir-switches)
+          (set (make-local-variable 'dired-subdir-switches)
+               find-ls-subdir-switches)
           (setq buffer-read-only nil)
           ;; Subdir headlerline must come first because the first marker in
           ;; subdir-alist points there.
@@ -1497,17 +1472,22 @@ reload abbrevs."
 ;;;_ , basecamp
 
 (use-package basecamp
+  :commands (syncbasecamp completebasecamp basecamp-showlist basecamp-showprojects)
   :init
   (progn
     (defun syncbasecamp ()
       (interactive)
-      (http-get "http://floatsolutions.com/docs/basecamp/index.php?accesskey=sdf6SDFwr88sdfASDdye76qw76876DFGDfgsdf" nil 'ignore nil "basecamp.org" nil)
+      (http-get
+      "http://floatsolutions.com/docs/basecamp/index.php?accesskey=sdf6SDFwr88sdfASDdye76qw76876DFGDfgsdf"
+      nil 'ignore nil "basecamp.org" nil)
       (org-mode)
       (save-buffer))
 
     (defun completebasecamp (todoid)
       (interactive)
-      (http-get (concatenate 'string "http://floatsolutions.com/docs/basecamp/index.php?accesskey=sdf6SDFwr88sdfASDdye76qw76876DFGDfgsdf&complete=" todoid) nil 'ignore nil "basecamp.org" nil)
+      (http-get (concatenate 'string
+      "http://floatsolutions.com/docs/basecamp/index.php?accesskey=sdf6SDFwr88sdfASDdye76qw76876DFGDfgsdf&complete="
+      todoid) nil 'ignore nil "basecamp.org" nil)
       (org-mode)
       (save-buffer))
 
@@ -1526,63 +1506,6 @@ reload abbrevs."
 (use-package bbdb-com
   :commands bbdb-create
   :bind ("M-B" . bbdb))
-
-
-;;;_ , bbdb
-
-(use-package bbdb
-  :if (not running-alternate-emacs)
-  :init
-  (progn
-    (bbdb-initialize 'gnus 'message)
-    (setq bbdb-accept-name-mismatch                 t
-          bbdb-completion-display-record            nil
-          bbdb-message-all-addresses                t
-          bbdb-mua-update-interactive-p             '(create . query))
-    (setq rs-bbdb-ignored-from-list '(
-                                      "-confirm"
-                                      "-request@kgnu.org"
-                                      "@public.gmane.org"
-                                      "DAEMON"
-                                      "MAILER-DAEMON"
-                                      "bozo@dev.null.invalid"
-                                      "confirm-nomail"
-                                      "daemon"
-                                      "damon.haley"
-                                      "dhaley"
-                                      "do-not-reply"
-                                      "emacs-orgmode-confirm"
-                                      "facebookmail"
-                                      "gnulist"
-                                      "lists.math.uh.edu"
-                                      "mailman-owner"
-                                      "no.?reply"
-                                      "noreply"
-                                      "post <at> gwene.org"
-                                      "post@gwene.org"
-                                      "privacy-noreply"
-                                      "twitter"
-                                      "vinylisl"
-                                      "webappsec-return"))
-
-    (setq bbdb-ignore-message-alist
-          `(("From" . , (regexp-opt rs-bbdb-ignored-from-list))))
-
-
-    ;; ; NOTE: there can be only one entry per header (such as To, From)
-    ;;       ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
-    ;;       bbdb-ignore-some-messages-alist
-    ;;       `(("From" . ,(concat "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|"
-    ;;                            "gmane\\|ebay\\|amazon\\|tfl\\|trenitalia"))))
-
-
-    (defun message-read-from-minibuffer (prompt &optional initial-contents)
-      "Read from the minibuffer while providing abbrev expansion."
-      (bbdb-completing-read-mails prompt initial-contents))
-    ))
-
-
-                                        ;_ , bm
 
 (use-package bm
   :pre-init
@@ -2150,7 +2073,64 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
          (next-line -1))
 
        (define-key dired-mode-map
-         (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)))
+         (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
+
+       ;; http://ergoemacs.org/emacs/emacs_dired_convert_images.html
+
+       (defun scale-image (fileList scalePercentage)
+         "Create a scaled jpg version of images of marked files in dired.
+The new names have “-s” appended before the file name extension.
+Requires ImageMagick shell tool."
+         (interactive
+          (list (dired-get-marked-files) (read-from-minibuffer "scale percentage:")))
+         (require 'dired)
+
+         (mapc
+          (lambda (ξf)
+            (let ( newName cmdStr )
+              (setq newName (concat (file-name-sans-extension ξf) "-s" ".jpg") )
+              (while (file-exists-p newName)
+                (setq newName (concat (file-name-sans-extension newName) "-s" (file-name-extension newName t))) )
+
+              ;; relative paths used to get around Windows/Cygwin path remapping problem
+              (setq cmdStr (concat "convert -scale " scalePercentage "% -quality 85% " (file-relative-name ξf) " " (file-relative-name newName)) )
+              (shell-command cmdStr)
+              ))
+          fileList ))
+
+       (defun 2jpg (fileList)
+         "Create a jpg version of images of marked files in dired.
+Requires ImageMagick shell tool.
+"
+         (interactive (list (dired-get-marked-files) ))
+         (require 'dired)
+
+         (mapc
+          (lambda (ξf)
+            (let ( newName cmdStr )
+              (setq newName (concat (file-name-sans-extension ξf) ".jpg") )
+              (while (file-exists-p newName)
+                (setq newName (concat (file-name-sans-extension newName) "-2" (file-name-extension newName t))) )
+
+              ;; relative paths used to get around Windows/Cygwin path remapping problem
+              (setq cmdStr (concat "convert " (file-relative-name ξf) " " (file-relative-name newName)) )
+
+              ;; (async-shell-command cmdStr)
+              (shell-command cmdStr)
+              ))
+          fileList ))
+
+       ;;Command to zip File/Dir
+
+       (defun 2zip ()
+         "Zip the current file/dir in `dired'.
+If multiple files are marked, only zip the first one.
+Require unix zip commandline tool."
+         (interactive)
+         (require 'dired)
+         (let ( (fileName (elt (dired-get-marked-files) 0))  )
+           (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
+           ))))
 
 ;;;_ , doxymacs
 
