@@ -170,6 +170,7 @@
   ;; (global-set-key (kbd "<M-s-return>") 'mac-toggle-fullscreen)
    (bind-key "C-H-f" 'mac-toggle-fullscreen)
 )
+
 
 
 ;;;_ , Enable C-8 prefix
@@ -1850,11 +1851,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 
 
-;;;;_ , dash.el
-
-(use-package dash
-  :load-path "dash.el")
-
 ;;;_ , debbugs
 
 (use-package debbugs-gnu
@@ -2160,7 +2156,9 @@ Require unix zip commandline tool."
   :if (and window-system (not running-alternate-emacs)
            (not noninteractive))
   :init
-  (edit-server-start))
+  (progn
+    (add-hook 'after-init-hook 'server-start t)
+    (add-hook 'after-init-hook 'edit-server-start t)))
 
 ;;;_ , emms
 
@@ -2218,6 +2216,7 @@ Require unix zip commandline tool."
 
 
 (use-package php-mode
+  :commands php-mode
   :diminish php-mode
   :config
   (progn
@@ -2280,21 +2279,21 @@ unless return was pressed outside the comment"
 ;;;_ , projectile
 
 (use-package projectile
-  :diminish projectile-mode
-  :init
-  (projectile-global-mode))
-
-
-(use-package projectile
+  :commands projectile-mode
   :diminish projectile
   :config
   (progn
+
+    (use-package dash
+      :commands dash
+      :load-path "dash.el")
 
     (bind-key "C-c h" 'helm-projectile)))
 
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
+  :commands (initialize_cu_drupal drupal-mode)
   :diminish drupal-mode
   :init
   (progn
@@ -2315,7 +2314,121 @@ unless return was pressed outside the comment"
                  (doxymacs-mode 1)
                  (doxymacs-font-lock)
                  (projectile-on)))
-    (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")))
+    (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+
+(defun initialize_cu_drupal ()
+  "Sets up project variables with out having anything project specific in the
+.dir-locals.el file. "
+  (interactive)
+
+  (setq site-directory (file-truename (locate-dominating-file default-directory ".dir-locals.el"))
+        tags-file-name (concat site-directory "TAGS")
+        readme-file-name (concat site-directory "README.md")
+        profile-name (curr-dir-project-string)
+        profile-directory (concat site-directory "profiles/" profile-name)
+        module-directory (concat profile-directory "/modules")
+        theme-directory (concat profile-directory "/themes")
+        profile-theme-directory (concat profile-directory "/themes/" profile-name)
+        feature-directory (concat module-directory "/features")
+        contrib-directory (concat module-directory "/contrib")
+        custom-directory (concat module-directory "/custom")
+        uri (concat "ww/" profile-name)
+        doxymacs-doxygen-dirs `((
+                                 ,site-directory
+                                 ,(concat site-directory "doxy_tag.xml")
+                                 ,(concat "file://" site-directory "docs/html")))
+        drupal-rootdir site-directory)
+
+
+  (defun drush-uli-to-string ()
+    " Provide dynamically derived uri for drush uli"
+    (interactive)
+    (cd site-directory)
+    (kill-new (shell-command-to-string (concat "drush --uri=" uri " uli"))))
+  (bind-key "C-8 d e" `drush-uli-to-string)
+
+  (setenv "8dr" readme-file-name)
+  (setenv "8ds" site-directory)
+  (setenv "DRUPAL_ROOT" site-directory)
+  (setenv "8dp" profile-directory)
+  (setenv "8dT" theme-directory)
+  (setenv "8dt" profile-theme-directory)
+  (setenv "8dm" module-directory)
+  (setenv "8dc" custom-directory)
+  (setenv "8df" feature-directory)
+  (setenv "8db" contrib-directory)
+
+  (bind-key "C-8 d r" (lambda()(interactive)(find-file readme-file-name)))
+  (bind-key "C-8 d s" (lambda()(interactive)(find-file site-directory)))
+  (bind-key "C-8 d p" (lambda()(interactive)(find-file profile-directory)))
+  (bind-key "C-8 d T" (lambda()(interactive)(find-file theme-directory)))
+  (bind-key "C-8 d t" (lambda()(interactive)(find-file profile-theme-directory)))
+  (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
+  (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
+  (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
+  (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory)))
+
+  (require 'find-file-in-project)
+  ;; Function to create new functions that look for a specific pattern
+  (defun ffip-create-pattern-file-finder (&rest patterns)
+    (lexical-let ((patterns patterns))
+      (lambda ()
+        (interactive)
+        (let ((ffip-patterns patterns))
+          (find-file-in-project)))))
+
+  ;; Find file in project, with specific patterns
+  ;; (global-unset-key (kbd "C-8 f"))
+  (bind-key "C-8 f ph" (ffip-create-pattern-file-finder "*.php"))
+  (bind-key "C-8 f if" (ffip-create-pattern-file-finder "*.info"))
+  (bind-key "C-8 f md" (ffip-create-pattern-file-finder "*.md"))
+  (bind-key "C-8 f mo" (ffip-create-pattern-file-finder "*.module"))
+  (bind-key "C-8 f in" (ffip-create-pattern-file-finder "*.inc"))
+  (bind-key "C-8 f cs" (ffip-create-pattern-file-finder "*.css"))
+
+  ;; (projectile-on)
+
+
+  (setq projectile-project-compilation-commands
+        (format "phpcs --report=emacs --standard=Drupal %s" (buffer-file-name)))
+  ;; use native indexing such as .gitignore
+  (setq projectile-use-native-indexing 't)
+  (setq projectile-tags-command "~/bin/etags_drupal.sh")
+
+  (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
+  (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep)
+
+  (defun drush-features-enabled ()
+    (interactive)
+    (setq fm (get-buffer-create "*features monitor*"))
+    (buffer-live-p fm)
+    (with-current-buffer fm
+  (defun create-drush-buffer (command &optional a-string)
+    ;; (setq args (split-string a-string))
+    (setq d-buffer (get-buffer-create  (concat "*" command " " a-string "*")))
+    (buffer-live-p d-buffer)
+    (with-current-buffer d-buffer
+      (goto-char (point-min))
+      (view-mode 1)
+      (stripe-buffer-mode 1)
+      (hl-line-mode 1)
+      (start-process "drush" (current-buffer) "drush"
+                     command (split-string-and-unquote a-string))
+      (shrink-window-if-larger-than-buffer))
+    (switch-to-buffer d-buffer))
+
+  (defun drush-features-enabled ()
+    (interactive)
+    (create-drush-buffer "features-list" "--status=enabled"))
+  (bind-key "C-8 f l" 'drush-features-enabled)
+
+  (defun drush-modules-nocore ()
+    (interactive)
+    (create-drush-buffer "pm-list" "--status=enabled" "--no-core" "--type=module"))
+  (bind-key "C-8 m n" 'drush-modules-nocore)
+
+;; drush pm-list --status=enabled  --no-core  --type=module
+)))))
 
 ;;;_ , erc
 
@@ -3014,8 +3127,8 @@ at the beginning of line, if already there."
 ;;;_ , flycheck
 
 (use-package flycheck
-  :load-path ("site-lisp/flycheck/deps/dash.el"
-              "site-lisp/flycheck/deps/s.el")
+  ;; :load-path ("site-lisp/flycheck/deps/dash.el"
+  ;;             "site-lisp/flycheck/deps/s.el")
   :init
   (progn
     (flycheck-declare-checker xmllint
@@ -5628,103 +5741,6 @@ file of a buffer in an external program."
 ;;   (interactive)
 ;;   (setq site-directory (locate-dominating-file default-directory ".dir-locals.el")
 ;; ))
-
-(defun initialize_cu_drupal ()
-  "Sets up project variables with out having anything project specific in the
-.dir-locals.el file. "
-  (interactive)
-
-  (setq site-directory (file-truename (locate-dominating-file default-directory ".dir-locals.el"))
-        tags-file-name (concat site-directory "TAGS")
-        readme-file-name (concat site-directory "README.md")
-        profile-name (curr-dir-project-string)
-        profile-directory (concat site-directory "profiles/" profile-name)
-        module-directory (concat profile-directory "/modules")
-        theme-directory (concat profile-directory "/themes")
-        profile-theme-directory (concat profile-directory "/themes/" profile-name)
-        feature-directory (concat module-directory "/features")
-        contrib-directory (concat module-directory "/contrib")
-        custom-directory (concat module-directory "/custom")
-        uri (concat "ww/" profile-name)
-        doxymacs-doxygen-dirs `((
-                                 ,site-directory
-                                 ,(concat site-directory "doxy_tag.xml")
-                                 ,(concat "file://" site-directory "docs/html")))
-        drupal-rootdir site-directory)
-
-
-  (defun drush-uli-to-string ()
-    " Provide dynamically derived uri for drush uli"
-    (interactive)
-    (cd site-directory)
-    (kill-new (shell-command-to-string (concat "drush --uri=" uri " uli"))))
-  (bind-key "C-8 d e" `drush-uli-to-string)
-
-  (setenv "8dr" readme-file-name)
-  (setenv "8ds" site-directory)
-  (setenv "DRUPAL_ROOT" site-directory)
-  (setenv "8dp" profile-directory)
-  (setenv "8dT" theme-directory)
-  (setenv "8dt" profile-theme-directory)
-  (setenv "8dm" module-directory)
-  (setenv "8dc" custom-directory)
-  (setenv "8df" feature-directory)
-  (setenv "8db" contrib-directory)
-
-  (bind-key "C-8 d r" (lambda()(interactive)(find-file readme-file-name)))
-  (bind-key "C-8 d s" (lambda()(interactive)(find-file site-directory)))
-  (bind-key "C-8 d p" (lambda()(interactive)(find-file profile-directory)))
-  (bind-key "C-8 d T" (lambda()(interactive)(find-file theme-directory)))
-  (bind-key "C-8 d t" (lambda()(interactive)(find-file profile-theme-directory)))
-  (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
-  (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
-  (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
-  (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory)))
-
-  (require 'find-file-in-project)
-  ;; Function to create new functions that look for a specific pattern
-  (defun ffip-create-pattern-file-finder (&rest patterns)
-    (lexical-let ((patterns patterns))
-      (lambda ()
-        (interactive)
-        (let ((ffip-patterns patterns))
-          (find-file-in-project)))))
-
-  ;; Find file in project, with specific patterns
-  ;; (global-unset-key (kbd "C-8 f"))
-  (bind-key "C-8 f ph" (ffip-create-pattern-file-finder "*.php"))
-  (bind-key "C-8 f if" (ffip-create-pattern-file-finder "*.info"))
-  (bind-key "C-8 f md" (ffip-create-pattern-file-finder "*.md"))
-  (bind-key "C-8 f mo" (ffip-create-pattern-file-finder "*.module"))
-  (bind-key "C-8 f in" (ffip-create-pattern-file-finder "*.inc"))
-  (bind-key "C-8 f cs" (ffip-create-pattern-file-finder "*.css"))
-
-  ;; (projectile-on)
-
-
-  (setq projectile-project-compilation-commands
-        (format "phpcs --report=emacs --standard=Drupal %s" (buffer-file-name)))
-  ;; use native indexing such as .gitignore
-  (setq projectile-use-native-indexing 't)
-  (setq projectile-tags-command "~/bin/etags_drupal.sh")
-
-  (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
-  (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep)
-
-  (defun drush-features-enabled ()
-    (interactive)
-    (setq fm (get-buffer-create "*features monitor*"))
-    (buffer-live-p fm)
-    (with-current-buffer fm
-      (goto-char (point-min))
-      (view-mode 1)
-      (stripe-buffer-mode 1)
-      (hl-line-mode 1)
-      (start-process "drush" (current-buffer) "drush"
-                     "features-list" "--status=enabled")
-      (shrink-window-if-larger-than-buffer))
-    (switch-to-buffer fm))
-  (bind-key "C-8 f l" 'drush-features-enabled))
 
 ;; Registers
 
