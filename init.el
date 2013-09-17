@@ -2157,8 +2157,9 @@ Require unix zip commandline tool."
            (not noninteractive))
   :init
   (progn
-    (add-hook 'after-init-hook 'server-start t)
-    (add-hook 'after-init-hook 'edit-server-start t)))
+    ;; (add-hook 'after-init-hook 'server-start t)
+    ;; (add-hook 'after-init-hook 'edit-server-start t)
+))
 
 ;;;_ , emms
 
@@ -3209,13 +3210,13 @@ at the beginning of line, if already there."
 
 ;;;_ , highlight-symbol
 (use-package highlight-symbol
+  :commands (highlight-symbol-prev highlight-symbol-next highlight-symbol-at-point highlight-symbol-query-replace)
   :init
   (progn
     (bind-key "C-8 C-p" 'highlight-symbol-prev)
     (bind-key "C-8 C-n" 'highlight-symbol-next)
     (bind-key "C-8 C-h" 'highlight-symbol-at-point)
     (bind-key "C-8 C-q" 'highlight-symbol-query-replace)))
-
 
 ;;;_ , highlight-tail
 (use-package highlight-tail
@@ -3263,10 +3264,12 @@ at the beginning of line, if already there."
           gnus-home-directory "~/Messages/Gnus/")
 
     ;; (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
+    )
+  :config
+  (progn
     (use-package org-mime)
-    (use-package eudc)
+    ;; (use-package eudc)
     (use-package rgr-web)))
-
 
 ;;;_ , grep
 
@@ -3578,24 +3581,8 @@ at the beginning of line, if already there."
 
 ;; ;;;_ , js2-mode
 
-;;;;_ , javascript
-
 (use-package js2-mode
-  :load-path "js2-mode"
-  :mode ("\\.js$" . js2-mode)
-  :config
-  (progn
-    (setq js2-pretty-multiline-declarations t)
-    (use-package js2-refactor ;; js2-refactor-mode
-      :load-path "js2-refactor"
-      :requires mark-multiple)
-
-    (add-hook 'js2-mode-hook
-              (lambda ()
-                ;; (paredit-mode 1)
-                (slime-js-minor-mode 1)
-                (local-set-key (kbd "<return>") 'newline-and-indent))
-              t)))
+  :mode ("\\.js\\'" . js2-mode))
 
 ;; js2-hightlight-vars-mode
 ;; see http://mihai.bazon.net/projects/editing-javascript-with-emacs-js2-mode/js2-highlight-vars-mode
@@ -4153,11 +4140,6 @@ at the beginning of line, if already there."
                  (setq imenu-generic-expression markdown-imenu-generic-expression)
                  (turn-on-pandoc)
                  ))))
-
-;;;;_ , mark-multiple
-
-(use-package mark-multiple
-  :load-path "mark-multiple")
 
 ;;;_ , mudel
 

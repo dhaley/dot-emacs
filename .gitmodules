@@ -202,9 +202,6 @@
 [submodule "site-lisp/powerline"]
         path = site-lisp/powerline
         url = https://github.com/milkypostman/powerline.git
-[submodule "site-lisp/mark-multiple"]
-        path = site-lisp/mark-multiple
-        url = https://github.com/magnars/mark-multiple.el.git
 [submodule "site-lisp/wgrep"]
         path = site-lisp/wgrep
         url = https://github.com/mhayashi1120/Emacs-wgrep.git
