@@ -1546,9 +1546,6 @@ reload abbrevs."
 
 (use-package browse-kill-ring+)
 
-;; (use-package browse-kill-ring
-;;   :bind ("M-y" . browse-kill-ring))
-;;
 ;; make hippie expand behave itself
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev
                                          try-expand-dabbrev-all-buffers
