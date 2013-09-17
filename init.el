@@ -1214,12 +1214,12 @@ reload abbrevs."
 (use-package ace-jump-mode
   :bind ("M-h" . ace-jump-mode))
 
-;;;_ , agda
+;; ;;;_ , agda
 
-(use-package agda2-mode
-  :mode ("\\.agda\\'" . agda2-mode)
-  :init
-  (use-package agda-input))
+;; (use-package agda2-mode
+;;   :mode ("\\.agda\\'" . agda2-mode)
+;;   :init
+;;   (use-package agda-input))
 
 ;;;_ , allout
 
