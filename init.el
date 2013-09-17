@@ -724,7 +724,7 @@ are in kbd format."
   "Insert a quick timestamp using the value of `user-initials'."
   (interactive)
   (insert (format "%s (%s): " user-initials
-                  (format-time-string "%Y-%m-%d" (current-time)))))
+                  (format-time-string "%Y-%m-%dT%T" (current-time)))))
 
 (bind-key "C-c n" 'insert-user-timestamp)
 (bind-key "C-c o" 'customize-option)
