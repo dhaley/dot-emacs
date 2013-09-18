@@ -2302,7 +2302,8 @@ unless return was pressed outside the comment"
       "Returns current project as a string, or the empty string if
 PWD is not in a project"
       (interactive)
-      (let ((project-root-dir (locate-dominating-file default-directory "current")))
+      (let ((project-root-dir (locate-dominating-file default-directory
+                                                      "current")))
         (let ((path (split-string project-root-dir "/")))     ; path as list
           (car (last (nbutlast path 1)))))))
   :config
@@ -2322,18 +2323,21 @@ PWD is not in a project"
     (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
 
     (defun initialize_cu_drupal ()
-      "Sets up project variables with out having anything project specific in the
-.dir-locals.el file. "
+      "Sets up project variables with out having anything project specific in
+the .dir-locals.el file. "
       (interactive)
 
-      (setq site-directory (file-truename (locate-dominating-file default-directory ".dir-locals.el"))
+      (setq site-directory (file-truename (locate-dominating-file
+                                           default-directory
+                                           "includes/bootstrap.inc"))
             tags-file-name (concat site-directory "TAGS")
             readme-file-name (concat site-directory "README.md")
             profile-name (curr-dir-project-string)
             profile-directory (concat site-directory "profiles/" profile-name)
             module-directory (concat profile-directory "/modules")
             theme-directory (concat profile-directory "/themes")
-            profile-theme-directory (concat profile-directory "/themes/" profile-name)
+            profile-theme-directory (concat profile-directory "/themes/"
+                                            profile-name)
             feature-directory (concat module-directory "/features")
             contrib-directory (concat module-directory "/contrib")
             custom-directory (concat module-directory "/custom")
@@ -2341,9 +2345,9 @@ PWD is not in a project"
             doxymacs-doxygen-dirs `((
                                      ,site-directory
                                      ,(concat site-directory "doxy_tag.xml")
-                                     ,(concat "file://" site-directory "docs/html")))
+                                     ,(concat "file://" site-directory
+                                              "docs/html")))
             drupal-rootdir site-directory)
-
 
       (defun drush-uli-to-string ()
         " Provide dynamically derived uri for drush uli"
@@ -2367,103 +2371,105 @@ PWD is not in a project"
       (bind-key "C-8 d s" (lambda()(interactive)(find-file site-directory)))
       (bind-key "C-8 d p" (lambda()(interactive)(find-file profile-directory)))
       (bind-key "C-8 d T" (lambda()(interactive)(find-file theme-directory)))
-      (bind-key "C-8 d t" (lambda()(interactive)(find-file profile-theme-directory)))
+      (bind-key "C-8 d t" (lambda()(interactive)(find-file
+                                            profile-theme-directory)))
       (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
       (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
       (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
       (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory))))
 
-      (initialize_cu_drupal)
+    (initialize_cu_drupal)
 
 
-      ;; (require 'find-file-in-project)
-      ;; ;; Function to create new functions that look for a specific pattern
-      ;; (defun ffip-create-pattern-file-finder (&rest patterns)
-      ;;   (lexical-let ((patterns patterns))
-      ;;     (lambda ()
-      ;;       (interactive)
-      ;;       (let ((ffip-patterns patterns))
-      ;;         (find-file-in-project)))))
+    ;; (require 'find-file-in-project)
+    ;; ;; Function to create new functions that look for a specific pattern
+    ;; (defun ffip-create-pattern-file-finder (&rest patterns)
+    ;;   (lexical-let ((patterns patterns))
+    ;;     (lambda ()
+    ;;       (interactive)
+    ;;       (let ((ffip-patterns patterns))
+    ;;         (find-file-in-project)))))
 
-      ;; ;; Find file in project, with specific patterns
-      ;; ;; (global-unset-key (kbd "C-8 f"))
-      ;; (bind-key "C-8 f ph" (ffip-create-pattern-file-finder "*.php"))
-      ;; (bind-key "C-8 f if" (ffip-create-pattern-file-finder "*.info"))
-      ;; (bind-key "C-8 f md" (ffip-create-pattern-file-finder "*.md"))
-      ;; (bind-key "C-8 f mo" (ffip-create-pattern-file-finder "*.module"))
-      ;; (bind-key "C-8 f in" (ffip-create-pattern-file-finder "*.inc"))
-      ;; (bind-key "C-8 f cs" (ffip-create-pattern-file-finder "*.css"))
+    ;; ;; Find file in project, with specific patterns
+    ;; ;; (global-unset-key (kbd "C-8 f"))
+    ;; (bind-key "C-8 f ph" (ffip-create-pattern-file-finder "*.php"))
+    ;; (bind-key "C-8 f if" (ffip-create-pattern-file-finder "*.info"))
+    ;; (bind-key "C-8 f md" (ffip-create-pattern-file-finder "*.md"))
+    ;; (bind-key "C-8 f mo" (ffip-create-pattern-file-finder "*.module"))
+    ;; (bind-key "C-8 f in" (ffip-create-pattern-file-finder "*.inc"))
+    ;; (bind-key "C-8 f cs" (ffip-create-pattern-file-finder "*.css"))
 
-      ;; (projectile-on)
-      ;; (setq projectile-project-compilation-commands
-      ;;       (format "phpcs --report=emacs --standard=Drupal %s" (buffer-file-name)))
-      ;; ;; use native indexing such as .gitignore
-      ;; (setq projectile-use-native-indexing 't)
-      ;; (setq projectile-tags-command "~/bin/etags_drupal.sh")
-      ;; (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
-      ;; (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep))
+    ;; (projectile-on)
+    ;; (setq projectile-project-compilation-commands
+    ;;       (format "phpcs --report=emacs --standard=Drupal %s" (buffer-file-name)))
+    ;; ;; use native indexing such as .gitignore
+    ;; (setq projectile-use-native-indexing 't)
+    ;; (setq projectile-tags-command "~/bin/etags_drupal.sh")
+    ;; (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
+    ;; (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep))
 
 
-      (defun create-drush-buffer (command &rest a)
-        (setq opt1 (car a))
-        (setq opt2 (cadr a))
-        (setq opt3 (caddr a))
-        (setq allopt (concat opt1 " " opt2 " " opt3))
-        (setq b-name (concat "*drush " command " " allopt "*"))
-        (if (buffer-live-p b-name)
-            (switch-to-buffer b-name)
-          (setq d-buffer (get-buffer-create  b-name))
-          (with-current-buffer d-buffer
-            (goto-char (point-min))
-            (view-mode 1)
-            (stripe-buffer-mode 1)
-            (hl-line-mode 1)
-            (if opt3
+    (defun create-drush-buffer (command &rest a)
+      (setq opt1 (car a))
+      (setq opt2 (cadr a))
+      (setq opt3 (caddr a))
+      (setq allopt (concat opt1 " " opt2 " " opt3))
+      (setq b-name (concat "*drush " command " " allopt "*"))
+      (if (buffer-live-p b-name)
+          (switch-to-buffer b-name)
+        (setq d-buffer (get-buffer-create  b-name))
+        (with-current-buffer d-buffer
+          (goto-char (point-min))
+          (view-mode 1)
+          (stripe-buffer-mode 1)
+          (hl-line-mode 1)
+          (if opt3
+              (start-process "drush" (current-buffer) "drush"
+                             command
+                             opt1
+                             opt2
+                             opt3)
+            (if opt2
                 (start-process "drush" (current-buffer) "drush"
                                command
                                opt1
-                               opt2
-                               opt3)
-              (if opt2
+                               opt2)
+              (if opt1
                   (start-process "drush" (current-buffer) "drush"
                                  command
-                                 opt1
-                                 opt2)
-                (if opt1
-                    (start-process "drush" (current-buffer) "drush"
-                                   command
-                                   opt1)
-                  (start-process "drush" (current-buffer) "drush"
-                                 command))))
+                                 opt1)
+                (start-process "drush" (current-buffer) "drush"
+                               command))))
 
-            (shrink-window-if-larger-than-buffer))
-          (switch-to-buffer d-buffer)))
+          (shrink-window-if-larger-than-buffer))
+        (switch-to-buffer d-buffer)))
 
-      (defun drush-core-status ()
-        (interactive)
-        (create-drush-buffer "core-status"))
-      (bind-key "C-8 c s" 'drush-core-status)
+    (defun drush-core-status ()
+      (interactive)
+      (create-drush-buffer "core-status"))
+    (bind-key "C-8 c s" 'drush-core-status)
 
-      (defun drush-watchdog-show ()
-        (interactive)
-        (create-drush-buffer "watchdog-show"))
-      (bind-key "C-8 w s" 'drush-watchdog-show)
+    (defun drush-watchdog-show ()
+      (interactive)
+      (create-drush-buffer "watchdog-show"))
+    (bind-key "C-8 w s" 'drush-watchdog-show)
 
 
-      (defun drush-features-enabled ()
-        (interactive)
-        (create-drush-buffer "features-list" "--status=enabled"))
-      (bind-key "C-8 f e" 'drush-features-enabled)
+    (defun drush-features-enabled ()
+      (interactive)
+      (create-drush-buffer "features-list" "--status=enabled"))
+    (bind-key "C-8 f e" 'drush-features-enabled)
 
-      (defun drush-features-list ()
-        (interactive)
-        (create-drush-buffer "features-list"))
-      (bind-key "C-8 f l" 'drush-features-list)
+    (defun drush-features-list ()
+      (interactive)
+      (create-drush-buffer "features-list"))
+    (bind-key "C-8 f l" 'drush-features-list)
 
-      (defun drush-modules-nocore ()
-        (interactive)
-        (create-drush-buffer "pm-list" "--status=enabled" "--no-core" "--type=module"))
-      (bind-key "C-8 m n" 'drush-modules-nocore)))
+    (defun drush-modules-nocore ()
+      (interactive)
+      (create-drush-buffer "pm-list" "--status=enabled" "--no-core"
+                           "--type=module"))
+    (bind-key "C-8 m n" 'drush-modules-nocore)))
 
 ;;;_ , erc
 
@@ -5745,16 +5751,6 @@ file of a buffer in an external program."
 
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
-
-;; ### Project utilities
-
-
-;; (defun set-site-directroy ()
-;;   "Sets up project variables with out having anything project specific in the
-;; .dir-locals.el file. "
-;;   (interactive)
-;;   (setq site-directory (locate-dominating-file default-directory ".dir-locals.el")
-;; ))
 
 ;; Registers
 
