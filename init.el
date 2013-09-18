@@ -2424,21 +2424,21 @@ the .dir-locals.el file. "
           (stripe-buffer-mode 1)
           (hl-line-mode 1)
           (if opt3
-              (start-process "drush" (current-buffer) "drush"
+              (start-process "drush" (current-buffer) drupal-drush-program
                              command
                              opt1
                              opt2
                              opt3)
             (if opt2
-                (start-process "drush" (current-buffer) "drush"
+                (start-process "drush" (current-buffer) drupal-drush-program
                                command
                                opt1
                                opt2)
               (if opt1
-                  (start-process "drush" (current-buffer) "drush"
+                  (start-process "drush" (current-buffer) drupal-drush-program
                                  command
                                  opt1)
-                (start-process "drush" (current-buffer) "drush"
+                (start-process "drush" (current-buffer) drupal-drush-program
                                command))))
 
           (shrink-window-if-larger-than-buffer))

@@ -93,6 +93,7 @@
  '(display-time-use-mail-icon t)
  '(doc-view-resolution 300)
  '(drupal-convert-line-ending nil)
+ '(drupal-drush-program "/Applications/MAMP/bin/php/php5.3.20/bin/drush")
  '(drupal-php-modes (quote (php-mode web-mode)))
  '(drupal/emacs-drush-update-tags-after-save nil)
  '(ediff-combination-pattern (quote ("<<<<<<< A: HEAD" A "||||||| Ancestor" Ancestor "=======" B ">>>>>>> B: Incoming")))
