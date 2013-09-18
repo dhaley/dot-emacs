@@ -2260,7 +2260,6 @@ unless return was pressed outside the comment"
               '(lambda ()
                  (abbrev-mode 1)
                  (hs-minor-mode 1)
-                 (imenu-add-menubar-index)
                  (subword-mode t)
                  (turn-on-eldoc-mode)
                  (which-func-mode 1)
@@ -2398,33 +2397,45 @@ unless return was pressed outside the comment"
         (setq opt3 (caddr a))
         (setq allopt (concat opt1 " " opt2 " " opt3))
         (setq b-name (concat "*drush " command " " allopt "*"))
-        (setq d-buffer (get-buffer-create  b-name))
-        (buffer-live-p d-buffer)
-        (with-current-buffer d-buffer
-          (goto-char (point-min))
-          (view-mode 1)
-          (stripe-buffer-mode 1)
-          (hl-line-mode 1)
-          (if opt3
-              (start-process "drush" (current-buffer) "drush"
-                             command
-                             opt1
-                             opt2
-                             opt3)
-            (if opt2
+        (if (buffer-live-p b-name)
+            (switch-to-buffer b-name)
+          (setq d-buffer (get-buffer-create  b-name))
+          (with-current-buffer d-buffer
+            (goto-char (point-min))
+            (view-mode 1)
+            (stripe-buffer-mode 1)
+            (hl-line-mode 1)
+            (if opt3
                 (start-process "drush" (current-buffer) "drush"
                                command
                                opt1
-                               opt2)
-              (if opt1
+                               opt2
+                               opt3)
+              (if opt2
                   (start-process "drush" (current-buffer) "drush"
                                  command
-                                 opt1)
-                (start-process "drush" (current-buffer) "drush"
-                               command))))
+                                 opt1
+                                 opt2)
+                (if opt1
+                    (start-process "drush" (current-buffer) "drush"
+                                   command
+                                   opt1)
+                  (start-process "drush" (current-buffer) "drush"
+                                 command))))
 
             (shrink-window-if-larger-than-buffer))
-          (switch-to-buffer d-buffer))
+          (switch-to-buffer d-buffer)))
+
+      (defun drush-core-status ()
+        (interactive)
+        (create-drush-buffer "core-status"))
+      (bind-key "C-8 c s" 'drush-core-status)
+
+      (defun drush-watchdog-show ()
+        (interactive)
+        (create-drush-buffer "watchdog-show"))
+      (bind-key "C-8 w s" 'drush-watchdog-show)
+
 
       (defun drush-features-enabled ()
         (interactive)
