@@ -2292,6 +2292,16 @@ unless return was pressed outside the comment"
   (progn
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\)$" . php-mode))
     (add-to-list 'auto-mode-alist '("\\.\\(profile\\)$" . php-mode))
+
+    (defun curr-dir-project-string ()
+      "Returns current project as a string, or the empty string if
+PWD is not in a project"
+      (interactive)
+      (let ((project-root-dir (locate-dominating-file default-directory "current")))
+        (let ((path (split-string project-root-dir "/")))     ; path as list
+          (car (last (nbutlast path 1))))))
+    ;;   (add-hook 'dired-mode-hook 'initialize_cu_drupal)
+
     )
   :config
   (progn
@@ -2735,13 +2745,6 @@ FORM => (eval FORM)."
     (window-number-meta-mode)
     (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))))
 
-(defun curr-dir-project-string ()
-  "Returns current project as a string, or the empty string if
-PWD is not in a project"
-  (interactive)
-  (let ((project-root-dir (locate-dominating-file default-directory "current")))
-    (let ((path (split-string project-root-dir "/")))     ; path as list
-      (car (last (nbutlast path 1))))))
 
 
 ;;;_ , eshell
@@ -3059,12 +3062,7 @@ at the beginning of line, if already there."
         (pcomplete-here* pcmpl-git-commands))
        ;; provide branch completion for the command `checkout'.
        ((pcomplete-match "checkout" 1)
-        (pcomplete-here* (pcmpl-git-get-refs "heads"))
-
-
-
-)))))
-
+        (pcomplete-here* (pcmpl-git-get-refs "heads")))))))
 
 (use-package esh-toggle
   :requires eshell

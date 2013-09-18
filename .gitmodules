@@ -466,3 +466,6 @@
 [submodule "site-lisp/agda-mode"]
         path = site-lisp/agda-mode
         url = git://github.com/jwiegley/agda-mode.git
+[submodule "site-lisp/drupal-mode"]
+	path = site-lisp/drupal-mode
+	url = https://github.com/dhaley/drupal-mode.git
