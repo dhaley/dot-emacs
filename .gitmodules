@@ -289,9 +289,6 @@
 [submodule "site-lisp/sauron"]
         path = site-lisp/sauron
         url = https://github.com/djcb/sauron.git
-[submodule "site-lisp/drupal-mode"]
-        path = site-lisp/drupal-mode
-        url = https://github.com/arnested/drupal-mode.git
 [submodule "site-lisp/projectile"]
         path = site-lisp/projectile
         url = https://github.com/bbatsov/projectile.git
@@ -467,5 +464,5 @@
         path = site-lisp/php-extras
         url = https://github.com/arnested/php-extras.git
 [submodule "site-lisp/agda-mode"]
-	path = site-lisp/agda-mode
-	url = git://github.com/jwiegley/agda-mode.git
+        path = site-lisp/agda-mode
+        url = git://github.com/jwiegley/agda-mode.git
