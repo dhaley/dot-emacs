@@ -2110,7 +2110,13 @@ Require unix zip commandline tool."
          (require 'dired)
          (let ( (fileName (elt (dired-get-marked-files) 0))  )
            (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
-           ))))
+           ))
+
+       (defun dired-detect-drupal ()
+         (if (locate-dominating-file default-directory "includes/bootstrap.inc")
+             (drupal-mode 1)))
+
+       (add-hook 'dired-mode-hook 'dired-detect-drupal)))
 
 ;;;_ , doxymacs
 
@@ -2287,7 +2293,6 @@ unless return was pressed outside the comment"
 
 (use-package drupal-mode
   :commands (initialize_cu_drupal drupal-mode)
-  :diminish drupal-mode
   :init
   (progn
     (add-to-list 'auto-mode-alist '("\\.\\(inc\\)$" . php-mode))
@@ -2299,10 +2304,7 @@ PWD is not in a project"
       (interactive)
       (let ((project-root-dir (locate-dominating-file default-directory "current")))
         (let ((path (split-string project-root-dir "/")))     ; path as list
-          (car (last (nbutlast path 1))))))
-    ;;   (add-hook 'dired-mode-hook 'initialize_cu_drupal)
-
-    )
+          (car (last (nbutlast path 1)))))))
   :config
   (progn
     (require 'etags)
@@ -2369,37 +2371,38 @@ PWD is not in a project"
       (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
       (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
       (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
-      (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory)))
+      (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory))))
 
-      (require 'find-file-in-project)
-      ;; Function to create new functions that look for a specific pattern
-      (defun ffip-create-pattern-file-finder (&rest patterns)
-        (lexical-let ((patterns patterns))
-          (lambda ()
-            (interactive)
-            (let ((ffip-patterns patterns))
-              (find-file-in-project)))))
+      (initialize_cu_drupal)
 
-      ;; Find file in project, with specific patterns
-      ;; (global-unset-key (kbd "C-8 f"))
-      (bind-key "C-8 f ph" (ffip-create-pattern-file-finder "*.php"))
-      (bind-key "C-8 f if" (ffip-create-pattern-file-finder "*.info"))
-      (bind-key "C-8 f md" (ffip-create-pattern-file-finder "*.md"))
-      (bind-key "C-8 f mo" (ffip-create-pattern-file-finder "*.module"))
-      (bind-key "C-8 f in" (ffip-create-pattern-file-finder "*.inc"))
-      (bind-key "C-8 f cs" (ffip-create-pattern-file-finder "*.css"))
+
+      ;; (require 'find-file-in-project)
+      ;; ;; Function to create new functions that look for a specific pattern
+      ;; (defun ffip-create-pattern-file-finder (&rest patterns)
+      ;;   (lexical-let ((patterns patterns))
+      ;;     (lambda ()
+      ;;       (interactive)
+      ;;       (let ((ffip-patterns patterns))
+      ;;         (find-file-in-project)))))
+
+      ;; ;; Find file in project, with specific patterns
+      ;; ;; (global-unset-key (kbd "C-8 f"))
+      ;; (bind-key "C-8 f ph" (ffip-create-pattern-file-finder "*.php"))
+      ;; (bind-key "C-8 f if" (ffip-create-pattern-file-finder "*.info"))
+      ;; (bind-key "C-8 f md" (ffip-create-pattern-file-finder "*.md"))
+      ;; (bind-key "C-8 f mo" (ffip-create-pattern-file-finder "*.module"))
+      ;; (bind-key "C-8 f in" (ffip-create-pattern-file-finder "*.inc"))
+      ;; (bind-key "C-8 f cs" (ffip-create-pattern-file-finder "*.css"))
 
       ;; (projectile-on)
+      ;; (setq projectile-project-compilation-commands
+      ;;       (format "phpcs --report=emacs --standard=Drupal %s" (buffer-file-name)))
+      ;; ;; use native indexing such as .gitignore
+      ;; (setq projectile-use-native-indexing 't)
+      ;; (setq projectile-tags-command "~/bin/etags_drupal.sh")
+      ;; (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
+      ;; (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep))
 
-
-      (setq projectile-project-compilation-commands
-            (format "phpcs --report=emacs --standard=Drupal %s" (buffer-file-name)))
-      ;; use native indexing such as .gitignore
-      (setq projectile-use-native-indexing 't)
-      (setq projectile-tags-command "~/bin/etags_drupal.sh")
-
-      (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
-      (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep)
 
       (defun create-drush-buffer (command &rest a)
         (setq opt1 (car a))
@@ -2460,7 +2463,7 @@ PWD is not in a project"
       (defun drush-modules-nocore ()
         (interactive)
         (create-drush-buffer "pm-list" "--status=enabled" "--no-core" "--type=module"))
-      (bind-key "C-8 m n" 'drush-modules-nocore))))
+      (bind-key "C-8 m n" 'drush-modules-nocore)))
 
 ;;;_ , erc
 
