@@ -466,3 +466,6 @@
 [submodule "site-lisp/php-extras"]
         path = site-lisp/php-extras
         url = https://github.com/arnested/php-extras.git
+[submodule "site-lisp/agda-mode"]
+	path = site-lisp/agda-mode
+	url = git://github.com/jwiegley/agda-mode.git
