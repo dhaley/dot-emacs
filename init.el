@@ -2420,10 +2420,10 @@ unless return was pressed outside the comment"
                                  command
                                  opt1)
                 (start-process "drush" (current-buffer) "drush"
-                               command)))
+                               command))))
 
             (shrink-window-if-larger-than-buffer))
-          (switch-to-buffer d-buffer)))
+          (switch-to-buffer d-buffer))
 
       (defun drush-features-enabled ()
         (interactive)
