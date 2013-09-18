@@ -2397,7 +2397,8 @@ unless return was pressed outside the comment"
         (setq opt2 (cadr a))
         (setq opt3 (caddr a))
         (setq allopt (concat opt1 " " opt2 " " opt3))
-        (setq d-buffer (get-buffer-create  (concat "*drush " command " " allopt "*")))
+        (setq b-name (concat "*drush " command " " allopt "*"))
+        (setq d-buffer (get-buffer-create  b-name))
         (buffer-live-p d-buffer)
         (with-current-buffer d-buffer
           (goto-char (point-min))
