@@ -262,6 +262,7 @@
  '(php-manual-path "~/Documents/php/php-chunked-xhtml/")
  '(ping-program-options (quote ("-c" "4")))
  '(pp^L-^L-string "                                                                              ")
+ '(projectile-switch-project-hook (quote (detect-drupal)))
  '(projectile-tags-command "~/bin/etags_drupal.sh")
  '(ps-font-size (quote (8 . 10)))
  '(ps-footer-font-size (quote (12 . 14)))

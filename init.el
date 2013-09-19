@@ -1883,7 +1883,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
          (interactive)
          (setq mark-files-cache (make-hash-table :test #'equal))
          (dired-mark-sexp '(mark-similar-versions name)))))
-
      :config
      (progn
        ;; Also auto refresh dired, but be quiet about it
@@ -2112,11 +2111,9 @@ Require unix zip commandline tool."
            (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
            ))
 
-       (defun dired-detect-drupal ()
-         (if (locate-dominating-file default-directory "includes/bootstrap.inc")
-             (drupal-mode 1)))
 
-       (add-hook 'dired-mode-hook 'dired-detect-drupal)))
+
+       (add-hook 'dired-mode-hook 'detect-drupal)))
 
 ;;;_ , doxymacs
 
@@ -2309,7 +2306,13 @@ PWD is not in a project"
       (let ((project-root-dir (locate-dominating-file default-directory
                                                       "current")))
         (let ((path (split-string project-root-dir "/")))     ; path as list
-          (car (last (nbutlast path 1)))))))
+          (car (last (nbutlast path 1))))))
+    (defun detect-drupal (&optional d)
+      (if d
+          (setq dir d)
+        (setq dir default-directory))
+      (if (locate-dominating-file dir "includes/bootstrap.inc")
+          (drupal-mode 1))))
   :config
   (progn
     (require 'etags)
