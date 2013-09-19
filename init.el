@@ -2375,7 +2375,8 @@ PWD is not in a project"
       (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
       (bind-key "C-8 d d" (lambda()(interactive)(find-file default-directory)))
       (bind-key "C-8 d S" (lambda()(interactive)(find-file settings-file-name)))
-      (bind-key "C-8 d l" (lambda()(interactive)(find-file settings-local-file-name)))
+      (bind-key "C-8 d l" (lambda()(interactive)(find-file
+      settings-local-file-name)))
       (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory))))
 
     (initialize_cu_drupal)
@@ -2421,15 +2422,24 @@ PWD is not in a project"
               (switch-to-buffer d-buffer)))
         (message (concat default-directory " is not a drupal project"))))
 
-
     (defun run-drush-command (command &rest a)
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
           (progn
             (setq opt1 (car a))
+            (setq opt2 (cadr a))
+            (setq opt3 (caddr a))
+            (setq allopt (concat opt1 " " opt2 " " opt3))
             (setq output (shell-command-to-string (concat drupal-drush-program
-      " " command " " opt1)))
+                                                          " " command " "
+                                                          allopt)))
             (message "%s" (propertize output 'face '(:foreground "#dc322f"))))
         (message (concat default-directory " is not a drupal project"))))
+
+    (defun drush-get-variable (v)
+      "prompt for variable and get its value"
+      (interactive "sEnter system variable: ")
+      (run-drush-command "vget" v))
+    (bind-key "C-8 g v" 'drush-get-variable)
 
     (defun drush-version ()
       (interactive)
@@ -2456,7 +2466,6 @@ PWD is not in a project"
       (create-drush-buffer "watchdog-show"))
     (bind-key "C-8 w s" 'drush-watchdog-show)
 
-
     (defun drush-features-enabled ()
       (interactive)
       (create-drush-buffer "features-list" "--status=enabled"))
@@ -2471,7 +2480,12 @@ PWD is not in a project"
       (interactive)
       (create-drush-buffer "pm-list" "--status=enabled" "--no-core"
                            "--type=module"))
-    (bind-key "C-8 m n" 'drush-modules-nocore)))
+    (bind-key "C-8 m n" 'drush-modules-nocore)
+
+    (defun drush-get-variables ()
+      (interactive)
+      (create-drush-buffer "vget"))
+      (bind-key "C-8 g V" 'drush-get-variables)))
 
 ;;;_ , erc
 
