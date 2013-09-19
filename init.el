@@ -2312,7 +2312,7 @@ PWD is not in a project"
           (setq dir d)
         (setq dir default-directory))
       (if (locate-dominating-file dir "includes/bootstrap.inc")
-          (drupal-mode 1))))
+          (initialize_cu_drupal))))
   :config
   (progn
     (require 'etags)
@@ -2346,6 +2346,10 @@ the .dir-locals.el file. "
             feature-directory (concat module-directory "/features")
             contrib-directory (concat module-directory "/contrib")
             custom-directory (concat module-directory "/custom")
+            default-directory (concat site-directory "sites/default")
+            settings-file-name (concat default-directory "/settings.php")
+            settings-local-file-name (concat default-directory
+            "/settings.local.php")
             uri (concat "ww/" profile-name)
             doxymacs-doxygen-dirs `((
                                      ,site-directory
@@ -2371,6 +2375,9 @@ the .dir-locals.el file. "
       (setenv "8dc" custom-directory)
       (setenv "8df" feature-directory)
       (setenv "8db" contrib-directory)
+      (setenv "8dd" default-directory)
+      (setenv "8dS" settings-file-name)
+      (setenv "8dl" settings-local-file-name)
 
       (bind-key "C-8 d r" (lambda()(interactive)(find-file readme-file-name)))
       (bind-key "C-8 d s" (lambda()(interactive)(find-file site-directory)))
@@ -2381,6 +2388,9 @@ the .dir-locals.el file. "
       (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
       (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
       (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
+      (bind-key "C-8 d d" (lambda()(interactive)(find-file default-directory)))
+      (bind-key "C-8 d S" (lambda()(interactive)(find-file settings-file-name)))
+      (bind-key "C-8 d l" (lambda()(interactive)(find-file settings-local-file-name)))
       (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory))))
 
     (initialize_cu_drupal)
