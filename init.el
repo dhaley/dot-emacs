@@ -2381,42 +2381,64 @@ PWD is not in a project"
     (initialize_cu_drupal)
 
     (defun create-drush-buffer (command &rest a)
-      (setq opt1 (car a))
-      (setq opt2 (cadr a))
-      (setq opt3 (caddr a))
-      (setq allopt (concat opt1 " " opt2 " " opt3))
-      (setq b-name (concat "*drush " command " " allopt "*"))
-      (if (buffer-live-p b-name)
-          (switch-to-buffer b-name)
-        (setq d-buffer (get-buffer-create  b-name))
-        (with-current-buffer d-buffer
-          (goto-char (point-min))
-          (view-mode 1)
-          (stripe-buffer-mode 1)
-          (hl-line-mode 1)
-          (if opt3
-              (start-process "drush" (current-buffer) drupal-drush-program
-                             command
-                             opt1
-                             opt2
-                             opt3)
-            (if opt2
-                (start-process "drush" (current-buffer) drupal-drush-program
-                               command
-                               opt1
-                               opt2)
-              (if opt1
-                  (start-process "drush" (current-buffer) drupal-drush-program
-                                 command
-                                 opt1)
-                (start-process "drush" (current-buffer) drupal-drush-program
-                               command))))
+      (if (locate-dominating-file default-directory "includes/bootstrap.inc")
+          (progn
+            (setq opt1 (car a))
+            (setq opt2 (cadr a))
+            (setq opt3 (caddr a))
+            (setq allopt (concat opt1 " " opt2 " " opt3))
+            (setq b-name (concat "*drush " command " " allopt "*"))
+            (if (buffer-live-p b-name)
+                (switch-to-buffer b-name)
+              (setq d-buffer (get-buffer-create  b-name))
+              (with-current-buffer d-buffer
+                (goto-char (point-min))
+                (view-mode 1)
+                (stripe-buffer-mode 1)
+                (hl-line-mode 1)
+                (if opt3
+                    (start-process "drush" (current-buffer) drupal-drush-program
+                                   command
+                                   opt1
+                                   opt2
+                                   opt3)
+                  (if opt2
+                      (start-process "drush" (current-buffer)
+                                     drupal-drush-program
+                                     command
+                                     opt1
+                                     opt2)
+                    (if opt1
+                        (start-process "drush" (current-buffer)
+                                       drupal-drush-program
+                                       command
+                                       opt1)
+                      (start-process "drush" (current-buffer)
+                                     drupal-drush-program
+                                     command))))
 
-          (shrink-window-if-larger-than-buffer))
-        (switch-to-buffer d-buffer)))
+                (shrink-window-if-larger-than-buffer))
+              (switch-to-buffer d-buffer)))
+        (message (concat default-directory " is not a drupal project"))))
+
+
+    (defun run-drush-command (command &rest a)
+      (if (locate-dominating-file default-directory "includes/bootstrap.inc")
+          (progn
+            (setq opt1 (car a))
+            (setq output (shell-command-to-string (concat drupal-drush-program
+      " " command " " opt1)))
+            (message "%s" (propertize output 'face '(:foreground "#dc322f"))))
+        (message (concat default-directory " is not a drupal project"))))
+
+    (defun drush-version ()
+      (interactive)
+      (run-drush-command "--version"))
+    (bind-key "C-8 d v" 'drush-version)
+
     (defun drush-cache-clear-all ()
       (interactive)
-      (create-drush-buffer "cache-clear" "all"))
+      (run-drush-command "cache-clear" "all"))
     (bind-key "C-8 c c" 'drush-cache-clear-all)
 
     (defun drush-core-status ()
