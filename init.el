@@ -1523,7 +1523,7 @@ reload abbrevs."
 ;;;_ , bookmark
 
 (use-package bookmark
-  :bind ("C-c j" . bookmark-jump)
+  :disabled t
   :defer t
   :config
   (progn
@@ -2109,11 +2109,7 @@ Require unix zip commandline tool."
          (require 'dired)
          (let ( (fileName (elt (dired-get-marked-files) 0))  )
            (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
-           ))
-
-
-
-       (add-hook 'dired-mode-hook 'detect-drupal)))
+           ))))
 
 ;;;_ , doxymacs
 
@@ -2274,21 +2270,11 @@ unless return was pressed outside the comment"
 
 ;;;_ , projectile
 
-;;;_ , projectile
-
 (use-package projectile
   :diminish projectile-mode
   :init
-  (projectile-global-mode))
-;;   :config
-;;   (progn
-
-;;     ;; (use-package dash
-;;     ;;   :commands dash
-;;     ;;   :load-path "dash.el")
-
-;;     ;; (bind-key "C-c h" 'helm-projectile)
-;; ))
+  (projectile-global-mode)
+)
 
 ;;;_ , drupal-mode
 
@@ -2296,8 +2282,8 @@ unless return was pressed outside the comment"
   :commands (initialize_cu_drupal drupal-mode)
   :init
   (progn
-    (add-to-list 'auto-mode-alist '("\\.\\(inc\\)$" . php-mode))
-    (add-to-list 'auto-mode-alist '("\\.\\(profile\\)$" . php-mode))
+    (add-to-list 'auto-mode-alist '("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode))
+    (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
 
     (defun curr-dir-project-string ()
       "Returns current project as a string, or the empty string if
@@ -2328,10 +2314,8 @@ PWD is not in a project"
     (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
 
     (defun initialize_cu_drupal ()
-      "Sets up project variables with out having anything project specific in
-the .dir-locals.el file. "
+      "Sets up project variables "
       (interactive)
-
       (setq site-directory (file-truename (locate-dominating-file
                                            default-directory
                                            "includes/bootstrap.inc"))
@@ -2928,23 +2912,7 @@ at the beginning of line, if already there."
                 (if (not node-exists)
                     (format "No menu item `%s' in node `(dir)Top'." subject))))))
 
-      ;; ;; aliases
 
-      (defalias 'open 'find-file)
-      (defalias 'openo 'find-file-other-window)
-
-      (defun eshell/emacs (file)
-        (find-file file))
-
-      (defun eshell/cds ()
-        "Change directory to the project's root."
-        (eshell/cd (locate-dominating-file default-directory ".dir-locals.el")))
-
-      (defun eshell/cdg ()
-        "Change directory to the project's root."
-        (eshell/cd (locate-dominating-file default-directory ".git")))
-
-    ;;;###autoload
       (defun eshell/extract (file)
         (let ((command (some (lambda (x)
                                (if (string-match-p (car x) file)
