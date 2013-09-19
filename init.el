@@ -2277,17 +2277,21 @@ unless return was pressed outside the comment"
 
 ;;;_ , projectile
 
+;;;_ , projectile
+
 (use-package projectile
-  :commands projectile-mode
-  :diminish projectile
-  :config
-  (progn
+  :diminish projectile-mode
+  :init
+  (projectile-global-mode))
+;;   :config
+;;   (progn
 
-    (use-package dash
-      :commands dash
-      :load-path "dash.el")
+;;     ;; (use-package dash
+;;     ;;   :commands dash
+;;     ;;   :load-path "dash.el")
 
-    (bind-key "C-c h" 'helm-projectile)))
+;;     ;; (bind-key "C-c h" 'helm-projectile)
+;; ))
 
 ;;;_ , drupal-mode
 
@@ -2311,15 +2315,13 @@ PWD is not in a project"
     (require 'etags)
     (require 'tags-view)
     (require 'smart-dash)
-    (require 'projectile)
     (require 'drupal-spell)
 
     (add-hook 'drupal-mode-hook
               '(lambda ()
                  (setq yas-extra-modes 'drupal-mode)
                  (doxymacs-mode 1)
-                 (doxymacs-font-lock)
-                 (projectile-on)))
+                 (doxymacs-font-lock)))
     (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
 
     (defun initialize_cu_drupal ()
@@ -2379,35 +2381,6 @@ the .dir-locals.el file. "
       (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory))))
 
     (initialize_cu_drupal)
-
-
-    ;; (require 'find-file-in-project)
-    ;; ;; Function to create new functions that look for a specific pattern
-    ;; (defun ffip-create-pattern-file-finder (&rest patterns)
-    ;;   (lexical-let ((patterns patterns))
-    ;;     (lambda ()
-    ;;       (interactive)
-    ;;       (let ((ffip-patterns patterns))
-    ;;         (find-file-in-project)))))
-
-    ;; ;; Find file in project, with specific patterns
-    ;; ;; (global-unset-key (kbd "C-8 f"))
-    ;; (bind-key "C-8 f ph" (ffip-create-pattern-file-finder "*.php"))
-    ;; (bind-key "C-8 f if" (ffip-create-pattern-file-finder "*.info"))
-    ;; (bind-key "C-8 f md" (ffip-create-pattern-file-finder "*.md"))
-    ;; (bind-key "C-8 f mo" (ffip-create-pattern-file-finder "*.module"))
-    ;; (bind-key "C-8 f in" (ffip-create-pattern-file-finder "*.inc"))
-    ;; (bind-key "C-8 f cs" (ffip-create-pattern-file-finder "*.css"))
-
-    ;; (projectile-on)
-    ;; (setq projectile-project-compilation-commands
-    ;;       (format "phpcs --report=emacs --standard=Drupal %s" (buffer-file-name)))
-    ;; ;; use native indexing such as .gitignore
-    ;; (setq projectile-use-native-indexing 't)
-    ;; (setq projectile-tags-command "~/bin/etags_drupal.sh")
-    ;; (define-key projectile-mode-map (kbd "C-8 p") 'projectile-find-file)
-    ;; (define-key projectile-mode-map (kbd "C-8 F") 'projectile-grep))
-
 
     (defun create-drush-buffer (command &rest a)
       (setq opt1 (car a))
