@@ -289,9 +289,6 @@
 [submodule "site-lisp/sauron"]
         path = site-lisp/sauron
         url = https://github.com/djcb/sauron.git
-[submodule "site-lisp/projectile"]
-        path = site-lisp/projectile
-        url = https://github.com/bbatsov/projectile.git
 [submodule "site-lisp/ibuffer-git"]
         path = site-lisp/ibuffer-git
         url = https://github.com/jrockway/ibuffer-git.git
