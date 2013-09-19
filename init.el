@@ -2298,7 +2298,8 @@ PWD is not in a project"
           (setq dir d)
         (setq dir default-directory))
       (if (locate-dominating-file dir "includes/bootstrap.inc")
-          (initialize_cu_drupal))))
+          (initialize_cu_drupal)
+        (message "You are not visiting a drupal project"))))
   :config
   (progn
     (require 'etags)
@@ -2413,11 +2414,20 @@ PWD is not in a project"
 
           (shrink-window-if-larger-than-buffer))
         (switch-to-buffer d-buffer)))
+    (defun drush-cache-clear-all ()
+      (interactive)
+      (create-drush-buffer "cache-clear" "all"))
+    (bind-key "C-8 c c" 'drush-cache-clear-all)
 
     (defun drush-core-status ()
       (interactive)
       (create-drush-buffer "core-status"))
     (bind-key "C-8 c s" 'drush-core-status)
+
+    (defun drush-core-status-debug ()
+      (interactive)
+      (create-drush-buffer "core-status" "--debug"))
+    (bind-key "C-8 c d" 'drush-core-status-debug)
 
     (defun drush-watchdog-show ()
       (interactive)
