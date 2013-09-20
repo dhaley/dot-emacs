@@ -466,3 +466,12 @@
 [submodule "site-lisp/drupal-mode"]
 	path = site-lisp/drupal-mode
 	url = https://github.com/dhaley/drupal-mode.git
+[submodule "site-lisp/f"]
+	path = site-lisp/f
+	url = https://github.com/rejeep/f.el.git
+[submodule "site-lisp/pkg-info"]
+	path = site-lisp/pkg-info
+	url = https://github.com/lunaryorn/pkg-info.el.git
+[submodule "site-lisp/projectile"]
+	path = site-lisp/projectile
+	url = git@github.com:dhaley/projectile.git
