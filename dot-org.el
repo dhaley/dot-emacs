@@ -889,9 +889,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
     (switch-to-buffer "*Org Agenda*"))
   (delete-other-windows))
 
-(require 'org-protocol)
-(require 'org-mac-link)
-
 (defvar bh/insert-inactive-timestamp t)
 
 (defun bh/toggle-insert-inactive-timestamp ()
