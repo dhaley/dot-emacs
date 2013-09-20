@@ -1603,10 +1603,8 @@ reload abbrevs."
     (define-derived-mode makefile-nmake-mode makefile-mode "nMakefile"
       "An adapted `makefile-mode' that knows about nmake."
       (setq font-lock-defaults
-            `(makefile-nmake-font-lock-keywords ,@(cdr font-lock-defaults))))
+            `(makefile-nmake-font-lock-keywords ,@(cdr font-lock-defaults))))))))
 
-    )
-  )
 
 
 ;;;_ , color-moccur
