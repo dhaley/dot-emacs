@@ -377,8 +377,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(diff-index ((((background dark)) (:foreground "Magenta")) (t (:foreground "Green"))))
- '(diff-nonexistent ((((background dark)) (:foreground "#FFFFFFFF7474")) (t (:foreground "DarkBlue"))))
  '(completions-common-part ((t (:inherit default :foreground "#dc322f"))))
  '(diff-added ((((background dark)) (:foreground "#93a1a1")) (t (:foreground "#859900"))))
  '(diff-added2 ((t (:foreground "#2aa198"))) t)
@@ -387,6 +385,8 @@
  '(diff-file-header ((((background dark)) (:foreground "#2aa198" :background "#073642")) (t (:foreground "#93a1a1" :background "#fdf6e3"))))
  '(diff-header ((((background dark)) (:foreground "#268bd2")) (t (:foreground "#dc322f"))))
  '(diff-hunk-header ((t (:background "#eee8d5" :foreground "#586e75"))))
+ '(diff-index ((((background dark)) (:foreground "#d33682")) (t (:foreground "#859900"))))
+ '(diff-nonexistent ((((background dark)) (:foreground "#93a1a1")) (t (:foreground "#268bd2"))))
  '(diff-refine-change ((t (:inherit diff-refine-change :background nil))))
  '(diff-removed ((t (:foreground "#dc322f"))))
  '(diff-removed2 ((t (:foreground "#Cb4b16"))) t)
