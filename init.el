@@ -2270,9 +2270,9 @@ PWD is not in a project"
           (setq dir d)
         (setq dir default-directory))
       (if (locate-dominating-file dir "includes/bootstrap.inc")
-         (progn
-           (initialize_cu_drupal)
-           (drupal-mode 1))
+          (progn
+            (initialize_cu_drupal)
+            (drupal-mode 1))
         (message "You are not visiting a drupal project")))
 
     (defun initialize_cu_drupal ()
@@ -2342,17 +2342,13 @@ PWD is not in a project"
     )
   :config
   (progn
-    ;;   (require 'etags)
-    ;;   (require 'tags-view)
-      (require 'smart-dash)
-
+    (require 'smart-dash)
     (add-hook 'drupal-mode-hook
               '(lambda ()
-                 ;;              (setq yas-extra-modes 'drupal-mode)
                  (smart-dash-mode 1)
                  (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")))
 
-    ;;   (initialize_cu_drupal)
+    (add-to-list 'yas-extra-modes 'drupal-mode)
 
     (defun create-drush-buffer (command &rest a)
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
