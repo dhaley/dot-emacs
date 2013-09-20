@@ -1907,19 +1907,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                  (call-interactively #'sr-change-window)
                (call-interactively #'other-window)))
 
-           ;;http://puntoblogspot.blogspot.com/2010/06/kill-buffers-illustrated-emacs.html
-           (defun kill-all-dired-buffers()
-             "Kill all dired buffers."
-             (interactive)
-             (save-excursion
-               (let((count 0))
-                 (dolist(buffer (buffer-list))
-                   (set-buffer buffer)
-                   (when (equal major-mode 'dired-mode)
-                     (setq count (1+ count))
-                     (kill-buffer buffer)))
-                 (message "Killed %i dired buffer(s)." count ))))
-
            (bind-key "<tab>" 'my-dired-switch-window dired-mode-map)
 
            (bind-key "M-!" 'async-shell-command dired-mode-map)
@@ -2018,12 +2005,10 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
  ;;              (setq command (concat command " &")))
  ;;            (dired-do-shell-command command arg file-list)))
 
-       (require 'stripe-buffer)
        (add-hook 'dired-mode-hook '(lambda ()
                                      (dired-package-initialize)
-                                     (stripe-listify-buffer)
-                                     (setq cursor-type t)
-                                     ))
+                                     (hl-line-mode 1)
+                                     (setq cursor-type t)))
 
        (defun dired-double-jump (first-dir second-dir)
          (interactive
@@ -2037,24 +2022,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
          (dired-other-window second-dir))
 
        (bind-key "C-c J" 'dired-double-jump)
-
-       (defun dired-back-to-top ()
-         (interactive)
-         (beginning-of-buffer)
-         (next-line 2))
-
-       (define-key dired-mode-map
-         (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
-
-       (defun dired-jump-to-bottom ()
-         (interactive)
-         (end-of-buffer)
-         (next-line -1))
-
-       (define-key dired-mode-map
-         (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
-
-       ;; http://ergoemacs.org/emacs/emacs_dired_convert_images.html
 
        (defun scale-image (fileList scalePercentage)
          "Create a scaled jpg version of images of marked files in dired.
