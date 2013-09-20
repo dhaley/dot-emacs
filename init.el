@@ -3135,6 +3135,9 @@ at the beginning of line, if already there."
   ;;             "site-lisp/flycheck/deps/s.el")
   :init
   (progn
+    (use-package f)
+    (use-package pkg-info)
+
     (flycheck-declare-checker xmllint
       "xmllint checker"
       :command '("xmllint" "--noout" "--postvalid" source)
