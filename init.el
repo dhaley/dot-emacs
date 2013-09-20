@@ -25,7 +25,7 @@
 (defun prog-mode-setup ()
   (run-hooks 'prog-mode-hook))
 
-(add-hook 'php-mode-hook 'prog-mode-setup)
+;; (add-hook 'php-mode-hook 'prog-mode-setup)
 
 (defun system-idle-time ()
   (with-temp-buffer
@@ -2251,11 +2251,11 @@ unless return was pressed outside the comment"
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
-  :commands (initialize_cu_drupal drupal-mode)
+  ;; :mode ("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode)
+  :commands (drupal-mode initialize_cu_drupal)
   :init
   (progn
-    (add-to-list 'auto-mode-alist '("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode))
-    (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
+    ;; (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
 
     (defun curr-dir-project-string ()
       "Returns current project as a string, or the empty string if
@@ -2270,21 +2270,10 @@ PWD is not in a project"
           (setq dir d)
         (setq dir default-directory))
       (if (locate-dominating-file dir "includes/bootstrap.inc")
-          (initialize_cu_drupal)
-        (message "You are not visiting a drupal project"))))
-  :config
-  (progn
-    (require 'etags)
-    (require 'tags-view)
-    (require 'smart-dash)
-    (require 'drupal-spell)
-
-    (add-hook 'drupal-mode-hook
-              '(lambda ()
-                 (setq yas-extra-modes 'drupal-mode)
-                 (doxymacs-mode 1)
-                 (doxymacs-font-lock)))
-    (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+         (progn
+           (initialize_cu_drupal)
+           (drupal-mode 1))
+        (message "You are not visiting a drupal project")))
 
     (defun initialize_cu_drupal ()
       "Sets up project variables "
@@ -2306,7 +2295,7 @@ PWD is not in a project"
             default-directory (concat site-directory "sites/default")
             settings-file-name (concat default-directory "/settings.php")
             settings-local-file-name (concat default-directory
-            "/settings.local.php")
+                                             "/settings.local.php")
             uri (concat "ww/" profile-name)
             doxymacs-doxygen-dirs `((
                                      ,site-directory
@@ -2348,10 +2337,22 @@ PWD is not in a project"
       (bind-key "C-8 d d" (lambda()(interactive)(find-file default-directory)))
       (bind-key "C-8 d S" (lambda()(interactive)(find-file settings-file-name)))
       (bind-key "C-8 d l" (lambda()(interactive)(find-file
-      settings-local-file-name)))
+                                            settings-local-file-name)))
       (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory))))
+    )
+  :config
+  (progn
+    ;;   (require 'etags)
+    ;;   (require 'tags-view)
+      (require 'smart-dash)
 
-    (initialize_cu_drupal)
+    (add-hook 'drupal-mode-hook
+              '(lambda ()
+                 ;;              (setq yas-extra-modes 'drupal-mode)
+                 (smart-dash-mode 1)
+                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")))
+
+    ;;   (initialize_cu_drupal)
 
     (defun create-drush-buffer (command &rest a)
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
@@ -2456,7 +2457,7 @@ PWD is not in a project"
     (defun drush-get-variables ()
       (interactive)
       (create-drush-buffer "vget"))
-      (bind-key "C-8 g V" 'drush-get-variables)))
+    (bind-key "C-8 g V" 'drush-get-variables)))
 
 ;;;_ , erc
 
