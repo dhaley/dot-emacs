@@ -247,9 +247,6 @@ improved by many.."
   (copy-region-as-kill (match-beginning 0) (match-end 0))
   )
 
-
-
-
 ;;;_  . C-?
 
 (defvar ctl-period-map)
@@ -2374,7 +2371,6 @@ PWD is not in a project"
               (with-current-buffer d-buffer
                 (goto-char (point-min))
                 (view-mode 1)
-                (stripe-buffer-mode 1)
                 (hl-line-mode 1)
                 (if opt3
                     (start-process "drush" (current-buffer) drupal-drush-program
@@ -4787,38 +4783,15 @@ and view local index.html url"
                               :doc-spec
                               '(("(bash)Index")))))
 
-    (add-hook 'shell-mode-hook 'initialize-sh-script)))
+    (add-hook 'shell-mode-hook
+              (lambda ()
+                (initialize-sh-script)
+                (ansi-color-for-comint-mode-on)))))
 
 ;;;_ , sh-toggle
 
 (use-package sh-toggle
   :bind ("C-. C-z" . shell-toggle))
-
-(use-package shell-mode
-  :defer t
-  :config
-  (progn
-
-    ;; by Ellen Taylor, 2012-07-20
-    ;; (defadvice shell (around always-new-shell)
-    ;;   "Always start a new shell."
-    ;;   (let ((buffer (generate-new-buffer-name "*shell*"))) ad-do-it))
-
-    ;; (ad-activate 'shell)
-
-    (defun comint-delchar-or-eof-or-kill-buffer (arg)
-      (interactive "p")
-      (if (null (get-buffer-process (current-buffer)))
-          (kill-buffer)
-        (comint-delchar-or-maybe-eof arg)))
-
-    (add-hook 'shell-mode-hook
-              (lambda ()
-                (define-key shell-mode-map
-                  (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)
-                (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-                (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)))))
-
 
 ;;;_ , smart-compile
 
