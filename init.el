@@ -5158,8 +5158,14 @@ and view local index.html url"
 
     (bind-key "H-M-e" 'goto-emacswiki)
     (bind-key "H-M-g" 'w3m-search)
-    (bind-key "H-M-w" 'wikipedia-query))
+    (bind-key "H-M-w" 'wikipedia-query)
 
+    (defun choose-browser (url &rest args)
+      (interactive "sURL: ")
+      (if current-prefix-arg
+          (w3m-browse-url url)
+        (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
+          (browse-url url)))))
   :config
   ;; (eval-after-load "w3m"
   ;;   '(progn
