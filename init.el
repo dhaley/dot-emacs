@@ -2001,7 +2001,8 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
        (add-hook 'dired-mode-hook '(lambda ()
                                      (dired-package-initialize)
                                      (hl-line-mode 1)
-                                     (setq cursor-type t)))
+                                     (setq cursor-type t)
+                                     (detect-drupal-dired)))
 
        (defun dired-double-jump (first-dir second-dir)
          (interactive
@@ -2173,7 +2174,6 @@ Require unix zip commandline tool."
   :diminish php-mode
   :config
   (progn
-    (require 'php-extras)
     (defun my-php-return ()
       "Advanced C-m for PHP doc multiline comments.
 Inserts `*' at the beggining of the new line if
@@ -2265,6 +2265,7 @@ PWD is not in a project"
                                                       "current")))
         (let ((path (split-string project-root-dir "/")))     ; path as list
           (car (last (nbutlast path 1))))))
+
     (defun detect-drupal (&optional d)
       (if d
           (setq dir d)
@@ -2273,6 +2274,16 @@ PWD is not in a project"
           (progn
             (initialize_cu_drupal)
             (drupal-mode 1))
+        (message "You are not visiting a drupal project")))
+
+    (defun detect-drupal-dired ()
+      (if (locate-dominating-file default-directory "includes/bootstrap.inc")
+          (progn
+            (defvar cu-drupal-initialized nil)
+            (unless cu-drupal-initialized
+              (setq cu-drupal-initialized t)
+              (initialize_cu_drupal)
+              (drupal-mode 1)))
         (message "You are not visiting a drupal project")))
 
     (defun initialize_cu_drupal ()
@@ -2346,6 +2357,7 @@ PWD is not in a project"
     (add-hook 'drupal-mode-hook
               '(lambda ()
                  (smart-dash-mode 1)
+                 (gtags-mode 1)
                  (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")))
 
     (add-to-list 'yas-extra-modes 'drupal-mode)
@@ -2453,7 +2465,12 @@ PWD is not in a project"
     (defun drush-get-variables ()
       (interactive)
       (create-drush-buffer "vget"))
-    (bind-key "C-8 g V" 'drush-get-variables)))
+    (bind-key "C-8 g V" 'drush-get-variables)
+
+    (defun drush-up ()
+      (interactive)
+      (create-drush-buffer "up" "-n" "--pipe"))
+    (bind-key "C-8 u p" 'drush-up)))
 
 ;;;_ , erc
 
@@ -3305,6 +3322,39 @@ at the beginning of line, if already there."
       (grep-apply-setting
        'grep-find-command
        '("find . -type f -print0 | xargs -P4 -0 egrep -nH -e " . 52)))))
+
+
+;;;_ , gtags
+
+(use-package gtags
+  :commands gtags-mode
+  :diminish gtags-mode
+  :config
+  (progn
+    (defun my-gtags-or-semantic-find-tag ()
+      (interactive)
+      (if (and (fboundp 'semantic-active-p)
+               (funcall #'semantic-active-p))
+          (call-interactively #'semantic-complete-jump)
+        (call-interactively #'gtags-find-tag)))
+
+    (bind-key "M-." 'my-gtags-or-semantic-find-tag gtags-mode-map)
+
+    (bind-key "C-c t ." 'gtags-find-rtag)
+    (bind-key "C-c t f" 'gtags-find-file)
+    (bind-key "C-c t p" 'gtags-parse-file)
+    (bind-key "C-c t g" 'gtags-find-with-grep)
+    (bind-key "C-c t i" 'gtags-find-with-idutils)
+    (bind-key "C-c t s" 'gtags-find-symbol)
+    (bind-key "C-c t r" 'gtags-find-rtag)
+    (bind-key "C-c t v" 'gtags-visit-rootdir)
+
+    (bind-key "<mouse-2>" 'gtags-find-tag-from-here gtags-mode-map)
+
+    (use-package helm-gtags
+      :bind ("M-T" . helm-gtags-select)
+      :config
+      (bind-key "M-," 'helm-gtags-resume gtags-mode-map))))
 
 ;;;_ , gud
 

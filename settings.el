@@ -263,7 +263,7 @@
  '(pp^L-^L-string "                                                                              ")
  '(projectile-project-root-files (quote ("includes/bootstrap.inc" ".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs" "rebar.config" "project.clj" "pom.xml" "build.sbt" "Gemfile" "Makefile")))
  '(projectile-switch-project-hook (quote (detect-drupal)))
- '(projectile-tags-command "~/bin/etags_drupal.sh")
+ '(projectile-tags-command "drush gtags")
  '(ps-font-size (quote (8 . 10)))
  '(ps-footer-font-size (quote (12 . 14)))
  '(ps-header-font-size (quote (12 . 14)))
