@@ -118,6 +118,7 @@ a buffer to switch to.  If it returns nil, ELSE-FORM is evaluated."
 (selectkey-define-select-key-class Emacs-Lisp "e" "\\.el\\'"
                                    user-emacs-directory)
 (selectkey-define-select-key-class HTML       "h" "\\.s?html\\'")
+(selectkey-define-select-key-class Drupal     "d" "\\.\\(module\\|test\\|install\\|theme\\|php\\|inc\\)")
 (selectkey-define-select-key-class Lisp       "l" "\\.\\(lisp\\|lsp\\)\\'")
 (selectkey-define-select-key-class LaTeX      "t" "\\.tex\\'")
 (selectkey-define-select-key-class Makefile   "M" "\\(GNU\\)?[Mm]akefile")
@@ -125,7 +126,7 @@ a buffer to switch to.  If it returns nil, ELSE-FORM is evaluated."
 
 ;; For easy access to a few commonly accessed files/buffers.
 
-(defvar selectkey-dotemacs-file "~/.emacs.d/emacs.el")
+(defvar selectkey-dotemacs-file "~/.emacs.d/init.el")
 
 (selectkey-define-select-key dotemacs-file "."
   selectkey-dotemacs-file
