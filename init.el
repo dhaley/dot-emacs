@@ -782,8 +782,7 @@ are in kbd format."
   (insert (number-to-string (count-lines (point-min) (point))))
   )
 
-(global-set-key "\C-c\C-f" 'wph-here)
-
+(global-set-key "\C-c\C-h" 'wph-here)
 
 ;;;_  . C-c C-?
 
@@ -2217,16 +2216,18 @@ unless return was pressed outside the comment"
 
     (add-hook 'php-mode-hook
               '(lambda ()
+                 (define-abbrev php-mode-abbrev-table "ex" "extends")
                  (abbrev-mode 1)
                  (hs-minor-mode 1)
-                 (subword-mode t)
                  (turn-on-eldoc-mode)
                  (which-func-mode 1)
                  (diminish 'hs-minor-mode)
                  (setq indicate-empty-lines t)
                  'my-php-mode-hook
-                 (local-set-key "\r" 'my-php-return)
-                 ))))
+                 (local-set-key "\r" 'my-php-return)))
+
+    (bind-key "C-c C-F" 'php-search-local-documentation)
+    (require 'php-extras)))
 
 ;;;_ , projectile
 
