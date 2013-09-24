@@ -475,3 +475,18 @@
 [submodule "site-lisp/projectile"]
 	path = site-lisp/projectile
 	url = git@github.com:dhaley/projectile.git
+[submodule "site-lisp/caffeine"]
+	path = site-lisp/caffeine
+	url = https://github.com/leoliu/caffeine.el.git
+[submodule "site-lisp/osx-dictionary"]
+	path = site-lisp/osx-dictionary
+	url = https://github.com/leoliu/osx-dictionary.git
+[submodule "site-lisp/play-sound-osx"]
+	path = site-lisp/play-sound-osx
+	url = https://github.com/leoliu/play-sound-osx.git
+[submodule "site-lisp/ggtags"]
+	path = site-lisp/ggtags
+	url = https://github.com/leoliu/ggtags.git
+[submodule "site-lisp/applescripts"]
+	path = site-lisp/applescripts
+	url = https://github.com/leoliu/applescripts.git

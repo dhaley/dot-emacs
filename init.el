@@ -1249,6 +1249,9 @@ reload abbrevs."
   :mode ("\\(\\.htaccess$\\|\\.conf$\\)" . apache-mode)
   )
 
+;;;_ , Applescripts
+(use-package AppleScripts
+  :commands (osx-say osx-finder))
 
 ;;;_ , ascii
 
@@ -1550,6 +1553,9 @@ reload abbrevs."
                                          try-complete-lisp-symbol-partially
                                          try-complete-lisp-symbol))
 
+
+(use-package caffeine
+    :commands (caffeine-mode caffeine-toggle))
 
 (use-package calfw
   :commands cfw:open-calendar-buffer
@@ -4427,13 +4433,12 @@ and view local index.html url"
            (cons "Wendy Turnbull" "wendy")))))
 
 
+;;;_ , outline-mode
 (use-package outline-mode
   :diminish outline-mode
   :commands outline-mode
   :config
-  (eval-after-load "outline" '(require 'foldout))
-  )
-
+  (eval-after-load "outline" '(require 'foldout)))
 
 ;;;_ , pabbrev
 
@@ -4441,11 +4446,11 @@ and view local index.html url"
   :commands pabbrev-mode
   :diminish pabbrev-mode)
 
+;;;_ , pandoc-mode
 
 (use-package pandoc-mode
   :commands (turn-on-pandoc
              pandoc-load-default-settings))
-
 
 ;;;_ , paredit
 
@@ -4534,11 +4539,6 @@ and view local index.html url"
   (use-package paren
     :init
     (show-paren-mode 1)))
-
-;;;_ , page-break-lines
-
-;; (use-package page-break-lines
-;;   :diminish page-break-lines)
 
 ;;;_ , per-window-point
 
@@ -5529,14 +5529,15 @@ and view local index.html url"
     (add-hook 'html-mode-hook 'zencoding-mode)
     (add-hook 'html-mode-hook
               #'(lambda ()
-                  (bind-key "<return>" 'newline-and-indent html-mode-map))))
+                (bind-key "<return>" 'newline-and-indent html-mode-map)))
+    (add-hook 'php-mode-hook 'zencoding-mode)
+    (add-hook 'web-mode-hook 'zencoding-mode)
+)
 
   :config
   (progn
     (defvar zencoding-mode-keymap (make-sparse-keymap))
     (bind-key "C-c C-c" 'zencoding-expand-line zencoding-mode-keymap)))
-
-
 
 ;;;_. Post initialization
 
