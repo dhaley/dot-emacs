@@ -2304,6 +2304,7 @@ PWD is not in a project"
             contrib-directory (concat module-directory "/contrib")
             custom-directory (concat module-directory "/custom")
             d-default-directory (concat site-directory "sites/default")
+            sites-all-directory (concat site-directory "sites/all")
             settings-file-name (concat d-default-directory "/settings.php")
             settings-local-file-name (concat d-default-directory
                                              "/settings.local.php")
@@ -2333,6 +2334,7 @@ PWD is not in a project"
       (setenv "8df" feature-directory)
       (setenv "8db" contrib-directory)
       (setenv "8dd" d-default-directory)
+      (setenv "8da" sites-all-directory)
       (setenv "8dS" settings-file-name)
       (setenv "8dl" settings-local-file-name)
 
@@ -2346,6 +2348,7 @@ PWD is not in a project"
       (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
       (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
       (bind-key "C-8 d d" (lambda()(interactive)(find-file d-default-directory)))
+      (bind-key "C-8 d a" (lambda()(interactive)(find-file sites-all-directory)))
       (bind-key "C-8 d S" (lambda()(interactive)(find-file settings-file-name)))
       (bind-key "C-8 d l" (lambda()(interactive)(find-file
                                             settings-local-file-name)))
@@ -5023,15 +5026,6 @@ and view local index.html url"
         ("k" twittering-goto-previous-status-of-user)))
     ))
 
-
-;;;_ , textexpander
-
-;; (when (= 0 (call-process "using-textexpander"))
-  (bind-key "H-v" 'scroll-down)
-  (bind-key "H-v" 'yank)
-  ;; (bind-key "M-v" 'scroll-down)
-;; )
-
 ;;;_ , vkill
 
 (use-package vkill
@@ -5159,7 +5153,19 @@ and view local index.html url"
       (if current-prefix-arg
           (w3m-browse-url url)
         (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
-          (browse-url url)))))
+          (browse-url url))))
+
+    (defun w3m-get-chrome-link ()
+      (interactive)
+      (let ((subject (do-applescript
+                      (string-to-multibyte "tell application \"Google Chrome\"
+        title of active tab of front window
+end tell")))
+            (url (do-applescript
+                  (string-to-multibyte "tell application \"Google Chrome\"
+        URL of active tab of front window
+end tell"))))
+        (w3m-browse-url (substring url 1 -1) (substring subject 1 -1)))))
   :config
   ;; (eval-after-load "w3m"
   ;;   '(progn
@@ -5530,7 +5536,9 @@ and view local index.html url"
   :config
   (progn
     (defvar zencoding-mode-keymap (make-sparse-keymap))
-    (bind-key "C-c C-c" 'zencoding-expand-line zencoding-mode-keymap)))
+    (bind-key "C-c C-c" 'zencoding-expand-line zencoding-mode-keymap)
+    ;; don't overwrite C-j -- newline-and-indent
+    (define-key zencoding-mode-keymap (kbd "C-j") nil)))
 
 ;;;_. Post initialization
 
