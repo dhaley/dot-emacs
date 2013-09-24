@@ -1251,7 +1251,9 @@ reload abbrevs."
 
 ;;;_ , Applescripts
 (use-package AppleScripts
-  :commands (osx-say osx-finder))
+  :commands (osx-say osx-finder)
+  :init
+  (bind-key "H-s" 'osx-say))
 
 ;;;_ , ascii
 

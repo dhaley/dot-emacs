@@ -196,9 +196,6 @@
 [submodule "site-lisp/identica-mode"]
         path = site-lisp/identica-mode
         url = https://github.com/emacsmirror/identica-mode.git
-[submodule "site-lisp/js3-mode"]
-        path = site-lisp/js3-mode
-        url = https://github.com/thomblake/js3-mode.git
 [submodule "site-lisp/powerline"]
         path = site-lisp/powerline
         url = https://github.com/milkypostman/powerline.git
@@ -464,29 +461,29 @@
         path = site-lisp/agda-mode
         url = git://github.com/jwiegley/agda-mode.git
 [submodule "site-lisp/drupal-mode"]
-	path = site-lisp/drupal-mode
-	url = https://github.com/dhaley/drupal-mode.git
+        path = site-lisp/drupal-mode
+        url = https://github.com/dhaley/drupal-mode.git
 [submodule "site-lisp/f"]
-	path = site-lisp/f
-	url = https://github.com/rejeep/f.el.git
+        path = site-lisp/f
+        url = https://github.com/rejeep/f.el.git
 [submodule "site-lisp/pkg-info"]
-	path = site-lisp/pkg-info
-	url = https://github.com/lunaryorn/pkg-info.el.git
+        path = site-lisp/pkg-info
+        url = https://github.com/lunaryorn/pkg-info.el.git
 [submodule "site-lisp/projectile"]
-	path = site-lisp/projectile
-	url = git@github.com:dhaley/projectile.git
+        path = site-lisp/projectile
+        url = git@github.com:dhaley/projectile.git
 [submodule "site-lisp/caffeine"]
-	path = site-lisp/caffeine
-	url = https://github.com/leoliu/caffeine.el.git
+        path = site-lisp/caffeine
+        url = https://github.com/leoliu/caffeine.el.git
 [submodule "site-lisp/osx-dictionary"]
-	path = site-lisp/osx-dictionary
-	url = https://github.com/leoliu/osx-dictionary.git
+        path = site-lisp/osx-dictionary
+        url = https://github.com/leoliu/osx-dictionary.git
 [submodule "site-lisp/play-sound-osx"]
-	path = site-lisp/play-sound-osx
-	url = https://github.com/leoliu/play-sound-osx.git
+        path = site-lisp/play-sound-osx
+        url = https://github.com/leoliu/play-sound-osx.git
 [submodule "site-lisp/ggtags"]
-	path = site-lisp/ggtags
-	url = https://github.com/leoliu/ggtags.git
+        path = site-lisp/ggtags
+        url = https://github.com/leoliu/ggtags.git
 [submodule "site-lisp/applescripts"]
-	path = site-lisp/applescripts
-	url = https://github.com/leoliu/applescripts.git
+        path = site-lisp/applescripts
+        url = https://github.com/leoliu/applescripts.git
