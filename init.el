@@ -1895,7 +1895,8 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
            ;; (use-package dired-async)
            ;; (use-package dired-sort-map)
            (use-package runner)
-           (use-package dired-details-hide
+
+           (use-package dired-details
              :commands dired-details-toggle)
 
            (bind-key "l" 'dired-up-directory dired-mode-map)
@@ -2312,9 +2313,9 @@ PWD is not in a project"
             feature-directory (concat module-directory "/features")
             contrib-directory (concat module-directory "/contrib")
             custom-directory (concat module-directory "/custom")
-            default-directory (concat site-directory "sites/default")
-            settings-file-name (concat default-directory "/settings.php")
-            settings-local-file-name (concat default-directory
+            d-default-directory (concat site-directory "sites/default")
+            settings-file-name (concat d-default-directory "/settings.php")
+            settings-local-file-name (concat d-default-directory
                                              "/settings.local.php")
             uri (concat "ww/" profile-name)
             doxymacs-doxygen-dirs `((
@@ -2341,7 +2342,7 @@ PWD is not in a project"
       (setenv "8dc" custom-directory)
       (setenv "8df" feature-directory)
       (setenv "8db" contrib-directory)
-      (setenv "8dd" default-directory)
+      (setenv "8dd" d-default-directory)
       (setenv "8dS" settings-file-name)
       (setenv "8dl" settings-local-file-name)
 
@@ -2354,7 +2355,7 @@ PWD is not in a project"
       (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
       (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
       (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
-      (bind-key "C-8 d d" (lambda()(interactive)(find-file default-directory)))
+      (bind-key "C-8 d d" (lambda()(interactive)(find-file d-default-directory)))
       (bind-key "C-8 d S" (lambda()(interactive)(find-file settings-file-name)))
       (bind-key "C-8 d l" (lambda()(interactive)(find-file
                                             settings-local-file-name)))
@@ -5813,6 +5814,7 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
   (interactive)
   (let ((random-quote (pick-random-quote)))
     (kill-new random-quote 't)
+    (osx-say random-quote)
     (message random-quote)
     ))
 (bind-key "H-a" 'awesome-button)
