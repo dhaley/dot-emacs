@@ -418,7 +418,6 @@
  '(erc-inverse-face ((t (:background "#fdf6e3" :foreground "#586e75"))))
  '(erc-pal-face ((t (:foreground "#d33682" :weight bold))))
  '(erc-prompt-face ((t (:background "#eee8d5" :foreground " #586e75" :weight bold))))
- '(erc-timestamp-face ((t (:foreground "dark violet"))))
  '(fg:erc-color-face0 ((t (:foreground "#93a1a1"))))
  '(fg:erc-color-face1 ((t (:foreground " #586e75"))))
  '(fg:erc-color-face11 ((t (:foreground "#2aa198"))))
