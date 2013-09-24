@@ -2246,17 +2246,7 @@ unless return was pressed outside the comment"
   (progn
     (projectile-global-mode)
 
-    (defun projectile-switch-project-dired ()
-      "Switch to a project we have seen before."
-      (interactive)
-      (let* ((project-to-switch
-              (projectile-completing-read "Switch to project: "
-                                          projectile-known-projects))
-             (default-directory project-to-switch))
-        (find-file default-directory)
-        (let ((project-switched project-to-switch))
-          (run-hooks 'projectile-switch-project-hook))))
-    (bind-key "C-c j" `projectile-switch-project-dired)))
+    (bind-key "C-c j" `projectile-switch-project)))
 
 ;;;_ , drupal-mode
 
