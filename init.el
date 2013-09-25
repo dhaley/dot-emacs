@@ -2166,16 +2166,11 @@ Require unix zip commandline tool."
     (bind-key "C-. C--" 'emms-player-mplayer-volume-down)
     (bind-key "C-. C-=" 'emms-player-mplayer-volume-up)))
 
-
-(use-package truthy
-  :commands (truthy
-             truthy-s
-             truthy-l))
-
-
+;;;_ , conf-mode
 (use-package conf-mode
   :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
 
+;;;_ , php-mode
 
 (use-package php-mode
   :commands php-mode
@@ -2289,32 +2284,38 @@ PWD is not in a project"
     (defun initialize_cu_drupal ()
       "Sets up project variables "
       (interactive)
-      (setq site-directory (file-truename (locate-dominating-file
-                                           default-directory
-                                           "includes/bootstrap.inc"))
-            tags-file-name (concat site-directory "TAGS")
-            readme-file-name (concat site-directory "README.md")
-            profile-name (curr-dir-project-string)
-            profile-directory (concat site-directory "profiles/" profile-name)
-            module-directory (concat profile-directory "/modules")
-            theme-directory (concat profile-directory "/themes")
-            profile-theme-directory (concat profile-directory "/themes/"
-                                            profile-name)
-            feature-directory (concat module-directory "/features")
-            contrib-directory (concat module-directory "/contrib")
-            custom-directory (concat module-directory "/custom")
-            d-default-directory (concat site-directory "sites/default")
-            sites-all-directory (concat site-directory "sites/all")
-            settings-file-name (concat d-default-directory "/settings.php")
-            settings-local-file-name (concat d-default-directory
-                                             "/settings.local.php")
-            uri (concat "ww/" profile-name)
-            doxymacs-doxygen-dirs `((
-                                     ,site-directory
-                                     ,(concat site-directory "doxy_tag.xml")
-                                     ,(concat "file://" site-directory
-                                              "docs/html")))
-            drupal-rootdir site-directory)
+      (setq
+       site-directory (file-truename (locate-dominating-file
+                                      default-directory
+                                      "includes/bootstrap.inc"))
+       tags-file-name (concat site-directory "TAGS")
+       readme-file-name (concat site-directory "README.md")
+       profile-name (curr-dir-project-string)
+       profile-directory (concat site-directory "profiles/" profile-name)
+       sites-all-directory (concat site-directory "sites/all"))
+      (if (file-exists-p profile-directory)
+        (progn (setq
+                module-directory (concat profile-directory "/modules")
+                theme-directory (concat profile-directory "/themes")
+                profile-theme-directory (concat profile-directory "/themes/"
+                                                profile-name))
+               (setenv "8dt" profile-theme-directory)
+               (bind-key "C-8 d t" (lambda()(interactive)(find-file
+                                                     profile-theme-directory))))
+              (setq
+               module-directory (concat sites-all-directory "/modules")
+               theme-directory (concat sites-all-directory "/themes")))
+      (setq
+       feature-directory (concat module-directory "/features")
+       contrib-directory (concat module-directory "/contrib")
+       custom-directory (concat module-directory "/custom")
+       d-default-directory (concat site-directory "sites/default")
+       settings-file-name (concat d-default-directory "/settings.php")
+       settings-local-file-name (concat
+                                 d-default-directory
+                                 "/settings.local.php")
+       uri (concat "ww/" profile-name)
+       drupal-rootdir site-directory)
 
       (defun drush-uli-to-string ()
         " Provide dynamically derived uri for drush uli"
@@ -2328,7 +2329,6 @@ PWD is not in a project"
       (setenv "DRUPAL_ROOT" site-directory)
       (setenv "8dp" profile-directory)
       (setenv "8dT" theme-directory)
-      (setenv "8dt" profile-theme-directory)
       (setenv "8dm" module-directory)
       (setenv "8dc" custom-directory)
       (setenv "8df" feature-directory)
@@ -2342,8 +2342,7 @@ PWD is not in a project"
       (bind-key "C-8 d s" (lambda()(interactive)(find-file site-directory)))
       (bind-key "C-8 d p" (lambda()(interactive)(find-file profile-directory)))
       (bind-key "C-8 d T" (lambda()(interactive)(find-file theme-directory)))
-      (bind-key "C-8 d t" (lambda()(interactive)(find-file
-                                            profile-theme-directory)))
+
       (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
       (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
       (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
@@ -3257,7 +3256,6 @@ at the beginning of line, if already there."
 ;;;_ , git-gutter+
 
 (use-package git-gutter+
-  :commands git-gutter+-mode
   :diminish git-gutter+-mode
   :config
   (progn
@@ -3266,11 +3264,10 @@ at the beginning of line, if already there."
       (git-gutter-fr+-minimal))
     (global-git-gutter+-mode 1)))
 
+;;;_ , magit-blame
 
-;;;_ , git-blame
-
-(use-package git-blame
-  :commands git-blame-mode)
+(use-package magit-blame
+  :commands magit-blame-mode)
 
 ;;;_ , gnus
 (use-package dot-gnus
@@ -5153,19 +5150,7 @@ and view local index.html url"
       (if current-prefix-arg
           (w3m-browse-url url)
         (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
-          (browse-url url))))
-
-    (defun w3m-get-chrome-link ()
-      (interactive)
-      (let ((subject (do-applescript
-                      (string-to-multibyte "tell application \"Google Chrome\"
-        title of active tab of front window
-end tell")))
-            (url (do-applescript
-                  (string-to-multibyte "tell application \"Google Chrome\"
-        URL of active tab of front window
-end tell"))))
-        (w3m-browse-url (substring url 1 -1) (substring subject 1 -1)))))
+          (browse-url url)))))
   :config
   ;; (eval-after-load "w3m"
   ;;   '(progn
