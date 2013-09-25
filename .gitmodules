@@ -484,3 +484,6 @@
 [submodule "site-lisp/applescripts"]
         path = site-lisp/applescripts
         url = https://github.com/leoliu/applescripts.git
+[submodule "site-lisp/emacs-drupal-snippets"]
+	path = site-lisp/emacs-drupal-snippets
+	url = git@github.com:dhaley/emacs-drupal-snippets.git
