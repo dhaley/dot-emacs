@@ -158,26 +158,26 @@ To use this function, add it to `org-agenda-finalize-hook':
   (defvar org-mobile-directory)
   (defvar org-mobile-capture-file))
 
-;; (defun org-my-auto-exclude-function (tag)
-;;   (and (cond
-;;         ((string= tag "call")
-;;          (let ((hour (nth 2 (decode-time))))
-;;            (or (< hour 8) (> hour 21))))
-;;         ((string= tag "errand")
-;;          (let ((hour (nth 2 (decode-time))))
-;;            (or (< hour 12) (> hour 17))))
-;;         ((or (string= tag "home") (string= tag "nasim"))
-;;          (with-temp-buffer
-;;            (call-process "/sbin/ifconfig" nil t nil "en0" "inet")
-;;            (call-process "/sbin/ifconfig" nil t nil "en1" "inet")
-;;            (call-process "/sbin/ifconfig" nil t nil "bond0" "inet")
-;;            (goto-char (point-min))
-;;            (not (re-search-forward "inet 192\\.168\\.9\\." nil t))))
-;;         ((string= tag "net")
-;;          (not (quickping "imap.gmail.com")))
-;;         ((string= tag "fun")
-;;          org-clock-current-task))
-;;        (concat "-" tag)))
+(defun org-my-auto-exclude-function (tag)
+  (and (cond
+        ;; ((string= tag "call")
+        ;;  (let ((hour (nth 2 (decode-time))))
+        ;;    (or (< hour 8) (> hour 21))))
+        ;; ((string= tag "errand")
+        ;;  (let ((hour (nth 2 (decode-time))))
+        ;;    (or (< hour 12) (> hour 17))))
+        ((string= tag "@home")
+         (with-temp-buffer
+           (call-process "/sbin/ifconfig" nil t nil "en0" "inet")
+           (call-process "/sbin/ifconfig" nil t nil "en1" "inet")
+           (call-process "/sbin/ifconfig" nil t nil "bond0" "inet")
+           (goto-char (point-min))
+           (not (re-search-forward "inet 192\\.168\\.9\\." nil t))))
+        ((string= tag "@office")
+         (not (quickping "imap.gmail.com")))
+        ((string= tag "fun")
+         org-clock-current-task))
+       (concat "-" tag)))
 
 ;; (defun my-mobileorg-convert ()
 ;;   (interactive)
@@ -697,7 +697,152 @@ end tell" (match-string 1))))
         (define-key org-todo-state-map [,(upcase key)]
           ',org-agenda-sym-no-logging)))))
 
-(define-key org-mode-map (kbd "C-c k") 'org-cut-subtree)
+
+;; global keybinding
+
+;; (bind-key "C-c x b"
+;;           (lambda (bug)
+;;             (interactive "sBug: ")
+;;             (insert (format "[[fpco:%s][fpco#%s]]" bug bug))))
+(bind-key "C-c x e" 'org-export)
+(bind-key "C-c x l" 'org-insert-dtp-link)
+(bind-key "C-c x L" 'org-set-dtp-link)
+(bind-key "C-c x m" 'org-insert-message-link)
+(bind-key "C-c x M" 'org-set-message-link)
+(bind-key "C-c x u" 'org-insert-url-link)
+(bind-key "C-c x U" 'org-set-url-link)
+(bind-key "C-c x f" 'org-insert-file-link)
+(bind-key "C-c x F" 'org-set-file-link)
+
+;; (autoload 'ledger-test-create "ldg-test" nil t)
+;; (autoload 'ledger-test-run "ldg-test" nil t)
+
+;; (add-to-list 'auto-mode-alist '("\\.test$" . ledger-mode))
+
+(org-defkey org-mode-map [(control meta return)]
+            'org-insert-heading-after-current)
+(org-defkey org-mode-map [(control return)] 'other-window)
+(org-defkey org-mode-map [return] 'org-return-indent)
+(org-defkey org-mode-map
+            [(control ?c) (control ?x) ?@] 'visible-mode)
+(org-defkey org-mode-map [(control ?c) (meta ?m)] 'my-org-wrap-region)
+(org-defkey org-mode-map (kbd "C-c k") 'org-cut-subtree)
+
+(defvar my-org-expand-map)
+(define-prefix-command 'my-org-expand-map)
+(define-key org-mode-map [(control ?c) (control ?e)] 'my-org-expand-map)
+;; (define-key my-org-expand-map [(control ?t)] 'ledger-test-create)
+(define-key my-org-expand-map [(control ?t)] 'bh/org-todo)
+(define-key my-org-expand-map [(control ?w)] 'bh/widen)
+(define-key my-org-expand-map [(control ?l)] 'bh/set-truncate-lines)
+(define-key my-org-expand-map [(control ?H)] 'bh/hide-other)
+(define-key my-org-expand-map [(control ?n)] 'bh/narrow-up-one-level)
+(define-key my-org-expand-map [(control ?i)] 'bh/punch-in)
+(define-key my-org-expand-map [(control ?o)] 'bh/punch-out)
+(define-key my-org-expand-map [(control ?t)] 'bh/insert-inactive-timestamp)
+(define-key my-org-expand-map [(control ?T)] 'bh/toggle-insert-inactive-timestamp)
+(define-key my-org-expand-map [(control ?c)] 'bh/clock-in-last-task)
+(define-key my-org-expand-map [(control ?p)] 'org-toggle-inline-images)
+(define-key my-org-expand-map [(control ?g)] 'org-clock-goto)
+(define-key my-org-expand-map [(control ?C)] 'org-clock-in)
+(define-key my-org-expand-map [(control ?s)] 'bh/save-then-publish)
+
+(eval-when-compile
+  (defvar yas/trigger-key)
+  (defvar yas/keymap)
+
+  (autoload 'yas/expand "yasnippet"))
+
+(defun yas/org-very-safe-expand ()
+  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (require 'yasnippet)
+            (set (make-local-variable 'yas/trigger-key) [tab])
+            (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
+            (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)))
+
+(remove-hook 'kill-emacs-hook 'org-babel-remove-temporary-directory)
+
+;;;_  . org-agenda-mode
+
+(let ((map org-agenda-mode-map))
+  (define-key map "r" 'org-agenda-refile)
+  (define-key map " " 'org-agenda-tree-to-indirect-buffer)
+  (define-key map "Z" 'org-agenda-follow-mode)
+  (define-key map "W" 'bh/widen)
+  (define-key map "F" 'bh/restrict-to-file-or-follow)
+  (define-key map "N" 'bh/narrow-to-subtree)
+  (define-key map "U" 'bh/narrow-up-one-level)
+  (define-key map "P" 'bh/narrow-to-project)
+  (define-key map "V" 'bh/view-next-project)
+  (define-key map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
+
+(defun org-fit-agenda-window ()
+  "Fit the window to the buffer size."
+  (and (memq org-agenda-window-setup '(reorganize-frame))
+       (fboundp 'fit-window-to-buffer)
+       (fit-window-to-buffer)))
+
+(defadvice org-agenda-redo (after fit-windows-for-agenda-redo activate)
+  "Fit the Org Agenda to its buffer."
+  (org-fit-agenda-window))
+
+(defadvice org-agenda (around fit-windows-for-agenda activate)
+  "Fit the Org Agenda to its buffer."
+  ;; (let ((notes (directory-files
+  ;;               "~/Dropbox/Apps/Drafts/" t "[0-9].*\\.txt\\'" nil)))
+  ;;   (with-current-buffer (find-file-noselect "~/Documents/Tasks/todo.txt")
+  ;;     (save-excursion
+  ;;       (goto-char (point-min))
+  ;;       (re-search-forward "^\\* Inbox$")
+  ;;       (re-search-forward "^:END:")
+  ;;       (forward-line 1)
+  ;;       (dolist (note notes)
+  ;;         (insert
+  ;;          "** TODO "
+  ;;          (with-temp-buffer
+  ;;            (insert-file-contents note)
+  ;;            (goto-char (point-min))
+  ;;            (forward-line)
+  ;;            (unless (bolp))
+  ;;            (insert ?\n)
+  ;;            (insert (format "SCHEDULED: %s\n"
+  ;;                            (format-time-string (org-time-stamp-format))))
+  ;;            (goto-char (point-max))
+  ;;            (unless (bolp)
+  ;;              (insert ?\n))
+  ;;            (let ((uuid (substring (shell-command-to-string "uuidgen") 0 -1))
+  ;;                  (file (file-name-nondirectory note)))
+  ;;              (insert (format (concat ":PROPERTIES:\n:ID:       %s\n"
+  ;;                                      ":CREATED:  ") uuid))
+  ;;              (string-match
+  ;;               (concat "\\`\\([0-9]\\{4\\}\\)"
+  ;;                       "-\\([0-9]\\{2\\}\\)"
+  ;;                       "-\\([0-9]\\{2\\}\\)"
+  ;;                       "-\\([0-9]\\{2\\}\\)"
+  ;;                       "-\\([0-9]\\{2\\}\\)"
+  ;;                       "-\\([0-9]\\{2\\}\\)"
+  ;;                       "\\.txt\\'") file)
+  ;;              (let ((year (string-to-number (match-string 1 file)))
+  ;;                    (mon (string-to-number (match-string 2 file)))
+  ;;                    (day (string-to-number (match-string 3 file)))
+  ;;                    (hour (string-to-number (match-string 4 file)))
+  ;;                    (min (string-to-number (match-string 5 file)))
+  ;;                    (sec (string-to-number (match-string 6 file))))
+  ;;                (insert (format "[%04d-%02d-%02d %s %02d:%02d]\n:END:\n"
+  ;;                                year mon day
+  ;;                                (calendar-day-name (list mon day year) t)
+  ;;                                hour min))))
+  ;;            (buffer-string)))
+  ;;         (delete-file note t)))
+  ;;     (when (buffer-modified-p)
+  ;;       (save-buffer))))
+  ;; ad-do-it
+  (org-fit-agenda-window))
+
+;; Other functionality
 
 (defun sacha/org-export-subtree-as-html-fragment ()
   (interactive)
@@ -705,45 +850,6 @@ end tell" (match-string 1))))
    (org-back-to-heading)
    (org-end-of-subtree)
    t))
-
-;;
-;; Standard key bindings
-(global-set-key "\C-cb" 'org-iswitchb)
-
-(bind-key "<f5>"  'bh/org-todo)
-(bind-key "<S-f5>" 'bh/widen)
-(bind-key "<f7>" 'bh/set-truncate-lines)
-(bind-key "<f8>" 'org-cycle-agenda-files)
-(bind-key "<f9> <f9>" 'bh/show-org-agenda)
-(bind-key "<f9> b" 'bbdb)
-(bind-key "<f9> c" 'calendar)
-(bind-key "<f9> f" 'boxquote-insert-file)
-(bind-key "<f9> g" 'gnus)
-(bind-key "<f9> h" 'bh/hide-other)
-(bind-key "<f9> W" 'widen)
-(bind-key "<f9> u" 'bh/narrow-up-one-level)
-(bind-key "<f9> I" 'bh/punch-in)
-(bind-key "<f9> O" 'bh/punch-out)
-(bind-key "<f9> o" 'bh/make-org-scratch)
-(bind-key "<f9> r" 'boxquote-region)
-(bind-key "<f9> s" 'bh/switch-to-scratch)
-(bind-key "<f9> t" 'bh/insert-inactive-timestamp)
-(global-set-key (kbd "<f9> T") 'bh/toggle-insert-inactive-timestamp)
-(bind-key "<f9> v" 'visible-mode)
-(bind-key "<f9> SPC" 'bh/clock-in-last-task)
-(bind-key "C-<f9>" 'previous-buffer)
-(bind-key "M-<f9>" 'org-toggle-inline-images)
-(bind-key "C-x n r" 'narrow-to-region)
-(bind-key "C-<f10>" 'next-buffer)
-(bind-key "<f11>" 'org-clock-goto)
-(bind-key "C-<f11>" 'org-clock-in)
-(bind-key "C-s-<f12>" 'bh/save-then-publish)
-
-
-
-;; Custom Key Bindings
-(global-set-key (kbd "<f9> U") 'untabify)
-
 
 (defun bh/hide-other ()
   (interactive)
@@ -763,17 +869,6 @@ end tell" (match-string 1))))
     (set-window-start (selected-window)
                       (window-start (selected-window)))))
 
-(defun bh/make-org-scratch ()
-  (interactive)
-  (find-file "/tmp/publish/scratch.org")
-  (gnus-make-directory "/tmp/publish"))
-
-(defun bh/switch-to-scratch ()
-  (interactive)
-  (switch-to-buffer "*scratch*"))
-
-(require 'org-exchange-capture)
-
 ;; Remove empty LOGBOOK drawers on clock out
 (defun bh/remove-empty-drawer-on-clock-out ()
   (interactive)
@@ -783,31 +878,15 @@ end tell" (match-string 1))))
 
 (add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
 
-;;;; Refile settings
+;;;; refile settings
+
 ; Exclude DONE state tasks from refile targets
 (defun bh/verify-refile-target ()
   "Exclude todo keywords with a done state from refile targets"
   (not (member (nth 2 (org-heading-components)) org-done-keywords)))
 
+;;;_  . clock setup
 
-;; Do not dim blocked tasks
-
-;; Compact the block agenda view
-
-;; Custom agenda command definitions
-
-
-(defun bh/org-auto-exclude-function (tag)
-  "Automatic task exclusion in the agenda with / RET"
-  (and (cond
-        ((string= tag "hold")
-         t)
-        ((string= tag "farm")
-         t))
-       (concat "-" tag)))
-
-
-;;
 ;; Resume clocking task when emacs is restarted
 (org-clock-persistence-insinuate)
 ;;
@@ -927,47 +1006,6 @@ A prefix arg forces clock in of the default task."
           (t (car org-clock-history)))))
     (org-with-point-at clock-in-to-task
       (org-clock-in nil))))
-
-
-
-
-(require 'bbdb)
-(require 'bbdb-com)
-
-(global-set-key (kbd "<f9> p") 'bh/phone-call)
-
-;;
-;; Phone capture template handling with BBDB lookup
-;; Adapted from code by Gregory J. Grubbs
-(defun bh/phone-call ()
-  "Return name and company info for caller from bbdb lookup"
-  (interactive)
-  (let* (name rec caller)
-    (setq name (completing-read "Who is calling? "
-                                (bbdb-hashtable)
-                                'bbdb-completion-predicate
-                                'confirm))
-    (when (> (length name) 0)
-      ; Something was supplied - look it up in bbdb
-      (setq rec
-            (or (first
-                 (or (bbdb-search (bbdb-records) name nil nil)
-                     (bbdb-search (bbdb-records) nil name nil)))
-                name)))
-
-    ; Build the bbdb link if we have a bbdb record, otherwise just return the name
-    (setq caller (cond ((and rec (vectorp rec))
-                        (let ((name (bbdb-record-name rec))
-                              (company (bbdb-record-company rec)))
-                          (concat "[[bbdb:"
-                                  name "]["
-                                  name "]]"
-                                  (when company
-                                    (concat " - " company)))))
-                       (rec)
-                       (t "NameOfCaller")))
-    (insert caller)))
-
 
 (defun bh/is-project-p ()
   "Any task with a todo keyword subtask"
@@ -1226,15 +1264,11 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
 ; a file that is part of a project.  So this function saves the file, and publishes
 ; the project that includes this file
 ;
-; It's bound to C-S-F12 so I just edit and hit C-S-F12 when I'm done and move on to the next thing
 (defun bh/save-then-publish ()
   (interactive)
   (save-buffer)
   (org-save-all-org-buffers)
   (org-publish-current-project))
-
-(global-set-key (kbd "C-s-<f12>") 'bh/save-then-publish)
-
 
 ; Erase all reminders and rebuilt reminders for today from the agenda
 (defun bh/org-agenda-to-appt ()
@@ -1311,9 +1345,7 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
 
 (define-abbrev org-mode-abbrev-table "selisp" "" 'skel-org-block-elisp)
 
-(global-set-key (kbd "<f5>") 'bh/org-todo)
-
-(defun bh/org-todo (rag)
+(defun bh/org-todo (arg)
   (interactive "p")
   (if (equal arg 4)
       (save-restriction
@@ -1322,18 +1354,14 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
     (bh/narrow-to-org-subtree)
     (org-show-todo-tree nil)))
 
-(global-set-key (kbd "<S-f5>") 'bh/widen)
-
 (defun bh/widen ()
-   (interactive)
-   (if (equal major-mode 'org-agenda-mode)
-       (org-agenda-remove-restriction-lock)
+  (interactive)
+  (if (equal major-mode 'org-agenda-mode)
       (progn
         (org-agenda-remove-restriction-lock)
         (when org-agenda-sticky
           (org-agenda-redo)))
     (widen)))
-
 
 (defun bh/restrict-to-file-or-follow (arg)
   "Set agenda restriction to 'file or with argument invoke follow mode.
@@ -1385,7 +1413,6 @@ so change the default 'F' binding in the agenda to allow both"
         (bh/narrow-up-one-org-level))
     (bh/narrow-up-one-org-level)))
 
-
 (defun bh/narrow-to-org-project ()
   (widen)
   (save-excursion
@@ -1394,53 +1421,62 @@ so change the default 'F' binding in the agenda to allow both"
     (bh/narrow-to-org-subtree)))
 
 (defun bh/narrow-to-project ()
-   (interactive)
-   (if (equal major-mode 'org-agenda-mode)
-       (progn
-         (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
-           (bh/narrow-to-org-project)
-           (save-excursion
-             (bh/find-project-task)
-             (org-agenda-set-restriction-lock)))
-         (org-agenda-redo)
-         (beginning-of-buffer))
-     (bh/narrow-to-org-project)
-     (save-restriction
-       (org-agenda-set-restriction-lock))))
+  (interactive)
+  (if (equal major-mode 'org-agenda-mode)
+      (progn
+        (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
+          (bh/narrow-to-org-project)
+          (save-excursion
+            (bh/find-project-task)
+            (org-agenda-set-restriction-lock)))
+        (org-agenda-redo)
+        (beginning-of-buffer))
+    (bh/narrow-to-org-project)
+    (save-restriction
+      (org-agenda-set-restriction-lock))))
 
-
-
-(defvar bh/current-view-project nil)
-
+(defvar bh/project-list nil)
 
 (defun bh/view-next-project ()
   (interactive)
-  (unless (marker-position org-agenda-restrict-begin)
-    (goto-char (point-min))
-    (re-search-forward "Tasks to Refile")
-    (setq bh/current-view-project (point)))
-  (bh/widen)
-  (when org-agenda-sticky
-    (org-agenda-redo))
-  (goto-char bh/current-view-project)
-  (forward-visible-line 1)
-  (while (and (< (point) (point-max))
-              (or (not (org-get-at-bol 'org-hd-marker))
-                  (org-with-point-at (org-get-at-bol 'org-hd-marker)
-                    (or (not (bh/is-project-p))
-                        (bh/is-project-subtree-p)))))
-    (forward-visible-line 1))
-  (setq bh/current-view-project (point))
-  (if (org-get-at-bol 'org-hd-marker)
-      (progn
-        (setq bh/hide-scheduled-and-waiting-next-tasks nil)
-        (bh/narrow-to-project)
-        (org-agenda-redo)
-        (beginning-of-buffer))
-    (beginning-of-buffer)
-    (setq bh/hide-scheduled-and-waiting-next-tasks t)
-    (error "All projects viewed.")))
+  (let (num-project-left current-project)
+    (unless (marker-position org-agenda-restrict-begin)
+      (goto-char (point-min))
+      ; Clear all of the existing markers on the list
+      (while bh/project-list
+        (set-marker (pop bh/project-list) nil))
+      (re-search-forward "Tasks to Refile")
+      (forward-visible-line 1))
 
+    ; Build a new project marker list
+    (unless bh/project-list
+      (while (< (point) (point-max))
+        (while (and (< (point) (point-max))
+                    (or (not (org-get-at-bol 'org-hd-marker))
+                        (org-with-point-at (org-get-at-bol 'org-hd-marker)
+                          (or (not (bh/is-project-p))
+                              (bh/is-project-subtree-p)))))
+          (forward-visible-line 1))
+        (when (< (point) (point-max))
+          (add-to-list 'bh/project-list (copy-marker (org-get-at-bol 'org-hd-marker)) 'append))
+        (forward-visible-line 1)))
+
+    ; Pop off the first marker on the list and display
+    (setq current-project (pop bh/project-list))
+    (when current-project
+      (org-with-point-at current-project
+        (setq bh/hide-scheduled-and-waiting-next-tasks nil)
+        (bh/narrow-to-project))
+      ; Remove the marker
+      (setq current-project nil)
+      (org-agenda-redo)
+      (beginning-of-buffer)
+      (setq num-projects-left (length bh/project-list))
+      (if (> num-projects-left 0)
+          (message "%s projects left to view" num-projects-left)
+        (beginning-of-buffer)
+        (setq bh/hide-scheduled-and-waiting-next-tasks t)
+        (error "All projects viewed.")))))
 
 (defun bh/set-agenda-restriction-lock (arg)
   "Set restriction lock to current task subtree or file if prefix is specified"
@@ -1452,7 +1488,8 @@ so change the default 'F' binding in the agenda to allow both"
         (cond
          ((and (equal major-mode 'org-agenda-mode) pom)
           (org-with-point-at pom
-            (org-agenda-set-restriction-lock restriction-type)))
+            (org-agenda-set-restriction-lock restriction-type))
+          (org-agenda-redo))
          ((and (equal major-mode 'org-mode) (org-before-first-heading-p))
           (org-agenda-set-restriction-lock 'file))
          (pom
@@ -1562,13 +1599,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (org-crypt-use-before-save-magic)
 
 
-(defun bh/show-org-agenda ()
-  (interactive)
-  (if org-agenda-sticky
-      (switch-to-buffer "*Org Agenda( )*")
-    (switch-to-buffer "*Org Agenda*"))
-  (delete-other-windows))
-
 (defvar bh/insert-inactive-timestamp t)
 
 (defun bh/toggle-insert-inactive-timestamp ()
@@ -1666,128 +1696,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;;;_  . make-bug-link
-
-
-
-
-(bind-key "C-c x b"
-          (lambda (bug)
-            (interactive "sBug: ")
-            (insert (format "[[fpco:%s][fpco#%s]]" bug bug))))
-(bind-key "C-c x e" 'org-export)
-(bind-key "C-c x l" 'org-insert-dtp-link)
-(bind-key "C-c x L" 'org-set-dtp-link)
-(bind-key "C-c x m" 'org-insert-message-link)
-(bind-key "C-c x M" 'org-set-message-link)
-(bind-key "C-c x u" 'org-insert-url-link)
-(bind-key "C-c x U" 'org-set-url-link)
-(bind-key "C-c x f" 'org-insert-file-link)
-(bind-key "C-c x F" 'org-set-file-link)
-
-(autoload 'ledger-test-create "ldg-test" nil t)
-(autoload 'ledger-test-run "ldg-test" nil t)
-
-(add-to-list 'auto-mode-alist '("\\.test$" . ledger-mode))
-
-(org-defkey org-mode-map [(control meta return)]
-            'org-insert-heading-after-current)
-(org-defkey org-mode-map [(control return)] 'other-window)
-(org-defkey org-mode-map [return] 'org-return-indent)
-(org-defkey org-mode-map
-            [(control ?c) (control ?x) ?@] 'visible-mode)
-(org-defkey org-mode-map [(control ?c) (meta ?m)] 'my-org-wrap-region)
-
-(defvar my-org-expand-map)
-(define-prefix-command 'my-org-expand-map)
-(define-key org-mode-map [(control ?c) (control ?e)] 'my-org-expand-map)
-
-(define-key my-org-expand-map [(control ?t)] 'ledger-test-create)
-
-(eval-when-compile
-  (defvar yas/trigger-key)
-  (defvar yas/keymap)
-
-  (autoload 'yas/expand "yasnippet"))
-
-(defun yas/org-very-safe-expand ()
-  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
-
-(add-hook 'org-mode-hook
-          (lambda ()
-            (require 'yasnippet)
-            (set (make-local-variable 'yas/trigger-key) [tab])
-            (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-            (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)))
-
-(remove-hook 'kill-emacs-hook 'org-babel-remove-temporary-directory)
-
-;;;_  . org-agenda-mode
-
-(let ((map org-agenda-mode-map))
-  (define-key map "r" 'org-agenda-refile)
-  (define-key map " " 'org-agenda-tree-to-indirect-buffer)
-  (define-key map "Z" 'org-agenda-follow-mode))
-
-
-
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "W" 'bh/widen))
-          'append)
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "F" 'bh/restrict-to-file-or-follow))
-          'append)
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "N" 'bh/narrow-to-subtree))
-          'append)
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "U" 'bh/narrow-up-one-level))
-          'append)
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "P" 'bh/narrow-to-project))
-          'append)
- (add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "V" 'bh/view-next-project))
-          'append)
-
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
-          'append)
-(add-hook 'org-agenda-mode-hook
-          (lambda ()
-            (define-key org-agenda-mode-map "q" 'bury-buffer))
-          'append)
-
-
-
-(defun org-fit-agenda-window ()
-  "Fit the window to the buffer size."
-  (and (memq org-agenda-window-setup '(reorganize-frame))
-       (fboundp 'fit-window-to-buffer)
-       (fit-window-to-buffer)))
-
-
-(defadvice org-agenda-redo (after fit-windows-for-agenda-redo activate)
-  "Fit the Org Agenda to its buffer."
-  (org-fit-agenda-window))
-
-(defadvice org-agenda (after fit-windows-for-agenda activate)
-  "Fit the Org Agenda to its buffer."
-  (org-fit-agenda-window))
 
 (add-hook 'org-mode-hook
           'turn-on-visual-line-mode
