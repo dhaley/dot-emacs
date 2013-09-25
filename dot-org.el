@@ -768,16 +768,19 @@ end tell" (match-string 1))))
 ;;;_  . org-agenda-mode
 
 (let ((map org-agenda-mode-map))
+                                        ; r runs the command org-agenda-redo
   (define-key map "r" 'org-agenda-refile)
   (define-key map " " 'org-agenda-tree-to-indirect-buffer)
   (define-key map "Z" 'org-agenda-follow-mode)
   (define-key map "W" 'bh/widen)
   (define-key map "F" 'bh/restrict-to-file-or-follow)
   (define-key map "N" 'bh/narrow-to-subtree)
+  ;; U runs the command org-agenda-bulk-unmark-all
   (define-key map "U" 'bh/narrow-up-one-level)
   (define-key map "P" 'bh/narrow-to-project)
   (define-key map "V" 'bh/view-next-project)
-  (define-key map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
+  (define-key map "\C-c\C-x<" 'bh/set-agenda-restriction-lock)
+  (define-key map (kbd "<f5>") 'cfw:open-org-calendar))
 
 (defun org-fit-agenda-window ()
   "Fit the window to the buffer size."
