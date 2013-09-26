@@ -3,7 +3,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-auto-exclude-function (quote bh/org-auto-exclude-function))
+ '(org-agenda-auto-exclude-function (quote org-my-auto-exclude-function))
  '(org-agenda-clock-consistency-checks (quote (:max-duration "4:00" :min-duration 0 :max-gap 0 :gap-ok-around ("4:00"))))
  '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80)))
  '(org-agenda-cmp-user-defined (quote bh/agenda-sort))
@@ -164,11 +164,11 @@ SCHEDULED: %t
 ?
 #+end_ascii") ("A" "#+ascii: ") ("i" "#+index: ?" "#+index: ?") ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
  '(org-stuck-projects (quote ("" nil nil "")))
- '(org-tag-alist (quote ((:startgroup) ("@errand" . 101) ("@office" . 111) ("@home" . 72) (:endgroup) ("PHONE" . 112) ("WAITING" . 119) ("HOLD" . 104) ("PERSONAL" . 80) ("WORK" . 87) ("ORG" . 79) ("NOTE" . 110) ("CANCELLED" . 99) ("FLAGGED" . 63))))
+ '(org-tag-alist (quote ((:startgroup) ("@errand" . 101) ("@office" . 111) ("@home" . 72) (:endgroup) ("WAITING" . 119) ("HOLD" . 104) ("PERSONAL" . 80) ("WORK" . 87) ("ORG" . 79) ("NOTE" . 110) ("CANCELLED" . 99) ("FLAGGED" . 63))))
  '(org-tags-exclude-from-inheritance (quote ("crypt")))
  '(org-tags-match-list-sublevels t)
  '(org-time-clocksum-format (quote (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
- '(org-todo-keyword-faces (quote (("TODO" :foreground "#859900" :weight bold) ("NEXT" :foreground "#2aa198" :weight bold) ("DONE" :foreground "#b58900" :weight bold) ("WAITING" :foreground "#cb4b16" :weight bold) ("HOLD" :foreground "#dc322f" :weight bold) ("CANCELLED" :foreground "#d33682" :weight bold) ("MEETING" :foreground "#6c71c4" :weight bold) ("PHONE" :foreground "#268bd2" :weight bold))))
+ '(org-todo-keyword-faces (quote (("TODO" :foreground "#859900" :weight bold) ("NEXT" :foreground "#2aa198" :weight bold) ("DONE" :foreground "#b58900" :weight bold) ("WAITING" :foreground "#cb4b16" :weight bold) ("HOLD" :foreground "#dc322f" :weight bold) ("CANCELLED" :foreground "#d33682" :weight bold))))
  '(org-todo-keywords (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)") (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
  '(org-todo-state-tags-triggers (quote (("CANCELLED" ("CANCELLED" . t)) ("WAITING" ("WAITING" . t)) ("HOLD" ("WAITING" . t) ("HOLD" . t)) (done ("WAITING") ("HOLD")) ("TODO" ("WAITING") ("CANCELLED") ("HOLD")) ("NEXT" ("WAITING") ("CANCELLED") ("HOLD")) ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
  '(org-treat-S-cursor-todo-selection-as-state-change nil)
