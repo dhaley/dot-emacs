@@ -1559,6 +1559,7 @@ reload abbrevs."
 (use-package caffeine
     :commands (caffeine-mode caffeine-toggle))
 
+;;;; calfw
 (use-package calfw
   :commands cfw:open-calendar-buffer
   :init
@@ -1577,7 +1578,6 @@ reload abbrevs."
                       :custom-map cfw:org-schedule-map
                       :sorter 'cfw:org-schedule-sorter)))
             (switch-to-buffer (cfw:cp-get-buffer cp))))))))
-
 
 ;;;_ , cmake-mode
 
@@ -2315,7 +2315,13 @@ PWD is not in a project"
                                  d-default-directory
                                  "/settings.local.php")
        uri (concat "ww/" profile-name)
-       drupal-rootdir site-directory)
+       drupal-rootdir site-directory
+       site-name "education"
+       local-alias (concat "cu.local-" site-name)
+       dev-alias (concat "cu.wcustdev1-" site-name)
+       stage-alias (concat "cu.wstage1-" site-name)
+       test-alias (concat "cu.wcusttest1-" site-name)
+       prod-alias (concat "cu.wcust1-" site-name))
 
       (defun drush-uli-to-string ()
         " Provide dynamically derived uri for drush uli"
@@ -2433,6 +2439,11 @@ PWD is not in a project"
       (run-drush-command "cache-clear" "all"))
     (bind-key "C-8 c c" 'drush-cache-clear-all)
 
+    (defun drush-disable-cu-cache ()
+      (interactive)
+      (run-drush-command "dis" "-y" "cu_cache"))
+    (bind-key "C-8 d c" 'drush-disable-cu-cache)
+
     (defun drush-core-status ()
       (interactive)
       (create-drush-buffer "core-status"))
@@ -2472,7 +2483,29 @@ PWD is not in a project"
     (defun drush-up ()
       (interactive)
       (create-drush-buffer "up" "-n" "--pipe"))
-    (bind-key "C-8 u p" 'drush-up)))
+    (bind-key "C-8 u p" 'drush-up)
+
+    (defun drush-sql-sync ()
+      (interactive)
+      (create-drush-buffer
+       "-y"
+       "-d"
+       "-v"
+       "sql-sync"
+       "@cu.wstage1-education"
+      "@cu.local-education"))
+    (bind-key "C-8 s s" 'drush-sql-sync)
+
+    (defun drush-rsync ()
+      (interactive)
+      (create-drush-buffer
+       "-y"
+       "-d"
+       "-v"
+       "rsync"
+       "@cu.wstage1-education:%files/"
+       "@cu.local-education:%files"))
+    (bind-key "C-8 r s" 'drush-rsync)))
 
 ;;;_ , erc
 
@@ -4996,6 +5029,18 @@ and view local index.html url"
             (if entry
                 (nth 1 entry)
               5)))))))
+
+;;;_ , textexpander
+
+;; (when (= 0 (call-process "using-textexpander"))
+  ;; (bind-key "A-v" 'scroll-down)
+  (bind-key "H-v" 'yank)
+  ;; (bind-key "M-v" 'scroll-down)
+;; )
+
+  ;; (bind-key "M-v" 'scroll-down)
+  ;; (bind-key "A-v" 'yank)
+
 
 ;; https://github.com/anthracite/emacs-config/blob/master/init.el
 ;;;;_ , twittering-mode
