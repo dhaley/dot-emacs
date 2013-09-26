@@ -170,9 +170,8 @@ To use this function, add it to `org-agenda-finalize-hook':
          (with-temp-buffer
            (call-process "/sbin/ifconfig" nil t nil "en0" "inet")
            (call-process "/sbin/ifconfig" nil t nil "en1" "inet")
-           (call-process "/sbin/ifconfig" nil t nil "bond0" "inet")
            (goto-char (point-min))
-           (not (re-search-forward "inet 192\\.168\\.9\\." nil t))))
+           (not (re-search-forward "inet 192\\.168\\.o\\." nil t))))
         ((string= tag "@office")
          (not (quickping "imap.gmail.com")))
         ((string= tag "fun")
