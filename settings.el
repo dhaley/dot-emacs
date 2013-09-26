@@ -261,7 +261,7 @@
  '(parens-require-spaces t)
  '(pcomplete-compare-entries-function (quote file-newer-than-file-p))
  '(persistent-scratch-file-name "~/.emacs.d/data/persistent-scratch")
- '(php-completion-file "~/.emacs.d/php/php-completion-file")
+ '(php-completion-file "~/Messages/php/php-completion-file")
  '(php-executable "/Applications/MAMP/bin/php/php5.3.13/bin/php")
  '(php-manual-path "~/Documents/php/php-chunked-xhtml")
  '(ping-program-options (quote ("-c" "4")))
