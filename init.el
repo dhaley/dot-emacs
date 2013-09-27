@@ -1119,9 +1119,9 @@ reload abbrevs."
 
 ;;;_ , Applescripts
 (use-package AppleScripts
-  :commands (osx-say osx-finder osx-pathfinder)
   :init
-  (bind-key "H-s" 'osx-say))
+  (bind-key "H-s" 'osx-say)
+  (bind-key "H-f" 'osx-pathfinder-or-iterm))
 
 ;;;_ , ascii
 
