@@ -1121,32 +1121,6 @@ Including indent-buffer, which should not be called automatically on save."
         ("marmalade"   . "http://marmalade-repo.org/packages/")))
 (package-initialize)
 
-
-
-;;;_.  Packages
-
-
-;; Install the packages I need if not already installed
-
-(defun rwd-require-package (name)
-  (or (package-installed-p name) (package-install name)))
-
-(setq dkh-required-packages
-      (list
-       'apache-mode
-       'applescript-mode
-       'buffer-move
-       'rainbow-mode
-       'smarter-compile
-       'switch-window
-       'window-number
-       ))
-
-;; (package-refresh-contents)
-(dolist
-    (package dkh-required-packages)
-  (when (not (package-installed-p package)) (package-install package)))
-
 
 
 
