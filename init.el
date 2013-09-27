@@ -221,31 +221,12 @@
 
 (bind-key "C-c \"" 'double-quote)
 
-
-                                        ; gets the name of the buffer.
-(defun region-to-string ()
-  (interactive)
-  (buffer-substring (mark) (point)))
-
-(bind-key "H-i" 'ispell-word)
-(bind-key "H-e" 'grab-email-my)
-(bind-key "H-\\" 'my-toggle-window-split)
-(bind-key "H-|" 'my-swap-windows)
 (bind-key "<H-down>" 'shrink-window)
 (bind-key "<H-left>" 'shrink-window-horizontally)
 (bind-key "<H-right>" 'enlarge-window-horizontally)
 (bind-key "<H-up>" 'enlarge-window)
-(bind-key "<H-backspace>" 'scroll-down-command)
-(bind-key "H-f" 'new-frame)
+(bind-key "H-`" 'new-frame)
 
-(defun grab-email-my ()
-  "Grab the next email in the buffer
-  First posted by François Fleuret <francois.fleuret@inria.fr>..
-improved by many.."
-  (interactive)
-  (re-search-forward "[^ \t\n]+@[^ \t\n]+")
-  (copy-region-as-kill (match-beginning 0) (match-end 0))
-  )
 
 ;;;_  . C-?
 
@@ -1032,6 +1013,11 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 
+;;;_ , easy-kill
+(use-package easy-kill
+  :init
+   (global-set-key "\M-w" 'easy-kill))
+
 ;;;_ , el-get
 
 (use-package el-get
@@ -1133,7 +1119,7 @@ reload abbrevs."
 
 ;;;_ , Applescripts
 (use-package AppleScripts
-  :commands (osx-say osx-finder)
+  :commands (osx-say osx-finder osx-pathfinder)
   :init
   (bind-key "H-s" 'osx-say))
 

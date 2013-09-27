@@ -481,3 +481,6 @@
 [submodule "site-lisp/applescripts"]
 	path = site-lisp/applescripts
 	url = git@github.com:dhaley/applescripts.git
+[submodule "site-lisp/easy-kill"]
+	path = site-lisp/easy-kill
+	url = git@github.com:dhaley/easy-kill.git
