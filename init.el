@@ -1438,6 +1438,13 @@ reload abbrevs."
                                          try-complete-lisp-symbol))
 
 
+(use-package buffer-move
+  :bind (
+         ("<C-S-up>"    . buf-move-up)
+         ("<C-S-down>"  . buf-move-down)
+         ("<C-S-left>"  . buf-move-left)
+         ("<C-S-right>" . buf-move-right)))
+
 (use-package caffeine
     :commands (caffeine-mode caffeine-toggle))
 
@@ -4954,6 +4961,11 @@ and view local index.html url"
           (sr-history-push default-directory)
           (sr-beginning-of-buffer))))))
 
+
+;;;_ , switch-window
+(use-package switch-window
+  :bind ("C-x o" . switch-window))
+
 ;;;_ , tablegen-mode
 
 (use-package tablegen-mode
@@ -5650,19 +5662,13 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;; Allow "y or n" instead of "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(require 'switch-window)
+
 
 ;; this interferes with 7.10 Numeric Arguments
 ;; (require 'window-number)
 ;; (window-number-mode)
 ;; (window-number-meta-mode)
 
-(require 'buffer-move)
-
-(bind-key "<C-S-up>"     'buf-move-up)
-(bind-key "<C-S-down>"   'buf-move-down)
-(bind-key "<C-S-left>"   'buf-move-left)
-(bind-key "<C-S-right>"  'buf-move-right)
 
 ;; Various superfluous white-space. Just say no.
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
