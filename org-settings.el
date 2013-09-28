@@ -164,7 +164,7 @@ SCHEDULED: %t
 ?
 #+end_ascii") ("A" "#+ascii: ") ("i" "#+index: ?" "#+index: ?") ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
  '(org-stuck-projects (quote ("" nil nil "")))
- '(org-tag-alist (quote ((:startgroup) ("@errand" . 101) ("@office" . 111) ("@home" . 72) (:endgroup) ("WAITING" . 119) ("HOLD" . 104) ("PERSONAL" . 80) ("WORK" . 87) ("ORG" . 79) ("NOTE" . 110) ("CANCELLED" . 99) ("FLAGGED" . 63))))
+ '(org-tag-alist (quote ((:startgroup) ("@errand" . 101) ("@net" . 110) ("@home" . 72) (:endgroup) ("WAITING" . 119) ("HOLD" . 104) ("PERSONAL" . 80) ("WORK" . 87) ("ORG" . 79) ("NOTE" . 78) ("CANCELLED" . 99) ("FLAGGED" . 63))))
  '(org-tags-exclude-from-inheritance (quote ("crypt")))
  '(org-tags-match-list-sublevels t)
  '(org-time-clocksum-format (quote (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))

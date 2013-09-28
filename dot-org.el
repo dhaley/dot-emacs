@@ -172,7 +172,7 @@ To use this function, add it to `org-agenda-finalize-hook':
            (call-process "/sbin/ifconfig" nil t nil "en1" "inet")
            (goto-char (point-min))
            (not (re-search-forward "inet 192\\.168\\.0\\." nil t))))
-        ((string= tag "@office")
+        ((string= tag "@net")
          (not (quickping "imap.gmail.com")))
         ((string= tag "fun")
          org-clock-current-task))
