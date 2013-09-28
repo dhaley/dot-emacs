@@ -2260,27 +2260,10 @@ PWD is not in a project"
                 (goto-char (point-min))
                 (view-mode 1)
                 (hl-line-mode 1)
-                (if opt3
-                    (start-process "drush" (current-buffer) drupal-drush-program
-                                   command
-                                   opt1
-                                   opt2
-                                   opt3)
-                  (if opt2
-                      (start-process "drush" (current-buffer)
-                                     drupal-drush-program
-                                     command
-                                     opt1
-                                     opt2)
-                    (if opt1
-                        (start-process "drush" (current-buffer)
-                                       drupal-drush-program
-                                       command
-                                       opt1)
-                      (start-process "drush" (current-buffer)
-                                     drupal-drush-program
-                                     command))))
-
+                (apply 'start-process "drush" (current-buffer)
+                             drupal-drush-program
+                             command
+                             a)
                 (shrink-window-if-larger-than-buffer))
               (switch-to-buffer d-buffer)))
         (message (concat default-directory " is not a drupal project"))))
