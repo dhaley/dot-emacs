@@ -2128,16 +2128,20 @@ unless return was pressed outside the comment"
   (progn
     ;; (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
 
-;;     (defun curr-dir-project-string ()
-;;       "Returns current project as a string, or the empty string if
-;; PWD is not in a project"
-;;       (interactive)
-;;       (let ((project-root-dir (locate-dominating-file default-directory
-;;                                                       "current")))
-;;         (let ((path (split-string project-root-dir "/")))     ; path as list
-;;           (car (last (nbutlast path 1))))))
-
     (defun curr-dir-project-string ()
+      "Returns current project as a string, or the empty string if
+PWD is not in a project"
+      (interactive)
+      (let ((project-root-dir (locate-dominating-file default-directory
+                                                      "current")))
+        (let* ((path (split-string project-root-dir "/"))     ; path as list
+               (profile-dir-path          (car (last (nbutlast path 1)))))
+          (let ((dir-test-file (concat site-directory "profiles/" profile-dir-path)))
+            (if (file-directory-p dir-test-file)
+                (return profile-dir-path)
+              (curr-dir-project-string2))))))
+
+    (defun curr-dir-project-string2 ()
       "Returns current project as a string, or the empty string if
 PWD is not in a project"
       (interactive)
