@@ -1119,9 +1119,7 @@ reload abbrevs."
 
 ;;;_ , Applescripts
 (use-package AppleScripts
-  :init
-  (bind-key "H-s" 'osx-say)
-  (bind-key "H-f" 'osx-pathfinder-or-iterm))
+  :bind (("H-s" . osx-say) ("H-f" . osx-pathfinder-or-iterm)))
 
 ;;;_ , ascii
 
@@ -1432,7 +1430,10 @@ reload abbrevs."
          ("<C-S-right>" . buf-move-right)))
 
 (use-package caffeine
-    :commands (caffeine-mode caffeine-toggle))
+    :commands (caffeine-toggle)
+    :config
+    (caffeine-mode)
+)
 
 ;;;; calfw
 (use-package calfw
@@ -2136,11 +2137,8 @@ PWD is not in a project"
         (let ((path (split-string project-root-dir "/")))     ; path as list
           (car (last (nbutlast path 1))))))
 
-    (defun detect-drupal (&optional d)
-      (if d
-          (setq dir d)
-        (setq dir default-directory))
-      (if (locate-dominating-file dir "includes/bootstrap.inc")
+    (defun detect-drupal ()
+      (if (locate-dominating-file default-directory "includes/bootstrap.inc")
           (progn
             (initialize_cu_drupal)
             (drupal-mode 1))
@@ -2163,7 +2161,6 @@ PWD is not in a project"
        site-directory (file-truename (locate-dominating-file
                                       default-directory
                                       "includes/bootstrap.inc"))
-       tags-file-name (concat site-directory "TAGS")
        readme-file-name (concat site-directory "README.md")
        profile-name (curr-dir-project-string)
        profile-directory (concat site-directory "profiles/" profile-name)
