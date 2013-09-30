@@ -5424,9 +5424,9 @@ and view local index.html url"
 
 ;;;_ , xmsi-mode
 
-(use-package xmsi-mode
-  ;; (autoload 'xmsi-mode "xmsi-math-symbols-input" "Load xmsi minor mode for inputting math (Unicode) symbols." t)
+(use-package xmsi-math-symbols-input
   :commands (xmsi-mode xmsi-math-symbols-input)
+  :bind ("<S-space>" . xmsi-mode)
   )
 
 ;;;_ , yaml-mode
