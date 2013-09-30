@@ -2245,7 +2245,7 @@ PWD is not in a project"
     (defun create-drush-buffer (command &rest a)
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
           (progn
-            (let
+            (let*
                 ((opt1 (car a))
                  (opt2 (cadr a))
                  (opt3 (caddr a))
@@ -2269,7 +2269,7 @@ PWD is not in a project"
     (defun run-drush-command (command &rest a)
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
           (progn
-            (let
+            (let*
             ((opt1 (car a))
              (opt2 (cadr a))
              (opt3 (caddr a))
