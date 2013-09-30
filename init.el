@@ -2251,33 +2251,33 @@ PWD is not in a project"
                  (opt3 (caddr a))
                  (allopt (concat opt1 " " opt2 " " opt3))
                  (b-name (concat "*drush " command " " allopt "*")))
-                 (if (buffer-live-p b-name)
-                     (switch-to-buffer b-name)
-                   (setq d-buffer (get-buffer-create  b-name))
-                   (with-current-buffer d-buffer
-                     (goto-char (point-min))
-                     (view-mode 1)
-                     (hl-line-mode 1)
-                     (apply 'start-process "drush" (current-buffer)
-                            drupal-drush-program
-                            command
-                            a)
-                     (shrink-window-if-larger-than-buffer))
-                   (switch-to-buffer d-buffer))))
-            (message (concat default-directory " is not a drupal project"))))
+              (if (buffer-live-p b-name)
+                  (switch-to-buffer b-name)
+                (setq d-buffer (get-buffer-create  b-name))
+                (with-current-buffer d-buffer
+                  (goto-char (point-min))
+                  (view-mode 1)
+                  (hl-line-mode 1)
+                  (apply 'start-process "drush" (current-buffer)
+                         drupal-drush-program
+                         command
+                         a)
+                  (shrink-window-if-larger-than-buffer))
+                (switch-to-buffer d-buffer))))
+        (message (concat default-directory " is not a drupal project"))))
 
     (defun run-drush-command (command &rest a)
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
           (progn
             (let*
-            ((opt1 (car a))
-             (opt2 (cadr a))
-             (opt3 (caddr a))
-             (allopt (concat opt1 " " opt2 " " opt3))
-             (output (shell-command-to-string (concat drupal-drush-program
+                ((opt1 (car a))
+                 (opt2 (cadr a))
+                 (opt3 (caddr a))
+                 (allopt (concat opt1 " " opt2 " " opt3))
+                 (output (shell-command-to-string (concat drupal-drush-program
                                                           " " command " "
                                                           allopt))))
-            (message "%s" (propertize output 'face '(:foreground "#dc322f")))))
+              (message "%s" (propertize output 'face '(:foreground "#dc322f")))))
         (message (concat default-directory " is not a drupal project"))))
 
     (defun drush-get-variable (v)
