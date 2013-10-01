@@ -2431,27 +2431,34 @@ PWD is not in a project"
       (create-drush-buffer "up" "-n" "--pipe"))
     (bind-key "C-8 u p" 'drush-up)
 
-    (defun drush-sql-sync ()
-      (interactive)
+    (defun drush-sql-sync (env)
       (create-drush-buffer
-       "-y"
-       "-d"
-       "-v"
        "sql-sync"
-       "@cu.wstage1-education"
-      "@cu.local-education"))
-    (bind-key "C-8 s s" 'drush-sql-sync)
-
-    (defun drush-rsync ()
-      (interactive)
-      (create-drush-buffer
        "-y"
        "-d"
        "-v"
+       cu-drupal-prod-alias
+       cu-drupal-local-alias))
+
+    (defun drush-sql-sync-prod ()
+      (interactive)
+      (drush-sql-sync "prod"))
+    (bind-key "C-8 s p" 'drush-sql-sync-prod)
+
+    (defun drush-rsync (env)
+      (create-drush-buffer
        "rsync"
-       "@cu.wstage1-education:%files/"
-       "@cu.local-education:%files"))
-    (bind-key "C-8 r s" 'drush-rsync)))
+       "-y"
+       "-d"
+       "-v"
+       (concat cu-drupal-prod-alias ":%files/")
+       (concat cu-drupal-local-alias ":%files/")))
+
+    (defun drush-rsync-prod ()
+      (interactive)
+      (drush-rsync "prod"))
+
+    (bind-key "C-8 r s" 'drush-rsync-prod)))
 
 ;;;_ , erc
 
