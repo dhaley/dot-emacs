@@ -2130,8 +2130,12 @@ unless return was pressed outside the comment"
 
     (require 'cl-macs)
     (defun* curr-dir-project-string (site-directory profile-dir-path)
-      "Returns current project as a string, or an error if we can'd deduce project"
-      (let ((dir-test-file (concat site-directory "profiles/" profile-dir-path)))
+      "Returns current project as a string, or an error if we can'd deduce
+project"
+      (let ((dir-test-file (concat
+                            site-directory
+                            "profiles/"
+                            profile-dir-path)))
         (catch 'error
           (if (file-directory-p dir-test-file)
               profile-dir-path
@@ -2186,6 +2190,7 @@ PWD is not in a project"
        cu-drupal-sites-all-directory (concat
                                       cu-drupal-site-directory
                                       "sites/all"))
+      ;; if there's a profile dir
       (if (and cu-drupal-profile-name (file-exists-p (concat
                                                       cu-drupal-site-directory
                                                       "profiles/"
@@ -2225,6 +2230,7 @@ PWD is not in a project"
                                     cu-drupal-sites-all-directory
                                     "/themes")))
 
+      ;; set up the rest of global vars after determining profile parameters
       (setq
        cu-drupal-feature-directory (concat
                                     cu-drupal-module-directory
@@ -2235,22 +2241,22 @@ PWD is not in a project"
        cu-drupal-custom-directory (concat
                                    cu-drupal-module-directory
                                    "/custom")
-       du-drupal-default-directory (concat
+       cu-drupal-default-directory (concat
                                     cu-drupal-site-directory "sites/default")
        cu-drupal-settings-file-name (concat
-                                     du-drupal-default-directory
+                                     cu-drupal-default-directory
                                      "/settings.php")
        cu-drupal-settings-local-file-name (concat
-                                           du-drupal-default-directory
+                                           cu-drupal-default-directory
                                            "/settings.local.php")
        ;; this is for drupal-mode's sake
        drupal-rootdir cu-drupal-site-directory
                                         ; let's set up drush aliases
-       local-alias (concat "@cu.local-" cu-drupal-site-name)
-       dev-alias (concat "@cu.wcustdev1-" cu-drupal-site-name)
-       stage-alias (concat "@cu.wstage1-" cu-drupal-site-name)
-       test-alias (concat "@cu.wcusttest1-" cu-drupal-site-name)
-       prod-alias (concat "@cu.wcust1-" cu-drupal-site-name))
+       cu-drupal-local-alias (concat "@cu.local-" cu-drupal-site-name)
+       cu-drupal-dev-alias (concat "@cu.wcustdev1-" cu-drupal-site-name)
+       cu-drupal-stage-alias (concat "@cu.wstage1-" cu-drupal-site-name)
+       cu-drupal-test-alias (concat "@cu.wcusttest1-" cu-drupal-site-name)
+       cu-drupal-prod-alias (concat "@cu.wcust1-" cu-drupal-site-name))
 
 
 
@@ -2262,7 +2268,7 @@ PWD is not in a project"
       (setenv "8dc" cu-drupal-custom-directory)
       (setenv "8df" cu-drupal-feature-directory)
       (setenv "8db" cu-drupal-contrib-directory)
-      (setenv "8dd" du-drupal-default-directory)
+      (setenv "8dd" cu-drupal-default-directory)
       (setenv "8da" cu-drupal-sites-all-directory)
       (setenv "8dS" cu-drupal-settings-file-name)
       (setenv "8dl" cu-drupal-settings-local-file-name)
@@ -2287,7 +2293,7 @@ PWD is not in a project"
                             (find-file cu-drupal-feature-directory)))
       (bind-key "C-8 d d" (lambda()
                             (interactive)
-                            (find-file du-drupal-default-directory)))
+                            (find-file cu-drupal-default-directory)))
       (bind-key "C-8 d a" (lambda()
                             (interactive)
                             (find-file cu-drupal-sites-all-directory)))
