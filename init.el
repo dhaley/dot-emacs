@@ -2354,14 +2354,13 @@ PWD is not in a project"
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
           (progn
             (let*
-                ((opt1 (car a))
-                 (opt2 (cadr a))
-                 (opt3 (caddr a))
-                 (allopt (concat opt1 " " opt2 " " opt3))
+                ((allopt (mapconcat 'identity a " "))
                  (output (shell-command-to-string (concat drupal-drush-program
                                                           " " command " "
                                                           allopt))))
-              (message "%s" (propertize output 'face '(:foreground "#dc322f")))))
+              (message "%s" (propertize output 'face '(:foreground
+      "#dc322f")))
+              (osx-say output)))
         (message (concat default-directory " is not a drupal project"))))
 
     (defun drush-get-variable (v)
