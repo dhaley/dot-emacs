@@ -2173,26 +2173,29 @@ PWD is not in a project"
       (let* ((project-root-dir (locate-dominating-file default-directory
                                                        "current"))
              (path (split-string project-root-dir "/")))     ; path as list
-        (setq site-name          (car (last (nbutlast path 1)))))
+        (setq cu-drupal-site-name          (car (last (nbutlast path 1)))))
 
       (setq
-       site-directory (file-truename (locate-dominating-file
+       cu-drupal-site-directory (file-truename (locate-dominating-file
                                       default-directory
                                       "includes/bootstrap.inc"))
-       readme-file-name (concat site-directory "README.md")
-       profile-name (curr-dir-project-string site-name)
-       sites-all-directory (concat site-directory "sites/all"))
-      (if (and profile-name (file-exists-p (concat site-directory "profiles/" profile-name)))
+       readme-file-name (concat cu-drupal-site-directory "README.md")
+       profile-name (curr-dir-project-string cu-drupal-site-name)
+       sites-all-directory (concat cu-drupal-site-directory "sites/all"))
+      (if (and profile-name (file-exists-p (concat cu-drupal-site-directory "profiles/" profile-name)))
           (progn
             (setq
-             profile-directory (concat site-directory "profiles/" profile-name)
+             profile-directory (concat cu-drupal-site-directory "profiles/" profile-name)
              module-directory (concat profile-directory "/modules")
              theme-directory (concat profile-directory "/themes")
              profile-theme-directory (concat profile-directory "/themes/"
                                              profile-name))
             (setenv "8dt" profile-theme-directory)
             (bind-key "C-8 d t" (lambda()(interactive)(find-file
-                                                  profile-theme-directory))))
+                                                  profile-theme-directory)))
+
+            (setenv "8dp" profile-directory)
+            (bind-key "C-8 d p" (lambda()(interactive)(find-file profile-directory))))
         (setq
          module-directory (concat sites-all-directory "/modules")
          theme-directory (concat sites-all-directory "/themes")))
@@ -2201,25 +2204,24 @@ PWD is not in a project"
        feature-directory (concat module-directory "/features")
        contrib-directory (concat module-directory "/contrib")
        custom-directory (concat module-directory "/custom")
-       d-default-directory (concat site-directory "sites/default")
+       d-default-directory (concat cu-drupal-site-directory "sites/default")
        settings-file-name (concat d-default-directory "/settings.php")
        settings-local-file-name (concat
                                  d-default-directory
                                  "/settings.local.php")
        uri (concat "ww/" profile-name)
-       drupal-rootdir site-directory
-       local-alias (concat "cu.local-" site-name)
-       dev-alias (concat "cu.wcustdev1-" site-name)
-       stage-alias (concat "cu.wstage1-" site-name)
-       test-alias (concat "cu.wcusttest1-" site-name)
-       prod-alias (concat "cu.wcust1-" site-name))
+       drupal-rootdir cu-drupal-site-directory
+       local-alias (concat "@cu.local-" cu-drupal-site-name)
+       dev-alias (concat "@cu.wcustdev1-" cu-drupal-site-name)
+       stage-alias (concat "@cu.wstage1-" cu-drupal-site-name)
+       test-alias (concat "@cu.wcusttest1-" cu-drupal-site-name)
+       prod-alias (concat "@cu.wcust1-" cu-drupal-site-name))
 
       (bind-key "C-8 d e" `drush-uli-to-string)
 
       (setenv "8dr" readme-file-name)
-      (setenv "8ds" site-directory)
-      (setenv "DRUPAL_ROOT" site-directory)
-      (setenv "8dp" profile-directory)
+      (setenv "8ds" cu-drupal-site-directory)
+      (setenv "DRUPAL_ROOT" cu-drupal-site-directory)
       (setenv "8dT" theme-directory)
       (setenv "8dm" module-directory)
       (setenv "8dc" custom-directory)
@@ -2231,8 +2233,7 @@ PWD is not in a project"
       (setenv "8dl" settings-local-file-name)
 
       (bind-key "C-8 d r" (lambda()(interactive)(find-file readme-file-name)))
-      (bind-key "C-8 d s" (lambda()(interactive)(find-file site-directory)))
-      (bind-key "C-8 d p" (lambda()(interactive)(find-file profile-directory)))
+      (bind-key "C-8 d s" (lambda()(interactive)(find-file cu-drupal-site-directory)))
       (bind-key "C-8 d T" (lambda()(interactive)(find-file theme-directory)))
 
       (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
@@ -2248,7 +2249,7 @@ PWD is not in a project"
       (defun drush-uli-to-string ()
         " Provide dynamically derived uri for drush uli"
         (interactive)
-        (cd site-directory)
+        (cd cu-drupal-site-directory)
         (kill-new (shell-command-to-string (concat "drush --uri=" uri " uli")))))
 
   :config
