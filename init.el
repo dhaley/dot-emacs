@@ -2129,19 +2129,13 @@ unless return was pressed outside the comment"
     ;; (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
 
     (require 'cl-macs)
-    (defun* curr-dir-project-string ()
-      "Returns current project as a string, or the empty string if
-PWD is not in a project"
-      (interactive)
-      (let ((project-root-dir (locate-dominating-file default-directory
-                                                      "current")))
-        (let* ((path (split-string project-root-dir "/"))     ; path as list
-               (profile-dir-path          (car (last (nbutlast path 1)))))
-          (let ((dir-test-file (concat site-directory "profiles/" profile-dir-path)))
-            (catch 'error
-              (if (file-directory-p dir-test-file)
-                  profile-dir-path
-                (curr-dir-project-string2)))))))
+    (defun* curr-dir-project-string (profile-dir-path)
+      "Returns current project as a string, or an error if we can'd deduce project"
+      (let ((dir-test-file (concat site-directory "profiles/" profile-dir-path)))
+        (catch 'error
+          (if (file-directory-p dir-test-file)
+              profile-dir-path
+            (curr-dir-project-string2)))))
 
     (defun curr-dir-project-string2 ()
       "Returns current project as a string, or the empty string if
@@ -2177,30 +2171,31 @@ PWD is not in a project"
       "Sets up project variables "
       (interactive)
       (let* ((project-root-dir (locate-dominating-file default-directory
-                                                      "current"))
+                                                       "current"))
              (path (split-string project-root-dir "/")))     ; path as list
-             (setq site-name          (car (last (nbutlast path 1)))))
+        (setq site-name          (car (last (nbutlast path 1)))))
 
       (setq
        site-directory (file-truename (locate-dominating-file
                                       default-directory
                                       "includes/bootstrap.inc"))
        readme-file-name (concat site-directory "README.md")
-       profile-name (curr-dir-project-string)
-       profile-directory (concat site-directory "profiles/" profile-name)
+       profile-name (curr-dir-project-string site-name)
        sites-all-directory (concat site-directory "sites/all"))
-      (if (file-exists-p profile-directory)
-        (progn (setq
-                module-directory (concat profile-directory "/modules")
-                theme-directory (concat profile-directory "/themes")
-                profile-theme-directory (concat profile-directory "/themes/"
-                                                profile-name))
-               (setenv "8dt" profile-theme-directory)
-               (bind-key "C-8 d t" (lambda()(interactive)(find-file
-                                                     profile-theme-directory))))
-              (setq
-               module-directory (concat sites-all-directory "/modules")
-               theme-directory (concat sites-all-directory "/themes")))
+      (if (and profile-name (file-exists-p (concat site-directory "profiles/" profile-name)))
+          (progn
+            (setq
+             profile-directory (concat site-directory "profiles/" profile-name)
+             module-directory (concat profile-directory "/modules")
+             theme-directory (concat profile-directory "/themes")
+             profile-theme-directory (concat profile-directory "/themes/"
+                                             profile-name))
+            (setenv "8dt" profile-theme-directory)
+            (bind-key "C-8 d t" (lambda()(interactive)(find-file
+                                                  profile-theme-directory))))
+        (setq
+         module-directory (concat sites-all-directory "/modules")
+         theme-directory (concat sites-all-directory "/themes")))
 
       (setq
        feature-directory (concat module-directory "/features")
