@@ -2176,6 +2176,11 @@ PWD is not in a project"
     (defun initialize_cu_drupal ()
       "Sets up project variables "
       (interactive)
+      (let* ((project-root-dir (locate-dominating-file default-directory
+                                                      "current"))
+             (path (split-string project-root-dir "/")))     ; path as list
+             (setq site-name          (car (last (nbutlast path 1)))))
+
       (setq
        site-directory (file-truename (locate-dominating-file
                                       default-directory
@@ -2196,6 +2201,7 @@ PWD is not in a project"
               (setq
                module-directory (concat sites-all-directory "/modules")
                theme-directory (concat sites-all-directory "/themes")))
+
       (setq
        feature-directory (concat module-directory "/features")
        contrib-directory (concat module-directory "/contrib")
@@ -2207,18 +2213,12 @@ PWD is not in a project"
                                  "/settings.local.php")
        uri (concat "ww/" profile-name)
        drupal-rootdir site-directory
-       site-name "education"
        local-alias (concat "cu.local-" site-name)
        dev-alias (concat "cu.wcustdev1-" site-name)
        stage-alias (concat "cu.wstage1-" site-name)
        test-alias (concat "cu.wcusttest1-" site-name)
        prod-alias (concat "cu.wcust1-" site-name))
 
-      (defun drush-uli-to-string ()
-        " Provide dynamically derived uri for drush uli"
-        (interactive)
-        (cd site-directory)
-        (kill-new (shell-command-to-string (concat "drush --uri=" uri " uli"))))
       (bind-key "C-8 d e" `drush-uli-to-string)
 
       (setenv "8dr" readme-file-name)
@@ -2249,7 +2249,13 @@ PWD is not in a project"
       (bind-key "C-8 d l" (lambda()(interactive)(find-file
                                             settings-local-file-name)))
       (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory))))
-    )
+
+      (defun drush-uli-to-string ()
+        " Provide dynamically derived uri for drush uli"
+        (interactive)
+        (cd site-directory)
+        (kill-new (shell-command-to-string (concat "drush --uri=" uri " uli")))))
+
   :config
   (progn
     (require 'smart-dash)
