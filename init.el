@@ -2168,7 +2168,7 @@ PWD is not in a project"
         (message "You are not visiting a drupal project")))
 
     (defun initialize_cu_drupal ()
-      "Sets up project variables "
+      "Sets up local and global project variables "
       (interactive)
       (let* ((project-root-dir (locate-dominating-file default-directory
                                                        "current"))
@@ -2179,17 +2179,17 @@ PWD is not in a project"
        cu-drupal-site-directory (file-truename (locate-dominating-file
                                       default-directory
                                       "includes/bootstrap.inc"))
-       readme-file-name (concat cu-drupal-site-directory "README.md")
-       profile-name (curr-dir-project-string cu-drupal-site-name)
-       sites-all-directory (concat cu-drupal-site-directory "sites/all"))
-      (if (and profile-name (file-exists-p (concat cu-drupal-site-directory "profiles/" profile-name)))
+       cu-drupal-readme-file-name (concat cu-drupal-site-directory "README.md")
+       cu-drupal-profile-name (curr-dir-project-string cu-drupal-site-name)
+       cu-drupal-sites-all-directory (concat cu-drupal-site-directory "sites/all"))
+      (if (and cu-drupal-profile-name (file-exists-p (concat cu-drupal-site-directory "profiles/" cu-drupal-profile-name)))
           (progn
             (setq
-             profile-directory (concat cu-drupal-site-directory "profiles/" profile-name)
+             profile-directory (concat cu-drupal-site-directory "profiles/" cu-drupal-profile-name)
              module-directory (concat profile-directory "/modules")
              theme-directory (concat profile-directory "/themes")
              profile-theme-directory (concat profile-directory "/themes/"
-                                             profile-name))
+                                             cu-drupal-profile-name))
             (setenv "8dt" profile-theme-directory)
             (bind-key "C-8 d t" (lambda()(interactive)(find-file
                                                   profile-theme-directory)))
@@ -2197,8 +2197,8 @@ PWD is not in a project"
             (setenv "8dp" profile-directory)
             (bind-key "C-8 d p" (lambda()(interactive)(find-file profile-directory))))
         (setq
-         module-directory (concat sites-all-directory "/modules")
-         theme-directory (concat sites-all-directory "/themes")))
+         module-directory (concat cu-drupal-sites-all-directory "/modules")
+         theme-directory (concat cu-drupal-sites-all-directory "/themes")))
 
       (setq
        feature-directory (concat module-directory "/features")
@@ -2219,7 +2219,7 @@ PWD is not in a project"
 
       (bind-key "C-8 d e" `drush-uli-to-string)
 
-      (setenv "8dr" readme-file-name)
+      (setenv "8dr" cu-drupal-readme-file-name)
       (setenv "8ds" cu-drupal-site-directory)
       (setenv "DRUPAL_ROOT" cu-drupal-site-directory)
       (setenv "8dT" theme-directory)
@@ -2228,11 +2228,11 @@ PWD is not in a project"
       (setenv "8df" feature-directory)
       (setenv "8db" contrib-directory)
       (setenv "8dd" d-default-directory)
-      (setenv "8da" sites-all-directory)
+      (setenv "8da" cu-drupal-sites-all-directory)
       (setenv "8dS" settings-file-name)
       (setenv "8dl" settings-local-file-name)
 
-      (bind-key "C-8 d r" (lambda()(interactive)(find-file readme-file-name)))
+      (bind-key "C-8 d r" (lambda()(interactive)(find-file cu-drupal-readme-file-name)))
       (bind-key "C-8 d s" (lambda()(interactive)(find-file cu-drupal-site-directory)))
       (bind-key "C-8 d T" (lambda()(interactive)(find-file theme-directory)))
 
@@ -2240,7 +2240,7 @@ PWD is not in a project"
       (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
       (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
       (bind-key "C-8 d d" (lambda()(interactive)(find-file d-default-directory)))
-      (bind-key "C-8 d a" (lambda()(interactive)(find-file sites-all-directory)))
+      (bind-key "C-8 d a" (lambda()(interactive)(find-file cu-drupal-sites-all-directory)))
       (bind-key "C-8 d S" (lambda()(interactive)(find-file settings-file-name)))
       (bind-key "C-8 d l" (lambda()(interactive)(find-file
                                             settings-local-file-name)))
