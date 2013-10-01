@@ -2129,15 +2129,15 @@ unless return was pressed outside the comment"
     ;; (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
 
     (require 'cl-macs)
-    (defun* curr-dir-project-string (profile-dir-path)
+    (defun* curr-dir-project-string (site-directory profile-dir-path)
       "Returns current project as a string, or an error if we can'd deduce project"
       (let ((dir-test-file (concat site-directory "profiles/" profile-dir-path)))
         (catch 'error
           (if (file-directory-p dir-test-file)
               profile-dir-path
-            (curr-dir-project-string2)))))
+            (curr-dir-project-string2 site-directory)))))
 
-    (defun curr-dir-project-string2 ()
+    (defun curr-dir-project-string2 (site-directory)
       "Returns current project as a string, or the empty string if
 PWD is not in a project"
       (let* ((p-dir (directory-file-name (concat site-directory "profiles/")))
@@ -2180,7 +2180,9 @@ PWD is not in a project"
                                       default-directory
                                       "includes/bootstrap.inc"))
        cu-drupal-readme-file-name (concat cu-drupal-site-directory "README.md")
-       cu-drupal-profile-name (curr-dir-project-string cu-drupal-site-name)
+       cu-drupal-profile-name (curr-dir-project-string
+                               cu-drupal-site-directory
+                               cu-drupal-site-name)
        cu-drupal-sites-all-directory (concat cu-drupal-site-directory "sites/all"))
       (if (and cu-drupal-profile-name (file-exists-p (concat cu-drupal-site-directory "profiles/" cu-drupal-profile-name)))
           (progn
