@@ -2339,20 +2339,17 @@ PWD is not in a project"
                  (opt2 (cadr a))
                  (opt3 (caddr a))
                  (allopt (concat opt1 " " opt2 " " opt3))
-                 (b-name (concat "*drush " command " " allopt "*")))
-              (if (buffer-live-p b-name)
-                  (switch-to-buffer b-name)
-                (setq d-buffer (get-buffer-create  b-name))
-                (with-current-buffer d-buffer
-                  (goto-char (point-min))
-                  (view-mode 1)
-                  (hl-line-mode 1)
-                  (apply 'start-process "drush" (current-buffer)
-                         drupal-drush-program
-                         command
-                         a)
-                  (shrink-window-if-larger-than-buffer))
-                (switch-to-buffer d-buffer))))
+                 (d-buffer (get-buffer-create (concat "*drush " command " " allopt "*"))))
+              (with-current-buffer d-buffer
+                (goto-char (point-min))
+                (view-mode 1)
+                (hl-line-mode 1)
+                (apply 'start-process "drush" (current-buffer)
+                       drupal-drush-program
+                       command
+                       a)
+                (shrink-window-if-larger-than-buffer))
+              (switch-to-buffer d-buffer)))
         (message (concat default-directory " is not a drupal project"))))
 
     (defun run-drush-command (command &rest a)
