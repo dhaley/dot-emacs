@@ -2432,33 +2432,62 @@ PWD is not in a project"
     (bind-key "C-8 u p" 'drush-up)
 
     (defun drush-sql-sync (env)
-      (create-drush-buffer
-       "sql-sync"
-       "-y"
-       "-d"
-       "-v"
-       cu-drupal-prod-alias
-       cu-drupal-local-alias))
+      (cond
+       ((equal env "prod")
+        (create-drush-buffer
+         "sql-sync"
+         "-y"
+         "-v"
+         cu-drupal-prod-alias
+         cu-drupal-local-alias))
+       ((equal env "stage")
+        (create-drush-buffer
+         "sql-sync"
+         "-y"
+         "-v"
+         cu-drupal-stage-alias
+         cu-drupal-local-alias))))
 
     (defun drush-sql-sync-prod ()
       (interactive)
       (drush-sql-sync "prod"))
+
     (bind-key "C-8 s p" 'drush-sql-sync-prod)
 
+    (defun drush-sql-sync-stage ()
+      (interactive)
+      (drush-sql-sync "stage"))
+
+    (bind-key "C-8 s s" 'drush-sql-sync-stage)
+
     (defun drush-rsync (env)
-      (create-drush-buffer
-       "rsync"
-       "-y"
-       "-d"
-       "-v"
-       (concat cu-drupal-prod-alias ":%files/")
-       (concat cu-drupal-local-alias ":%files/")))
+      (cond
+       ((equal env "prod")
+        (create-drush-buffer
+         "-y"
+         "-v"
+         "rsync"
+         (concat cu-drupal-prod-alias ":%files/")
+         (concat cu-drupal-local-alias ":%files/")))
+       ((equal env "stage")
+        (create-drush-buffer
+         "-y"
+         "-v"
+         "rsync"
+         (concat cu-drupal-stage-alias ":%files/")
+         (concat cu-drupal-local-alias ":%files/")))))
 
     (defun drush-rsync-prod ()
       (interactive)
       (drush-rsync "prod"))
 
-    (bind-key "C-8 r s" 'drush-rsync-prod)))
+    (bind-key "C-8 r p" 'drush-rsync-prod)
+
+    (defun drush-rsync-stage ()
+      (interactive)
+      (drush-rsync "stage"))
+
+    (bind-key "C-8 r s" 'drush-rsync-stage)))
 
 ;;;_ , erc
 
