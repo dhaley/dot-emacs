@@ -2335,11 +2335,9 @@ PWD is not in a project"
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
           (progn
             (let*
-                ((opt1 (car a))
-                 (opt2 (cadr a))
-                 (opt3 (caddr a))
-                 (allopt (concat opt1 " " opt2 " " opt3))
-                 (d-buffer (get-buffer-create (concat "*drush " command " " allopt "*"))))
+                ((allopt (mapconcat 'identity a " "))
+                 (b-name (concat "*drush " command " " allopt "*"))
+                 (d-buffer (get-buffer-create b-name)))
               (with-current-buffer d-buffer
                 (goto-char (point-min))
                 (view-mode 1)
