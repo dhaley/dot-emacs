@@ -2128,7 +2128,8 @@ unless return was pressed outside the comment"
   (progn
     ;; (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
 
-    (defun curr-dir-project-string ()
+    (require 'cl-macs)
+    (defun* curr-dir-project-string ()
       "Returns current project as a string, or the empty string if
 PWD is not in a project"
       (interactive)
@@ -2137,14 +2138,14 @@ PWD is not in a project"
         (let* ((path (split-string project-root-dir "/"))     ; path as list
                (profile-dir-path          (car (last (nbutlast path 1)))))
           (let ((dir-test-file (concat site-directory "profiles/" profile-dir-path)))
-            (if (file-directory-p dir-test-file)
-                (return profile-dir-path)
-              (curr-dir-project-string2))))))
+            (catch 'error
+              (if (file-directory-p dir-test-file)
+                  profile-dir-path
+                (curr-dir-project-string2)))))))
 
     (defun curr-dir-project-string2 ()
       "Returns current project as a string, or the empty string if
 PWD is not in a project"
-      (interactive)
       (let* ((p-dir (directory-file-name (concat site-directory "profiles/")))
              (dirs '())
              (profiles (directory-files p-dir nil nil t)))
@@ -2153,7 +2154,7 @@ PWD is not in a project"
             (let ((test-file (concat p-dir "/" profile)))
               (if (file-directory-p test-file)
                   (return profile)
-                (throw 'return "No profile")))))))
+                (throw 'error "no profile")))))))
 
     (defun detect-drupal ()
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
