@@ -2177,8 +2177,8 @@ PWD is not in a project"
 
       (setq
        cu-drupal-site-directory (file-truename (locate-dominating-file
-                                      default-directory
-                                      "includes/bootstrap.inc"))
+                                                default-directory
+                                                "includes/bootstrap.inc"))
        cu-drupal-readme-file-name (concat cu-drupal-site-directory "README.md")
        cu-drupal-profile-name (curr-dir-project-string
                                cu-drupal-site-directory
@@ -2187,72 +2187,77 @@ PWD is not in a project"
       (if (and cu-drupal-profile-name (file-exists-p (concat cu-drupal-site-directory "profiles/" cu-drupal-profile-name)))
           (progn
             (setq
-             profile-directory (concat cu-drupal-site-directory "profiles/" cu-drupal-profile-name)
-             module-directory (concat profile-directory "/modules")
-             theme-directory (concat profile-directory "/themes")
-             profile-theme-directory (concat profile-directory "/themes/"
+             cu-drupal-profile-directory (concat cu-drupal-site-directory "profiles/" cu-drupal-profile-name)
+             cu-drupal-module-directory (concat cu-drupal-profile-directory "/modules")
+             cu-drupal-theme-directory (concat cu-drupal-profile-directory "/themes")
+             cu-drupal-profile-theme-directory (concat cu-drupal-profile-directory "/themes/"
                                              cu-drupal-profile-name))
-            (setenv "8dt" profile-theme-directory)
+            (setenv "8dt" cu-drupal-profile-theme-directory)
             (bind-key "C-8 d t" (lambda()(interactive)(find-file
-                                                  profile-theme-directory)))
+                                                  cu-drupal-profile-theme-directory)))
 
-            (setenv "8dp" profile-directory)
-            (bind-key "C-8 d p" (lambda()(interactive)(find-file profile-directory))))
+            (setenv "8dp" cu-drupal-profile-directory)
+            (bind-key "C-8 d p" (lambda()(interactive)(find-file cu-drupal-profile-directory))))
         (setq
-         module-directory (concat cu-drupal-sites-all-directory "/modules")
-         theme-directory (concat cu-drupal-sites-all-directory "/themes")))
+         cu-drupal-module-directory (concat cu-drupal-sites-all-directory "/modules")
+         cu-drupal-theme-directory (concat cu-drupal-sites-all-directory "/themes")))
 
       (setq
-       feature-directory (concat module-directory "/features")
-       contrib-directory (concat module-directory "/contrib")
-       custom-directory (concat module-directory "/custom")
-       d-default-directory (concat cu-drupal-site-directory "sites/default")
-       settings-file-name (concat d-default-directory "/settings.php")
-       settings-local-file-name (concat
-                                 d-default-directory
+       cu-drupal-feature-directory (concat cu-drupal-module-directory "/features")
+       cu-drupal-contrib-directory (concat cu-drupal-module-directory "/contrib")
+       cu-drupal-custom-directory (concat cu-drupal-module-directory "/custom")
+       du-drupal-default-directory (concat cu-drupal-site-directory "sites/default")
+       cu-drupal-settings-file-name (concat du-drupal-default-directory "/settings.php")
+       cu-drupal-settings-local-file-name (concat
+                                 du-drupal-default-directory
                                  "/settings.local.php")
-       uri (concat "ww/" profile-name)
+       ;; this is for drupal-mode's sake
        drupal-rootdir cu-drupal-site-directory
+       ; let's set up drush aliases
        local-alias (concat "@cu.local-" cu-drupal-site-name)
        dev-alias (concat "@cu.wcustdev1-" cu-drupal-site-name)
        stage-alias (concat "@cu.wstage1-" cu-drupal-site-name)
        test-alias (concat "@cu.wcusttest1-" cu-drupal-site-name)
        prod-alias (concat "@cu.wcust1-" cu-drupal-site-name))
 
-      (bind-key "C-8 d e" `drush-uli-to-string)
+
 
       (setenv "8dr" cu-drupal-readme-file-name)
       (setenv "8ds" cu-drupal-site-directory)
       (setenv "DRUPAL_ROOT" cu-drupal-site-directory)
-      (setenv "8dT" theme-directory)
-      (setenv "8dm" module-directory)
-      (setenv "8dc" custom-directory)
-      (setenv "8df" feature-directory)
-      (setenv "8db" contrib-directory)
-      (setenv "8dd" d-default-directory)
+      (setenv "8dT" cu-drupal-theme-directory)
+      (setenv "8dm" cu-drupal-module-directory)
+      (setenv "8dc" cu-drupal-custom-directory)
+      (setenv "8df" cu-drupal-feature-directory)
+      (setenv "8db" cu-drupal-contrib-directory)
+      (setenv "8dd" du-drupal-default-directory)
       (setenv "8da" cu-drupal-sites-all-directory)
-      (setenv "8dS" settings-file-name)
-      (setenv "8dl" settings-local-file-name)
+      (setenv "8dS" cu-drupal-settings-file-name)
+      (setenv "8dl" cu-drupal-settings-local-file-name)
 
       (bind-key "C-8 d r" (lambda()(interactive)(find-file cu-drupal-readme-file-name)))
       (bind-key "C-8 d s" (lambda()(interactive)(find-file cu-drupal-site-directory)))
-      (bind-key "C-8 d T" (lambda()(interactive)(find-file theme-directory)))
+      (bind-key "C-8 d T" (lambda()(interactive)(find-file cu-drupal-theme-directory)))
 
-      (bind-key "C-8 d m" (lambda()(interactive)(find-file module-directory)))
-      (bind-key "C-8 d c" (lambda()(interactive)(find-file custom-directory)))
-      (bind-key "C-8 d f" (lambda()(interactive)(find-file feature-directory)))
-      (bind-key "C-8 d d" (lambda()(interactive)(find-file d-default-directory)))
+      (bind-key "C-8 d m" (lambda()(interactive)(find-file cu-drupal-module-directory)))
+      (bind-key "C-8 d c" (lambda()(interactive)(find-file cu-drupal-custom-directory)))
+      (bind-key "C-8 d f" (lambda()(interactive)(find-file cu-drupal-feature-directory)))
+      (bind-key "C-8 d d" (lambda()(interactive)(find-file du-drupal-default-directory)))
       (bind-key "C-8 d a" (lambda()(interactive)(find-file cu-drupal-sites-all-directory)))
-      (bind-key "C-8 d S" (lambda()(interactive)(find-file settings-file-name)))
+      (bind-key "C-8 d S" (lambda()(interactive)(find-file cu-drupal-settings-file-name)))
       (bind-key "C-8 d l" (lambda()(interactive)(find-file
-                                            settings-local-file-name)))
-      (bind-key "C-8 d b" (lambda()(interactive)(find-file contrib-directory))))
+                                            cu-drupal-settings-local-file-name)))
+      (bind-key "C-8 d b" (lambda()(interactive)(find-file cu-drupal-contrib-directory))))
 
-      (defun drush-uli-to-string ()
-        " Provide dynamically derived uri for drush uli"
-        (interactive)
-        (cd cu-drupal-site-directory)
-        (kill-new (shell-command-to-string (concat "drush --uri=" uri " uli")))))
+    (defun drush-uli-to-string ()
+      " Provide dynamically derived uri for drush uli"
+      (interactive)
+      (cd cu-drupal-site-directory)
+      (let* ((uri (concat "ww/" cu-drupal-site-name))
+        (kill-new (shell-command-to-string (concat "drush --uri=" uri " uli"))))))
+
+    (bind-key "C-8 d e" `drush-uli-to-string)
+)
 
   :config
   (progn
