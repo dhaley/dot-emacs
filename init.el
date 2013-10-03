@@ -2221,7 +2221,17 @@ PWD is not in a project"
     (defun drush-version ()
       (interactive)
       (run-drush-command "--version"))
-    (bind-key "C-8 d v" 'drush-version))
+    (bind-key "C-8 d v" 'drush-version)
+
+    (defun drush-core-status ()
+      (interactive)
+      (create-drush-buffer "core-status"))
+    (bind-key "C-8 c s" 'drush-core-status)
+
+    (defun drush-core-status-debug ()
+      (interactive)
+      (create-drush-buffer "core-status" "--debug"))
+    (bind-key "C-8 c d" 'drush-core-status-debug))
   :config
   (progn
     (require 'smart-dash)
@@ -2273,16 +2283,6 @@ PWD is not in a project"
       (interactive)
       (run-drush-command "dis" "-y" "cu_cache"))
     (bind-key "C-8 d c" 'drush-disable-cu-cache)
-
-    (defun drush-core-status ()
-      (interactive)
-      (create-drush-buffer "core-status"))
-    (bind-key "C-8 c s" 'drush-core-status)
-
-    (defun drush-core-status-debug ()
-      (interactive)
-      (create-drush-buffer "core-status" "--debug"))
-    (bind-key "C-8 c d" 'drush-core-status-debug)
 
     (defun drush-watchdog-show ()
       (interactive)
