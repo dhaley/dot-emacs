@@ -2353,10 +2353,13 @@ PWD is not in a project"
               (switch-to-buffer d-buffer)))
         (message (concat default-directory " is not a drupal project"))))
 
-    (defun drush-sentinel (p e)
-  "Tell me it worked"
-  (when (= 0 (process-exit-status p))
-    (osx-say "it worked")))
+    (defun drush-msg-me (process event)
+      "Tell me it worked"
+      (when (= 0 (process-exit-status process))
+        (end-of-buffer)
+        (osx-say "it worked"))
+      (princ
+       (format "Process: %s had the event `%s'" process event)))
 
     (defun run-drush-command (command &rest a)
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
