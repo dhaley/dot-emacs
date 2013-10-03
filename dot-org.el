@@ -406,7 +406,7 @@ To use this function, add it to `org-agenda-finalize-hook':
   (interactive)
   (switch-to-buffer-other-window "todo.txt")
   (goto-char (point-min))
-  (re-search-forward "^\\* Inbox$")
+  (re-search-forward "^\\* Inbox * :REFILE:$")
   (re-search-forward "^:END:")
   (forward-line)
   (goto-char (line-beginning-position))
