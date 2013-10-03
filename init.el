@@ -1015,6 +1015,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;;_ , easy-kill
 (use-package easy-kill
+  :disabled t
+  :defer t
   :init
    (global-set-key "\M-w" 'easy-kill))
 
