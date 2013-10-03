@@ -2232,7 +2232,6 @@ PWD is not in a project"
                                    drupal-drush-program
                                    command
                                    a)))
-                  (set-process-sentinel proc 'drush-sentinel)
                   (set-process-query-on-exit-flag proc nil))
                 (shrink-window-if-larger-than-buffer))
               (switch-to-buffer d-buffer)))
