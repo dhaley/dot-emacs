@@ -2186,8 +2186,26 @@ PWD is not in a project"
                                                  uri
                                                  " uli"))))))
 
-    (bind-key "C-8 d e" `drush-uli-to-string))
+    (bind-key "C-8 d e" `drush-uli-to-string)
 
+    (defun run-drush-command (command &rest a)
+      (if (or (locate-dominating-file default-directory
+      "includes/bootstrap.inc")
+               (equal command "--version"))
+          (progn
+            (let*
+                ((allopt (mapconcat 'identity a " "))
+                 (output (shell-command-to-string (concat "drush " command " "
+                                                          allopt))))
+              (message "%s" (propertize output 'face '(:foreground
+                                                       "#dc322f")))
+              (osx-say output)))
+        (message (concat default-directory " is not a drupal project"))))
+
+    (defun drush-version ()
+      (interactive)
+      (run-drush-command "--version"))
+    (bind-key "C-8 d v" 'drush-version))
   :config
   (progn
     (require 'smart-dash)
