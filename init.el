@@ -2246,29 +2246,12 @@ PWD is not in a project"
       (princ
        (format "Process: %s had the event `%s'" process event)))
 
-    (defun run-drush-command (command &rest a)
-      (if (locate-dominating-file default-directory "includes/bootstrap.inc")
-          (progn
-            (let*
-                ((allopt (mapconcat 'identity a " "))
-                 (output (shell-command-to-string (concat drupal-drush-program
-                                                          " " command " "
-                                                          allopt))))
-              (message "%s" (propertize output 'face '(:foreground
-      "#dc322f")))
-              (osx-say output)))
-        (message (concat default-directory " is not a drupal project"))))
 
     (defun drush-get-variable (v)
       "prompt for variable and get its value"
       (interactive "sEnter system variable: ")
       (run-drush-command "vget" v))
     (bind-key "C-8 g v" 'drush-get-variable)
-
-    (defun drush-version ()
-      (interactive)
-      (run-drush-command "--version"))
-    (bind-key "C-8 d v" 'drush-version)
 
     (defun drush-cache-clear-all ()
       (interactive)
@@ -3083,7 +3066,7 @@ at the beginning of line, if already there."
 
 
 (use-package geben
-  :commands (geben)
+  :commands (geben my-php-debug)
   :config
     (progn
     ;; Debug a simple PHP script.
