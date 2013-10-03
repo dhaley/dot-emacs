@@ -2158,14 +2158,26 @@ PWD is not in a project"
                 (throw 'error "no profile")))))))
 
     (defun detect-drupal ()
-      (if (locate-dominating-file default-directory "includes/bootstrap.inc")
+      (if (and
+           (locate-dominating-file
+            default-directory
+            "includes/common.inc")
+           (locate-dominating-file
+            default-directory
+            "includes/bootstrap.inc"))
           (progn
             (initialize_cu_drupal)
             (drupal-mode 1))
         (message "You are not visiting a drupal project")))
 
     (defun detect-drupal-dired ()
-      (if (locate-dominating-file default-directory "includes/bootstrap.inc")
+      (if (and
+           (locate-dominating-file
+            default-directory
+            "includes/common.inc")
+           (locate-dominating-file
+            default-directory
+            "includes/bootstrap.inc"))
           (progn
             (defvar cu-drupal-initialized nil)
             (unless cu-drupal-initialized
