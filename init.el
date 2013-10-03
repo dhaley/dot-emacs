@@ -2195,8 +2195,12 @@ PWD is not in a project"
           (progn
             (let*
                 ((allopt (mapconcat 'identity a " "))
-                 (output (shell-command-to-string (concat "drush " command " "
-                                                          allopt))))
+                 (output (shell-command-to-string
+                          (concat
+                           "php /Users/daha1836/src/drush/drush.php "
+                           command
+                           " "
+                           allopt))))
               (message "%s" (propertize output 'face '(:foreground
                                                        "#dc322f")))
               (osx-say output)))
