@@ -2050,6 +2050,7 @@ Require unix zip commandline tool."
 
 (use-package php-mode
   :commands php-mode
+  :mode ("\\.php[s345t]?\\|inc\\|[ip]html$" . php-mode)
   :diminish php-mode
   :config
   (progn
