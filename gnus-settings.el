@@ -168,6 +168,7 @@ Bcc:
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(gnus-emphasis-highlight-words ((t (:background "#073642" :foreground "#b58900" :inverse-video nil :underline nil :slant normal :weight normal))))
+ '(gnus-header-content ((t (:foreground "#657b83" :inverse-video nil :underline nil :slant normal :weight normal))))
  '(gnus-summary-cancelled ((t (:background "#002b36" :foreground "#dc322f" :inverse-video nil :underline nil :slant normal :weight normal))))
  '(gnus-summary-expirable-face ((t (:foreground "#586e75" :strike-through t :slant italic))))
  '(gnus-summary-high-ancient ((t (:inherit gnus-summary-normal-ancient :foreground "#268bd2" :inverse-video nil :underline nil :slant normal :weight bold))))
