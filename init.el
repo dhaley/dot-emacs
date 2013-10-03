@@ -2241,7 +2241,7 @@ PWD is not in a project"
                  (b-name (concat "*drush " command " " allopt "*"))
                  (d-buffer (get-buffer-create b-name)))
               (with-current-buffer d-buffer
-                (goto-char (point-min))
+                (end-of-buffer)
                 (view-mode 1)
                 (hl-line-mode 1)
                 (let ((proc (apply 'start-process "drush" (current-buffer)
@@ -3085,15 +3085,17 @@ at the beginning of line, if already there."
   :commands (geben my-php-debug)
   :config
     (progn
+
     ;; Debug a simple PHP script.
-    ;; Change the session key my-php-53 to any session key text you like
     (defun my-php-debug ()
       "Run current PHP script for debugging with geben"
       (interactive)
       (call-interactively 'geben)
       (shell-command
-       (concat "XDEBUG_CONFIG='idekey=my-php-53' /Applications/MAMP/bin/php/php5.3.20/bin/php "
-               (buffer-file-name) " &")))))
+       (concat
+        "XDEBUG_CONFIG='idekey=my-php-53'  /Applications/MAMP/bin/php/php5.3.20/bin/php "
+               (buffer-file-name) " status" " &")))
+
     ;; geben won't connect because its "Already in debugging"  This might help.
     (defun my-geben-release ()
       (interactive)
@@ -3102,9 +3104,7 @@ at the beginning of line, if already there."
         (ignore-errors
           (geben-session-release session))))
 
-    (use-package my-geben
-       :defer t)))
-
+    (use-package my-geben)))
 
 ;;;_ , highlight-symbol
 (use-package highlight-symbol
