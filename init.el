@@ -2238,8 +2238,8 @@ PWD is not in a project"
           (progn
             (let*
                 ((allopt (mapconcat 'identity a " "))
-                 (b-name (concat "*drush " command " " allopt "*"))
-                 (d-buffer (get-buffer-create b-name)))
+                 (b-name (concat "*drush " command " " allopt "*")))
+              (setq d-buffer (get-buffer-create b-name))
               (with-current-buffer d-buffer
                 (end-of-buffer)
                 (view-mode 1)
@@ -2248,20 +2248,15 @@ PWD is not in a project"
                                    drupal-drush-program
                                    command
                                    a)))
-                  (set-process-query-on-exit-flag proc nil)
-                  (set-process-sentinel proc 'drush-msg-me))
-                (shrink-window-if-larger-than-buffer))
-              (switch-to-buffer d-buffer)))
+                  (set-process-sentinel proc 'drush-msg-me)))))
         (message (concat default-directory " is not a drupal project"))))
 
     (defun drush-msg-me (process event)
       "Tell me it worked"
       (when (= 0 (process-exit-status process))
-        (end-of-buffer)
-        (osx-say "it worked"))
-      (princ
-       (format "Process: %s had the event `%s'" process event)))
-
+        (osx-say "Drush complete")
+        (switch-to-buffer d-buffer)
+        (end-of-buffer)))
 
     (defun drush-get-variable (v)
       "prompt for variable and get its value"
