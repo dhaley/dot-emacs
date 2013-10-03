@@ -2236,7 +2236,8 @@ PWD is not in a project"
                                    drupal-drush-program
                                    command
                                    a)))
-                  (set-process-query-on-exit-flag proc nil))
+                  (set-process-query-on-exit-flag proc nil)
+                  (set-process-sentinel proc 'drush-msg-me))
                 (shrink-window-if-larger-than-buffer))
               (switch-to-buffer d-buffer)))
         (message (concat default-directory " is not a drupal project"))))
