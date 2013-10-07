@@ -5357,7 +5357,27 @@ and view local index.html url"
           (wg-load workgroups-file)))
 
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
-    (bind-key "\\" 'toggle-input-method wg-map)))
+    (bind-key "\\" 'toggle-input-method wg-map)
+
+    (defun wg-create-workgroup-awesome ()
+      "create workgroups using names from awesome button"
+      (interactive)
+      (wg-create-workgroup (get-awesome-button)))
+    (bind-key "C-8 \\" 'wg-create-workgroup-awesome)
+
+    (use-package awesome-button
+      :bind ("H-a" . awesome-button-say)
+      :commands (get-awesome-button awesome-button-say)
+      :init
+      (progn
+        (defun awesome-button-say ()
+          "Say a word for awesome"
+          (interactive)
+          (let
+              ((a-word (get-awesome-button)))
+            (kill-new a-word 't)
+            (osx-say a-word)
+            (message a-word)))))))
 
 ;;;_ , wrap-region
 
@@ -5756,18 +5776,6 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
     (save-excursion
       (let ((case-fold-search nil))
         (replace-pairs-region p1 p2 useMap ) ) ) ) )
-
-(require 'random-quote)
-;; http://blog.makezine.com/2011/04/08/the-awesome-button/
-(defun awesome-button ()
-  " Insert random string from .quotes file"
-  (interactive)
-  (let ((random-quote (pick-random-quote)))
-    (kill-new random-quote 't)
-    (osx-say random-quote)
-    (message random-quote)
-    ))
-(bind-key "H-a" 'awesome-button)
 
 ;; no need to type a space after comma
 (global-set-key (kbd ",") (lambda() (interactive) (insert ", ")))
