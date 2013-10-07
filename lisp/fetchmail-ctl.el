@@ -111,52 +111,17 @@
           (function
            (lambda ()
              (start-fetchmail "*fetchmail*" nil "--idle")))))
-        ;; (fetchmail-lists-buf
-        ;;  (get-buffer-or-call-func
-        ;;   "*fetchmail-lists*"
-        ;;   (function
-        ;;    (lambda ()
-        ;;      (let ((process-environment (copy-alist process-environment)))
-        ;;        (setenv "FETCHMAILHOME" (expand-file-name "~/Messages/Newsdir"))
-        ;;        (start-fetchmail "*fetchmail-lists*" nil
-        ;;                         "-f" (expand-file-name
-        ;;                               "~/Messages/fetchmailrc.lists")))))))
-        ;; (fetchmail-spam-buf
-        ;;  (get-buffer-or-call-func
-        ;;   "*fetchmail-spam*"
-        ;;   (function
-        ;;    (lambda ()
-        ;;      (let ((process-environment (copy-alist process-environment)))
-        ;;        (setenv "FETCHMAILHOME" (expand-file-name "~/Maildir"))
-        ;;        (start-fetchmail "*fetchmail-spam*" t
-        ;;                         "-f" (expand-file-name
-        ;;                               "~/Messages/fetchmailrc.spam")))))))
-        ;; (fetchnews-buf
-        ;;  (get-buffer-or-call-func
-        ;;   "*fetchnews*"
-        ;;   (function
-        ;;    (lambda ()
-        ;;      (start-process "*fetchnews*"
-        ;;                     (get-buffer-create "*fetchnews*")
-        ;;                     (executable-find "fetchnews") "-vvv")))))
         (cur-buf (current-buffer)))
     (delete-other-windows)
     (flet (
            (switch-in-other-buffer
             (buf)
             (when buf
-              (split-window-vertically)
-              (balance-windows)
-              (switch-to-buffer-other-window buf)))
-           )
+              (switch-to-buffer-other-window buf))))
       (switch-to-buffer cur-buf)
       (switch-in-other-buffer fetchmail-buf)
-      ;; (switch-in-other-buffer fetchmail-lists-buf)
-      ;; (switch-in-other-buffer fetchmail-spam-buf)
-      ;; (switch-in-other-buffer fetchnews-buf)
       (select-window (get-buffer-window cur-buf))
-      (balance-windows))
-    ))
+      (balance-windows))))
 
 (add-hook 'gnus-after-exiting-gnus-hook 'shutdown-fetchmail)
 
