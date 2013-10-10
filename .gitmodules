@@ -295,9 +295,6 @@
 [submodule "site-lisp/page-break-lines"]
         path = site-lisp/page-break-lines
         url = https://github.com/purcell/page-break-lines.git
-[submodule "site-lisp/ido-ubiquitous"]
-        path = site-lisp/ido-ubiquitous
-        url = https://github.com/technomancy/ido-ubiquitous.git
 [submodule "site-lisp/timelog-mode"]
         path = site-lisp/timelog-mode
         url = https://github.com/arvidj/timelog-mode.git
@@ -479,5 +476,5 @@
         path = site-lisp/easy-kill
         url = git@github.com:dhaley/easy-kill.git
 [submodule "lisp/org-jira"]
-	path = lisp/org-jira
-	url = git@github.com:dhaley/org-jira.git
+        path = lisp/org-jira
+        url = git@github.com:dhaley/org-jira.git

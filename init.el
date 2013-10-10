@@ -4248,7 +4248,7 @@ and view local index.html url"
 ;;;_ , org-jira
 
 (use-package org-jira
-  :load-path ("~/.emacs.d/site-lisp/org-jira")
+  :load-path ("~/.emacs.d/lisp/org-jira")
   :commands (org-jira-create-issue org-jira-get-issue)
   :bind (
          ("C-8 j G" . org-jira-get-subtasks)
