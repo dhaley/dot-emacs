@@ -2192,11 +2192,15 @@ PWD is not in a project"
       " Provide dynamically derived uri for drush uli"
       (interactive)
       (cd cu-drupal-site-directory)
-      (let* ((uri (concat "ww/" cu-drupal-site-name))
+      (let* ((uri
+              (if (equal cu-drupal-site-name "admissions_undergraduate")
+                  "ww/admissions/undergraduate"
+                (concat "ww/" cu-drupal-site-name)))
              (kill-new (shell-command-to-string (concat
                                                  "drush --uri="
                                                  uri
-                                                 " uli"))))))
+                                                 " uli"))))
+      (message (concat "Visiting " uri))))
 
     (bind-key "C-8 d e" `drush-uli-to-string)
 
@@ -2209,7 +2213,7 @@ PWD is not in a project"
                 ((allopt (mapconcat 'identity a " "))
                  (output (shell-command-to-string
                           (concat
-                           "php /Users/daha1836/src/drush/drush.php "
+                           "drush "
                            command
                            " "
                            allopt))))
@@ -2258,7 +2262,8 @@ PWD is not in a project"
                                    drupal-drush-program
                                    command
                                    a)))
-                  (set-process-sentinel proc 'drush-msg-me)))))
+                  (set-process-sentinel proc 'drush-msg-me)))
+            (message (concat "Starting: drush " command))))
         (message (concat default-directory " is not a drupal project"))))
 
     (defun drush-msg-me (process event)
@@ -2266,7 +2271,12 @@ PWD is not in a project"
       (when (= 0 (process-exit-status process))
         (osx-say "Drush complete")
         (switch-to-buffer d-buffer)
-        (end-of-buffer)))
+        (end-of-buffer)
+        (if (equal (substring (prin1-to-string d-buffer) 16 24) "sql-sync")
+            (progn
+              ;; (drush-disable-cu-cache)
+              (osx-say "Drush sql-sync complete. You might need to disable CU Cache"))
+          (osx-say "Drush complete"))))
 
     (defun drush-get-variable (v)
       "prompt for variable and get its value"
@@ -2467,7 +2477,7 @@ PWD is not in a project"
 
     (defun switch-to-bitlbee ()
       (interactive)
-      (switch-to-buffer-other-window "&bitlbee")
+      (switch-to-buffer "&bitlbee")
       (call-interactively 'erc-channel-names)
       (goto-char (point-max)))
 
@@ -2907,7 +2917,6 @@ at the beginning of line, if already there."
       (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
       (add-hook 'eshell-mode-hook
                 '(lambda ()
-                   ;; (or (getenv "CDPATH") (setenv "CDPATH" ".:~:~/.emacs.d:~/data:~/data/releases"))
                    (make-local-variable 'project-name)
                    (local-set-key "\C-c\C-q" 'eshell-kill-process)
                    (local-set-key "\C-c\C-k" 'compile))))
@@ -5123,7 +5132,40 @@ and view local index.html url"
       (if current-prefix-arg
           (w3m-browse-url url)
         (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
-          (browse-url url)))))
+          (browse-url url))))
+
+    (defun choose-cu-site (env site)
+      "env & URL"
+      (cond
+       ((equal env "prod")
+        (browse-url (concat "http://www.colorado.edu/" site)))
+       ((equal env "stage"))
+      ((equal env "stage")
+       (browse-url (concat "http://www-stage.colorado.edu/" site)))
+      ((equal env "dev")
+       (browse-url (concat "http://www-dev.colorado.edu/" site)))
+      ((equal env "test")
+       (browse-url (concat "http://www-test.colorado.edu/" site)))))
+
+    (defun choose-cu-site-prod (site)
+      (interactive "sSite: ")
+      (choose-cu-site "prod" site))
+    (bind-key "C-8 c p" 'choose-cu-site-prod)
+
+    (defun choose-cu-site-stage (site)
+      (interactive "sSite: ")
+      (choose-cu-site "stage" site))
+    (bind-key "C-8 c s" 'choose-cu-site-stage)
+
+    (defun choose-cu-site-dev (site)
+      (interactive "sSite: ")
+      (choose-cu-site "dev" site))
+    (bind-key "C-8 c d" 'choose-cu-site-dev)
+
+    (defun choose-cu-site-test (site)
+      (interactive "sSite: ")
+      (choose-cu-site "test" site))
+    (bind-key "C-8 c t" 'choose-cu-site-test))
   :config
   ;; (eval-after-load "w3m"
   ;;   '(progn
