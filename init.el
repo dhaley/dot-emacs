@@ -3389,31 +3389,9 @@ at the beginning of line, if already there."
         (switch-to-buffer buffer)
         (set (make-local-variable 'mode-line-format) nil)))
 
-    (bind-key "C-x 5 t" 'ido-switch-buffer-tiny-frame)
+    (bind-key "C-x 5 t" 'ido-switch-buffer-tiny-frame)))
 
-
-    ;; Use ido everywhere
-    (require 'ido-ubiquitous)
-    (ido-ubiquitous-mode 1)
-
-    ;; Fix ido-ubiquitous for newer packages
-    (defmacro ido-ubiquitous-use-new-completing-read (cmd package)
-      `(eval-after-load ,package
-         '(defadvice ,cmd (around ido-ubiquitous-new activate)
-            (let ((ido-ubiquitous-enable-compatibility nil))
-              ad-do-it))))
-
-    (ido-ubiquitous-use-new-completing-read webjump 'webjump)
-    (ido-ubiquitous-use-new-completing-read yas-expand 'yasnippet)
-    (ido-ubiquitous-use-new-completing-read yas-visit-snippet-file 'yasnippet)
-
-    ;; http://emacsrocks.com/e10.html
-    (defadvice ido-imenu (before push-mark activate)
-    (push-mark))
-                                                                              )
-)
-
-
+;;;_ , iedit
 
 (use-package iedit
   :bind ("C-c ;" . iedit-mode)
