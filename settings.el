@@ -473,6 +473,7 @@
  '(helm-source-header ((t (:background "#fdf6e3" :foreground "#586e75" :underline t))))
  '(helm-visible-mark ((t (:background "#d1f5ae"))))
  '(holiday ((t (:background "#fdf6e3"))))
+ '(ido-indicator ((t (:background "#dc322f" :foreground "#b58900" :width condensed))))
  '(iedit-occurrence ((t (:inherit lazy-highlight))) t)
  '(ledger-register-pending-face ((t (:weight bold))) t)
  '(lusty-match-face ((t (:inherit helm-match))) t)
