@@ -5632,7 +5632,7 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;; OS X ls doesn't support --dired
 (setq dired-use-ls-dired nil)
 
-;; (setenv "GPG_AGENT_INFO" "~/.gnupg/S.gpg-agent")
+(setenv "GPG_AGENT_INFO" "~/.gnupg/S.gpg-agent")
 
 ;; (defun offlineimap-get-password (host port)
 ;;   (let* ((netrc (netrc-parse (expand-file-name "~/Documents/.autinfo.gpg")))
