@@ -361,9 +361,6 @@
 [submodule "site-lisp/emacs-color-theme-solarized"]
         path = site-lisp/emacs-color-theme-solarized
         url = https://github.com/sellout/emacs-color-theme-solarized.git
-[submodule "override/org-jira"]
-        path = override/org-jira
-        url = https://github.com/baohaojun/org-jira
 [submodule "site-lisp/artbollocks-mode"]
         path = site-lisp/artbollocks-mode
         url = https://github.com/sachac/artbollocks-mode.git
@@ -430,9 +427,6 @@
 [submodule "site-lisp/navi"]
         path = site-lisp/navi
         url = https://github.com/tj64/navi.git
-[submodule "site-lisp/org-jira"]
-        path = site-lisp/org-jira
-        url = https://github.com/baohaojun/org-jira.git
 [submodule "site-lisp/jira-rest"]
         path = site-lisp/jira-rest
         url = https://github.com/mattdeboard/jira-rest.git
@@ -479,8 +473,8 @@
         path = site-lisp/emacs-drupal-snippets
         url = git@github.com:dhaley/emacs-drupal-snippets.git
 [submodule "site-lisp/applescripts"]
-	path = site-lisp/applescripts
-	url = git@github.com:dhaley/applescripts.git
+        path = site-lisp/applescripts
+        url = git@github.com:dhaley/applescripts.git
 [submodule "site-lisp/easy-kill"]
-	path = site-lisp/easy-kill
-	url = git@github.com:dhaley/easy-kill.git
+        path = site-lisp/easy-kill
+        url = git@github.com:dhaley/easy-kill.git
