@@ -439,6 +439,7 @@
  '(emms-metaplaylist-mode-current-face ((t (:foreground "#dc322f"))) t)
  '(emms-metaplaylist-mode-face ((t (:foreground "#93a1a1"))) t)
  '(emms-stream-url-face ((t (:foreground "#268bd2"))) t)
+ '(emms-playlist-track-face ((t (:foreground "#859900"))))
  '(erb-face ((t (:background nil))) t)
  '(erb-out-delim-face ((t (:inherit erb-exec-delim-face :foreground "#b58900"))) t)
  '(erc-dangerous-host-face ((t (:foreground "#dc322f"))) t)
