@@ -5017,8 +5017,6 @@ and view local index.html url"
   (progn
     (setq w3m-command "/usr/local/bin/w3m")
 
-    (setq w3m-session-file "~/Documents/w3m-session")
-
     (setq w3m-coding-system 'utf-8
           w3m-file-coding-system 'utf-8
           w3m-file-name-coding-system 'utf-8
@@ -5026,35 +5024,9 @@ and view local index.html url"
           w3m-output-coding-system 'utf-8
           w3m-terminal-coding-system 'utf-8)
 
-    (add-hook 'w3m-mode-hook 'w3m-link-numbering-mode)
+    (add-hook 'w3m-mode-hook 'w3m-lnum-mode)
 
     (autoload 'w3m-session-crash-recovery-remove "w3m-session")
-
-    (defvar ivan-w3m-facebook-user
-      "user@facebook.com"
-      "Facebook user name.")
-
-    (defvar ivan-w3m-facebook-password
-      "secret"
-      "Facebook password.")
-
-    (defalias 'fb 'ivan-w3m-open-facebook)
-
-    (defun ivan-w3m-open-facebook ()
-      "Open Facebook."
-      (interactive)
-      (setq w3m-async-exec nil)
-      (w3m-goto-url "http://m.facebook.com?l=en_US")
-      (goto-char (point-min))
-      (ivan-w3m-fill-entry
-       "Email" ivan-w3m-facebook-user 'ivan-w3m-fill-text)
-      (ivan-w3m-fill-entry
-       "Password" ivan-w3m-facebook-password 'ivan-w3m-fill-password)
-      (search-forward "Log In")
-      (left-char 1)
-      (setq w3m-async-exec t)
-      (widget-button-press (point)))
-
 
     (defun show-browser ()
       (interactive)
@@ -5118,12 +5090,12 @@ and view local index.html url"
        ((equal env "prod")
         (browse-url (concat "http://www.colorado.edu/" site)))
        ((equal env "stage"))
-      ((equal env "stage")
-       (browse-url (concat "http://www-stage.colorado.edu/" site)))
-      ((equal env "dev")
-       (browse-url (concat "http://www-dev.colorado.edu/" site)))
-      ((equal env "test")
-       (browse-url (concat "http://www-test.colorado.edu/" site)))))
+       ((equal env "stage")
+        (browse-url (concat "http://www-stage.colorado.edu/" site)))
+       ((equal env "dev")
+        (browse-url (concat "http://www-dev.colorado.edu/" site)))
+       ((equal env "test")
+        (browse-url (concat "http://www-test.colorado.edu/" site)))))
 
     (defun choose-cu-site-prod (site)
       (interactive "sSite: ")
@@ -5145,76 +5117,66 @@ and view local index.html url"
       (choose-cu-site "test" site))
     (bind-key "C-8 c t" 'choose-cu-site-test))
   :config
-  ;; (eval-after-load "w3m"
-  ;;   '(progn
-  ;;      (setq w3m-add-user-agent nil
-  ;;            w3m-default-display-inline-images t
-  ;;            w3m-default-save-directory "~/.emacs.d/.w3m"
-  ;;            w3m-favicon-use-cache-file t
-  ;;            w3m-key-binding (quote info)
-  ;;            w3m-profile-directory "~/.emacs.d/.w3m"
-  ;;            w3m-resize-images t
-  ;;            w3m-cookie-accept-bad-cookies t
-  ;;            w3m-use-cookies nil
-  ;;            w3m-key-binding (quote info)
-  ;;            w3m-display-inline-image t
-  ;;             ;; added my DKH
-  ;;             w3m-home-page "http://www.emacswiki.org/"
-  ;;            w3m-command-arguments
-  ;;            (nconc w3m-command-arguments
+  (progn
 
-  ;;                   '("-o" "http_proxy=http://192.168.0.5:8118"))
-  ;;            w3m-no-proxy-domains '("colorado.edu"
-  ;;            "competitions.colorado.edu" "neighbor.com" "jobsatcu.com"
-  ;;            "identi.ca" "vinylisland.org" "dhaley.org")
-  ;;            )))
+    (setq w3m-form-textarea-use-org-mode-p t)
 
+    ;;            w3m-command-arguments
+    ;;            (nconc w3m-command-arguments
 
-  (let (proxy-host proxy-port)
-    (with-temp-buffer
-      (shell-command "scutil --proxy" (current-buffer))
+    ;;                   '("-o" "http_proxy=http://192.168.0.5:8118"))
+    ;;            w3m-no-proxy-domains '("colorado.edu"
+    ;;            "competitions.colorado.edu" "neighbor.com" "jobsatcu.com"
+    ;;            "identi.ca" "vinylisland.org" "dhaley.org")
+    ;;            )))
 
-      (when (re-search-forward "HTTPPort : \\([0-9]+\\)" nil t)
-        (setq proxy-port (match-string 1)))
-      (when (re-search-forward "HTTPProxy : \\(\\S-+\\)" nil t)
-        (setq proxy-host (match-string 1))))
+    (let (proxy-host proxy-port)
+      (with-temp-buffer
+        (shell-command "scutil --proxy" (current-buffer))
 
-    (if (and proxy-host proxy-port)
-        (setq w3m-command-arguments
-              (nconc w3m-command-arguments
-                     (list "-o" (format "http_proxy=http://%s:%s/"
-                                        proxy-host proxy-port)))))
+        (when (re-search-forward "HTTPPort : \\([0-9]+\\)" nil t)
+          (setq proxy-port (match-string 1)))
+        (when (re-search-forward "HTTPProxy : \\(\\S-+\\)" nil t)
+          (setq proxy-host (match-string 1))))
 
-    (use-package w3m-type-ahead
-      :requires w3m
-      :init
-      (add-hook 'w3m-mode-hook 'w3m-type-ahead-mode))
+      (if (and proxy-host proxy-port)
+          (setq w3m-command-arguments
+                (nconc w3m-command-arguments
+                       (list "-o" (format "http_proxy=http://%s:%s/"
+                                          proxy-host proxy-port)))))
 
-    (add-hook 'w3m-display-hook
-              (lambda (url)
-                (let ((buffer-read-only nil))
-                  (delete-trailing-whitespace))))
+      (use-package w3m-type-ahead
+        :requires w3m
+        :init
+        (add-hook 'w3m-mode-hook 'w3m-type-ahead-mode))
 
-    (defun my-w3m-linknum-follow ()
-      (interactive)
-      (w3m-linknum-follow))
+      (add-hook 'w3m-display-hook
+                (lambda (url)
+                  (let ((buffer-read-only nil))
+                    (delete-trailing-whitespace))))
 
-    (bind-key "k" 'w3m-delete-buffer w3m-mode-map)
-    (bind-key "i" 'w3m-view-previous-page w3m-mode-map)
-    (bind-key "p" 'w3m-previous-anchor w3m-mode-map)
-    (bind-key "n" 'w3m-next-anchor w3m-mode-map)
+      (defun my-w3m-linknum-follow ()
+        (interactive)
+        (w3m-linknum-follow))
 
-    (defun dka-w3m-textarea-hook()
-      (save-excursion
-        (while (re-search-forward "\r\n" nil t)
-          (replace-match "\n" nil nil))
-        (delete-other-windows)))
+      (bind-key "k" 'w3m-delete-buffer w3m-mode-map)
+      (bind-key "i" 'w3m-view-previous-page w3m-mode-map)
+      (bind-key "p" 'w3m-previous-anchor w3m-mode-map)
+      (bind-key "n" 'w3m-next-anchor w3m-mode-map)
 
-    (add-hook 'w3m-form-input-textarea-mode-hook 'dka-w3m-textarea-hook)
+      (defun dka-w3m-textarea-hook()
+        (save-excursion
+          (while (re-search-forward "\r\n" nil t)
+            (replace-match "\n" nil nil))
+          (delete-other-windows)))
 
-    (bind-key "<return>" 'w3m-view-url-with-external-browser
-              w3m-minor-mode-map)
-    (bind-key "S-<return>" 'w3m-safe-view-this-url w3m-minor-mode-map)))
+      (add-hook 'w3m-form-input-textarea-mode-hook 'dka-w3m-textarea-hook)
+
+      (bind-key "<return>" 'w3m-view-url-with-external-browser
+                w3m-minor-mode-map)
+      (bind-key "S-<return>" 'w3m-safe-view-this-url w3m-minor-mode-map)
+
+      )))
 
 ;;;_ , wcount-mode
 
