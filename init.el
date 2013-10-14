@@ -3097,7 +3097,7 @@ at the beginning of line, if already there."
       (call-interactively 'geben)
       (shell-command
        (concat
-        "XDEBUG_CONFIG='idekey=my-php-53'  /Applications/MAMP/bin/php/php5.3.20/bin/php "
+        "XDEBUG_CONFIG='idekey=my-php-53'  /usr/local/bin/php "
                (buffer-file-name) " status" " &")))
 
     ;; geben won't connect because its "Already in debugging"  This might help.
@@ -5154,10 +5154,6 @@ and view local index.html url"
                 (lambda (url)
                   (let ((buffer-read-only nil))
                     (delete-trailing-whitespace))))
-
-      (defun my-w3m-linknum-follow ()
-        (interactive)
-        (w3m-linknum-follow))
 
       (bind-key "k" 'w3m-delete-buffer w3m-mode-map)
       (bind-key "i" 'w3m-view-previous-page w3m-mode-map)
