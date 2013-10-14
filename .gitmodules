@@ -478,3 +478,12 @@
 [submodule "lisp/org-jira"]
         path = lisp/org-jira
         url = git@github.com:dhaley/org-jira.git
+[submodule "site-lisp/helm-spotify"]
+	path = site-lisp/helm-spotify
+	url = https://github.com/krisajenkins/helm-spotify.git
+[submodule "site-lisp/clojure-cheatsheet"]
+	path = site-lisp/clojure-cheatsheet
+	url = https://github.com/krisajenkins/clojure-cheatsheet.git
+[submodule "site-lisp/php-boris"]
+	path = site-lisp/php-boris
+	url = https://github.com/tomterl/php-boris.git
