@@ -79,6 +79,8 @@
 (read-system-environment)
 (add-hook 'after-init-hook 'read-system-environment)
 
+(setenv "GPG_AGENT_INFO" "~/.gnupg/S.gpg-agent")
+
 ;;;_ , Load customization settings
 
 (defvar running-alternate-emacs nil)
@@ -2110,7 +2112,9 @@ unless return was pressed outside the comment"
                  (local-set-key "\r" 'my-php-return)))
 
     (bind-key "C-c C-F" 'php-search-local-documentation)
-    (require 'php-extras)))
+    (require 'php-extras)
+
+    (use-package php-boris)))
 
 ;;;_ , projectile
 
@@ -2271,7 +2275,6 @@ PWD is not in a project"
     (defun drush-msg-me (process event)
       "Tell me it worked"
       (when (= 0 (process-exit-status process))
-        (osx-say "Drush complete")
         (switch-to-buffer d-buffer)
         (end-of-buffer)
         (if (equal (substring (prin1-to-string d-buffer) 16 24) "sql-sync")
@@ -2285,6 +2288,14 @@ PWD is not in a project"
       (interactive "sEnter system variable: ")
       (run-drush-command "vget" v))
     (bind-key "C-8 g v" 'drush-get-variable)
+
+    (defun drush-get-variable (v)
+      "prompt for module and get its info"
+      (interactive "sPlease list the specific module by machine name or leave blank for all: ")
+      (create-drush-buffer "pm-info" v)
+      (run-drush-command "vget" v))
+    (bind-key "C-8 g v" 'drush-get-variable)
+
 
     (defun drush-cache-clear-all ()
       (interactive)
@@ -4129,7 +4140,6 @@ at the beginning of line, if already there."
    (if string string (current-kill 0))))
 
 (add-hook 'term-exec-hook '(lambda ()
-                             (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)
                              (goto-address-mode)
                              (define-key term-raw-map (kbd "C-y") 'my-term-paste)
                              ))
@@ -5592,7 +5602,7 @@ This one changes the cursor color on each blink. Define colors in `blink-cursor-
 ;; OS X ls doesn't support --dired
 (setq dired-use-ls-dired nil)
 
-(setenv "GPG_AGENT_INFO" "~/.gnupg/S.gpg-agent")
+
 
 ;; (defun offlineimap-get-password (host port)
 ;;   (let* ((netrc (netrc-parse (expand-file-name "~/Documents/.autinfo.gpg")))
