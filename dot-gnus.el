@@ -551,7 +551,10 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
     (define-key gnus-summary-mode-map [(control ?c) (control ?o)]
       'gnus-article-browse-urls)
     (define-key gnus-article-mode-map [(control ?c) (control ?o)]
-      'gnus-article-browse-urls)))
+      'gnus-article-browse-urls)
+
+    (define-key gnus-article-mode-map [(control ?c) (control ?g)]
+      'w3m-lnum-goto)))
 
 (define-key gnus-summary-mode-map (kbd ">") 'gnus-summary-show-thread)
 (define-key gnus-summary-mode-map (kbd "<") 'gnus-summary-hide-thread)

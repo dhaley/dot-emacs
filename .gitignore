@@ -34,3 +34,4 @@ logs/
 /#dkh-core.org#
 flycheck-org-clock-save*
 .cask
+*.yas-compiled-snippets.el
