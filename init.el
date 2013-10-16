@@ -2248,6 +2248,7 @@ PWD is not in a project"
     (add-to-list 'yas-extra-modes 'drupal-mode)
 
     (defun create-drush-buffer (command &rest a)
+      "drush scratchpad buffer(s)"
       (if (locate-dominating-file default-directory "includes/bootstrap.inc")
           (progn
             (let*
@@ -2258,12 +2259,13 @@ PWD is not in a project"
                 (end-of-buffer)
                 (view-mode 1)
                 (hl-line-mode 1)
-                (let ((proc (apply 'start-process "drush" (current-buffer)
-                                   drupal-drush-program
-                                   command
-                                   a)))
-                  (set-process-sentinel proc 'drush-msg-me)))
-            (message (concat "Starting: drush " command))))
+                (let ((coding-system-for-read 'raw-text))
+                  (let ((proc (apply 'start-process "drush" (current-buffer)
+                                     drupal-drush-program
+                                     command
+                                     a)))
+                    (set-process-sentinel proc 'drush-msg-me))))
+              (message (concat "Starting: drush " command))))
         (message (concat default-directory " is not a drupal project"))))
 
     (defun drush-msg-me (process event)
@@ -3097,7 +3099,7 @@ at the beginning of line, if already there."
       (call-interactively 'geben)
       (shell-command
        (concat
-        "XDEBUG_CONFIG='idekey=my-php-53'  /usr/local/bin/php "
+        "XDEBUG_CONFIG='idekey=my-php-54'  /usr/local/opt/php54/bin/php "
                (buffer-file-name) " status" " &")))
 
     ;; geben won't connect because its "Already in debugging"  This might help.
