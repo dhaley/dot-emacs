@@ -204,7 +204,7 @@
     ("agreemnets" "agreements" nil 0)
     ("agressive" "aggressive" nil 0)
     ("ahppen" "happen" nil 0)
-    ("ahve" "have" nil 2)
+    ("ahve" "have" nil 3)
     ("allwasy" "always" nil 0)
     ("allwyas" "always" nil 0)
     ("almots" "almost" nil 0)
@@ -274,7 +274,7 @@
     ("bcak" "back" nil 0)
     ("beacause" "because" nil 0)
     ("beacuse" "because" nil 0)
-    ("becasue" "because" nil 0)
+    ("becasue" "because" nil 1)
     ("becaus" "because" nil 0)
     ("becausea" "because a" nil 0)
     ("becauseof" "because of" nil 0)
@@ -514,7 +514,7 @@
     ("emigre" "emigre" nil 0)
     ("enahancements" "enhancements" nil 0)
     ("english" "English" nil 0)
-    ("enought" "enough" nil 0)
+    ("enought" "enough" nil 1)
     ("entree" "entree" nil 0)
     ("equippment" "equipment" nil 0)
     ("equivalant" "equivalent" nil 0)
@@ -695,7 +695,7 @@
     ("jugment" "judgment" nil 0)
     ("knowldge" "knowledge" nil 0)
     ("knowlege" "knowledge" nil 0)
-    ("knwo" "know" nil 0)
+    ("knwo" "know" nil 1)
     ("knwon" "known" nil 0)
     ("knwos" "knows" nil 0)
     ("konw" "know" nil 0)
@@ -798,7 +798,7 @@
     ("orginized" "organized" nil 0)
     ("originial" "original" nil 0)
     ("orignal" "original" nil 0)
-    ("ot" "to" nil 3)
+    ("ot" "to" nil 5)
     ("otehr" "other" nil 1)
     ("otu" "out" nil 0)
     ("outof" "out of" nil 0)
@@ -830,7 +830,7 @@
     ("personell" "personnel" nil 0)
     ("phpcs" "phpcs --standard=Drupal --extensions=php,module,inc,install,test,profile,theme sites/all/modules/custom/cu_users/cu_users.module" nil 0)
     ("pleasent" "pleasant" nil 0)
-    ("plugin" "plug-in" nil 5)
+    ("plugin" "plug-in" nil 6)
     ("poeple" "people" nil 0)
     ("porblem" "problem" nil 0)
     ("porblems" "problems" nil 0)
@@ -880,7 +880,7 @@
     ("reccomendations" "recommendations" nil 0)
     ("reccommend" "recommend" nil 0)
     ("receieve" "receive" nil 0)
-    ("recieve" "receive" nil 0)
+    ("recieve" "receive" nil 1)
     ("recieved" "received" nil 4)
     ("recieving" "receiving" nil 0)
     ("recomend" "recommend" nil 0)
@@ -956,7 +956,7 @@
     ("shesaid" "she said" nil 0)
     ("shineing" "shining" nil 0)
     ("shiped" "shipped" nil 0)
-    ("shoudl" "should" nil 0)
+    ("shoudl" "should" nil 1)
     ("shouldent" "shouldn't" nil 0)
     ("shouldnt" "shouldn't" nil 0)
     ("showinf" "showing" nil 0)
@@ -1098,7 +1098,7 @@
     ("virtualyl" "virtually" nil 0)
     ("vrey" "very" nil 0)
     ("vulnerible" "vulnerable" nil 0)
-    ("waht" "what" nil 0)
+    ("waht" "what" nil 1)
     ("warrent" "warrant" nil 0)
     ("wasnt" "wasn't" nil 0)
     ("watn" "want" nil 0)
@@ -1180,6 +1180,12 @@
 (define-abbrev-table 'image-dired-thumbnail-mode-abbrev-table '())
 
 (define-abbrev-table 'inferior-moz-mode-abbrev-table '())
+
+(define-abbrev-table 'inferior-php-mode-abbrev-table
+  '(
+    ("8e" "\\n\";" nil 0)
+    ("8o" "$output .= \"" nil 0)
+   ))
 
 (define-abbrev-table 'inferior-python-mode-abbrev-table '())
 
@@ -1314,6 +1320,7 @@
   '(
     ("8e" "\\n\";" nil 4)
     ("8o" "$output .= \"" nil 4)
+    ("ex" "extends" nil 0)
    ))
 
 (define-abbrev-table 'pike-mode-abbrev-table
@@ -1867,7 +1874,7 @@
     ("love_hotel" "🏩" nil 0)
     ("love_letter" "💌" nil 0)
     ("maint" "maintenance" nil 1)
-    ("man" "👨" nil 1)
+    ("man" "👨" nil 2)
     ("man_and_woman_holding_hands" "👫" nil 0)
     ("man_with_gua_pi_mao" "👲" nil 0)
     ("man_with_turban" "👳" nil 0)
@@ -2025,3 +2032,4 @@
 (define-abbrev-table 'xmtn-log-edit-mode-abbrev-table '())
 
 (define-abbrev-table 'yaml-mode-abbrev-table '())
+
