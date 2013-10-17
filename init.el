@@ -2314,12 +2314,11 @@ PWD is not in a project"
       (run-drush-command "vget" v))
     (bind-key "C-8 g v" 'drush-get-variable)
 
-    (defun drush-get-variable (v)
+    (defun drush-pm-info (v)
       "prompt for module and get its info"
       (interactive "sPlease list the specific module by machine name or leave blank for all: ")
-      (create-drush-buffer "pm-info" v)
-      (run-drush-command "vget" v))
-    (bind-key "C-8 g v" 'drush-get-variable)
+      (create-drush-buffer "pm-info" v))
+    (bind-key "C-8 p i" 'drush-pm-info)
 
 
     (defun drush-cache-clear-all ()
