@@ -2140,8 +2140,7 @@ unless return was pressed outside the comment"
         (help-setup-xref (list #'describe-function function)
                          (called-interactively-p 'interactive))
         (save-excursion
-          (let
-              ((manual-program "pman"))
+          (let ((manual-program "pman"))
             (man (symbol-name function))))))
     (define-key php-mode-map "\C-hf" 'describe-function-via-pman)))
 
