@@ -3023,11 +3023,6 @@ at the beginning of line, if already there."
   )
 
 
-;;;_ , eudc
-
-(defalias 'eu 'eudc-query-form)
-
-
 ;;;_ , eval-expr
 
 (use-package eval-expr
@@ -3613,65 +3608,6 @@ at the beginning of line, if already there."
             (delete-region account-beg account-end)
             (insert account))
           (forward-line))))))
-
-;;;_ , aliases
-
-(defalias 'acm 'auto-complete-mode)
-(defalias 'ai 'auto-install-from-emacswiki)
-(defalias 'bb  'bbdb)
-(defalias 'bc  'bbdb-create)
-(defalias 'cc 'calc)
-(defalias 'gc 'gnus-summary-catchup-to-here)
-(defalias 'delete-matching-lines 'flush-lines)
-(defalias 'delete-non-matching-lines 'keep-lines)
-(defalias 'dml 'delete-matching-lines)
-(defalias 'dnml 'delete-non-matching-lines)
-(defalias 'dsm 'desktop-save-mode)
-(defalias 'dtw 'delete-trailing-whitespace)
-(defalias 'eb 'eval-buffer)
-(defalias 'ed 'eval-defun)
-(defalias 'egi 'el-get-install)
-(defalias 'eis 'elisp-index-search)
-(defalias 'ele 'eval-last-sexp)
-(defalias 'elm 'emacs-lisp-mode)
-(defalias 'er 'eval-region)
-(defalias 'eu 'eudc-query-form)
-(defalias 'ev 'eval-buffer)
-(defalias 'fb 'flyspell-buffer)
-(defalias 'fd 'find-dired)
-(defalias 'g 'grep)
-(defalias 'gf 'grep-find)
-(defalias 'gwsm 'global-whitespace-mode)
-(defalias 'hm 'html-mode)
-(defalias 'iw 'ispell-word)
-(defalias 'j 'jabber)
-(defalias 'lcd 'list-colors-display)
-(defalias 'lf 'load-file)
-(defalias 'list-matching-lines 'occur)
-(defalias 'll 'load-library)  ;; dynamic, instead of require
-(defalias 'lml 'list-matching-lines)
-(defalias 'man 'woman)
-(defalias 'ntr 'narrow-to-region)
-(defalias 'om 'org-mode)
-(defalias 'pi 'package-install)
-(defalias 'ps 'powershell)
-(defalias 'qrr 'query-replace-regexp)
-(defalias 'r 'list-registers)
-(defalias 'rb 'revert-buffer)
-(defalias 'rn 'wdired-change-to-wdired-mode) ; rename file in dired
-(defalias 'rof 'recentf-open-files)
-(defalias 'rr 'reverse-region)
-(defalias 'rs 'replace-string)
-(defalias 'sbc 'set-background-color)
-(defalias 'sc 'sql-connect)
-(defalias 'sh 'shell)
-(defalias 'sl 'sort-lines)
-(defalias 'ssm 'shell-script-mode)
-(defalias 'td 'toggle-debug-on-error)
-(defalias 'tm 'text-mode)
-(defalias 'vbm 'visual-basic-mode)
-(defalias 'vlm 'visual-line-mode)
-(defalias 'wsm 'whitespace-mode)
 
 ;;;_ , lisp-mode
 
