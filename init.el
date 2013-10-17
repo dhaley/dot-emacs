@@ -2074,10 +2074,7 @@ unless return was pressed outside the comment"
               (goto-char last)
               (if (search-backward "/*" nil t)
                   't
-                'nil
-                )
-              )
-            )
+                'nil)))
       ;; go to last char position
       (goto-char last)
       ;; the point is inside some comment, insert `*'
