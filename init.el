@@ -2114,7 +2114,36 @@ unless return was pressed outside the comment"
     (bind-key "C-c C-F" 'php-search-local-documentation)
     (require 'php-extras)
 
-    (use-package php-boris)))
+    (use-package php-boris)
+
+    ;; pman
+    ;; sudo pear channel-update doc.php.net
+    ;; sudo pear install doc.php.net/pman
+
+    (defun describe-function-via-pman (function)
+      "Display the full documentation of FUNCTION, using pman"
+      (interactive
+       (let (
+             (fn (intern-soft (thing-at-point 'symbol)
+                              obarray))
+             (enable-recursive-minibuffers t)
+             val)
+         (setq val (completing-read (if fn
+                                        (format "Describe function (default %s): " fn)
+                                      "Describe function: ")
+                                    obarray 'fboundp t nil nil
+                                    (and fn (symbol-name fn))))
+         (list (if (equal val "")
+                   fn (intern val)))))
+      (if (null function)
+          (message "You didn't specify a function")
+        (help-setup-xref (list #'describe-function function)
+                         (called-interactively-p 'interactive))
+        (save-excursion
+          (let
+              ((manual-program "pman"))
+            (man (symbol-name function))))))
+    (define-key php-mode-map "\C-hf" 'describe-function-via-pman)))
 
 ;;;_ , projectile
 
