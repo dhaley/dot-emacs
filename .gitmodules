@@ -34,9 +34,6 @@
 [submodule "site-lisp/ace-jump-mode"]
         path = site-lisp/ace-jump-mode
         url = https://github.com/winterTTr/ace-jump-mode.git
-[submodule "site-lisp/anything"]
-        path = site-lisp/anything
-        url = https://github.com/jwiegley/anything-config.git
 [submodule "site-lisp/auctex"]
         path = site-lisp/auctex
         url = https://github.com/jwiegley/auctex.git
@@ -280,15 +277,9 @@
 [submodule "site-lisp/org-camp"]
         path = site-lisp/org-camp
         url = https://github.com/openist/org-camp.git
-[submodule "site-lisp/sauron"]
-        path = site-lisp/sauron
-        url = https://github.com/djcb/sauron.git
 [submodule "site-lisp/ibuffer-git"]
         path = site-lisp/ibuffer-git
         url = https://github.com/jrockway/ibuffer-git.git
-[submodule "site-lisp/eproject"]
-        path = site-lisp/eproject
-        url = https://github.com/jrockway/eproject.git
 [submodule "site-lisp/yasnippet"]
         path = site-lisp/yasnippet
         url = https://github.com/capitaomorte/yasnippet.git
@@ -328,9 +319,6 @@
 [submodule "site-lisp/emacs-window-layout"]
         path = site-lisp/emacs-window-layout
         url = https://github.com/kiwanami/emacs-window-layout.git
-[submodule "site-lisp/tags-view"]
-        path = site-lisp/tags-view
-        url = https://github.com/markhepburn/tags-view.git
 [submodule "site-lisp/fold-this"]
         path = site-lisp/fold-this
         url = https://github.com/magnars/fold-this.el.git
@@ -479,11 +467,17 @@
         path = lisp/org-jira
         url = git@github.com:dhaley/org-jira.git
 [submodule "site-lisp/helm-spotify"]
-	path = site-lisp/helm-spotify
-	url = https://github.com/krisajenkins/helm-spotify.git
+        path = site-lisp/helm-spotify
+        url = https://github.com/krisajenkins/helm-spotify.git
 [submodule "site-lisp/clojure-cheatsheet"]
-	path = site-lisp/clojure-cheatsheet
-	url = https://github.com/krisajenkins/clojure-cheatsheet.git
+        path = site-lisp/clojure-cheatsheet
+        url = https://github.com/krisajenkins/clojure-cheatsheet.git
 [submodule "site-lisp/php-boris"]
-	path = site-lisp/php-boris
-	url = https://github.com/tomterl/php-boris.git
+        path = site-lisp/php-boris
+        url = https://github.com/tomterl/php-boris.git
+[submodule "site-lisp/bdo"]
+        path = site-lisp/bdo
+        url = https://github.com/chrisdone/bdo.git
+[submodule "site-lisp/butler"]
+        path = site-lisp/butler
+        url = https://github.com/AshtonKem/Butler.git
