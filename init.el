@@ -1993,8 +1993,7 @@ PWD is not in a project"
 
   :config
   (progn
-
-  (erc-track-minor-mode 1)
+    (erc-track-minor-mode 1)
     (erc-track-mode 1)
 
     (use-package erc-alert)
@@ -2134,6 +2133,27 @@ FORM => (eval FORM)."
                                 (or reason
                                     "Kicked (kicktroll)"))))
 
+    ;; this is essentially a refactored `erc-cmd-KICK'
+    (defun erc-cmd-REMOVE (target &optional reason-or-nick &rest reasonwords)
+      "Remove a user from the default or specified channel.
+    LINE has the format: \"#CHANNEL NICK REASON\" or \"NICK REASON\"."
+      (let* ((target-channel-p (erc-channel-p target))
+             (channel (if target-channel-p target (erc-default-target)))
+             (nick (if target-channel-p reason-or-nick target))
+             (reason
+              (mapconcat 'identity
+                         (or (if target-channel-p reasonwords
+                               (and reason-or-nick
+                                    (cons reason-or-nick reasonwords)))
+                             `("Requested by" ,(erc-current-nick)))
+                         " "))
+             (server-command (format "REMOVE %s %s :%s" channel nick reason)))
+        (if (not channel)
+            (erc-display-message nil 'error (current-buffer)
+                                 'no-default-channel)
+          (erc-log (format "cmd: REMOVE: %s/%s: %s" channel nick reason))
+          (erc-server-send server-command))))
+
     (defun erc-cmd-UNTRACK (&optional target)
       "Add TARGET to the list of target to be tracked."
       (if target
@@ -2205,9 +2225,6 @@ FORM => (eval FORM)."
     ;; add abbrevs
     (abbrev-table-put erc-mode-abbrev-table :parents (list
                                                       text-mode-abbrev-table))
-    (use-package window-number)
-    (window-number-mode)
-    (window-number-meta-mode)
     (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))))
 
 
