@@ -19,9 +19,6 @@
   `(dolist (mode-hook ,modes)
      (add-hook mode-hook ,func)))
 
-(defun prog-mode-setup ()
-  (run-hooks 'prog-mode-hook))
-
 (defun system-idle-time ()
   (with-temp-buffer
     (call-process "ioreg" nil (current-buffer) nil
@@ -33,7 +30,6 @@
 
 (defun quickping (host)
   (= 0 (call-process "/sbin/ping" nil nil nil "-c1" "-W50" "-q" host)))
-
 
 (defun cleanup-term-log ()
   "Do not show ^M in files containing mixed UNIX and DOS line endings."
@@ -73,8 +69,6 @@
 
 (read-system-environment)
 (add-hook 'after-init-hook 'read-system-environment)
-
-(setenv "GPG_AGENT_INFO" "~/.gnupg/S.gpg-agent")
 
 ;;;_ , Load customization settings
 
@@ -119,9 +113,32 @@
 (put 'narrow-to-region 'disabled nil)   ; Let narrowing work
 (put 'set-goal-column  'disabled nil)
 (put 'upcase-region    'disabled nil)   ; Let upcasing work
-(put 'scroll-left 'disabled nil)
 
-
+;;;_.  Keybindings
+
+;; Main keymaps for personal bindings are:
+;;
+;;   C-x <letter>  primary map (has many defaults too)
+;;   C-c <letter>  secondary map (not just for mode-specific)
+;;   C-. <letter>  tertiary map
+;;
+;;   M-g <letter>  goto map
+;;   M-s <letter>  search map
+;;   M-o <letter>  markup map (even if only temporarily)
+;;
+;;   C-<capital letter>
+;;   M-<capital letter>
+;;
+;;   H-<anything>
+;;   M-H-<anything>
+;;
+;; Single-letter bindings still available:
+;;   C- ,'";:?<>|!#$%^&*`~ <tab>
+;;   M- ?#
+
+;;;_ , global-map
+
+;;;_  . H-?
 
 ;; mac switch meta key
 (defun mac-switch-meta nil
@@ -170,31 +187,6 @@
 
 (bind-key "C-8" 'workgroups-preload-map)
 
-;;;_.  Keybindings
-
-;; Main keymaps for personal bindings are:
-;;
-;;   C-x <letter>  primary map (has many defaults too)
-;;   C-c <letter>  secondary map (not just for mode-specific)
-;;   C-. <letter>  tertiary map
-;;
-;;   M-g <letter>  goto map
-;;   M-s <letter>  search map
-;;   M-o <letter>  markup map (even if only temporarily)
-;;
-;;   C-<capital letter>
-;;   M-<capital letter>
-;;
-;;   H-<anything>
-;;   M-H-<anything>
-;;
-;; Single-letter bindings still available:
-;;   C- ,'";:?<>|!#$%^&*`~ <tab>
-;;   M- ?#
-
-;;;_ , global-map
-
-;;;_  . H-?
 
 (defun double-quote ()
   (interactive)
@@ -2042,6 +2034,10 @@ Require unix zip commandline tool."
   :commands php-mode
   :mode ("\\.php[s345t]?\\|inc\\|[ip]html$" . php-mode)
   :diminish php-mode
+  :init
+  (progn
+    (defun prog-mode-setup ()
+      (run-hooks 'prog-mode-hook)))
   :config
   (progn
     (defun my-php-return ()
