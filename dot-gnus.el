@@ -62,7 +62,7 @@
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 (add-hook 'gnus-group-mode-hook 'hl-line-mode)
 
-(require 'auto-show)
+;; (require 'auto-show)
 (use-package hl-spotlight)
 (use-package centered-cursor-mode)
 (add-hook 'gnus-summary-mode-hook
@@ -371,10 +371,13 @@ is:
 
     (defun gnus-goto-article (message-id)
       (activate-gnus)
-      (gnus-summary-read-group "mail.laima" 15 t)
+
+    (defun gnus-goto-article (message-id)
+      (activate-gnus)
+      (gnus-summary-read-group "INBOX" 15 t)
       (let ((nnir-imap-default-search-key "imap")
-            (nnir-ignored-newsgroups "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")
-        (gnus-summary-refer-article message-id))))
+            (nnir-ignored-newsgroups "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")))
+        (gnus-summary-refer-article message-id)))
 
     (defvar gnus-query-history nil)
 
