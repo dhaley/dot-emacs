@@ -1326,8 +1326,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                     (eq last-command 'my-iflipb-previous-buffer))
                 my-iflipb-ing-internal)))))
 
-
-
 ;;;_ , debbugs
 
 (use-package debbugs-gnu
@@ -1659,111 +1657,6 @@ Require unix zip commandline tool."
 ;;;_ , conf-mode
 (use-package conf-mode
   :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
-
-;;;_ , php-mode
-
-(use-package php-mode
-  :commands php-mode
-  :mode ("\\.php[s345t]?\\|inc\\|[ip]html$" . php-mode)
-  :diminish php-mode
-  :init
-  (progn
-    (defun prog-mode-setup ()
-      (run-hooks 'prog-mode-hook)))
-  :config
-  (progn
-    (defun my-php-return ()
-      "Advanced C-m for PHP doc multiline comments.
-Inserts `*' at the beggining of the new line if
-unless return was pressed outside the comment"
-      (interactive)
-      (setq last (point))
-      (setq is-inside
-            (if (search-backward "*/" nil t)
-                ;; there are some comment endings - search forward
-                (if (search-forward "/*" last t)
-                    't
-                  'nil)
-              ;; it's the only comment - search backward
-              (goto-char last)
-              (if (search-backward "/*" nil t)
-                  't
-                'nil)))
-      ;; go to last char position
-      (goto-char last)
-      ;; the point is inside some comment, insert `*'
-      (if is-inside
-          (progn
-            (insert "\n*")
-            (indent-for-tab-command))
-        ;; else insert only new-line
-        (insert "\n")))
-
-    (defun my-php-indent-or-complete ()
-      (interactive)
-      (let (
-      (call-interactively 'indent-according-to-mode)
-      (call-interactively 'php-complete-function))))
-
-    (defun my-php-mode-hook ()
-      (set (make-local-variable 'yas-fallback-behavior)
-           '(apply my-php-indent-or-complete . nil))
-      (bind-key "<tab>" 'yas-expand-from-trigger-key php-mode-map))
-
-    (add-hook 'php-mode-hook
-              '(lambda ()
-                 (define-abbrev php-mode-abbrev-table "ex" "extends")
-                 (abbrev-mode 1)
-                 (hs-minor-mode 1)
-                 (turn-on-eldoc-mode)
-                 (which-func-mode 1)
-                 (diminish 'hs-minor-mode)
-                 (setq indicate-empty-lines t)
-                 'my-php-mode-hook
-                 (local-set-key "\r" 'my-php-return)))
-
-    (bind-key "C-c C-F" 'php-search-local-documentation)
-    (require 'php-extras)
-
-    (use-package php-boris)
-
-    ;; pman
-    ;; sudo pear channel-update doc.php.net
-    ;; sudo pear install doc.php.net/pman
-
-    (defun describe-function-via-pman (function)
-      "Display the full documentation of FUNCTION, using pman"
-      (interactive
-       (let (
-             (fn (intern-soft (thing-at-point 'symbol)
-                              obarray))
-             (enable-recursive-minibuffers t)
-             val)
-         (setq val (completing-read (if fn
-                                        (format "Describe function (default %s): " fn)
-                                      "Describe function: ")
-                                    obarray 'fboundp t nil nil
-                                    (and fn (symbol-name fn))))
-         (list (if (equal val "")
-                   fn (intern val)))))
-      (if (null function)
-          (message "You didn't specify a function")
-        (help-setup-xref (list #'describe-function function)
-                         (called-interactively-p 'interactive))
-        (save-excursion
-          (let ((manual-program "pman"))
-            (man (symbol-name function))))))
-    (define-key php-mode-map "\C-hf" 'describe-function-via-pman)))
-
-;;;_ , projectile
-
-(use-package projectile
-  :diminish projectile-mode
-  :init
-  (progn
-    (projectile-global-mode)
-
-    (bind-key "C-c j" `projectile-switch-project)))
 
 ;;;_ , drupal-mode
 
@@ -3992,6 +3885,111 @@ and view local index.html url"
 (use-package persistent-scratch
   :if (and window-system (not running-alternate-emacs)
            (not noninteractive)))
+
+;;;_ , php-mode
+
+(use-package php-mode
+  :commands php-mode
+  :mode ("\\.php[s345t]?\\|inc\\|[ip]html$" . php-mode)
+  :diminish php-mode
+  :init
+  (progn
+    (defun prog-mode-setup ()
+      (run-hooks 'prog-mode-hook)))
+  :config
+  (progn
+    (defun my-php-return ()
+      "Advanced C-m for PHP doc multiline comments.
+Inserts `*' at the beggining of the new line if
+unless return was pressed outside the comment"
+      (interactive)
+      (setq last (point))
+      (setq is-inside
+            (if (search-backward "*/" nil t)
+                ;; there are some comment endings - search forward
+                (if (search-forward "/*" last t)
+                    't
+                  'nil)
+              ;; it's the only comment - search backward
+              (goto-char last)
+              (if (search-backward "/*" nil t)
+                  't
+                'nil)))
+      ;; go to last char position
+      (goto-char last)
+      ;; the point is inside some comment, insert `*'
+      (if is-inside
+          (progn
+            (insert "\n*")
+            (indent-for-tab-command))
+        ;; else insert only new-line
+        (insert "\n")))
+
+    (defun my-php-indent-or-complete ()
+      (interactive)
+      (let (
+      (call-interactively 'indent-according-to-mode)
+      (call-interactively 'php-complete-function))))
+
+    (defun my-php-mode-hook ()
+      (set (make-local-variable 'yas-fallback-behavior)
+           '(apply my-php-indent-or-complete . nil))
+      (bind-key "<tab>" 'yas-expand-from-trigger-key php-mode-map))
+
+    (add-hook 'php-mode-hook
+              '(lambda ()
+                 (define-abbrev php-mode-abbrev-table "ex" "extends")
+                 (abbrev-mode 1)
+                 (hs-minor-mode 1)
+                 (turn-on-eldoc-mode)
+                 (which-func-mode 1)
+                 (diminish 'hs-minor-mode)
+                 (setq indicate-empty-lines t)
+                 'my-php-mode-hook
+                 (local-set-key "\r" 'my-php-return)))
+
+    (bind-key "C-c C-F" 'php-search-local-documentation)
+    (require 'php-extras)
+
+    (use-package php-boris)
+
+    ;; pman
+    ;; sudo pear channel-update doc.php.net
+    ;; sudo pear install doc.php.net/pman
+
+    (defun describe-function-via-pman (function)
+      "Display the full documentation of FUNCTION, using pman"
+      (interactive
+       (let (
+             (fn (intern-soft (thing-at-point 'symbol)
+                              obarray))
+             (enable-recursive-minibuffers t)
+             val)
+         (setq val (completing-read (if fn
+                                        (format "Describe function (default %s): " fn)
+                                      "Describe function: ")
+                                    obarray 'fboundp t nil nil
+                                    (and fn (symbol-name fn))))
+         (list (if (equal val "")
+                   fn (intern val)))))
+      (if (null function)
+          (message "You didn't specify a function")
+        (help-setup-xref (list #'describe-function function)
+                         (called-interactively-p 'interactive))
+        (save-excursion
+          (let ((manual-program "pman"))
+            (man (symbol-name function))))))
+    (define-key php-mode-map "\C-hf" 'describe-function-via-pman)))
+
+;;;_ , projectile
+
+(use-package projectile
+  :diminish projectile-mode
+  :init
+  (progn
+    (projectile-global-mode)
+
+    (bind-key "C-c j" `projectile-switch-project)))
 
 ;;;_ , popup-ruler
 
