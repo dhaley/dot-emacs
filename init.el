@@ -796,29 +796,7 @@ Including indent-buffer, which should not be called automatically on save."
         ("marmalade"   . "http://marmalade-repo.org/packages/")))
 (package-initialize)
 
-
-;;;_ , el-get
-
-(use-package el-get
-  :disabled t
-  :commands (el-get
-             el-get-install
-             el-get-update
-             el-get-list-packages)
-  :init
-  (defvar el-get-sources nil)
-
-  :config
-    (progn
-    (defun el-get-read-status-file ()
-      (mapcar #'(lambda (entry)
-                  (cons (plist-get entry :symbol)
-                        `(status "installed" recipe ,entry)))
-              el-get-sources))
-
-  (defalias 'el-get-init 'ignore
-    "Don't use el-get for making packages available for use.")))
-
+;;;_. Packages
 
 ;;;_ , abbrev
 
@@ -830,22 +808,13 @@ Including indent-buffer, which should not be called automatically on save."
 
   :config
   (progn
-    (if (file-exists-p abbrev-file-name)
-        (quietly-read-abbrev-file))
+   (if (file-exists-p abbrev-file-name)
+       (quietly-read-abbrev-file))
 
-
-
-    (defun reload-abbrevs () "\
-reload abbrevs."
-      (interactive "")
-      (kill-all-abbrevs)
-      (read-abbrev-file abbrev-file-name)
-      )
-
-    (add-hook 'expand-load-hook
-              (lambda ()
-                (add-hook 'expand-expand-hook 'indent-according-to-mode)
-                (add-hook 'expand-jump-hook 'indent-according-to-mode)))))
+   (add-hook 'expand-load-hook
+             (lambda ()
+               (add-hook 'expand-expand-hook 'indent-according-to-mode)
+               (add-hook 'expand-jump-hook 'indent-according-to-mode)))))
 
 ;;;_ , ace-jump-mode
 
@@ -884,7 +853,6 @@ reload abbrevs."
           (unbind-key "C-k" allout-mode-map)))
 
     (add-hook 'allout-mode-hook 'my-allout-mode-hook)))
-
 
 ;;;_ , archive-region
 
@@ -1140,10 +1108,9 @@ reload abbrevs."
 
     (defun basecamp-showprojects ()
       (interactive)
-      (find-file-other-window "~/org/projects.org"))
-    ))
+      (find-file-other-window "~/org/projects.org"))))
 
-;;;_ , bbdbq
+;;;_ , bbdb
 
 (use-package bbdb-com
   :commands bbdb-create
@@ -1188,19 +1155,6 @@ reload abbrevs."
 
 (use-package browse-kill-ring+)
 
-;; make hippie expand behave itself
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                         try-expand-dabbrev-all-buffers
-                                         try-expand-dabbrev-from-kill
-                                         try-complete-file-name-partially
-                                         try-complete-file-name
-                                         try-expand-all-abbrevs
-                                         try-expand-list
-                                         try-expand-line
-                                         try-complete-lisp-symbol-partially
-                                         try-complete-lisp-symbol))
-
-
 (use-package buffer-move
   :bind (
          ("<C-S-up>"    . buf-move-up)
@@ -1211,8 +1165,7 @@ reload abbrevs."
 (use-package caffeine
     :commands (caffeine-toggle)
     :config
-    (caffeine-mode)
-)
+    (caffeine-mode))
 
 ;;;; calfw
 (use-package calfw
@@ -1239,7 +1192,6 @@ reload abbrevs."
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'"         . cmake-mode)))
-
 
 (use-package crontab-mode
   :mode ("\\.?cron\\(tab\\)?\\'" . crontab-mode))
@@ -1291,7 +1243,6 @@ reload abbrevs."
 (use-package crosshairs
   :bind ("M-o c" . crosshairs-mode))
 
-
 (use-package csv-mode
   :commands csv-mode
   :mode ("\\.[Cc][Ss][Vv]\\'" . csv-mode)
@@ -1301,8 +1252,7 @@ reload abbrevs."
               '(lambda ()
                  (whitespace-mode 1)
                  (orgtbl-mode 1)
-                 (stripe-buffer-mode 1)
-))))
+                 (stripe-buffer-mode 1)))))
 
 ;;;_ , css-mode
 (use-package css-mode
@@ -1321,136 +1271,13 @@ reload abbrevs."
 
 (use-package ibuffer
   :defer t
-  :bind ("C-x C-b" . ibuffer)
+  :init
+  (add-hook 'ibuffer-mode-hook
+            #'(lambda ()
+                (ibuffer-switch-to-saved-filter-groups "default")))
   :config
   (progn
-    (use-package ibuffer-git)
-    (define-ibuffer-column size-h
-      (:name "Size" :inline t)
-      (cond
-       ((> (buffer-size) 1000)
-        (format "%7.1fk" (/ (buffer-size) 1000.0)))
-       ((> (buffer-size) 1000000)
-        (format "%7.1fM" (/ (buffer-size) 1000000.0)))
-       (t
-        (format "%8d" (buffer-size)))))
-
-    (setq
-     ibuffer-default-sorting-mode 'filename/process
-     ibuffer-eliding-string "…"
-     ibuffer-compile-formats t
-     ibuffer-formats '((mark modified read-only
-                             " " (name 25 25 :left :elide)
-                             " " (size-h 9 -1 :right)
-                             " " (mode 7 7 :left :elide)
-                             " " (git-status 8 8 :left)
-                             " " filename-and-process)
-                       (mark " " (name 16 -1) " " filename))
-     ibuffer-show-empty-filter-groups nil
-     ibuffer-saved-filter-groups
-     (quote (("default"
-              ("emacs Lisp" (mode . emacs-lisp-mode))
-              ("python" (mode . python-mode))
-              ("ruby" (mode . ruby-mode))
-              ("coffee-script" (mode . coffee-mode))
-              ("java-script" (or
-                              (mode . js-mode)
-                              (mode . js2-mode)))
-              ("action-script" (mode . actionscript-mode))
-              ("java" (mode . java-mode))
-              ("html" (or
-                       (mode . html-mode)
-                       (mode . web-mode)
-                       (mode . haml-mode)))
-              ("xml" (mode . nxml-mode))
-              ("css preprocessor" (or
-                                   (mode . scss-mode)
-                                   (mode . sass-mode)
-                                   (mode . stylus-mode)))
-              ("css" (mode . css-mode))
-              ("org agenda" (mode . org-agenda-mode))
-              ("org" (or
-                      (mode . org-mode)
-                      (name . "^\\*Calendar\\*$")
-                      (name . "^diary$")))
-              ("text misc" (or
-                            (mode . text-mode)
-                            (mode . rst-mode)
-                            (mode . markdown-mode)))
-              ("w3m" (mode . w3m-mode))
-              ("git" (or
-                      (mode . magit-log-edit-mode)
-                      (mode . magit-log)))
-              ("dired" (mode . dired-mode))
-              ("help" (or
-                       (mode . Info-mode)
-                       (mode . help-mode)
-                       (mode . Man-mode)
-                       (mode . apropos-mode)
-                       (mode . woman-mode)))
-              ("*kite*" (name . "^\\*kite.*\\*"))
-              ("*helm*" (name . "^\\*helm.*\\*"))
-              ("*buffer*" (name . "\\*.*\\*"))
-              ("ssh"
-               (or
-                (name . "\\*tramp")
-                (name . "^\\*debug tramp")
-                ))
-              ("emacs"
-               (or
-                (mode . occur-mode)
-                (mode . bookmark-bmenu-mode)
-                (mode . help-mode)
-                (name . "^\\*scratch\\*$")
-                (name . "^\\*Messages\\*$")
-
-                (name . "^\\*Compile-Log\\*$")
-                (name . "^\\*Backtrace\\*$")
-                (name . "^\\*info\\*$")
-                (name . "^\\*Occur\\*$")
-                (name . "^\\*grep\\*$")
-                (name . "^\\*Process List\\*$")
-                (name . "^\\*gud\\*$")
-                (name . "^\\*compilation\\*$")
-                (name . "^\\*Kill Ring\\*$")
-                ))
-              ("latex" (or (mode . latex-mode)
-                           (mode . LaTeX-mode)
-                           (mode . bibtex-mode)
-                           (mode . reftex-mode)))
-              ("irc"
-               (or
-                (mode . garak-mode)
-                (name . "^\\*Garak\\*$")
-                (mode . erc-mode)
-                (mode . twittering-mode)
-                (name . "^\\*scratch\\* (irc)$")
-                ))
-              ("gnus" (or
-                       (mode . message-mode)
-                       (mode . bbdb-mode)
-                       (mode . mail-mode)
-                       (mode . gnus-group-mode)
-                       (mode . gnus-summary-mode)
-                       (mode . gnus-article-mode)
-                       (name . "^\\.bbdb$")
-                       (name . "^\\*fetchmail\\*$")
-                       (name . "^\\.newsrc-dribble")
-                       (name . "^\\*gnus trace\\*$")
-                       (name . "^\\*scratch\\* (gnus)$")
-                       ))
-              ("Magit" (name . "\*magit"))
-              ))))
-
-
-    ;; (require 'ibuffer-ext)
-    ;; (add-to-list 'ibuffer-never-show-predicates "^\\*")
-
-    (add-hook 'ibuffer-mode-hook
-              #'(lambda ()
-                  (ibuffer-switch-to-saved-filter-groups "default")))))
-
-
+    (use-package ibuffer-git)))
 
 ;;;_ , iflipb
 
