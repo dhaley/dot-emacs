@@ -479,11 +479,6 @@
 
 (bind-key "C-c k" 'keep-lines)
 
-
-
-
-
-
 (eval-when-compile
   (defvar emacs-min-top)
   (defvar emacs-min-left)
@@ -514,8 +509,7 @@
   (set-frame-parameter (selected-frame) 'width emacs-min-width)
 
   (when running-alternate-emacs
-        ;; (set-background-color "grey85")
-        (set-face-background 'fringe "gray80")))
+        (set-face-background 'fringe "#073642")))
 
 (if window-system
     (add-hook 'after-init-hook 'emacs-min))
@@ -553,26 +547,6 @@
   (interactive)
   (insert (format-time-string "%Y-%m-%d")))
 
-(defun define-keys (mode-map keybindings)
-  "Takes a mode map, and a list of (key function-designator)
-lists.  The functions are bound to the keys in the given mode-map.
-Keys are in kbd format."
-  (mapc (lambda (keybinding)
-          (destructuring-bind (key function) keybinding
-            (define-key mode-map (read-kbd-macro key) function)))
-        keybindings))
-
-(defun global-set-keys (keybindings)
-  "Takes a list of (key function-designator) lists.
-The functions are globally bound to the keys.  Keys
-are in kbd format."
-  (mapc (lambda (keybinding)
-          (destructuring-bind (key function) keybinding
-            (global-set-key (read-kbd-macro key) function)))
-        keybindings))
-
-
-
 (defcustom user-initials nil
   "*Initials of this user."
   :set
@@ -588,7 +562,6 @@ are in kbd format."
       (set symbol value))
   :type 'string
   :group 'mail)
-
 
 (defun insert-user-timestamp ()
   "Insert a quick timestamp using the value of `user-initials'."
