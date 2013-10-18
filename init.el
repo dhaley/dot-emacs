@@ -104,6 +104,56 @@
 
   (load (expand-file-name "settings" user-emacs-directory)))
 
+;; mac switch meta key
+(defun mac-switch-meta nil
+  "switch meta between Option and Command"
+  (interactive)
+  (if (eq mac-option-modifier nil)
+      (progn
+        (setq mac-option-modifier 'meta)
+        (setq mac-command-modifier 'hyper)
+        )
+    (progn
+      (setq mac-option-modifier nil)
+      (setq mac-command-modifier 'meta))))
+
+(mac-switch-meta)
+(setq mac-function-modifier 'hyper)
+
+(defvar mac-fullscreen-on  nil
+  "keep a track of mac-mouse-turn-o(n|ff)-fullscreen, assumes fullscreen is not on")
+
+(defun mac-toggle-fullscreen ()
+  "toggle fullscreen mode in Emacs mac (by Yamamoto Mitsuharu)"
+  (interactive)
+  ;; check we are in the emacs mac build
+  ; (when (functionp 'mac-process-hi-command)
+  (if (eq mac-fullscreen-on t)
+      (progn
+        (mac-mouse-turn-off-fullscreen t)
+        (setq mac-fullscreen-on nil))
+    (progn
+      (mac-mouse-turn-on-fullscreen t)
+      (setq mac-fullscreen-on t))))
+
+(when (and (window-system) (fboundp 'mac-mouse-turn-on-fullscreen))
+   (bind-key "C-H-f" 'mac-toggle-fullscreen))
+
+(defun double-quote ()
+  (interactive)
+  (if (use-region-p)
+      (save-excursion
+        (let ((beginning (region-beginning))
+              (end (+ (region-end) 1)))
+          (goto-char beginning)
+          (insert "“")
+          (goto-char end)
+          (insert "”")))
+    (insert "“”")
+    (backward-char)))
+
+(bind-key "C-c \"" 'double-quote)
+
 ;;;_ , Enable disabled commands
 
 (put 'downcase-region  'disabled nil)   ; Let downcasing work
@@ -140,41 +190,6 @@
 
 ;;;_  . H-?
 
-;; mac switch meta key
-(defun mac-switch-meta nil
-  "switch meta between Option and Command"
-  (interactive)
-  (if (eq mac-option-modifier nil)
-      (progn
-        (setq mac-option-modifier 'meta)
-        (setq mac-command-modifier 'hyper)
-        )
-    (progn
-      (setq mac-option-modifier nil)
-      (setq mac-command-modifier 'meta))))
-
-(mac-switch-meta)
-(setq mac-function-modifier 'hyper)
-
-(defvar mac-fullscreen-on  nil
-  "keep a track of mac-mouse-turn-o(n|ff)-fullscreen, assumes fullscreen is not on")
-
-(defun mac-toggle-fullscreen ()
-  "toggle fullscreen mode in Emacs mac (by Yamamoto Mitsuharu)"
-  (interactive)
-  ;; check we are in the emacs mac build
-  ; (when (functionp 'mac-process-hi-command)
-  (if (eq mac-fullscreen-on t)
-      (progn
-        (mac-mouse-turn-off-fullscreen t)
-        (setq mac-fullscreen-on nil))
-    (progn
-      (mac-mouse-turn-on-fullscreen t)
-      (setq mac-fullscreen-on t))))
-
-(when (and (window-system) (fboundp 'mac-mouse-turn-on-fullscreen))
-   (bind-key "C-H-f" 'mac-toggle-fullscreen))
-
 ;;;_ , Enable C-8 prefix
 
 (defvar workgroups-preload-map)
@@ -182,27 +197,11 @@
 
 (bind-key "C-8" 'workgroups-preload-map)
 
-(defun double-quote ()
-  (interactive)
-  (if (use-region-p)
-      (save-excursion
-        (let ((beginning (region-beginning))
-              (end (+ (region-end) 1)))
-          (goto-char beginning)
-          (insert "“")
-          (goto-char end)
-          (insert "”")))
-    (insert "“”")
-    (backward-char)))
-
-(bind-key "C-c \"" 'double-quote)
-
 (bind-key "<H-down>" 'shrink-window)
 (bind-key "<H-left>" 'shrink-window-horizontally)
 (bind-key "<H-right>" 'enlarge-window-horizontally)
 (bind-key "<H-up>" 'enlarge-window)
 (bind-key "H-`" 'new-frame)
-
 
 ;;;_  . C-?
 
@@ -5581,7 +5580,6 @@ point reaches the beginning or end of the buffer, stop there."
          (?G (file . "~/.emacs.d/gnus-settings.el"))
          ))
   (set-register (car r) (cadr r)))
-
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
