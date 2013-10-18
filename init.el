@@ -19,13 +19,8 @@
   `(dolist (mode-hook ,modes)
      (add-hook mode-hook ,func)))
 
-
-;; (defvar prog-mode-hook nil)
-
 (defun prog-mode-setup ()
   (run-hooks 'prog-mode-hook))
-
-;; (add-hook 'php-mode-hook 'prog-mode-setup)
 
 (defun system-idle-time ()
   (with-temp-buffer
@@ -143,13 +138,8 @@
       )
     )
   )
+
 (mac-switch-meta)
-
-;; you can also bind the Function-key to Hyper.  Without losing the ability to
-;; change the volume or pause/play - those will still work.
-
-                                        ;(setq mac-command-modifier 'meta)
-                                        ;(setq mac-option-modifier 'super)
 (setq mac-function-modifier 'hyper)
 
 (defvar mac-fullscreen-on  nil
@@ -169,9 +159,7 @@
       (setq mac-fullscreen-on t))))
 
 (when (and (window-system) (fboundp 'mac-mouse-turn-on-fullscreen))
-  ;; (global-set-key (kbd "<M-s-return>") 'mac-toggle-fullscreen)
-   (bind-key "C-H-f" 'mac-toggle-fullscreen)
-)
+   (bind-key "C-H-f" 'mac-toggle-fullscreen))
 
 
 
@@ -1017,8 +1005,6 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;;_ , easy-kill
 (use-package easy-kill
-  :disabled t
-  :defer t
   :init
    (global-set-key "\M-w" 'easy-kill))
 
