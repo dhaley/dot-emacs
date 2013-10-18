@@ -4011,7 +4011,25 @@ unless return was pressed outside the comment"
   (progn
     (projectile-global-mode)
 
-    (bind-key "C-c j" `projectile-switch-project)))
+    (bind-key "C-c j" `projectile-switch-project)
+
+  (defun define-keys (mode-map keybindings)
+    "Takes a mode map, and a list of (key function-designator)
+lists.  The functions are bound to the keys in the given mode-map.
+Keys are in kbd format."
+    (mapc (lambda (keybinding)
+            (destructuring-bind (key function) keybinding
+              (define-key mode-map (read-kbd-macro key) function)))
+          keybindings))
+
+  (defun global-set-keys (keybindings)
+    "Takes a list of (key function-designator) lists.
+The functions are globally bound to the keys.  Keys
+are in kbd format."
+    (mapc (lambda (keybinding)
+            (destructuring-bind (key function) keybinding
+              (global-set-key (read-kbd-macro key) function)))
+          keybindings))))
 
 ;;;_ , popup-ruler
 
@@ -4604,12 +4622,6 @@ unless return was pressed outside the comment"
 
   :config
   (setq vkill-show-all-processes t))
-
-(use-package rgr-web
-  :if (not running-alternate-emacs)
-  ;; :load-path "~/.emacs.d/lisp/"
-  :bind (("<f4>" . rgr/browse-url)
-         ))
 
 ;;;_ , w3m
 
