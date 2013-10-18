@@ -623,14 +623,12 @@
 (bind-key "C-c =" 'count-matches)
 (bind-key "C-c ;" 'comment-or-uncomment-region)
 
-
 (defun wph-here()
   "Inserts the filename and line number at the current point"
   (interactive)
   (insert buffer-file-name)
   (insert ":")
-  (insert (number-to-string (count-lines (point-min) (point))))
-  )
+  (insert (number-to-string (count-lines (point-min) (point)))))
 
 (global-set-key "\C-c\C-h" 'wph-here)
 
@@ -668,10 +666,14 @@
 
 (bind-key "C-c M-q" 'unfill-paragraph)
 
-;; Set path to .emacs.d
-(setq dotfiles-dir (file-name-directory
-                    (or (buffer-file-name) load-file-name)))
-
+(defun unfill-region (beg end)
+  (interactive "r")
+  (setq end (copy-marker end))
+  (save-excursion
+    (goto-char beg)
+    (while (< (point) end)
+      (unfill-paragraph 1)
+      (forward-paragraph))))
 
 ;;;_ , ctl-period-map
 
@@ -770,78 +772,6 @@
 (bind-key "C-h e v" 'find-variable)
 (bind-key "C-h e V" 'apropos-value)
 
-
-
-(defun select-text-in-quote ()
-  "Select text between the nearest left and right delimiters.
-Delimiters are paired characters:
- () [] {} «» ‹› “” 〖〗 【】 「」 『』 （） 〈〉 《》 〔〕 ⦗⦘ 〘〙 ⦅⦆ 〚〛 ⦃⦄
- For practical purposes, also: \"\", but not single quotes."
-  (interactive)
-  (let (p1)
-    (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
-    (setq p1 (point))
-    (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙⦆〛⦄\"")
-    (set-mark p1)
-    )
-  )
-
-(global-set-key (kbd "H-*") 'select-text-in-quote)
-
-
-;; **********
-;; re-buidler
-;; **********
-(defun reb-query-replace-this-regxp (replace)
-  "Uses the regexp built with re-builder to query the target buffer.
-This function must be run from within the re-builder buffer, not the target
-buffer.
-
-Argument REPLACE String used to replace the matched strings in the buffer.
-Subexpression references can be used (\1, \2, etc)."
-  (interactive "sReplace with: ")
-  (if (eq major-mode 'reb-mode)
-      (let ((reg (reb-read-regexp)))
-        (select-window reb-target-window)
-        (save-excursion
-          (beginning-of-buffer)
-          (query-replace-regexp reg replace)))
-    (message "Not in a re-builder buffer!")))
-
-(defun make-elisp-header ()
-  (interactive)
-  (save-excursion
-    (beginning-of-line)
-    (let ((use-semicolons (looking-at ";"))
-          (count (- (save-excursion (end-of-line) (point)) (point))))
-      (open-line 1)
-      (if use-semicolons
-          (insert ";; " (make-string (- count 3) ?\*))
-        (insert (make-string count ?\*)))
-      (forward-line 2)
-      (beginning-of-line)
-      (open-line 1)
-      (if use-semicolons
-          (insert ";; " (make-string (- count 3) ?\*))
-        (insert (make-string count ?\*))))))
-
-
-(defun untabify-buffer ()
-  (interactive)
-  (untabify (point-min) (point-max)))
-
-(defun clean-up-buffer-or-region ()
-  "Untabifies, indents and deletes trailing whitespace from buffer or region."
-  (interactive)
-  (save-excursion
-    (unless (region-active-p)
-      (mark-whole-buffer))
-    (untabify (region-beginning) (region-end))
-    (indent-region (region-beginning) (region-end))
-    (save-restriction
-      (narrow-to-region (region-beginning) (region-end))
-      (delete-trailing-whitespace))))
-
 (defun cleanup-buffer-safe ()
   "Perform a bunch of safe operations on the whitespace content of a buffer.
 Does not indent buffer, because it is used for a before-save-hook, and that
@@ -861,31 +791,12 @@ Including indent-buffer, which should not be called automatically on save."
 ;; Various superfluous white-space. Just say no.
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
 
-
-;; Uneven application of white-space is bad, m'kay?
-(bind-key "H-N" 'clean-up-buffer-or-region)
-(bind-key "H-n" 'cleanup-buffer)
-
-
-(global-set-key (kbd "H-j")
-                (lambda ()
-                  (interactive)
-                  (join-line -1)))
-
-
 (setq package-archives
       '(("original"    . "http://tromey.com/elpa/")
         ("gnu"         . "http://elpa.gnu.org/packages/")
         ("marmalade"   . "http://marmalade-repo.org/packages/")))
 (package-initialize)
 
-
-
-
-;;;_ , easy-kill
-(use-package easy-kill
-  :init
-   (global-set-key "\M-w" 'easy-kill))
 
 ;;;_ , el-get
 
@@ -1831,6 +1742,14 @@ Require unix zip commandline tool."
   :commands doxymacs-mode
   :diminish doxymacs-mode
   :load-path "~/.emacs.d/site-lisp/doxymacs-1.8.0/lisp")
+
+;;;_ , easy-kill
+
+(use-package easy-kill
+  :init
+  (progn
+    (global-set-key [remap kill-ring-save] 'easy-kill)
+    (global-set-key [remap mark-sexp] 'easy-mark-sexp)))
 
 ;;;_ , ediff
 
