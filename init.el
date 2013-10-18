@@ -294,7 +294,6 @@
 (bind-key "M-s n" 'find-name-dired)
 (bind-key "M-s o" 'occur)
 
-
 ;;;_  . M-C-?
 
 (bind-key "<C-M-backspace>" 'backward-kill-sexp)
@@ -325,33 +324,12 @@
 
 ;;;_ , ctl-x-map
 
-
-(defun youngfrog/copy-rectangle-to-kill-ring (start end)
-  "Saves a rectangle to the normal kill ring. Not suitable for yank-rectangle."
-  (interactive "r")
-  (let ((lines (extract-rectangle start end)))
-    (with-temp-buffer
-      (while lines ;; insert-rectangle, but without the unneeded stuff
-        ;; (most importantly no push-mark)
-        (insert-for-yank (car lines))
-        (insert "\n")
-        (setq lines (cdr lines)))
-      (kill-ring-save (point-min) (point-max)))))
-
 ;;;_  . C-x ?
 
 (bind-key "C-x B" 'ido-switch-buffer-other-window)
 (bind-key "C-x d" 'delete-whitespace-rectangle)
 (bind-key "C-x F" 'set-fill-column)
 (bind-key "C-x t" 'toggle-truncate-lines)
-
-(defun toggle-transparency ()
-  (interactive)
-  (if (/= (cadr (frame-parameter nil 'alpha)) 100)
-      (set-frame-parameter nil 'alpha '(100 100))
-    (set-frame-parameter nil 'alpha '(85 50))))
-
-(bind-key "C-x T" 'toggle-transparency)
 
 ;;;_  . C-x C-?
 
@@ -374,22 +352,14 @@
 (bind-key "C-x C-e" 'pp-eval-last-sexp)
 (bind-key "C-x C-n" 'next-line)
 
-
 (defun find-alternate-file-with-sudo ()
   (interactive)
   (find-alternate-file (concat "/sudo::" (buffer-file-name))))
 
 (bind-key "C-x C-v" 'find-alternate-file-with-sudo)
 
-
 (defun mlm/locate-make-command-line (search-string)
   (list "mdfind" "-interpret" search-string))
-
-;; http://www.emacswiki.org/emacs/ElispCookbook
-(defun qdot/filter (condp lst)
-  (delq nil
-        (mapcar (lambda (x) (and (funcall condp x) x)) lst)))
-
 
 ;;;_  . C-x M-?
 
