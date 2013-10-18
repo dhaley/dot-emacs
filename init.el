@@ -771,6 +771,11 @@
 (bind-key "C-h e v" 'find-variable)
 (bind-key "C-h e V" 'apropos-value)
 
+(defun untabify-buffer ()
+    "Untabify current buffer"
+    (interactive)
+    (save-excursion (untabify (point-min) (point-max))))
+
 (defun cleanup-buffer-safe ()
   "Perform a bunch of safe operations on the whitespace content of a buffer.
 Does not indent buffer, because it is used for a before-save-hook, and that

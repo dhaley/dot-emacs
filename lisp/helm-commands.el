@@ -25,7 +25,7 @@
 
 ;;; Commentary:
 
-;;
+;; 
 
 (defgroup helm-commands nil
   "More helm commands that I use"
@@ -34,7 +34,7 @@
 (defvar helm-c-source-git-files
   '((name . "Files under Git version control")
     (init . helm-c-source-git-files-init)
-    (action . (("Execute Command" . find-file)))
+    (action . (("Find File" . helm-c-git-find-file)))
     (candidates-in-buffer)
     (type . file))
   "Search for files in the current Git project.")
@@ -58,17 +58,17 @@
      :sources
      (append (mapcar (lambda (func)
                        (funcall func default))
-                     '(helm-def-source--emacs-commands
-                       helm-def-source--emacs-functions
-                       helm-def-source--emacs-variables
-                       helm-def-source--emacs-faces
-                       helm-def-source--helm-attributes))
-             '(helm-source-info-emacs
-               helm-source-info-elisp
-               helm-source-info-gnus
-               helm-source-info-org
-               helm-source-info-cl
-               helm-source-emacs-source-defun)))))
+                     '(helm-c-source-emacs-commands
+                       helm-c-source-emacs-functions
+                       helm-c-source-emacs-variables
+                       helm-c-source-emacs-faces
+                       helm-c-source-helm-attributes))
+             '(helm-c-source-info-emacs
+               helm-c-source-info-elisp
+               helm-c-source-info-gnus
+               helm-c-source-info-org
+               helm-c-source-info-cl
+               helm-c-source-emacs-source-defun)))))
 
 (defun helm-c-zsh-history-set-candidates (&optional request-prefix)
   (let ((pattern (replace-regexp-in-string
@@ -95,14 +95,18 @@
   (require 'helm)
   (helm-other-buffer 'helm-c-source-zsh-history "*helm zsh history*"))
 
+(defun helm-c-git-find-file (candidate)
+  (let ((dir (substring
+              (shell-command-to-string "git rev-parse --git-dir") 0 -1)))
+    (find-file (expand-file-name candidate (file-name-directory dir)))))
+
 (defun helm-c-source-git-files-init ()
   "Build `helm-candidate-buffer' of Git files."
   (let ((dir (substring
               (shell-command-to-string "git rev-parse --git-dir") 0 -1)))
     (with-current-buffer (helm-candidate-buffer 'local)
       (mapcar
-       (lambda (item)
-         (insert (expand-file-name item (file-name-directory dir)) ?\n))
+       (lambda (item) (insert item ?\n))
        (split-string (shell-command-to-string
                       (format "git --git-dir=\"%s\" ls-files" dir)) "\n")))))
 
