@@ -340,8 +340,6 @@
  '(term-scroll-to-bottom-on-output t)
  '(text-mode-hook (quote (turn-on-auto-fill (lambda nil (ignore-errors (diminish (quote auto-fill-function)))))))
  '(tls-program (quote ("openssl s_client -connect %h:%p -no_ssl2 -ign_eof")))
- '(todochiku-icons (quote ((alarm . "alarm.png") (mail . "mail.png") (irc . "irc.png"))))
- '(todochiku-icons-directory (expand-file-name (concat dotfiles-dir "todochiku-icons/")))
  '(tool-bar-mode nil)
  '(tramp-auto-save-directory "~/.backups")
  '(tramp-default-method "rsync")
