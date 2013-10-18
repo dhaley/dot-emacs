@@ -151,16 +151,14 @@
         )
     (progn
       (setq mac-option-modifier nil)
-      (setq mac-command-modifier 'meta)
-      )
-    )
-  )
+      (setq mac-command-modifier 'meta))))
 
 (mac-switch-meta)
 (setq mac-function-modifier 'hyper)
 
 (defvar mac-fullscreen-on  nil
   "keep a track of mac-mouse-turn-o(n|ff)-fullscreen, assumes fullscreen is not on")
+
 (defun mac-toggle-fullscreen ()
   "toggle fullscreen mode in Emacs mac (by Yamamoto Mitsuharu)"
   (interactive)
@@ -169,8 +167,7 @@
   (if (eq mac-fullscreen-on t)
       (progn
         (mac-mouse-turn-off-fullscreen t)
-        (setq mac-fullscreen-on nil)
-        )
+        (setq mac-fullscreen-on nil))
     (progn
       (mac-mouse-turn-on-fullscreen t)
       (setq mac-fullscreen-on t))))
@@ -178,15 +175,12 @@
 (when (and (window-system) (fboundp 'mac-mouse-turn-on-fullscreen))
    (bind-key "C-H-f" 'mac-toggle-fullscreen))
 
-
-
 ;;;_ , Enable C-8 prefix
 
 (defvar workgroups-preload-map)
 (define-prefix-command 'workgroups-preload-map)
 
 (bind-key "C-8" 'workgroups-preload-map)
-
 
 (defun double-quote ()
   (interactive)
@@ -226,21 +220,6 @@
 
 (bind-key "C-z" 'collapse-or-expand)
 
-
-;; http://www.masteringemacs.org/articles/2011/03/16/removing-blank-lines-buffer/
-(defun flush-blank-lines (start end)
-  (interactive "r")
-  (flush-lines "^\\s-*$" start end nil))
-
-(defun collapse-blank-lines (start end)
-  (interactive "r")
-  (replace-regexp "^\n\\{2,\\}" "\n" nil start end))
-
-(bind-key "C-x C-m" 'execute-extended-command)
-(bind-key "C-c C-m" 'execute-extended-command)
-(bind-key "C-x C-r" 'rename-current-buffer-file)
-(bind-key "C-x C-k" 'delete-current-buffer-file)
-
 ;;;_  . M-?
 
 (defadvice async-shell-command (before uniqify-running-shell-command activate)
@@ -267,7 +246,8 @@
 (bind-key "M-[" 'align-code)
 (bind-key "M-`" 'other-frame)
 
-(bind-key "M-RET" 'other-frame)
+(bind-key "M-j" 'delete-indentation-forward)
+(bind-key "M-J" 'delete-indentation)
 
 (bind-key "M-W" 'mark-word)
 
@@ -307,42 +287,6 @@
         (linum-mode 1)
         (goto-line (read-number "Goto line: ")))
     (linum-mode -1)))
-
-
-(defun delete-current-file (ξno-backup-p)
-  "Delete the file associated with the current buffer.
-Delete the current buffer too.
-
-A backup file is created with filename appended “~”. Existing backup file are
-overwritten.
-
-if ΞNO-BACKUP-P is non-nil (when called with `universal-argument'), don't
-create backup.
-
-If no file is associated, just close buffer without prompt for save."
-  (interactive "P")
-  (let (fName)
-    (when (buffer-file-name) ; buffer is associated with a file
-      (setq fName (buffer-file-name))
-      (save-buffer fName)
-      (if ξno-backup-p
-          (progn )
-        (copy-file fName (concat fName "~" ) t)
-        )
-      (delete-file fName)
-      (message "「%s」 deleted." fName)
-      )
-    (kill-buffer (current-buffer))
-    ) )
-
-
-(defun delete-duplicate-lines (beg end)
-  (interactive "r")
-  (let ((lines (split-string (buffer-substring beg end) "\n")))
-    (delete-region beg end)
-    (insert
-     (mapconcat #'identity (delete-dups lines) "\n"))))
-
 (defun delete-indentation-forward ()
   (interactive)
   (delete-indentation t))
