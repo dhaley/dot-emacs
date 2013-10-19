@@ -507,9 +507,6 @@
   (set-frame-parameter (selected-frame) 'height emacs-min-height)
   (set-frame-parameter (selected-frame) 'width emacs-min-width)
 
-  (when running-alternate-emacs
-        (set-face-background 'fringe "#073642")))
-
 (if window-system
     (add-hook 'after-init-hook 'emacs-min))
 
@@ -1744,6 +1741,42 @@ PWD is not in a project"
       (message (concat "Visiting " uri))))
 
     (bind-key "C-8 d e" `drush-uli-to-string)
+
+    ;; browse drupal menus from emacs
+    (setq base_url (concat "http://ww/" cu-drupal-site-name))
+    (defun browse-drupal-menu (menu)
+      "browse specific menu path on drupal site"
+      (message (concat "browsing " menu))
+      (cond
+       ((equal menu "login")
+        (message (concat base_url "/user"))
+        (browse-url (concat base_url "/user")))
+       ((equal menu "add")
+        (browse-url (concat base_url "/node/add")))
+       ((equal menu "finder")
+        (browse-url (concat base_url "/admin/content")))
+       ((equal menu "blocks")
+        (browse-url (concat base_url "/admin/content/blocks")))
+       ((equal menu "quicktabs")
+        (browse-url (concat base_url "/admin/structure/quicktabs")))
+       ((equal menu "context")
+        (browse-url (concat base_url "/admin/structure/context")))
+       ((equal menu "features")
+        (browse-url (concat base_url "/admin/structure/features")))
+       ((equal menu "views")
+        (browse-url (concat base_url "/admin/structure/views")))
+       ((equal menu "types")
+        (browse-url (concat base_url "/admin/structure/types")))
+       ((equal menu "taxonomy")
+        (browse-url (concat base_url "/admin/structure/taxonomy")))
+       ((equal menu "field-collections")
+        (browse-url (concat base_url "/admin/structure/field-collections")))
+       ((equal menu "migrate")
+        (browse-url (concat base_url "/admin/content/migrate")))))
+    (defun cu-drupal-menu-browse (menu)
+      (interactive "sMenu: ")
+      (browse-drupal-menu menu))
+    (bind-key "C-8 m b" 'cu-drupal-menu-browse)
 
     (defun run-drush-command (command &rest a)
       (if (or (locate-dominating-file default-directory
@@ -4891,38 +4924,6 @@ are in kbd format."
     (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))
     ))
 
-
-;;;_ , windmove
-
-;; (setq windmove-wrap-around t)
-;; (windmove-default-keybindings)        ; Move between frames with Shift+arrow
-;;                                         ; windmove shows a stacktrace when
-;;                                         ; there is nothing to move to
-
-
-;; ;; If, like me, you’re a heavy org-mode user, you’ll find that these key
-;; ;; bindings won’t work in org-mode buffers because org-mode takes them
-;; ;; over. Happily you can solve this by adding the line
-;; (setq org-replace-disputed-keys t)
-
-;; (defmacro maser/swallow-errors (name f-with-error)
-;;   `(defun ,name ()
-;;      (interactive)
-;;      (condition-case err
-;;          (,f-with-error)
-;;        (error
-;;         (message "%s" (error-message-string err))))))
-
-;; (maser/swallow-errors windmove-down-without-errors windmove-down)
-;; (maser/swallow-errors windmove-up-without-errors windmove-up)
-;; (maser/swallow-errors windmove-right-without-errors windmove-right)
-;; (maser/swallow-errors windmove-left-without-errors windmove-left)
-
-
-;; (bind-key "H-'" 'windmove-right-without-errors)
-;; (bind-key "H-/" 'windmove-down-without-errors)
-;; (bind-key "H-;" 'windmove-left-without-errors)
-;; (bind-key "H-[" 'windmove-up-without-errors)
 
 (use-package wgrep
   :commands (wgrep-setup))
