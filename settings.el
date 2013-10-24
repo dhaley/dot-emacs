@@ -38,6 +38,7 @@
  '(bbdb-default-country "")
  '(bbdb-file "~/Documents/.bbdb")
  '(bbdb-message-caching-enabled nil)
+ '(bbdb-mua-update-interactive-p (quote (query . create)))
  '(bbdb-no-duplicates t)
  '(bbdb-offer-save (quote savenoprompt))
  '(bbdb-silent-running t)
