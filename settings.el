@@ -464,7 +464,7 @@
  '(erc-nick-msg-face ((t (:foreground "#268bd2" :weight bold))))
  '(erc-pal-face ((t (:foreground "#d33682" :weight bold))))
  '(erc-prompt-face ((t (:background "#002b36" :foreground "#b58900" :weight bold))))
- '(erc-timestamp-face ((t (:foreground "dark violet"))))
+ '(erc-timestamp-face ((t (:foreground "#586e75"))))
  '(fg:erc-color-face0 ((t (:foreground "#93a1a1"))))
  '(fg:erc-color-face1 ((t (:foreground "#586e75"))))
  '(fg:erc-color-face11 ((t (:foreground "#2aa198"))))
