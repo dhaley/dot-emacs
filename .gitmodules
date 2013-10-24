@@ -481,3 +481,6 @@
 [submodule "site-lisp/butler"]
         path = site-lisp/butler
         url = https://github.com/AshtonKem/Butler.git
+[submodule "site-lisp/winpoint"]
+	path = site-lisp/winpoint
+	url = https://github.com/jorgenschaefer/winpoint.git
