@@ -1,81 +1,10 @@
 * Point, Search Rectangle & Region functionality
-*** Store and restore point
-
-When two windows view the same buffer at the same time, and one
-window is switched to another buffer and back, point is now the
-same as in the other window, not as it was before we switched away.
-This mode tries to work around this problem by storing and
-restoring per-window positions for each buffer.
-
-#+begin_src emacs-lisp :tangle no
-
-(require 'winpoint)
-(window-point-remember-mode 1)
-
-#+end_src
-
-*** I like returning to the same place
-
-Purpose: When you visit a file, point goes to the last place where
-  it was when you previously visited the same file.
-
-To use it, turn it on in the options menu - “Save place in files
-between Sessions”
-
-#+begin_src emacs-lisp :tangle no
-
-(require 'saveplace)                          ;; get the package
-
-#+end_src
-
-*** Goto last change - this is bodacious
-
-#+begin_src emacs-lisp :tangle no
-
-(when (require 'goto-last-change nil 'noerror)
-  (global-set-key (kbd "C-x C-/") 'goto-last-change))
-
-#+end_src
-
-** Make script files executable automatically
-
-You can force Emacs to make a file executable (respecting your umask
-settings) if Emacs considers it a script. To determine if it is a
-script, Emacs will look for the hash-bang notation in the file and
-treat it as a script if it finds it.
-
-Add this to your .emacs and Emacs will then make the file executable
-if it is a script.
-
-#+begin_src emacs-lisp :tangle no
-
-(add-hook 'after-save-hook
-  'executable-make-buffer-file-executable-if-script-p)
-
-#+end_src
-
-
-** Rotate text
-
-#+begin_src emacs-lisp :tangle no
-
-(require 'rotate-text)
-(autoload 'rotate-text "rotate-text" nil t)
-(autoload 'rotate-text-backward "rotate-text" nil t)
-
-#+end_src
-
-
 
 ** Kill Ring
 *** Kill Ring
 
 #+begin_src emacs-lisp :tangle no
 
-
-(global-set-key (kbd "C-M-y") '(lambda ()
-   (interactive)
-   (popup-menu 'yank-menu)))
 
 (require 'second-sel)
 
