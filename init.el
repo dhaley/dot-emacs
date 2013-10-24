@@ -4326,7 +4326,6 @@ and view local index.html url"
 
 (use-package org-jira
   :load-path ("~/.emacs.d/lisp/org-jira")
-  :commands (org-jira-create-issue org-jira-get-issue)
   :bind (
          ("C-8 j G" . org-jira-get-subtasks)
          ("C-8 j P" . org-jira-get-projects)
@@ -4342,27 +4341,21 @@ and view local index.html url"
   :init
   (progn
 
-    ;; (require 'jira)
-    (setq jira-url "https://cuboulder.atlassian.net//rpc/xmlrpc")
-    ;; (require 'org-jira)
-    (setq jiralib-url "https://cuboulder.atlassian.net")
-    ;; jiralib is not explicitly required, since org-jira will load it.
-    (setq org-jira-working-dir "~/Documents/Tasks/.org-jira")
-    (setq org-jira-current-project "VCR")
-
-    (setq jira-users
-          (list
-           (cons "Unassigned" "")
-           (cons "Erin Corsin" "erin")
-           (cons "Matt Tucker" "matt")
-           (cons "Kevin Crafts" "kevin")
-           (cons "Damon Haley" "daha1836")
-           (cons "Alfredo Nevarez" "alfredo")
-           (cons "Catherine Snider" "snider")
-           (cons "Kosta Tovstiadi" "kosta")
-           (cons "Will Kubie" "kubie")
-           (cons "Joanna Bertrand" "joanna")
-           (cons "Wendy Turnbull" "wendy")))))
+    (setq
+     org-jira-working-dir "~/Documents/Tasks/.org-jira"
+     jira-users
+     (list
+      (cons "Unassigned" "")
+      (cons "Erin Corsin" "erin")
+      (cons "Matt Tucker" "matt")
+      (cons "Kevin Crafts" "kevin")
+      (cons "Damon Haley" "daha1836")
+      (cons "Alfredo Nevarez" "alfredo")
+      (cons "Catherine Snider" "snider")
+      (cons "Kosta Tovstiadi" "kosta")
+      (cons "Will Kubie" "kubie")
+      (cons "Joanna Bertrand" "joanna")
+      (cons "Wendy Turnbull" "wendy")))))
 
 
 ;;;_ , outline-mode
