@@ -615,6 +615,9 @@
 (bind-key "C-c V" 'view-clipboard)
 (bind-key "C-c z" 'clean-buffer-list)
 
+(global-set-key (kbd "C-M-y") '(lambda ()
+   (interactive)
+   (popup-menu 'yank-menu)))
 (bind-key "C-c [" 'align-regexp)
 (bind-key "C-c =" 'count-matches)
 (bind-key "C-c ;" 'comment-or-uncomment-region)
@@ -1724,8 +1727,6 @@ PWD is not in a project"
               (drupal-mode 1)))
         (message "You are not visiting a drupal project")))
 
-    (use-package druide)
-
     (defun drush-uli-to-string ()
       " Provide dynamically derived uri for drush uli"
       (interactive)
@@ -1776,6 +1777,9 @@ PWD is not in a project"
     (bind-key "C-8 c d" 'drush-core-status-debug))
   :config
   (progn
+
+    (use-package druide)
+
     (require 'smart-dash)
     (add-hook 'drupal-mode-hook
               '(lambda ()
@@ -4154,6 +4158,13 @@ are in kbd format."
              insert-patterned-3
              insert-patterned-4))
 
+;;;_ , rotate-text
+
+;; rotate-text allows you rotate to commonly interchanged text with a single keystroke. For example, you can toggle between frame-width and frame-height, between public, protected and private and between variable1, variable2 through variableN.
+
+(use-package rotate-text
+  :commands (rotate-text rotate-text-backward))
+
 ;;;_ , ruby-mode
 
 (use-package ruby-mode
@@ -4896,6 +4907,18 @@ are in kbd format."
 
     (bind-key "M-N" 'winner-redo)
     (bind-key "M-P" 'winner-undo)))
+
+
+;; When two windows view the same buffer at the same time, and one
+;; window is switched to another buffer and back, point is now the
+;; same as in the other window, not as it was before we switched away.
+;; This mode tries to work around this problem by storing and
+;; restoring per-window positions for each buffer.
+
+(use-package winpoint
+  :diminish winpoint-mode
+  :init
+  (winpoint-mode 1))
 
 ;;;_ , workgroups
 
