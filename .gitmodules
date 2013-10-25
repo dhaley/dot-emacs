@@ -40,9 +40,6 @@
 [submodule "site-lisp/doxymacs"]
         path = site-lisp/doxymacs
         url = git://doxymacs.git.sourceforge.net/gitroot/doxymacs/doxymacs
-[submodule "site-lisp/emacs-w3m"]
-        path = site-lisp/emacs-w3m
-        url = https://github.com/jwiegley/emacs-w3m.git
 [submodule "site-lisp/ess"]
         path = site-lisp/ess
         url = https://github.com/emacs-ess/ESS.git
@@ -482,5 +479,11 @@
         path = site-lisp/butler
         url = https://github.com/AshtonKem/Butler.git
 [submodule "site-lisp/winpoint"]
-	path = site-lisp/winpoint
-	url = https://github.com/jorgenschaefer/winpoint.git
+        path = site-lisp/winpoint
+        url = https://github.com/jorgenschaefer/winpoint.git
+[submodule "site-lisp/emacs-helm-gtags"]
+        path = site-lisp/emacs-helm-gtags
+        url = https://github.com/lbsx/emacs-helm-gtags.git
+[submodule "site-lisp/epl"]
+        path = site-lisp/epl
+        url = https://github.com/cask/epl.git
