@@ -136,6 +136,7 @@
  '(erc-prompt-for-nickserv-password nil)
  '(erc-replace-alist (quote (("</?FONT>" . ""))))
  '(erc-server "asimov.freenode.net")
+ '(erc-server-auto-reconnect nil)
  '(erc-services-mode t)
  '(erc-text-matched-hook (quote (erc-hide-fools my-erc-hook)))
  '(erc-track-enable-keybindings t)
