@@ -291,7 +291,8 @@
   (delete-indentation t))
 
 (bind-key "M-s n" 'find-name-dired)
-(bind-key "M-s o" 'occur)
+;(bind-key "M-s o" 'occur)
+(bind-key "M-s o" 'helm-swoop)
 
 ;;;_  . M-C-?
 
@@ -1331,6 +1332,13 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                     (eq last-command 'my-iflipb-previous-buffer))
                 my-iflipb-ing-internal)))))
 
+;;;_ , dash-at-point
+
+(use-package dash-at-point
+  :commands (dash-at-point)
+  :bind ("\C-c8" . dash-at-point)
+  )
+
 ;;;_ , debbugs
 
 (use-package debbugs-gnu
@@ -1785,7 +1793,8 @@ PWD is not in a project"
               '(lambda ()
                  (smart-dash-mode 1)
                  (gtags-mode 1)
-                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")))
+                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+                 (setq dash-at-point-docset "drupal")))
 
     (add-to-list 'yas-extra-modes 'drupal-mode)
 
@@ -2164,17 +2173,17 @@ FORM => (eval FORM)."
       "Add TARGET to the list of target to be tracked."
       (if target
           (erc-with-server-buffer
-            (let ((untracked
-                   (car (erc-member-ignore-case target erc-track-exclude))))
-              (if untracked
-                  (erc-display-line
-                   (erc-make-notice
-                    (format "%s is not currently tracked!" target))
-                   'active)
-                (add-to-list 'erc-track-exclude target)
-                (erc-display-line
-                 (erc-make-notice (format "Now not tracking %s" target))
-                 'active))))
+           (let ((untracked
+                  (car (erc-member-ignore-case target erc-track-exclude))))
+             (if untracked
+                 (erc-display-line
+                  (erc-make-notice
+                   (format "%s is not currently tracked!" target))
+                  'active)
+               (add-to-list 'erc-track-exclude target)
+               (erc-display-line
+                (erc-make-notice (format "Now not tracking %s" target))
+                'active))))
 
         (if (null erc-track-exclude)
             (erc-display-line
@@ -2850,6 +2859,8 @@ at the beginning of line, if already there."
       :commands helm-descbinds
       :init
       (fset 'describe-bindings 'helm-descbinds))
+
+    (use-package helm-swoop)
 
     (bind-key "C-h b" 'helm-descbinds))
 

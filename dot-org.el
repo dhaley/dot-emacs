@@ -781,6 +781,8 @@ end tell" (match-string 1))))
   (define-key map "\C-c\C-x<" 'bh/set-agenda-restriction-lock)
   (define-key map (kbd "<f5>") 'cfw:open-org-calendar))
 
+(unbind-key "M-m" org-agenda-keymap)
+
 (defun org-fit-agenda-window ()
   "Fit the window to the buffer size."
   (and (memq org-agenda-window-setup '(reorganize-frame))
