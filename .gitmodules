@@ -487,3 +487,15 @@
 [submodule "site-lisp/epl"]
         path = site-lisp/epl
         url = https://github.com/cask/epl.git
+[submodule "site-lisp/dash-at-point"]
+	path = site-lisp/dash-at-point
+	url = https://github.com/stanaka/dash-at-point.git
+[submodule "site-lisp/cider"]
+	path = site-lisp/cider
+	url = https://github.com/clojure-emacs/cider.git
+[submodule "site-lisp/helm-swoop"]
+	path = site-lisp/helm-swoop
+	url = git://github.com/ShingoFukuyama/helm-swoop.git
+[submodule "site-lisp/emacs-cl"]
+	path = site-lisp/emacs-cl
+	url = https://github.com/larsbrinkhoff/emacs-cl.git
