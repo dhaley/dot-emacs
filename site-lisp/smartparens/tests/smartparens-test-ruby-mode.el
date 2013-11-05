@@ -61,6 +61,20 @@ if test
 end
 ")
 
+  (sp-ruby-test-slurp-assert 3 "
+if teXst
+end
+foo.
+  bar.
+  bar
+" :=> "
+if test
+  foo.
+    bar.
+    bar
+end
+")
+
   (sp-ruby-test-slurp-assert 5 "
 beginX
 end
@@ -90,10 +104,131 @@ begin
   Module::Class
 end
 ")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+foo_bar
+" :=> "
+begin
+  foo_bar
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+foo?
+" :=> "
+begin
+  foo?
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+foo!
+" :=> "
+begin
+  foo!
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+@foo
+" :=> "
+begin
+  @foo
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+@@foo
+" :=> "
+begin
+  @@foo
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+$foo
+" :=> "
+begin
+  $foo
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+&foo
+" :=> "
+begin
+  &foo
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+&:foo
+" :=> "
+begin
+  &:foo
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+?x
+" :=> "
+begin
+  ?x
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+!x
+" :=> "
+begin
+  !x
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+class_name
+" :=> "
+begin
+  class_name
+end
+")
+
+  (sp-ruby-test-slurp-assert 1 "
+beginX
+end
+:foo
+" :=> "
+begin
+  :foo
+end
+")
+
   )
 
 (ert-deftest sp-test-ruby-slurp-backward ()
-  (sp-ruby-test-slurp-assert -2 "
+  (sp-ruby-test-slurp-assert -1 "
 foo.bar
 begin X
 end
@@ -101,6 +236,121 @@ end
 begin
   foo.bar
 end
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+foo.class
+begin X
+end
+" :=> "
+begin
+  foo.class
+end
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+@foo
+begin X
+end
+" :=> "
+begin
+  @foo
+end
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+foo?
+begin X
+end
+" :=> "
+begin
+  foo?
+end
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+foo!
+begin X
+end
+" :=> "
+begin
+  foo!
+end
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+!foo
+begin X
+end
+" :=> "
+begin
+  !foo
+end
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+?f
+begin X
+end
+" :=> "
+begin
+  ?f
+end
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+:foo
+begin X
+end
+" :=> "
+begin
+  :foo
+end
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+@@foo
+begin X
+end
+" :=> "
+begin
+  @@foo
+end
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+&:foo
+begin X
+end
+" :=> "
+begin
+  &:foo
+end
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+::Class
+begin X
+end
+" :=> "
+begin
+  ::Class
+end
+")
+
+  ;; Indentation is a bit off here, but it works great in Enhanced Ruby Mode.
+  (sp-ruby-test-slurp-assert -1 "
+foo.
+  class.
+  bar
+begin X
+end
+" :=> "
+begin
+  foo.
+    class.
+        bar
+    end
 ")
 
   (sp-ruby-test-slurp-assert -1 "
@@ -117,7 +367,7 @@ begin
 end
 ")
 
-  (sp-ruby-test-slurp-assert -5 "
+  (sp-ruby-test-slurp-assert -3 "
 test(1).test[2].test
 beginX
 end
@@ -149,6 +399,33 @@ end
 
   )
 
+(ert-deftest sp-test-ruby-slurp-on-single-line ()
+  (sp-ruby-test-slurp-assert 1 "
+test {X} test
+" :=> "
+test { test }
+")
+
+  (sp-ruby-test-slurp-assert 2 "
+test {X} test; test
+" :=> "
+test { test; test }
+")
+
+  (sp-ruby-test-slurp-assert -1 "
+test test {X}
+" :=> "
+test { test }
+")
+
+  (sp-ruby-test-slurp-assert -2 "
+test test; test {X}
+" :=> "
+test { test; test }
+")
+
+)
+
 (ert-deftest sp-test-ruby-slurp-with-inline-blocks ()
   (sp-ruby-test-slurp-assert 1 "
 if teXst
@@ -160,7 +437,7 @@ if test
 end if true
 ")
 
-  (sp-ruby-test-slurp-assert 2 "
+  (sp-ruby-test-slurp-assert 3 "
 if teXst
 end
 foo if true
@@ -242,6 +519,20 @@ end
 foo.bar
 ")
 
+  (sp-ruby-test-barf-assert 3 "
+if teXst
+  foo.
+    bar.
+    bar
+end
+" :=> "
+if test
+end
+foo.
+  bar.
+  bar
+")
+
   (sp-ruby-test-barf-assert 5 "
 beginX
   test(1).test[2].test
@@ -276,15 +567,15 @@ Module::Class
 (ert-deftest sp-test-ruby-barf-backward ()
   (sp-ruby-test-barf-assert -1 "
 begin
-  foo.barX
+  fooX
 end
 " :=> "
-foo. begin
-       bar
-     end
+foo
+begin
+end
 ")
 
-  (sp-ruby-test-barf-assert -2 "
+  (sp-ruby-test-barf-assert -1 "
 begin
   foo.barX
 end
@@ -308,7 +599,7 @@ begin
 end
 ")
 
-  (sp-ruby-test-barf-assert -5 "
+  (sp-ruby-test-barf-assert -1 "
 begin
   test(1).test[2].testX
 end
@@ -337,19 +628,44 @@ Module::Class
 begin
 end
 ")
-
   )
 
-(ert-deftest sp-test-ruby-barf-with-inline-blocks ()
-  (sp-ruby-test-barf-assert 2 "
-if teXst
-  foo if true
-end
+(ert-deftest sp-test-ruby-slurp-on-single-line ()
+  (sp-ruby-test-barf-assert 1 "
+test { Xtest }
 " :=> "
-if test
-end
-foo if true
+test { } test
 ")
+
+  (sp-ruby-test-barf-assert 2 "
+test { Xtest; test }
+" :=> "
+test { } test; test
+")
+
+  (sp-ruby-test-barf-assert -1 "
+test { Xtest }
+" :=> "
+test test { }
+")
+
+  (sp-ruby-test-barf-assert -2 "
+test { test; testX }
+" :=> "
+test test; test { }
+")
+
+)
+(ert-deftest sp-test-ruby-barf-with-inline-blocks ()
+;;   (sp-ruby-test-barf-assert 2 "
+;; if teXst
+;;   foo if true
+;; end
+;; " :=> "
+;; if test
+;; end
+;; foo if true
+;; ")
 
   (sp-ruby-test-barf-assert 2 "
 if teXst
@@ -444,6 +760,46 @@ end
 foo(ifX test; bar; end)
 " :=> "
 foo( test; bar; )
+")
+
+  (sp-ruby-test-splice-assert 1 "
+begin
+  object.classX
+end
+" :=> "
+object.class
+")
+
+  (sp-ruby-test-splice-assert 1 "
+begin
+  object.
+    classX
+end
+" :=> "
+object.
+  class
+")
+
+  (sp-ruby-test-splice-assert 1 "
+begin
+  # object.
+  classX
+  end
+end
+" :=> "
+begin
+  # object.
+end
+")
+
+  (sp-ruby-test-splice-assert 1 "
+begin
+  foo.send(\"#{object}\").
+    classX
+end
+" :=> "
+foo.send(\"#{object}\").
+  class
 ")
 
   )

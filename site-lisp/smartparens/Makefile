@@ -10,7 +10,7 @@ unit-tests: elpa
 		-l tests/smartparens-test.el -f ert-run-tests-batch-and-exit
 
 ecukes-features: elpa
-	${CASK} exec ${ECUKES} features
+	${CASK} exec ${ECUKES} --no-win
 
 elpa:
 	mkdir -p elpa
@@ -20,7 +20,7 @@ clean-elpa:
 	rm -rf elpa
 
 clean-elc:
-	rm -f *.elc
+	rm -f *.elc tests/*.elc
 
 clean: clean-elpa clean-elc
 
