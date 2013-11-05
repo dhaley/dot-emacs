@@ -3636,17 +3636,12 @@ at the beginning of line, if already there."
     (defadvice term-process-pager (after term-process-rebind-keys activate)
       (define-key term-pager-break-map  "\177" 'term-pager-back-page))
 
-(defun my-term-paste (&optional string)
-  (interactive)
-  (process-send-string
-   (get-buffer-process (current-buffer))
-   (if string string (current-kill 0))))
+    (add-hook 'term-mode-hook
+              (lambda ()
+                (goto-address-mode)
+                (define-key term-raw-map (kbd "C-y") 'term-paste)))
 
-(add-hook 'term-exec-hook '(lambda ()
-                             (goto-address-mode)
-                             (define-key term-raw-map (kbd "C-y") 'my-term-paste)
-                             ))
-(setenv "PATH" (shell-command-to-string "echo $PATH"))))
+    (setenv "PATH" (shell-command-to-string "echo $PATH"))))
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
