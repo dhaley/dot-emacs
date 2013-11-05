@@ -388,7 +388,7 @@
  '(yaoddmuse-browse-function (quote w3m-browse-url))
  '(yaoddmuse-directory "~/.emacs.d/doc")
  '(yas-prompt-functions (quote (yas-ido-prompt yas-completing-prompt yas-no-prompt)))
- '(yas-snippet-dirs (quote ("~/.emacs.d/snippets" "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets")) nil (yasnippet))
+ '(yas-snippet-dirs (quote ("~/.emacs.d/snippets" "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets" "~/.emacs.d/site-lisp/css-scss")) nil (yasnippet))
  '(yas-triggers-in-field t)
  '(yas-wrap-around-region t)
  '(yas/triggers-in-field t)

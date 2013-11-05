@@ -952,7 +952,7 @@ Including indent-buffer, which should not be called automatically on save."
 
   :config
   (progn
-    (ac-set-trigger-key "TAB")
+    (ac-set-trigger-key "BACKTAB")
     (setq ac-use-menu-map t)
 
     (bind-key "H-M-?" 'ac-last-help)
@@ -2683,6 +2683,7 @@ at the beginning of line, if already there."
 
 ;;;_ , highlight-symbol
 (use-package highlight-symbol
+  :disabled t
   :commands (highlight-symbol-prev highlight-symbol-next highlight-symbol-at-point highlight-symbol-query-replace)
   :init
   (progn
@@ -2861,6 +2862,7 @@ at the beginning of line, if already there."
       (fset 'describe-bindings 'helm-descbinds))
 
     (use-package helm-swoop)
+    (use-package helm-css-scss)
 
     (bind-key "C-h b" 'helm-descbinds))
 
@@ -4226,6 +4228,10 @@ are in kbd format."
     (setq-default save-place t)
     ;; Keep places in the load path
     (setq save-place-file "~/Documents/places")))
+
+;;;_ , scss-mode
+(use-package scss-mode
+  :mode ("\\.scss\\'" . scss-mode))
 
 ;;;_ , selectkey
 
