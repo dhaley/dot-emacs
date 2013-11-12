@@ -352,9 +352,6 @@
 [submodule "site-lisp/org-mac-link-grabber"]
         path = site-lisp/org-mac-link-grabber
         url = https://github.com/alander/org-mac-link-grabber.git
-[submodule "site-lisp/highlight-indentation"]
-        path = site-lisp/highlight-indentation
-        url = git://github.com/jorgenschaefer/Highlight-Indentation-for-Emacs.git
 [submodule "site-lisp/gimme-cat"]
         path = site-lisp/gimme-cat
         url = https://github.com/afroisalreadyinu/gimme-cat.git
@@ -488,35 +485,35 @@
         path = site-lisp/epl
         url = https://github.com/cask/epl.git
 [submodule "site-lisp/dash-at-point"]
-	path = site-lisp/dash-at-point
-	url = https://github.com/stanaka/dash-at-point.git
+        path = site-lisp/dash-at-point
+        url = https://github.com/stanaka/dash-at-point.git
 [submodule "site-lisp/cider"]
-	path = site-lisp/cider
-	url = https://github.com/clojure-emacs/cider.git
+        path = site-lisp/cider
+        url = https://github.com/clojure-emacs/cider.git
 [submodule "site-lisp/helm-swoop"]
-	path = site-lisp/helm-swoop
-	url = git://github.com/ShingoFukuyama/helm-swoop.git
+        path = site-lisp/helm-swoop
+        url = git://github.com/ShingoFukuyama/helm-swoop.git
 [submodule "site-lisp/emacs-cl"]
-	path = site-lisp/emacs-cl
-	url = https://github.com/larsbrinkhoff/emacs-cl.git
+        path = site-lisp/emacs-cl
+        url = https://github.com/larsbrinkhoff/emacs-cl.git
 [submodule "site-lisp/helm-css-scss"]
-	path = site-lisp/helm-css-scss
-	url = https://github.com/ShingoFukuyama/helm-css-scss.git
+        path = site-lisp/helm-css-scss
+        url = https://github.com/ShingoFukuyama/helm-css-scss.git
 [submodule "site-lisp/scss-mode"]
-	path = site-lisp/scss-mode
-	url = https://github.com/antonj/scss-mode.git
+        path = site-lisp/scss-mode
+        url = https://github.com/antonj/scss-mode.git
 [submodule "site-lisp/css-scss"]
-	path = site-lisp/css-scss
-	url = https://github.com/ShingoFukuyama/css-scss-yasnippet.git
+        path = site-lisp/css-scss
+        url = https://github.com/ShingoFukuyama/css-scss-yasnippet.git
 [submodule "site-lisp/smartparens"]
-	path = site-lisp/smartparens
-	url = https://github.com/Fuco1/smartparens.git
+        path = site-lisp/smartparens
+        url = https://github.com/Fuco1/smartparens.git
 [submodule "site-lisp/ag"]
-	path = site-lisp/ag
-	url = https://github.com/Wilfred/ag.el.git
+        path = site-lisp/ag
+        url = https://github.com/Wilfred/ag.el.git
 [submodule "site-lisp/helm-ag"]
-	path = site-lisp/helm-ag
-	url = https://github.com/syohex/emacs-helm-ag.git
+        path = site-lisp/helm-ag
+        url = https://github.com/syohex/emacs-helm-ag.git
 [submodule "site-lisp/oauth"]
-	path = site-lisp/oauth
-	url = https://github.com/psanford/emacs-oauth.git
+        path = site-lisp/oauth
+        url = https://github.com/psanford/emacs-oauth.git
