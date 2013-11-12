@@ -511,3 +511,12 @@
 [submodule "site-lisp/smartparens"]
 	path = site-lisp/smartparens
 	url = https://github.com/Fuco1/smartparens.git
+[submodule "site-lisp/ag"]
+	path = site-lisp/ag
+	url = https://github.com/Wilfred/ag.el.git
+[submodule "site-lisp/helm-ag"]
+	path = site-lisp/helm-ag
+	url = https://github.com/syohex/emacs-helm-ag.git
+[submodule "site-lisp/oauth"]
+	path = site-lisp/oauth
+	url = https://github.com/psanford/emacs-oauth.git

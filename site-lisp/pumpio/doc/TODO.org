@@ -1,0 +1,48 @@
+#+TITLE: TODO
+#+AUTHOR: Giménez, Christian
+
+#+TODO: TODO CURRENT PAUSED | DONE CANCELED
+
+* Login and Misc
+** DONE OAuth login
+* Posting
+** PAUSED Implement the post note feature
+*** TODO Allow CC and TO destinataries selection 
+** TODO Implement the post image feature
+* Retrieving
+** DONE Fetching a note
+** CURRENT Get the major feed
+*** TODO If no nickname entered has to be the current user
+    If no nickname is given, then has to use the logged in username.
+
+    First, [[*Implement%20whoami%20retrieval%20in%20pumpio-stream%20and%20below%20levels][Whoami retrieval feature]] has to be implemented.
+* TODO Give support for two or more accounts
+** TODO Geting the feeds for all accounts
+   
+** TODO Posting to one and sharing all
+   The user create one note that is posted into the default account, and the others accounts share it.
+
+* Internal Developing
+** TODO Implement whoami retrieval in pumpio-stream and below levels
+   In pumpio-http there's no need for doing a HTTP GET request if it has registered into the server. Just has to return the ~pmpio-http-user-data~ variable.
+* Licence
+
+    TODO.org
+    Copyright (C) 2013  Giménez, Christian N.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Sábado 06 De Julio Del 2013    
+
+
