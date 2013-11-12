@@ -827,6 +827,14 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package ace-jump-mode
   :bind ("M-h" . ace-jump-mode))
 
+;;;_ , ag
+
+(use-package ag
+  :init
+  (progn
+    (use-package wgrep)
+    (use-package wgrep-ag)))
+
 ;;;_ , agda
 
 (use-package agda2-mode
@@ -1615,6 +1623,7 @@ Require unix zip commandline tool."
 ;;;_ , edit-emacs
 
 (use-package edit-server
+  :load-path "site-lisp/emacs_chrome/servers"
   :if (and window-system (not running-alternate-emacs)
            (not noninteractive))
   :init
@@ -1665,7 +1674,11 @@ Require unix zip commandline tool."
        emms-player-simple-process-name "volume -1\n"))
 
     (bind-key "C-. C--" 'emms-player-mplayer-volume-down)
-    (bind-key "C-. C-=" 'emms-player-mplayer-volume-up)))
+    (bind-key "C-. C-=" 'emms-player-mplayer-volume-up)
+    (add-to-list 'Info-directory-list
+             (expand-file-name "~/.emacs.d/site-lisp/emms/doc") t)
+     ;;;  Highlight current line in browser
+    (add-hook 'emms-browser-show-display-hook '(lambda () (hl-line-mode 1)))))
 
 ;;;_ , conf-mode
 (use-package conf-mode
@@ -2733,15 +2746,11 @@ at the beginning of line, if already there."
   :init
   (progn
     (setq gnus-init-file (expand-file-name "dot-gnus" user-emacs-directory)
-          gnus-home-directory "~/Messages/Gnus/")
-
-    ;; (abbrev-table-put gnus-article-edit-mode-abbrev-table :parents (list org-mode-abbrev-table))
-    )
+          gnus-home-directory "~/Messages/Gnus/"))
   :config
   (progn
     (use-package org-mime)
-    ;; (use-package eudc)
-    (use-package rgr-web)))
+    (setq org-mime-library 'mml)))
 
 ;;;_ , grep
 
@@ -2863,6 +2872,7 @@ at the beginning of line, if already there."
 
     (use-package helm-swoop)
     (use-package helm-css-scss)
+    (use-package helm-ag)
 
     (bind-key "C-h b" 'helm-descbinds))
 
@@ -4014,6 +4024,9 @@ unless return was pressed outside the comment"
     (projectile-global-mode)
 
     (bind-key "C-c j" `projectile-switch-project)
+    (local-set-key "\C-c p g" 'ag-project)
+    (bind-key "C-c p g" 'ag-project
+                projectile-mode-map)
 
   (defun define-keys (mode-map keybindings)
     "Takes a mode map, and a list of (key function-designator)
@@ -4446,6 +4459,14 @@ are in kbd format."
   :init
   (setq smerge-command-prefix (kbd "C-. C-.")))
 
+;;;_ , isql
+
+(use-package sql
+  :init
+  (progn
+    (sql-set-product 'mysql)
+    ;; (load-library "sql-indent")
+    ))
 
 ;;;_ , stripe-buffer
 
@@ -4903,10 +4924,6 @@ are in kbd format."
   (progn
     (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))
     ))
-
-
-(use-package wgrep
-  :commands (wgrep-setup))
 
 ;;;_ , winner
 
