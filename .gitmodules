@@ -31,9 +31,6 @@
 [submodule "site-lisp/ace-jump-mode"]
         path = site-lisp/ace-jump-mode
         url = git://github.com/winterTTr/ace-jump-mode.git
-[submodule "site-lisp/auctex"]
-        path = site-lisp/auctex
-        url = git://git.savannah.gnu.org/auctex.git
 [submodule "site-lisp/doxymacs"]
         path = site-lisp/doxymacs
         url = git://doxymacs.git.sourceforge.net/gitroot/doxymacs/doxymacs
