@@ -36,10 +36,12 @@
         "override/gnus/lisp/"
         "override/org-mode/contrib/lisp/"
         "override/org-mode/lisp/"
+        "override/tramp/lisp/"
 
         ;; Packages located elsewhere on the system...
-        "~/Documents/github/ledger/lisp/"
-        ;; "/usr/local/share/doc/git-core/contrib/emacs/"
+        "~/src/ledger/lisp/"
+        "/usr/local/share/emacs/site-lisp/"
+        "/usr/local/opt/git/share/git-core/contrib/emacs/"
         )))
 
 (let ((cl-p load-path))
