@@ -3465,7 +3465,7 @@ at the beginning of line, if already there."
                   (flyspell-mode)))
 
     (require 'magit-topgit)
-    (require 'rebase-mode)
+    (require 'git-rebase-mode)
     (require 'magit-blame)
 
     (global-set-key (kbd "C-x v b") 'magit-blame-mode)
