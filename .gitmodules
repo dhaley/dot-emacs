@@ -521,5 +521,14 @@
         path = site-lisp/magit
         url = git://github.com/magit/magit.git
 [submodule "site-lisp/git-modes"]
-	path = site-lisp/git-modes
-	url = git://github.com/magit/git-modes.git
+        path = site-lisp/git-modes
+        url = git://github.com/magit/git-modes.git
+[submodule "site-lisp/ack-and-a-half"]
+        path = site-lisp/ack-and-a-half
+        url = https://github.com/jhelwig/ack-and-a-half.git
+[submodule "site-lisp/emoji-cheat-sheet"]
+        path = site-lisp/emoji-cheat-sheet
+        url = https://github.com/ShingoFukuyama/emacs-emoji-cheat-sheet.git
+[submodule "site-lisp/ht.el"]
+        path = site-lisp/ht.el
+        url = git://github.com/Wilfred/ht.el.git
