@@ -71,6 +71,7 @@
    cu-drupal-contrib-directory (concat
                                 cu-drupal-module-directory
                                 "/contrib")
+
    cu-drupal-custom-directory (concat
                                cu-drupal-module-directory
                                "/custom")
@@ -86,12 +87,16 @@
    drupal-rootdir cu-drupal-site-directory
                                         ; let's set up drush aliases
    cu-drupal-local-alias (concat "@cu.local-" cu-drupal-site-name)
-   cu-drupal-dev-alias (concat "@cu.wcustdev1-" cu-drupal-site-name)
+   cu-drupal-dev-alias (concat "@cu.wwebdev1-" cu-drupal-site-name)
    cu-drupal-stage-alias (concat "@cu.wstage1-" cu-drupal-site-name)
-   cu-drupal-test-alias (concat "@cu.wcusttest1-" cu-drupal-site-name)
-   cu-drupal-prod-alias (concat "@cu.wcust1-" cu-drupal-site-name))
+   cu-drupal-test-alias (concat "@cu.wwebtest1-" cu-drupal-site-name)
+   cu-drupal-prod-alias (concat "@cu.wweb1-" cu-drupal-site-name))
 
-
+  (add-to-list 'projectile-globally-ignored-directories
+               (concat
+                "profiles/"
+                cu-drupal-profile-name
+                "/modules/contrib"))
 
   (setenv "8dr" cu-drupal-readme-file-name)
   (setenv "8ds" cu-drupal-site-directory)
