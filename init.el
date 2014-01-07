@@ -827,14 +827,6 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package ace-jump-mode
   :bind ("M-h" . ace-jump-mode))
 
-;;;_ , ag
-
-(use-package ag
-  :init
-  (progn
-    (use-package wgrep)
-    (use-package wgrep-ag)))
-
 ;;;_ , agda
 
 (use-package agda2-mode
@@ -1620,6 +1612,12 @@ Require unix zip commandline tool."
   :config
   (use-package ediff-keep))
 
+;; If you’re already running an instance of Emacs in --daemon mode then you can wrap the code in something like:
+
+;;  (when (and (daemonp) (locate-library "edit-server"))
+;;    (require 'edit-server)
+;;    (edit-server-start))
+
 ;;;_ , edit-emacs
 
 (use-package edit-server
@@ -1631,6 +1629,11 @@ Require unix zip commandline tool."
     ;; (add-hook 'after-init-hook 'server-start t)
     ;; (add-hook 'after-init-hook 'edit-server-start t)
 ))
+
+;;_ ,  emoji-cheat-sheet
+
+(use-package emoji-cheat-sheet
+  :commands (emoji-cheat-sheet))
 
 ;;;_ , emms
 
@@ -1779,7 +1782,8 @@ PWD is not in a project"
                            allopt))))
               (message "%s" (propertize output 'face '(:foreground
                                                        "#dc322f")))
-              (osx-say output)))
+              ;; (osx-say output)
+))
         (message (concat default-directory " is not a drupal project"))))
 
     (defun drush-version ()
@@ -4013,7 +4017,8 @@ unless return was pressed outside the comment"
         (save-excursion
           (let ((manual-program "pman"))
             (man (symbol-name function))))))
-    (define-key php-mode-map "\C-hf" 'describe-function-via-pman)))
+    (define-key php-mode-map "\C-hf" 'describe-function-via-pman)
+    (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)))
 
 ;;;_ , projectile
 
@@ -4044,7 +4049,15 @@ are in kbd format."
     (mapc (lambda (keybinding)
             (destructuring-bind (key function) keybinding
               (global-set-key (read-kbd-macro key) function)))
-          keybindings))))
+          keybindings))
+
+  (use-package ag
+    :init
+    (progn
+      (use-package wgrep)
+      (use-package wgrep-ag)))
+
+  (use-package ack-and-a-half)))
 
 ;;;_ , popup-ruler
 
