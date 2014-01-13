@@ -12,8 +12,8 @@ Here is the simplest `use-package` declaration:
     (use-package foo)
 
 This loads in the package foo, but only if foo is available on your system.
-If not, a warning is logged to your `*Messages*` buffer.  If it succeeds, a
-message about "Loading foo" is logged -- along with the time it took to load
+If not, a warning is logged to your `*Messages*` buffer.  If it succeeds a
+message about "Loading foo" is logged, along with the time it took to load,
 if that time is over 0.01s.
 
 Use the :init keywoard to do some stuff to initialize foo, but only if foo
@@ -51,11 +51,17 @@ on your system.  So remember to keep `:init` activities to only those that
 would succeed either way.
 
 Similar to `:bind`, you can use `:mode` and `:interpreter` to establish a
-deferred binding within `auto-mode-alist` and `auto-interpreter-alist`.
-The specifier to either keyword can be a single cons or a list:
+deferred binding within `auto-mode-alist` and `interpreter-mode-alist`.
+The specifier to either keyword can be a single cons, or a list, or just
+a string:
 
-    (use-package python-mode
-      :mode ("\\.py$" . python-mode)
+    (use-package ruby-mode
+      :mode "\\.rb\\'"
+      :interpreter "ruby")
+
+    ;; The package is "python" but the mode is "python-mode":
+    (use-package python
+      :mode ("\\.py\\'" . python-mode)
       :interpreter ("python" . python-mode))
 
 If you aren't using `:commands`, `:bind`, `:mode`, or `:interpreter` (all
@@ -101,6 +107,31 @@ In this case, I want to autoload the command `haskell-mode` from
 "haskell-mode.el", add it to `auto-mode-alist` at the time ".emacs" is
 loaded, but wait until after I've opened a Haskell file before loading
 "inf-haskell.el" and "hs-lint.el".
+
+Another similar option to `:init` is `:idle`. Like `:init` this always run,
+however, it does so when Emacs is idle at some time in the future after
+load. This is particularly useful for convienience minor modes which can be
+slow to load. For instance, in this case, I want Emacs to always use
+`global-pabbrev-mode`. `:commands` creates an appropriate autoload; `:idle`
+will run this command at some point in the future. If you start Emacs and
+begin typing straight away, loading will happen eventually.
+
+(use-package pabbrev
+  :commands global-pabbrev-mode
+  :idle (global-pabbrev-mode))
+
+Idle functions are run in the order in which they are evaluated. If you
+have many, it may take sometime for all to run. `use-package` will always
+tell you if there is an error in the form which can otherwise be difficult
+to debug. It may tell you about functions being eval'd, depending on the
+value of `use-package-verbose`. Other good candidates for `:idle` are
+`yasnippet`, `auto-complete` and `autopair`.
+
+Finally, you may wish to use `:pre-load`. This form runs before everything
+else whenever the `use-package` form evals; the package in question will
+never have been required. This can be useful, if you wish for instance, to
+pull files from a git repository, or mount a file system. Like :init,
+keeping this form as simple as possible makes sense.
 
 The `:bind` keyword takes either a cons or a list of conses:
 
@@ -155,8 +186,8 @@ stub in your `:init` block:
       (eval-when-compile
         (autoload 'w3m-search-escape-query-string "w3m-search")))
 
-If your package needs a directory added to the `load-path` in order to load, use
-`:load-path`.  It takes a string or a list of strings.  If the path is
+If your package needs a directory added to the `load-path` in order to load,
+use `:load-path`.  It takes a string or a list of strings.  If the path is
 relative, it will be expanded within `user-emacs-directory`:
 
     (use-package ess-site
@@ -168,8 +199,8 @@ Lastly, `use-package` provides built-in support for the diminish utility,
 if you have that installed.  It's purpose is to remove strings from your
 mode-line that would otherwise always be there and provide no useful
 information.  It is invoked with the `:diminish` keyword, which is passed
-the minor mode symbol, a cons of the symbol and a replacement string, or
-just a replacement string in which case the minor mode symbol is guessed
+either the minor mode symbol, a cons of the symbol and a replacement string,
+or just a replacement string in which case the minor mode symbol is guessed
 to be the package name with "-mode" at the end:
 
     (use-package abbrev
@@ -193,39 +224,13 @@ startup time, and things that could potentioally wait until after the
 actual load.  In this case, everything could be put inside `:init` and
 there would be no difference.
 
-# For el-get users
+## For `package.el` users
 
-You can use `use-package` as a way to create source definitions for el-get.
-All that's needed is to add a `:type` keyword to your declaration.  When
-this is present, certain keywords get translated to what el-get expects in
-the `el-get-sources` list:
+You can use `use-package` to load packages from ELPA with package.el. This
+is particularly useful if you share your .emacs between several machines;
+the relevant packages will download automatically once placed in your
+.emacs. The `:ensure` key will install the package automatically if it is
+not already present:
 
-    :config   -> :after
-    :requires -> :depends
-
-A `:name` will be added also, if one is not provided explicitly, which will
-be the same as the name of the package.
-
-But why would you want to use `use-package` when you have el-get?  My
-answer is that I'd like to use el-get to install and update some packages,
-but I don't want it managing configuration.  Just loading el-get -- without
-calling `(el-get 'sync)` -- takes a quarter second on my machine.  That's 25% of
-my load time!  `use-package` is designed for performance, so I only want to
-load el-get when it's time to install or update on of my used packages.
-
-Here is the `use-package` declaration I use for setting up el-get, but only
-when I want to install or update:
-
-    (defvar el-get-sources nil)
-
-    (use-package el-get
-      :commands (el-get
-                 el-get-install
-                 el-get-update
-                 el-get-list-packages)
-      :config
-      (defun el-get-read-status-file ()
-        (mapcar #'(lambda (entry)
-                    (cons (plist-get entry :symbol)
-                          `(status "installed" recipe ,entry)))
-                el-get-sources)))
+    (use-package tex-site
+      :ensure auctex)

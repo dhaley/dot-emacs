@@ -1573,6 +1573,14 @@ Require unix zip commandline tool."
            (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
            ))))
 
+;;;_ , discover
+
+(use-package discover
+  :init
+  (progn
+  (global-discover-mode 1)
+  (use-package makey)))
+
 ;;;_ , doxymacs
 
 (use-package doxymacs

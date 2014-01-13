@@ -6,7 +6,7 @@
 ;; Created: 16 Jun 2012
 ;; Version: 1.0
 ;; Keywords: keys keybinding config dotemacs
-;; X-URL: https://github.com/jwiegley/bind-key
+;; URL: https://github.com/jwiegley/use-package
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
@@ -205,8 +205,8 @@
                 (if (or (null was-command)
                         (string= command-desc was-command-desc))
                     ""
-                  (format "(%s)" was-command-desc))
-              (format "[now: %s]" at-present)))))
+                  (format "was `%s\'" was-command-desc))
+              (format "[now: `%s\']" at-present)))))
 
         (setq last-binding binding)))))
 
