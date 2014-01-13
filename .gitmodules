@@ -547,3 +547,6 @@
 [submodule "site-lisp/makey"]
         path = site-lisp/makey
         url = https://github.com/mickeynp/makey.git
+[submodule "site-lisp/ht"]
+	path = site-lisp/ht
+	url = git://github.com/Wilfred/ht.el.git
