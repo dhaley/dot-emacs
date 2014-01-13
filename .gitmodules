@@ -538,3 +538,15 @@
 [submodule "site-lisp/prodigy"]
 	path = site-lisp/prodigy
 	url = git://github.com/rejeep/prodigy.el.git
+[submodule "site-lisp/discover"]
+	path = site-lisp/discover
+	url = https://github.com/mickeynp/discover.el.git
+[submodule "lib/pkg-info"]
+	path = lib/pkg-info
+	url = git://github.com/lunaryorn/pkg-info.el.git
+[submodule "lib/epl"]
+	path = lib/epl
+	url = git://github.com/cask/epl.git
+[submodule "site-lisp/makey"]
+	path = site-lisp/makey
+	url = https://github.com/mickeynp/makey.git
