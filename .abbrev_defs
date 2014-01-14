@@ -1915,7 +1915,6 @@
     ("question" "🙋" nil 0)
     ("raised_fist" "✊" nil 0)
     ("raised_hand" "✋" nil 0)
-    ("rec" "recommend" nil 1)
     ("rel" "relevant" nil 0)
     ("relieved_face" "😌" nil 0)
     ("revolving_hearts" "💞" nil 0)
@@ -2032,4 +2031,3 @@
 (define-abbrev-table 'xmtn-log-edit-mode-abbrev-table '())
 
 (define-abbrev-table 'yaml-mode-abbrev-table '())
-
