@@ -550,3 +550,15 @@
 [submodule "site-lisp/ht"]
 	path = site-lisp/ht
 	url = git://github.com/Wilfred/ht.el.git
+[submodule "site-lisp/evernote-mode"]
+	path = site-lisp/evernote-mode
+	url = https://github.com/pymander/evernote-mode.git
+[submodule "site-lisp/helm-dash"]
+	path = site-lisp/helm-dash
+	url = https://github.com/areina/helm-dash.git
+[submodule "site-lisp/esqlite"]
+	path = site-lisp/esqlite
+	url = https://github.com/mhayashi1120/Emacs-esqlite.git
+[submodule "site-lisp/pcsv"]
+	path = site-lisp/pcsv
+	url = https://github.com/mhayashi1120/Emacs-pcsv.git
