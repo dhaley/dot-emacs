@@ -2221,7 +2221,6 @@ FORM => (eval FORM)."
                 (erc-with-server-buffer erc-track-exclude))))
       t)
 
-
     (defun erc-cmd-TRACK (target)
       "Remove TARGET of the list of targets which they should not be tracked.
    If no TARGET argument is specified, list contents of `erc-track-exclude'."
@@ -2654,26 +2653,6 @@ at the beginning of line, if already there."
   (progn
     (use-package f)
     (use-package pkg-info)
-
-    (flycheck-declare-checker xmllint
-      "xmllint checker"
-      :command '("xmllint" "--noout" "--postvalid" source)
-      :error-patterns
-      '(("^\\(?1:.*\\):\\(?2:[0-9]+\\): parser error : \\(?4:.*\\)$" error))
-      :modes 'nxml-mode)
-
-    (push 'xmllint flycheck-checkers)
-
-    (flycheck-declare-checker jslint
-      "jslint checker"
-      :command '("jsl" "-process" source)
-      :error-patterns
-      '(("^\\(?1:.*\\)(\\(?2:[0-9]+\\)): error: \\(?4:.*\\)$" error)
-        ("^\\(?1:.*\\)(\\(?2:[0-9]+\\)): \\(\\(lint \\)?warning\\): \\(?4:.*\\)$"
-         warning))
-      :modes 'js2-mode)
-
-    (push 'jslint flycheck-checkers)
 
     (hook-into-modes #'flycheck-mode '(prog-mode-hook)))
   :config
