@@ -2871,6 +2871,10 @@ at the beginning of line, if already there."
   :config
   (helm-match-plugin-mode t))
 
+;;;_ , helm-dash
+
+;; (use-package helm-dash)
+
 ;;;_ , hi-lock
 
 (use-package hi-lock
