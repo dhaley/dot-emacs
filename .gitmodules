@@ -547,3 +547,6 @@
 [submodule "site-lisp/ht"]
 	path = site-lisp/ht
 	url = git://github.com/Wilfred/ht.el.git
+[submodule "override/gnus"]
+	path = override/gnus
+	url = git@github.com:dhaley/gnus.git
