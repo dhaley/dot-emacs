@@ -286,9 +286,6 @@
 [submodule "site-lisp/emacs-async"]
         path = site-lisp/emacs-async
         url = git://github.com/jwiegley/emacs-async.git
-[submodule "override/gnus"]
-        path = override/gnus
-        url = git://github.com/jwiegley/gnus.git
 [submodule "site-lisp/paredit"]
         path = site-lisp/paredit
         url = git://github.com/emacsmirror/paredit.git
