@@ -1575,11 +1575,12 @@ Require unix zip commandline tool."
 
 ;;;_ , discover
 
-(use-package discover
-  :init
-  (progn
-  (global-discover-mode 1)
-  (use-package makey)))
+;;(use-package discover
+;;  :disable
+;;  :init
+;;  (progn
+;;  (global-discover-mode 1)
+;;  (use-package makey)))
 
 ;;;_ , doxymacs
 
