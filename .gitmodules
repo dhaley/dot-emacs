@@ -174,7 +174,7 @@
         url = git://git.naquadah.org/erc-track-score.git
 [submodule "site-lisp/php-mode"]
         path = site-lisp/php-mode
-        url = git://github.com/ejmr/php-mode.git
+        url = git@github.com:dhaley/php-mode.git
 [submodule "site-lisp/smart-dash"]
         path = site-lisp/smart-dash
         url = git://github.com/emacsmirror/smart-dash.git
@@ -548,17 +548,17 @@
         path = site-lisp/makey
         url = https://github.com/mickeynp/makey.git
 [submodule "site-lisp/ht"]
-	path = site-lisp/ht
-	url = git://github.com/Wilfred/ht.el.git
+        path = site-lisp/ht
+        url = git://github.com/Wilfred/ht.el.git
 [submodule "site-lisp/evernote-mode"]
-	path = site-lisp/evernote-mode
-	url = https://github.com/pymander/evernote-mode.git
+        path = site-lisp/evernote-mode
+        url = https://github.com/pymander/evernote-mode.git
 [submodule "site-lisp/helm-dash"]
-	path = site-lisp/helm-dash
-	url = https://github.com/areina/helm-dash.git
+        path = site-lisp/helm-dash
+        url = https://github.com/areina/helm-dash.git
 [submodule "site-lisp/esqlite"]
-	path = site-lisp/esqlite
-	url = https://github.com/mhayashi1120/Emacs-esqlite.git
+        path = site-lisp/esqlite
+        url = https://github.com/mhayashi1120/Emacs-esqlite.git
 [submodule "helm-css-scss"]
-	path = helm-css-scss
-	url = https://github.com/ShingoFukuyama/helm-css-scss.git
+        path = helm-css-scss
+        url = https://github.com/ShingoFukuyama/helm-css-scss.git
