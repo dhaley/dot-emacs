@@ -35,3 +35,5 @@ logs/
 flycheck-org-clock-save*
 .cask
 *.yas-compiled-snippets.el
+flycheck_org-clock-save.el
+projectile-bookmarks.eld
