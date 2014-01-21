@@ -2873,7 +2873,7 @@ at the beginning of line, if already there."
 
 ;;;_ , helm-dash
 
-;; (use-package helm-dash)
+(use-package helm-dash)
 
 ;;;_ , hi-lock
 
