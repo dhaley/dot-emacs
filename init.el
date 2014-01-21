@@ -2873,7 +2873,11 @@ at the beginning of line, if already there."
 
 ;;;_ , helm-dash
 
-(use-package helm-dash)
+(use-package helm-dash
+  :load-path "site-lisp/esqlite/Emacs-pcsv"
+  :init
+    (helm-dash-activate-docset "Drupal")
+    )
 
 ;;;_ , hi-lock
 
