@@ -568,3 +568,6 @@
 [submodule "site-lisp/helm-gtags"]
 	path = site-lisp/helm-gtags
 	url = https://github.com/lbsx/emacs-helm-gtags.git
+[submodule "site-lisp/helm-recentd"]
+	path = site-lisp/helm-recentd
+	url = https://github.com/ShingoFukuyama/helm-recentd.git
