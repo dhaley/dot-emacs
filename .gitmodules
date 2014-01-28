@@ -463,9 +463,6 @@
 [submodule "site-lisp/winpoint"]
         path = site-lisp/winpoint
         url = git://github.com/jorgenschaefer/winpoint.git
-[submodule "site-lisp/emacs-helm-gtags"]
-        path = site-lisp/emacs-helm-gtags
-        url = git://github.com/lbsx/emacs-helm-gtags.git
 [submodule "site-lisp/epl"]
         path = site-lisp/epl
         url = git://github.com/cask/epl.git
@@ -562,3 +559,9 @@
 [submodule "helm-css-scss"]
         path = helm-css-scss
         url = https://github.com/ShingoFukuyama/helm-css-scss.git
+[submodule "site-lisp/howdoi"]
+        path = site-lisp/howdoi
+        url = https://github.com/arthurnn/howdoi-emacs.git
+[submodule "site-lisp/erc-youtube"]
+        path = site-lisp/erc-youtube
+        url = https://github.com/kidd/erc-youtube.el.git

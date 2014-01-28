@@ -1088,6 +1088,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , basecamp
 
 (use-package basecamp
+  :disabled t
   :commands (syncbasecamp completebasecamp basecamp-showlist basecamp-showprojects)
   :init
   (progn
@@ -2058,6 +2059,8 @@ PWD is not in a project"
                   (kill-ring-save (point-min) (point-max)))
                 (message msg))
             (message (concat "No definition found for " (upcase term)))))))
+
+    (use-package erc-youtube)
 
     (defun switch-to-bitlbee ()
       (interactive)
@@ -3713,6 +3716,7 @@ at the beginning of line, if already there."
 ;; ;;;_ , o-blog
 
 (use-package o-blog
+  :disabled t
   :commands (o-blog-publish
              o-blog-tangle-publish-and-view)
   :config
