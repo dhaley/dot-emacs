@@ -565,3 +565,6 @@
 [submodule "site-lisp/erc-youtube"]
         path = site-lisp/erc-youtube
         url = https://github.com/kidd/erc-youtube.el.git
+[submodule "site-lisp/helm-gtags"]
+	path = site-lisp/helm-gtags
+	url = https://github.com/lbsx/emacs-helm-gtags.git
