@@ -571,3 +571,6 @@
 [submodule "site-lisp/helm-recentd"]
 	path = site-lisp/helm-recentd
 	url = https://github.com/ShingoFukuyama/helm-recentd.git
+[submodule "override/org-mode"]
+	path = override/org-mode
+	url = git://orgmode.org/org-mode.git
