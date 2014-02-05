@@ -556,9 +556,6 @@
 [submodule "site-lisp/esqlite"]
         path = site-lisp/esqlite
         url = https://github.com/mhayashi1120/Emacs-esqlite.git
-[submodule "helm-css-scss"]
-        path = helm-css-scss
-        url = https://github.com/ShingoFukuyama/helm-css-scss.git
 [submodule "site-lisp/howdoi"]
         path = site-lisp/howdoi
         url = https://github.com/arthurnn/howdoi-emacs.git
@@ -566,11 +563,11 @@
         path = site-lisp/erc-youtube
         url = https://github.com/kidd/erc-youtube.el.git
 [submodule "site-lisp/helm-gtags"]
-	path = site-lisp/helm-gtags
-	url = https://github.com/lbsx/emacs-helm-gtags.git
+        path = site-lisp/helm-gtags
+        url = https://github.com/lbsx/emacs-helm-gtags.git
 [submodule "site-lisp/helm-recentd"]
-	path = site-lisp/helm-recentd
-	url = https://github.com/ShingoFukuyama/helm-recentd.git
+        path = site-lisp/helm-recentd
+        url = https://github.com/ShingoFukuyama/helm-recentd.git
 [submodule "override/org-mode"]
-	path = override/org-mode
-	url = git://orgmode.org/org-mode.git
+        path = override/org-mode
+        url = git://orgmode.org/org-mode.git
