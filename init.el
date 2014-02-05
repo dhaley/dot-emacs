@@ -1926,6 +1926,13 @@ PWD is not in a project"
          "-y"
          "-v"
          cu-drupal-stage-alias
+         cu-drupal-local-alias))
+       ((equal env "dev")
+        (create-drush-buffer
+         "sql-sync"
+         "-y"
+         "-v"
+         cu-drupal-dev-alias
          cu-drupal-local-alias))))
 
     (defun drush-sql-sync-prod ()
@@ -1939,6 +1946,12 @@ PWD is not in a project"
       (drush-sql-sync "stage"))
 
     (bind-key "C-8 s s" 'drush-sql-sync-stage)
+
+    (defun drush-sql-sync-dev ()
+      (interactive)
+      (drush-sql-sync "dev"))
+
+    (bind-key "C-8 s d" 'drush-sql-sync-dev)
 
     (defun drush-rsync (env)
       (cond
@@ -1955,7 +1968,15 @@ PWD is not in a project"
          "-v"
          "rsync"
          (concat cu-drupal-stage-alias ":%files/")
-         (concat cu-drupal-local-alias ":%files/")))))
+         (concat cu-drupal-local-alias ":%files/")))
+       ((equal env "dev")
+        (create-drush-buffer
+         "-y"
+         "-v"
+         "rsync"
+         (concat cu-drupal-dev-alias ":%files/")
+         (concat cu-drupal-local-alias ":%files/")))
+))
 
     (defun drush-rsync-prod ()
       (interactive)
@@ -1967,7 +1988,16 @@ PWD is not in a project"
       (interactive)
       (drush-rsync "stage"))
 
-    (bind-key "C-8 r s" 'drush-rsync-stage)))
+    (bind-key "C-8 r s" 'drush-rsync-stage)
+
+    (defun drush-rsync-dev ()
+      (interactive)
+      (drush-rsync "dev"))
+
+    (bind-key "C-8 r d" 'drush-rsync-dev)
+
+
+))
 
 ;;;_ , erc
 
@@ -3759,7 +3789,7 @@ and view local index.html url"
   :init
   (progn
     (unless running-alternate-emacs
-      (run-with-idle-timer 300 t 'jump-to-org-agenda))
+      (run-with-idle-timer 600 t 'jump-to-org-agenda))
 
     (unless running-alternate-emacs
       (add-hook 'after-init-hook
