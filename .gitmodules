@@ -574,3 +574,12 @@
 [submodule "override/org-mode"]
 	path = override/org-mode
 	url = git://orgmode.org/org-mode.git
+[submodule "site-lisp/helm-git-grep"]
+	path = site-lisp/helm-git-grep
+	url = https://github.com/yasuyk/helm-git-grep.git
+[submodule "site-lisp/Hyde"]
+	path = site-lisp/Hyde
+	url = https://github.com/nibrahim/Hyde.git
+[submodule "site-lisp/github-browse-file"]
+	path = site-lisp/github-browse-file
+	url = https://github.com/osener/github-browse-file.git
