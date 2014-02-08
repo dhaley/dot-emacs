@@ -735,13 +735,18 @@ end tell" (match-string 1))))
 (define-key my-org-expand-map [(control ?w)] 'bh/widen)
 (define-key my-org-expand-map [(control ?l)] 'bh/set-truncate-lines)
 (define-key my-org-expand-map [(control ?H)] 'bh/hide-other)
-(define-key my-org-expand-map [(control ?n)] 'bh/narrow-up-one-level)
+;; (define-key my-org-expand-map [(control ?n)] 'bh/narrow-up-one-level)
 (define-key my-org-expand-map [(control ?i)] 'bh/punch-in)
 (define-key my-org-expand-map [(control ?o)] 'bh/punch-out)
 (define-key my-org-expand-map [(control ?t)] 'bh/insert-inactive-timestamp)
 (define-key my-org-expand-map [(control ?T)] 'bh/toggle-insert-inactive-timestamp)
+(define-key my-org-expand-map [(control ?v)] 'visible-mode)
+(define-key my-org-expand-map [(control ?L)] 'org-toggle-link-display)
 (define-key my-org-expand-map [(control ?c)] 'bh/clock-in-last-task)
+;; (define-key my-org-expand-map [(control ?P)] 'previous-buffer)
 (define-key my-org-expand-map [(control ?p)] 'org-toggle-inline-images)
+(define-key my-org-expand-map [(control ?r)] 'narrow-to-region)
+;; (define-key my-org-expand-map [(control ?n)] 'next-buffer)
 (define-key my-org-expand-map [(control ?g)] 'org-clock-goto)
 (define-key my-org-expand-map [(control ?C)] 'org-clock-in)
 (define-key my-org-expand-map [(control ?s)] 'bh/save-then-publish)
@@ -874,7 +879,7 @@ end tell" (match-string 1))))
   (interactive)
   (save-excursion
     (beginning-of-line 0)
-    (org-remove-empty-drawer-at "LOGBOOK" (point))))
+    (org-remove-empty-drawer-at (point))))
 
 (add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
 
@@ -1105,7 +1110,7 @@ Callers of this function already widen the buffer view."
 
 (defun bh/skip-non-stuck-projects ()
   "Skip trees that are not stuck projects"
-  (bh/list-sublevels-for-projects-indented)
+  ;; (bh/list-sublevels-for-projects-indented)
   (save-restriction
     (widen)
     (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
@@ -1124,22 +1129,55 @@ Callers of this function already widen the buffer view."
 
 (defun bh/skip-non-projects ()
   "Skip trees that are not projects"
-  (bh/list-sublevels-for-projects-indented)
+  ;; (bh/list-sublevels-for-projects-indented)
   (if (save-excursion (bh/skip-non-stuck-projects))
       (save-restriction
         (widen)
         (let ((subtree-end (save-excursion (org-end-of-subtree t))))
           (cond
-           ((and (bh/is-project-p)
-                 (marker-buffer org-agenda-restrict-begin))
+           ((bh/is-project-p)
             nil)
-           ((and (bh/is-project-p)
-                 (not (marker-buffer org-agenda-restrict-begin))
-                 (not (bh/is-project-subtree-p)))
+           ((and (bh/is-project-subtree-p) (not (bh/is-task-p)))
             nil)
            (t
             subtree-end))))
     (save-excursion (org-end-of-subtree t))))
+
+(defun bh/skip-project-tasks ()
+  "Show non-project tasks.
+Skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       ((bh/is-project-subtree-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-non-project-tasks ()
+  "Show project tasks.
+Skip project and sub-project tasks, habits, and loose non-project tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+           (next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((bh/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        subtree-end)
+       ((and (bh/is-project-subtree-p)
+             (member (org-get-todo-state) (list "NEXT")))
+        subtree-end)
+       ((not (bh/is-project-subtree-p))
+        subtree-end)
+       (t
+        nil)))))
 
 (defun bh/skip-project-trees-and-habits ()
   "Skip trees that are projects"
@@ -1363,6 +1401,10 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
           (org-agenda-redo)))
     (widen)))
 
+(add-hook 'org-agenda-mode-hook
+          '(lambda () (org-defkey org-agenda-mode-map "W" (lambda () (interactive) (setq bh/hide-scheduled-and-waiting-next-tasks t) (bh/widen))))
+          'append)
+
 (defun bh/restrict-to-file-or-follow (arg)
   "Set agenda restriction to 'file or with argument invoke follow mode.
 I don't use follow mode very often but I restrict to file all the time
@@ -1375,24 +1417,21 @@ so change the default 'F' binding in the agenda to allow both"
     (org-agenda-redo)
     (beginning-of-buffer)))
 
-
 (defun bh/narrow-to-org-subtree ()
   (widen)
-  (org-narrow-to-subtree))
+  (org-narrow-to-subtree)
+  (save-restriction
+    (org-agenda-set-restriction-lock)))
 
 (defun bh/narrow-to-subtree ()
   (interactive)
   (if (equal major-mode 'org-agenda-mode)
       (progn
         (org-with-point-at (org-get-at-bol 'org-hd-marker)
-          (bh/narrow-to-org-subtree)
-          (save-restriction
-            (org-agenda-set-restriction-lock)))
+          (bh/narrow-to-org-subtree))
         (when org-agenda-sticky
           (org-agenda-redo)))
-    (bh/narrow-to-org-subtree)
-    (save-restriction
-      (org-agenda-set-restriction-lock))))
+    (bh/narrow-to-org-subtree)))
 
 (defun bh/narrow-up-one-org-level ()
   (widen)
@@ -1417,7 +1456,6 @@ so change the default 'F' binding in the agenda to allow both"
   (widen)
   (save-excursion
     (bh/find-project-task)
-    (org-agenda-set-restriction-lock)
     (bh/narrow-to-org-subtree)))
 
 (defun bh/narrow-to-project ()
@@ -1670,15 +1708,20 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;; flyspell mode for spell checking everywhere
 ;; (add-hook 'org-mode-hook 'turn-on-flyspell 'append)
 
-;; Disable C-c [ and C-c ] and C-c ; in org-mode
+;; Disable keys in org-mode
+;;    C-c [
+;;    C-c ]
+;;    C-c ;
+;;    C-c C-x C-q  cancelling the clock (we never want this)
 (add-hook 'org-mode-hook
           '(lambda ()
              ;; Undefine C-c [ and C-c ] since this breaks my
              ;; org-agenda files when directories are include It
              ;; expands the files in the directories individually
-             (org-defkey org-mode-map "\C-c["    'undefined)
-             (org-defkey org-mode-map "\C-c]"    'undefined)
-             (org-defkey org-mode-map "\C-c;"    'undefined))
+             (org-defkey org-mode-map "\C-c[" 'undefined)
+             (org-defkey org-mode-map "\C-c]" 'undefined)
+             (org-defkey org-mode-map "\C-c;" 'undefined)
+             (org-defkey org-mode-map "\C-c\C-x\C-q" 'undefined))
           'append)
 
 (add-hook 'org-mode-hook
