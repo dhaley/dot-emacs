@@ -516,10 +516,10 @@
         url = git://github.com/magit/git-modes.git
 [submodule "site-lisp/ack-and-a-half"]
         path = site-lisp/ack-and-a-half
-        url = https://github.com/jhelwig/ack-and-a-half.git
+        url = git//github.com/jhelwig/ack-and-a-half.git
 [submodule "site-lisp/emoji-cheat-sheet"]
         path = site-lisp/emoji-cheat-sheet
-        url = https://github.com/ShingoFukuyama/emacs-emoji-cheat-sheet.git
+        url = git//github.com/ShingoFukuyama/emacs-emoji-cheat-sheet.git
 [submodule "site-lisp/ht.el"]
         path = site-lisp/ht.el
         url = git://github.com/Wilfred/ht.el.git
@@ -537,7 +537,7 @@
         url = git://github.com/cask/epl.git
 [submodule "site-lisp/makey"]
         path = site-lisp/makey
-        url = https://github.com/mickeynp/makey.git
+        url = git://github.com/mickeynp/makey.git
 [submodule "site-lisp/ht"]
         path = site-lisp/ht
         url = git://github.com/Wilfred/ht.el.git
@@ -546,37 +546,37 @@
         url = git@github.com:dhaley/gnus.git
 [submodule "site-lisp/evernote-mode"]
         path = site-lisp/evernote-mode
-        url = https://github.com/pymander/evernote-mode.git
+        url = git://github.com/pymander/evernote-mode.git
 [submodule "site-lisp/helm-dash"]
         path = site-lisp/helm-dash
-        url = https://github.com/areina/helm-dash.git
+        url = git://github.com/areina/helm-dash.git
 [submodule "site-lisp/esqlite"]
         path = site-lisp/esqlite
-        url = https://github.com/mhayashi1120/Emacs-esqlite.git
+        url = git://github.com/mhayashi1120/Emacs-esqlite.git
 [submodule "site-lisp/howdoi"]
         path = site-lisp/howdoi
-        url = https://github.com/arthurnn/howdoi-emacs.git
+        url = git://github.com/arthurnn/howdoi-emacs.git
 [submodule "site-lisp/erc-youtube"]
         path = site-lisp/erc-youtube
-        url = https://github.com/kidd/erc-youtube.el.git
+        url = git://github.com/kidd/erc-youtube.el.git
 [submodule "site-lisp/helm-gtags"]
         path = site-lisp/helm-gtags
-        url = https://github.com/lbsx/emacs-helm-gtags.git
+        url = git://github.com/lbsx/emacs-helm-gtags.git
 [submodule "site-lisp/helm-recentd"]
         path = site-lisp/helm-recentd
-        url = https://github.com/ShingoFukuyama/helm-recentd.git
+        url = git://github.com/ShingoFukuyama/helm-recentd.git
 [submodule "override/org-mode"]
         path = override/org-mode
         url = git@github.com:dhaley/org-mode.git
 [submodule "site-lisp/helm-git-grep"]
         path = site-lisp/helm-git-grep
-        url = https://github.com/yasuyk/helm-git-grep.git
+        url = git://github.com/yasuyk/helm-git-grep.git
 [submodule "site-lisp/Hyde"]
         path = site-lisp/Hyde
-        url = https://github.com/nibrahim/Hyde.git
+        url = git://github.com/nibrahim/Hyde.git
 [submodule "site-lisp/github-browse-file"]
         path = site-lisp/github-browse-file
-        url = https://github.com/osener/github-browse-file.git
+        url = git://github.com/osener/github-browse-file.git
 [submodule "site-lisp/helm-swoop"]
         path = site-lisp/helm-swoop
         url = git://github.com/ShingoFukuyama/helm-swoop.git
