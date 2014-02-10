@@ -541,9 +541,6 @@
 [submodule "site-lisp/ht"]
         path = site-lisp/ht
         url = git://github.com/Wilfred/ht.el.git
-[submodule "override/gnus"]
-        path = override/gnus
-        url = git@github.com:dhaley/gnus.git
 [submodule "site-lisp/evernote-mode"]
         path = site-lisp/evernote-mode
         url = https://github.com/pymander/evernote-mode.git
@@ -569,5 +566,5 @@
         path = override/org-mode
         url = git://orgmode.org/org-mode.git
 [submodule "site-lisp/helm-swoop"]
-	path = site-lisp/helm-swoop
-	url = git://github.com/ShingoFukuyama/helm-swoop.git
+        path = site-lisp/helm-swoop
+        url = git://github.com/ShingoFukuyama/helm-swoop.git
