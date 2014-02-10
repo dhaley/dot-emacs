@@ -1531,7 +1531,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                                      (dired-package-initialize)
                                      (hl-line-mode 1)
                                      (setq cursor-type t)
-                                     (detect-drupal-dired)))
+                                     (projectile-drupal-on)))
 
        (defun dired-double-jump (first-dir second-dir)
          (interactive
@@ -1759,21 +1759,6 @@ PWD is not in a project"
                   (return profile)
                 (throw 'error "no profile")))))))
 
-    (defun detect-drupal-dired ()
-      (if (and
-           (locate-dominating-file
-            default-directory
-            "includes/common.inc")
-           (locate-dominating-file
-            default-directory
-            "includes/bootstrap.inc"))
-          (progn
-            (defvar cu-drupal-initialized nil)
-            (unless cu-drupal-initialized
-              (setq cu-drupal-initialized t)
-             (initialize_cu_drupal)))
-        (message "You are not visiting a drupal project")))
-
     (defun drush-uli-to-string ()
       " Provide dynamically derived uri for drush uli"
       (interactive)
@@ -1825,8 +1810,6 @@ PWD is not in a project"
     (bind-key "C-8 c d" 'drush-core-status-debug))
   :config
   (progn
-
-    (use-package druide)
 
     (require 'smart-dash)
     (add-hook 'drupal-mode-hook
@@ -4100,7 +4083,8 @@ are in kbd format."
       (use-package wgrep)
       (use-package wgrep-ag)))
 
-  (use-package ack-and-a-half)))
+  (use-package ack-and-a-half)
+  (use-package projectile-drupal)))
 
 ;;;_ , popup-ruler
 
