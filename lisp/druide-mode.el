@@ -1,7 +1,46 @@
-;;; druide --- Commands to help manipulate diff3 regions
+;;; druide-mode.el --- Minor mode for Drupal projects based on projectile-mode
+
+;; Copyright (C) 2014 Damon Haley
+
+;; Author:            Damon Haley <dhk@member.fsf.org>
+;; URL:               https://github.com/dhaley/druide-mode
+;; Version:           0.0.1
+;; Keywords:          drupal, projectile
+
+;; This file is NOT part of GNU Emacs.
+
+;;; License:
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to the
+;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+
+;;; Commentary:
+;;
+;;
+;;; Code:
 
 
+;;;###autoload
 
+(define-minor-mode druide-mode
+  "Emacs Drupal mode based on projectile."
+  :lighter " druide"
+  :keymap (let ((map (make-sparse-keymap)))
+            (define-key map (kbd "C-8 m b") 'cu-drupal-menu-browse)
+            map)
+)
 
 
 (defun initialize_cu_drupal ()
@@ -722,10 +761,8 @@
       (interactive)
       (let ((menu (completing-read "Browse: " d7-menus)))
         (browse-url (concat base_url "/" menu))))
-    (bind-key "C-8 m b" 'cu-drupal-menu-browse)
+
+;;
 )
 
-
-(provide 'druide)
-
-;;; druide.el ends here
+(provide 'druide-mode)
