@@ -580,3 +580,6 @@
 [submodule "override/gnus"]
         path = override/gnus
         url = git@github.com:dhaley/gnus.git
+[submodule "lisp/projectile-drupal"]
+	path = lisp/projectile-drupal
+	url = git@github.com:dhaley/projectile-drupal.git
