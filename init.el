@@ -1728,7 +1728,7 @@ Require unix zip commandline tool."
 
 (use-package drupal-mode
   ;; :mode ("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode)
-  :commands (drupal-mode initialize_cu_drupal)
+  :commands (initialize_cu_drupal)
   :init
   (progn
     ;; (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
@@ -1759,19 +1759,6 @@ PWD is not in a project"
                   (return profile)
                 (throw 'error "no profile")))))))
 
-    (defun detect-drupal ()
-      (if (and
-           (locate-dominating-file
-            default-directory
-            "includes/common.inc")
-           (locate-dominating-file
-            default-directory
-            "includes/bootstrap.inc"))
-          (progn
-            (initialize_cu_drupal)
-            (drupal-mode 1))
-        (message "You are not visiting a drupal project")))
-
     (defun detect-drupal-dired ()
       (if (and
            (locate-dominating-file
@@ -1784,8 +1771,7 @@ PWD is not in a project"
             (defvar cu-drupal-initialized nil)
             (unless cu-drupal-initialized
               (setq cu-drupal-initialized t)
-              (initialize_cu_drupal)
-              (drupal-mode 1)))
+             (initialize_cu_drupal)))
         (message "You are not visiting a drupal project")))
 
     (defun drush-uli-to-string ()
