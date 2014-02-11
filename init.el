@@ -195,8 +195,6 @@
 (defvar workgroups-preload-map)
 (define-prefix-command 'workgroups-preload-map)
 
-(bind-key "C-8" 'workgroups-preload-map)
-
 (bind-key "<H-down>" 'shrink-window)
 (bind-key "<H-left>" 'shrink-window-horizontally)
 (bind-key "<H-right>" 'enlarge-window-horizontally)
@@ -1530,8 +1528,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
        (add-hook 'dired-mode-hook '(lambda ()
                                      (dired-package-initialize)
                                      (hl-line-mode 1)
-                                     (setq cursor-type t)
-                                     (projectile-drupal-on)))
+                                     (setq cursor-type t)))
 
        (defun dired-double-jump (first-dir second-dir)
          (interactive
@@ -1742,8 +1739,7 @@ Require unix zip commandline tool."
                  (smart-dash-mode 1)
                  (gtags-mode 1)
                  (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                 (setq dash-at-point-docset "drupal")
-                 (projectile-drupal-on)))
+                 (setq dash-at-point-docset "drupal")))
     (add-to-list 'yas-extra-modes 'drupal-mode)))
 
 ;;;_ , erc
@@ -2469,13 +2465,7 @@ at the beginning of line, if already there."
 ;;;_ , highlight-symbol
 (use-package highlight-symbol
   :disabled t
-  :commands (highlight-symbol-prev highlight-symbol-next highlight-symbol-at-point highlight-symbol-query-replace)
-  :init
-  (progn
-    (bind-key "C-8 C-p" 'highlight-symbol-prev)
-    (bind-key "C-8 C-n" 'highlight-symbol-next)
-    (bind-key "C-8 C-h" 'highlight-symbol-at-point)
-    (bind-key "C-8 C-q" 'highlight-symbol-query-replace)))
+  :commands (highlight-symbol-prev highlight-symbol-next highlight-symbol-at-point highlight-symbol-query-replace))
 
 ;;;_ , highlight-tail
 (use-package highlight-tail
@@ -3550,18 +3540,6 @@ and view local index.html url"
 
 (use-package org-jira
   :load-path ("~/.emacs.d/lisp/org-jira")
-  :bind (
-         ("C-8 j G" . org-jira-get-subtasks)
-         ("C-8 j P" . org-jira-get-projects)
-         ("C-8 j b" . org-jira-browse-issue)
-         ("C-8 j c" . org-jira-create-issue)
-         ("C-8 j C" . org-jira-update-comment)
-         ("C-8 j g" . org-jira-get-issues)
-         ("C-8 j p" . org-jira-progress-issue)
-         ("C-8 j r" . org-jira-refresh-issue)
-         ("C-8 j s" . org-jira-create-subtask)
-         ("C-8 j t" . org-jira-todo-to-jira)
-         ("C-8 j u" . org-jira-update-issue))
   :init
   (progn
 
@@ -3835,7 +3813,9 @@ are in kbd format."
       (use-package wgrep-ag)))
 
   (use-package ack-and-a-half)
-  (use-package projectile-drupal)))
+  (use-package projectile-drupal)
+  (add-hook 'projectile-mode-hook 'projectile-drupal-on)
+))
 
 ;;;_ , popup-ruler
 
@@ -4520,45 +4500,6 @@ are in kbd format."
     (bind-key "H-M-g" 'w3m-search)
     (bind-key "H-M-w" 'wikipedia-query)
 
-    (defun choose-browser (url &rest args)
-      (interactive "sURL: ")
-      (if current-prefix-arg
-          (w3m-browse-url url)
-        (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
-          (browse-url url))))
-
-    (defun choose-cu-site (env site)
-      "env & URL"
-      (cond
-       ((equal env "prod")
-        (browse-url (concat "http://www.colorado.edu/" site)))
-       ((equal env "stage"))
-       ((equal env "stage")
-        (browse-url (concat "http://www-stage.colorado.edu/" site)))
-       ((equal env "dev")
-        (browse-url (concat "http://www-dev.colorado.edu/" site)))
-       ((equal env "test")
-        (browse-url (concat "http://www-test.colorado.edu/" site)))))
-
-    (defun choose-cu-site-prod (site)
-      (interactive "sSite: ")
-      (choose-cu-site "prod" site))
-    (bind-key "C-8 c p" 'choose-cu-site-prod)
-
-    (defun choose-cu-site-stage (site)
-      (interactive "sSite: ")
-      (choose-cu-site "stage" site))
-    (bind-key "C-8 c s" 'choose-cu-site-stage)
-
-    (defun choose-cu-site-dev (site)
-      (interactive "sSite: ")
-      (choose-cu-site "dev" site))
-    (bind-key "C-8 c d" 'choose-cu-site-dev)
-
-    (defun choose-cu-site-test (site)
-      (interactive "sSite: ")
-      (choose-cu-site "test" site))
-    (bind-key "C-8 c t" 'choose-cu-site-test))
   :config
   (progn
 
@@ -4760,7 +4701,6 @@ are in kbd format."
       "create workgroups using names from awesome button"
       (interactive)
       (wg-create-workgroup (get-awesome-button)))
-    (bind-key "C-8 \\" 'wg-create-workgroup-awesome)
 
     (use-package awesome-button
       :bind ("H-a" . awesome-button-say)
