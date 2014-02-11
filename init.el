@@ -4498,8 +4498,7 @@ are in kbd format."
 
     (bind-key "H-M-e" 'goto-emacswiki)
     (bind-key "H-M-g" 'w3m-search)
-    (bind-key "H-M-w" 'wikipedia-query)
-
+    (bind-key "H-M-w" 'wikipedia-query))
   :config
   (progn
 
