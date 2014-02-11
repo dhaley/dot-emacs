@@ -583,3 +583,6 @@
 [submodule "lisp/projectile-drupal"]
 	path = lisp/projectile-drupal
 	url = git@github.com:dhaley/projectile-drupal.git
+[submodule "site-lisp/php-boris-minor-mode"]
+	path = site-lisp/php-boris-minor-mode
+	url = https://github.com/steckerhalter/php-boris-minor-mode.git
