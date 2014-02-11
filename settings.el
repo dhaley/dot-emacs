@@ -300,7 +300,6 @@
  '(regex-tool-backend (quote perl))
  '(require-final-newline t)
  '(runner-init-file "~/.emacs.d/runner-conf.el")
- '(safe-local-variable-values (quote ((eval projectile-drupal-initialize-drupal))))
  '(same-window-buffer-names (quote ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
  '(same-window-regexps (quote ("\\*vc\\-.+\\*" "\\*magit.+\\*" "*grep*" "\\*compilation\\*\\(\\|<[0-9]+>\\)" "\\*Help\\*\\(\\|<[0-9]+>\\)" "\\*Shell Command Output\\*\\(\\|<[0-9]+>\\)" "\\*dictem.*")))
  '(save-abbrevs (quote silently))

@@ -1725,7 +1725,7 @@ Require unix zip commandline tool."
 
 (use-package drupal-mode
   ;; :mode ("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode)
-  :commands (projectile-drupal-initialize-drupal)
+  :commands (projectile-drupal-setup)
   :init
   (progn
     ;; (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
