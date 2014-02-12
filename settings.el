@@ -281,7 +281,6 @@
  '(projectile-globally-ignored-files (quote ("TAGS" ".gitignore" ".gitmodules" ".htaccess" "authorize.php" "cron.php" "install.php" "robots.txt" "update.php" "xmlrpc.php" "web.config" "GTAGS" "GRTAGS" "GPATH")))
  '(projectile-project-root-files (quote ("includes/bootstrap.inc" ".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs" "rebar.config" "project.clj" "pom.xml" "build.sbt" "Gemfile" "Makefile")))
  '(projectile-switch-project-action (quote projectile-dired))
- '(projectile-switch-project-hook (quote (projectile-drupal-on)))
  '(projectile-tags-command "drush gtags")
  '(ps-font-size (quote (8 . 10)))
  '(ps-footer-font-size (quote (12 . 14)))
