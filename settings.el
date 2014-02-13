@@ -116,7 +116,6 @@
  '(emms-source-file-default-directory "/Users/daha1836/Music/iTunes/iTunes Media")
  '(emms-stream-bookmarks-file "~/Documents/emms/streams")
  '(enable-recursive-minibuffers t)
- '(epg-gpg-program "gpg2")
  '(erc-auto-query (quote frame))
  '(erc-autoawayo-message "I'm at the cappuccino bar(after %i seconds of idle-time)")
  '(erc-autojoin-channels-alist (quote (("freenode.net" "#drupal-colorado" "#emacs") ("localhost"))))
