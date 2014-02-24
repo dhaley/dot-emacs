@@ -243,6 +243,7 @@
  '(magit-completing-read-function (quote magit-ido-completing-read))
  '(magit-process-popup-time 15)
  '(make-backup-file-name-function (quote my-make-backup-file-name))
+ '(mail-sources (quote ((file :path "/var/mail/dadu"))))
  '(memory-usage-format "%R %F %S")
  '(moccur-following-mode-toggle nil)
  '(modelinepos-column-limit 80)
