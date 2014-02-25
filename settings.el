@@ -20,7 +20,7 @@
  '(ac-use-fuzzy nil)
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
  '(alert-default-style (quote notifier))
- '(alert-notifier-command "/usr/bin/terminal-notifier")
+ '(alert-notifier-command "/usr/local/bin/terminal-notifier")
  '(align-c++-modes (quote (csharp-mode c++-mode c-mode java-mode groovy-mode)))
  '(align-to-tab-stop nil)
  '(allout-command-prefix ".")
