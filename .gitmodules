@@ -586,3 +586,6 @@
 [submodule "site-lisp/php-boris-minor-mode"]
         path = site-lisp/php-boris-minor-mode
         url = https://github.com/steckerhalter/php-boris-minor-mode.git
+[submodule "override/tramp"]
+	path = override/tramp
+	url = git://git.savannah.gnu.org/tramp.git
