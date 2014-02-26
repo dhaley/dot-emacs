@@ -566,8 +566,8 @@
         path = override/org-mode
         url = git@github.com:dhaley/org-mode.git
 [submodule "site-lisp/helm-git-grep"]
-	path = site-lisp/helm-git-grep
-	url = git://github.com/yasuyk/helm-git-grep.git
+        path = site-lisp/helm-git-grep
+        url = git://github.com/yasuyk/helm-git-grep.git
 [submodule "site-lisp/Hyde"]
         path = site-lisp/Hyde
         url = git://github.com/nibrahim/Hyde.git
@@ -586,6 +586,3 @@
 [submodule "site-lisp/php-boris-minor-mode"]
         path = site-lisp/php-boris-minor-mode
         url = https://github.com/steckerhalter/php-boris-minor-mode.git
-[submodule "override/tramp"]
-	path = override/tramp
-	url = git://git.savannah.gnu.org/tramp.git
