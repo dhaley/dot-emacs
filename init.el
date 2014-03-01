@@ -3526,8 +3526,13 @@ and view local index.html url"
   (progn
     (unless running-alternate-emacs
       (run-with-idle-timer 600 t 'jump-to-org-agenda))
+  (defun org-fit-agenda-window ()
+  "Fit the window to the buffer size."
+  (and (memq org-agenda-window-setup '(reorganize-frame))
+       (fboundp 'fit-window-to-buffer)
+       (fit-window-to-buffer)))
 
-    (unless running-alternate-emacs
+  (unless running-alternate-emacs
       (add-hook 'after-init-hook
                 #'(lambda ()
                     (org-agenda-list)
@@ -3814,7 +3819,9 @@ are in kbd format."
   (use-package ack-and-a-half)
   (use-package projectile-drupal)
   (add-hook 'projectile-mode-hook 'projectile-drupal-on)
-))
+
+  (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
+  (bind-key "C-c p ESC" 'projectile-project-buffers-other-buffer)))
 
 ;;;_ , popup-ruler
 
