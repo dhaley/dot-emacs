@@ -3515,22 +3515,24 @@ and view local index.html url"
 ;; ;;;_ , org-mode
 
 (use-package dot-org
-  :commands org-agenda-list
-  :bind (("M-C"   . jump-to-org-agenda)
-         ("M-m"   . org-smart-capture)
-         ("M-M"   . org-inline-note)
-         ("C-c a" . org-agenda)
-         ("C-c S" . org-store-link)
-         ("C-c l" . org-insert-link))
+  ;; :commands org-agenda-list
+  ;; :bind (("M-C"   . jump-to-org-agenda)
+  ;;        ("M-m"   . org-smart-capture)
+  ;;        ("M-M"   . org-inline-note)
+  ;;        ("C-c a" . org-agenda)
+  ;;        ("C-c S" . org-store-link)
+  ;;        ("C-c l" . org-insert-link))
   :init
+  (bind-key "M-C"   'jump-to-org-agenda)
+  (bind-key "M-m"   'org-smart-capture)
+  (bind-key "M-M"   'org-inline-note)
+  (bind-key "C-c a" 'org-agenda)
+  (bind-key "C-c S" 'org-store-link)
+  (bind-key "C-c l" 'org-insert-link)
+
   (progn
     (unless running-alternate-emacs
       (run-with-idle-timer 600 t 'jump-to-org-agenda))
-  (defun org-fit-agenda-window ()
-  "Fit the window to the buffer size."
-  (and (memq org-agenda-window-setup '(reorganize-frame))
-       (fboundp 'fit-window-to-buffer)
-       (fit-window-to-buffer)))
 
   (unless running-alternate-emacs
       (add-hook 'after-init-hook
@@ -3538,7 +3540,6 @@ and view local index.html url"
                     (org-agenda-list)
                     (org-fit-agenda-window)
                     (org-resolve-clocks))) t)))
-
 
 ;;;_ , org-jira
 
