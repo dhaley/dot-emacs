@@ -3780,6 +3780,8 @@ unless return was pressed outside the comment"
     (define-key php-mode-map "\C-hf" 'describe-function-via-pman)
     (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)))
 
+    (use-package php-auto-yasnippets)))
+
 ;;;_ , projectile
 
 (use-package projectile
@@ -4664,11 +4666,10 @@ are in kbd format."
 ;;;_ , web-mode
 
 (use-package web-mode
-  :mode ("\\.tpl\\.php\\.html$" . web-mode)
+  :mode ("\\.tpl\\.php$" . web-mode)
   :init
   (progn
-    (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))
-    ))
+    (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))))
 
 ;;;_ , winner
 
@@ -4709,6 +4710,12 @@ are in kbd format."
 
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
     (bind-key "\\" 'toggle-input-method wg-map)
+
+    (add-hook 'wg-switch-hook
+              '(lambda ()
+                 (awesome-button-say)
+                 ;; (message "ho")
+     ))
 
     (defun wg-create-workgroup-awesome ()
       "create workgroups using names from awesome button"
