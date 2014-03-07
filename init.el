@@ -2600,8 +2600,11 @@ at the beginning of line, if already there."
     (use-package helm-css-scss)
     (use-package helm-ag)
 
-    (bind-key "C-h b" 'helm-descbinds))
-
+    (bind-key "C-h b" 'helm-descbinds)
+    (use-package helm-gtags
+      :bind ("M-T" . helm-gtags-select)
+      :config
+      (bind-key "M-," 'helm-gtags-resume gtags-mode-map)))
   :config
   (helm-match-plugin-mode t))
 
@@ -3743,7 +3746,7 @@ unless return was pressed outside the comment"
           (let ((manual-program "pman"))
             (man (symbol-name function))))))
     (define-key php-mode-map "\C-hf" 'describe-function-via-pman)
-    (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)))
+    (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
 
     (use-package php-auto-yasnippets)))
 
@@ -3784,12 +3787,10 @@ are in kbd format."
       (use-package wgrep)
       (use-package wgrep-ag)))
 
-  (use-package ack-and-a-half)
   (use-package projectile-drupal)
   (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
-  (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
-  (bind-key "C-c p ESC" 'projectile-project-buffers-other-buffer)))
+  (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)))
 
 ;;;_ , popup-ruler
 
