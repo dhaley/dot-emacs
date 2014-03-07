@@ -1799,9 +1799,7 @@ Require unix zip commandline tool."
                                                 :port 6667))
                        :secret))))
     (add-hook 'after-init-hook 'im)
-    (add-hook 'after-init-hook 'irc)
-    ;; (add-hook 'after-init-hook 'create-new-erc-frames)
-    )
+    (add-hook 'after-init-hook 'irc))
 
   :config
   (progn
@@ -2010,31 +2008,8 @@ FORM => (eval FORM)."
                (erc-make-notice (format "Now tracking %s" target))
                'active)))))
       t)
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    (defun my-reformat-jabber-backlog ()
-      "Fix \"unkown participant\" backlog messages from bitlbee."
-      (save-excursion
-        (goto-char (point-min))
-        (if (looking-at
-             "^<root> System message: Message from unknown participant \\([^:]+\\):")
-            (replace-match "<\\1>"))))
-    (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
-
     ;; turn on abbrevs
     (abbrev-mode 1)
-
-    (defun create-new-erc-frames ()
-      (interactive)
-      (switch-to-bitlbee)
-      (switch-to-buffer-other-frame "#drupal-colorado")
-      (switch-to-buffer-other-frame "#emacs")
-      )
-
-    ;; (frame-configuration-to-register REGISTER &optional ARG)
-    ;; (set-register "E"  (list (current-frame-configuration) (point-marker)))
-    (bind-key "H-E" 'create-new-erc-frames)
-
     ;; add abbrevs
     (abbrev-table-put erc-mode-abbrev-table :parents (list
                                                       text-mode-abbrev-table))
