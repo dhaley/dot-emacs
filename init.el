@@ -1732,13 +1732,11 @@ Require unix zip commandline tool."
   :config
   (progn
 
-    (require 'smart-dash)
+    (use-package ggtags)
     (add-hook 'drupal-mode-hook
               '(lambda ()
-                 (smart-dash-mode 1)
-                 (gtags-mode 1)
-                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                 (setq dash-at-point-docset "drupal")))
+                 (ggtags-mode 1)
+                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")))
     (add-to-list 'yas-extra-modes 'drupal-mode)))
 
 ;;;_ , erc
@@ -2548,39 +2546,6 @@ at the beginning of line, if already there."
       (grep-apply-setting
        'grep-find-command
        '("find . -type f -print0 | xargs -P4 -0 egrep -nH -e " . 52)))))
-
-
-;;;_ , gtags
-
-(use-package gtags
-  :commands gtags-mode
-  :diminish gtags-mode
-  :config
-  (progn
-    (defun my-gtags-or-semantic-find-tag ()
-      (interactive)
-      (if (and (fboundp 'semantic-active-p)
-               (funcall #'semantic-active-p))
-          (call-interactively #'semantic-complete-jump)
-        (call-interactively #'gtags-find-tag)))
-
-    (bind-key "M-." 'my-gtags-or-semantic-find-tag gtags-mode-map)
-
-    (bind-key "C-c t ." 'gtags-find-rtag)
-    (bind-key "C-c t f" 'gtags-find-file)
-    (bind-key "C-c t p" 'gtags-parse-file)
-    (bind-key "C-c t g" 'gtags-find-with-grep)
-    (bind-key "C-c t i" 'gtags-find-with-idutils)
-    (bind-key "C-c t s" 'gtags-find-symbol)
-    (bind-key "C-c t r" 'gtags-find-rtag)
-    (bind-key "C-c t v" 'gtags-visit-rootdir)
-
-    (bind-key "<mouse-2>" 'gtags-find-tag-from-here gtags-mode-map)
-
-    (use-package helm-gtags
-      :bind ("M-T" . helm-gtags-select)
-      :config
-      (bind-key "M-," 'helm-gtags-resume gtags-mode-map))))
 
 ;;;_ , gud
 
