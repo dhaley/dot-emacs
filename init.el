@@ -1732,13 +1732,11 @@ Require unix zip commandline tool."
   :config
   (progn
 
-    (require 'smart-dash)
+    (use-package ggtags)
     (add-hook 'drupal-mode-hook
               '(lambda ()
-                 (smart-dash-mode 1)
-                 (gtags-mode 1)
-                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                 (setq dash-at-point-docset "drupal")))
+                 (ggtags-mode 1)
+                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")))
     (add-to-list 'yas-extra-modes 'drupal-mode)))
 
 ;;;_ , erc
@@ -1801,9 +1799,7 @@ Require unix zip commandline tool."
                                                 :port 6667))
                        :secret))))
     (add-hook 'after-init-hook 'im)
-    (add-hook 'after-init-hook 'irc)
-    ;; (add-hook 'after-init-hook 'create-new-erc-frames)
-    )
+    (add-hook 'after-init-hook 'irc))
 
   :config
   (progn
@@ -2012,31 +2008,8 @@ FORM => (eval FORM)."
                (erc-make-notice (format "Now tracking %s" target))
                'active)))))
       t)
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-    (defun my-reformat-jabber-backlog ()
-      "Fix \"unkown participant\" backlog messages from bitlbee."
-      (save-excursion
-        (goto-char (point-min))
-        (if (looking-at
-             "^<root> System message: Message from unknown participant \\([^:]+\\):")
-            (replace-match "<\\1>"))))
-    (add-hook 'erc-insert-modify-hook 'my-reformat-jabber-backlog)
-
     ;; turn on abbrevs
     (abbrev-mode 1)
-
-    (defun create-new-erc-frames ()
-      (interactive)
-      (switch-to-bitlbee)
-      (switch-to-buffer-other-frame "#drupal-colorado")
-      (switch-to-buffer-other-frame "#emacs")
-      )
-
-    ;; (frame-configuration-to-register REGISTER &optional ARG)
-    ;; (set-register "E"  (list (current-frame-configuration) (point-marker)))
-    (bind-key "H-E" 'create-new-erc-frames)
-
     ;; add abbrevs
     (abbrev-table-put erc-mode-abbrev-table :parents (list
                                                       text-mode-abbrev-table))
@@ -2549,39 +2522,6 @@ at the beginning of line, if already there."
        'grep-find-command
        '("find . -type f -print0 | xargs -P4 -0 egrep -nH -e " . 52)))))
 
-
-;;;_ , gtags
-
-(use-package gtags
-  :commands gtags-mode
-  :diminish gtags-mode
-  :config
-  (progn
-    (defun my-gtags-or-semantic-find-tag ()
-      (interactive)
-      (if (and (fboundp 'semantic-active-p)
-               (funcall #'semantic-active-p))
-          (call-interactively #'semantic-complete-jump)
-        (call-interactively #'gtags-find-tag)))
-
-    (bind-key "M-." 'my-gtags-or-semantic-find-tag gtags-mode-map)
-
-    (bind-key "C-c t ." 'gtags-find-rtag)
-    (bind-key "C-c t f" 'gtags-find-file)
-    (bind-key "C-c t p" 'gtags-parse-file)
-    (bind-key "C-c t g" 'gtags-find-with-grep)
-    (bind-key "C-c t i" 'gtags-find-with-idutils)
-    (bind-key "C-c t s" 'gtags-find-symbol)
-    (bind-key "C-c t r" 'gtags-find-rtag)
-    (bind-key "C-c t v" 'gtags-visit-rootdir)
-
-    (bind-key "<mouse-2>" 'gtags-find-tag-from-here gtags-mode-map)
-
-    (use-package helm-gtags
-      :bind ("M-T" . helm-gtags-select)
-      :config
-      (bind-key "M-," 'helm-gtags-resume gtags-mode-map))))
-
 ;;;_ , gud
 
 (use-package gud
@@ -2635,8 +2575,11 @@ at the beginning of line, if already there."
     (use-package helm-css-scss)
     (use-package helm-ag)
 
-    (bind-key "C-h b" 'helm-descbinds))
-
+    (bind-key "C-h b" 'helm-descbinds)
+    (use-package helm-gtags
+      :bind ("M-T" . helm-gtags-select)
+      :config
+      (bind-key "M-," 'helm-gtags-resume gtags-mode-map)))
   :config
   (helm-match-plugin-mode t))
 
@@ -3778,7 +3721,9 @@ unless return was pressed outside the comment"
           (let ((manual-program "pman"))
             (man (symbol-name function))))))
     (define-key php-mode-map "\C-hf" 'describe-function-via-pman)
-    (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)))
+    (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
+
+    (use-package php-auto-yasnippets)))
 
 ;;;_ , projectile
 
@@ -3817,12 +3762,10 @@ are in kbd format."
       (use-package wgrep)
       (use-package wgrep-ag)))
 
-  (use-package ack-and-a-half)
   (use-package projectile-drupal)
   (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
-  (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
-  (bind-key "C-c p ESC" 'projectile-project-buffers-other-buffer)))
+  (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)))
 
 ;;;_ , popup-ruler
 
@@ -4664,11 +4607,10 @@ are in kbd format."
 ;;;_ , web-mode
 
 (use-package web-mode
-  :mode ("\\.tpl\\.php\\.html$" . web-mode)
+  :mode ("\\.tpl\\.php$" . web-mode)
   :init
   (progn
-    (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))
-    ))
+    (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))))
 
 ;;;_ , winner
 
@@ -4709,6 +4651,12 @@ are in kbd format."
 
     (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
     (bind-key "\\" 'toggle-input-method wg-map)
+
+    (add-hook 'wg-switch-hook
+              '(lambda ()
+                 (awesome-button-say)
+                 ;; (message "ho")
+     ))
 
     (defun wg-create-workgroup-awesome ()
       "create workgroups using names from awesome button"
