@@ -2402,7 +2402,11 @@ at the beginning of line, if already there."
     (use-package f)
     (use-package pkg-info)
 
-    (hook-into-modes #'flycheck-mode '(prog-mode-hook)))
+    (hook-into-modes #'flycheck-mode '(prog-mode-hook))
+
+    (use-package google-this
+      :init
+      (google-this-mode 1)))
   :config
   (progn
     (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
