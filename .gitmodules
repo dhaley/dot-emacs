@@ -67,9 +67,6 @@
 [submodule "site-lisp/boxquote"]
         path = site-lisp/boxquote
         url = git://github.com/emacsmirror/boxquote.git
-[submodule "site-lisp/workgroups"]
-        path = site-lisp/workgroups
-        url = git://github.com/tlh/workgroups.el.git
 [submodule "site-lisp/dired-sync"]
         path = site-lisp/dired-sync
         url = git://github.com/renard/dired-sync.git
@@ -587,14 +584,14 @@
         path = site-lisp/php-boris-minor-mode
         url = https://github.com/steckerhalter/php-boris-minor-mode.git
 [submodule "override/tramp"]
-	path = override/tramp
-	url = git://git.savannah.gnu.org/tramp.git
+        path = override/tramp
+        url = git://git.savannah.gnu.org/tramp.git
 [submodule "site-lisp/use-package"]
-	path = site-lisp/use-package
-	url = git://github.com/jwiegley/use-package.git
+        path = site-lisp/use-package
+        url = git://github.com/jwiegley/use-package.git
 [submodule "site-lisp/emacs-google-this"]
-	path = site-lisp/emacs-google-this
-	url = https://github.com/Bruce-Connor/emacs-google-this
+        path = site-lisp/emacs-google-this
+        url = https://github.com/Bruce-Connor/emacs-google-this
 [submodule "site-lisp/workgroups2"]
-	path = site-lisp/workgroups2
-	url = git@github.com:dhaley/workgroups2.git
+        path = site-lisp/workgroups2
+        url = git@github.com:dhaley/workgroups2.git
