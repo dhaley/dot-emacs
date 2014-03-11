@@ -370,7 +370,7 @@
  '(w3m-session-file "~/Documents/w3m-session")
  '(w3m-use-cookies t)
  '(wdired-use-dired-vertical-movement (quote sometimes))
- '(wg-mode-line-on nil)
+ '(wg-mode-line-on t)
  '(wg-morph-on nil)
  '(wg-prefix-key "")
  '(wg-query-for-save-on-emacs-exit nil)

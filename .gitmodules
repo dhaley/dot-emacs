@@ -595,3 +595,6 @@
 [submodule "site-lisp/emacs-google-this"]
 	path = site-lisp/emacs-google-this
 	url = https://github.com/Bruce-Connor/emacs-google-this
+[submodule "site-lisp/workgroups2"]
+	path = site-lisp/workgroups2
+	url = git@github.com:dhaley/workgroups2.git
