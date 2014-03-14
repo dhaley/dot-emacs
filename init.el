@@ -3751,22 +3751,22 @@ Keys are in kbd format."
               (define-key mode-map (read-kbd-macro key) function)))
           keybindings))
 
-  (defun global-set-keys (keybindings)
-    "Takes a list of (key function-designator) lists.
-The functions are globally bound to the keys.  Keys
-are in kbd format."
-    (mapc (lambda (keybinding)
-            (destructuring-bind (key function) keybinding
-              (global-set-key (read-kbd-macro key) function)))
-          keybindings))
-
   (use-package ag
     :init
     (progn
       (use-package wgrep)
       (use-package wgrep-ag)))
 
-  (use-package projectile-drupal)
+  (use-package projectile-drupal
+    :init
+    (progn
+      (defun dkh-get-site-name ()
+        "Gets site name based on dslm standard."
+        (let* ((project-root-dir (locate-dominating-file default-directory
+                                                         "current"))
+               (path (split-string project-root-dir "/")))     ; path as list
+          (car (last (nbutlast path 1)))))))
+
   (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
   (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)))
