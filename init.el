@@ -3761,11 +3761,14 @@ Keys are in kbd format."
     :init
     (progn
       (defun dkh-get-site-name ()
-        "Gets site name based on dslm standard."
-        (let* ((project-root-dir (locate-dominating-file default-directory
-                                                         "current"))
-               (path (split-string project-root-dir "/")))     ; path as list
-          (car (last (nbutlast path 1)))))))
+        "Gets site name based on University WWNG standard or standalone."
+        (if (locate-dominating-file default-directory
+                                                             "current")
+            (let* ((project-root-dir (locate-dominating-file default-directory
+                                                             "current"))
+                   (path (split-string project-root-dir "/")))     ; path as list
+              (car (last (nbutlast path 1))))
+            (projectile-project-name)))))
 
   (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
