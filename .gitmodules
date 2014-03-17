@@ -595,3 +595,6 @@
 [submodule "site-lisp/workgroups"]
         path = site-lisp/workgroups
         url = git@github.com:dhaley/workgroups.el.git
+[submodule "site-lisp/emmet-mode"]
+	path = site-lisp/emmet-mode
+	url = https://github.com/smihica/emmet-mode.git
