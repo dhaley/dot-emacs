@@ -61,9 +61,6 @@
 [submodule "site-lisp/slime"]
         path = site-lisp/slime
         url = git://github.com/jwiegley/slime.git
-[submodule "site-lisp/zencoding"]
-        path = site-lisp/zencoding
-        url = git://github.com/rooney/zencoding.git
 [submodule "site-lisp/boxquote"]
         path = site-lisp/boxquote
         url = git://github.com/emacsmirror/boxquote.git
