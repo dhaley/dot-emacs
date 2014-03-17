@@ -2603,7 +2603,7 @@ at the beginning of line, if already there."
     (use-package helm-gtags
       :bind ("M-T" . helm-gtags-select)
       :config
-      (bind-key "M-," 'helm-gtags-resume gtags-mode-map)))
+      (bind-key "M-," 'helm-gtags-resume ggtags-mode-map)))
   :config
   (helm-match-plugin-mode t))
 
