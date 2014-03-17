@@ -1664,6 +1664,26 @@ Require unix zip commandline tool."
     ;; (add-hook 'after-init-hook 'edit-server-start t)
 ))
 
+;;;_ , emmet-mode
+
+(use-package emmet-mode
+  :commands emmet-mode
+  :init
+  (progn
+    (add-hook 'nxml-mode-hook 'emmet-mode)
+    (add-hook 'html-mode-hook 'emmet-mode)
+    (add-hook 'html-mode-hook
+              #'(lambda ()
+                (bind-key "<return>" 'newline-and-indent html-mode-map)))
+    (add-hook 'php-mode-hook 'emmet-mode)
+    (add-hook 'web-mode-hook 'emmet-mode)
+)
+
+  :config
+  (progn
+    (defvar emmet-mode-keymap (make-sparse-keymap))
+    (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap)))
+
 ;;_ ,  emoji-cheat-sheet
 
 (use-package emoji-cheat-sheet
@@ -4813,27 +4833,6 @@ Keys are in kbd format."
          ("C-c w e" . yaoddmuse-edit-default)
          ("C-c w p" . yaoddmuse-post-library-default)))
 
-;;;_ , zencoding-mode
-
-(use-package zencoding-mode
-  :commands zencoding-mode
-  :init
-  (progn
-    (add-hook 'nxml-mode-hook 'zencoding-mode)
-    (add-hook 'html-mode-hook 'zencoding-mode)
-    (add-hook 'html-mode-hook
-              #'(lambda ()
-                (bind-key "<return>" 'newline-and-indent html-mode-map)))
-    (add-hook 'php-mode-hook 'zencoding-mode)
-    (add-hook 'web-mode-hook 'zencoding-mode)
-)
-
-  :config
-  (progn
-    (defvar zencoding-mode-keymap (make-sparse-keymap))
-    (bind-key "C-c C-c" 'zencoding-expand-line zencoding-mode-keymap)
-    ;; don't overwrite C-j -- newline-and-indent
-    (define-key zencoding-mode-keymap (kbd "C-j") nil)))
 
 ;;;_. Post initialization
 

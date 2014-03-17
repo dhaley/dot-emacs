@@ -61,9 +61,6 @@
 [submodule "site-lisp/slime"]
         path = site-lisp/slime
         url = git://github.com/jwiegley/slime.git
-[submodule "site-lisp/zencoding"]
-        path = site-lisp/zencoding
-        url = git://github.com/rooney/zencoding.git
 [submodule "site-lisp/boxquote"]
         path = site-lisp/boxquote
         url = git://github.com/emacsmirror/boxquote.git
@@ -438,7 +435,7 @@
         url = git@github.com:dhaley/applescripts.git
 [submodule "site-lisp/easy-kill"]
         path = site-lisp/easy-kill
-        url = https://github.com/leoliu/easy-kill.git
+        url = git://github.com/leoliu/easy-kill.git
 [submodule "lisp/org-jira"]
         path = lisp/org-jira
         url = git@github.com:dhaley/org-jira.git
@@ -499,9 +496,6 @@
 [submodule "override/bbdb"]
         path = override/bbdb
         url = git://git.savannah.nongnu.org/bbdb.git
-[submodule "free-keys"]
-        path = free-keys
-        url = git://github.com/Fuco1/free-keys.git
 [submodule "site-lisp/auctex"]
         path = site-lisp/auctex
         url = git://git.savannah.gnu.org/auctex.git
@@ -582,7 +576,7 @@
         url = git@github.com:dhaley/projectile-drupal.git
 [submodule "site-lisp/php-boris-minor-mode"]
         path = site-lisp/php-boris-minor-mode
-        url = https://github.com/steckerhalter/php-boris-minor-mode.git
+        url = git://github.com/steckerhalter/php-boris-minor-mode.git
 [submodule "override/tramp"]
         path = override/tramp
         url = git://git.savannah.gnu.org/tramp.git
@@ -591,10 +585,16 @@
         url = git://github.com/jwiegley/use-package.git
 [submodule "site-lisp/emacs-google-this"]
         path = site-lisp/emacs-google-this
-        url = https://github.com/Bruce-Connor/emacs-google-this
+        url = git://github.com/Bruce-Connor/emacs-google-this
 [submodule "site-lisp/workgroups2"]
         path = site-lisp/workgroups2
         url = git@github.com:dhaley/workgroups2.git
 [submodule "site-lisp/workgroups"]
-	path = site-lisp/workgroups
-	url = git@github.com:dhaley/workgroups.el.git
+        path = site-lisp/workgroups
+        url = git@github.com:dhaley/workgroups.el.git
+[submodule "site-lisp/emmet-mode"]
+        path = site-lisp/emmet-mode
+        url = https://github.com/smihica/emmet-mode.git
+[submodule "site-lisp/free-keys"]
+	path = site-lisp/free-keys
+	url = git://github.com/Fuco1/free-keys.git
