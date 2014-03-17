@@ -2612,8 +2612,7 @@ at the beginning of line, if already there."
 (use-package helm-dash
   :load-path "site-lisp/esqlite/Emacs-pcsv"
   :init
-    (helm-dash-activate-docset "Drupal")
-    )
+    (helm-dash-activate-docset "Drupal"))
 
 ;;;_ , hi-lock
 
@@ -3771,22 +3770,7 @@ Keys are in kbd format."
   (use-package ag
     :init
     (progn
-      (setq ag-arguments (append '("--ignore" "'*#'"
-                             ;; "--ignore" "'*.js'"
-                             ;; "--ignore" "'*.xml'"
-                             ;; "--ignore" "'*.log'"
-                             ;; "--ignore" "'*.sql'"
-                             ;; "--ignore" "'*.txt'"
-                             ;; "--ignore" "'*.json'"
-                             ;; "--ignore" "'*.yaml'"
-                             "--ignore" "TAGS"
-                             "--ignore" "GPATH"
-                             "--ignore" "GRTAGS"
-                             "--ignore" "GTAGS"
-                             "--ignore-dir" "'contrib'"
 
-)
-                           ag-arguments))
       (use-package wgrep)
       (use-package wgrep-ag)))
 
