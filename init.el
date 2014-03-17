@@ -3738,9 +3738,6 @@ unless return was pressed outside the comment"
     (projectile-global-mode)
 
     (bind-key "C-c j" `projectile-switch-project)
-    (local-set-key "\C-c p g" 'ag-project)
-    (bind-key "C-c p g" 'ag-project
-                projectile-mode-map)
 
   (defun define-keys (mode-map keybindings)
     "Takes a mode map, and a list of (key function-designator)
@@ -3754,6 +3751,22 @@ Keys are in kbd format."
   (use-package ag
     :init
     (progn
+      (setq ag-arguments (append '("--ignore" "'*#'"
+                             ;; "--ignore" "'*.js'"
+                             ;; "--ignore" "'*.xml'"
+                             ;; "--ignore" "'*.log'"
+                             ;; "--ignore" "'*.sql'"
+                             ;; "--ignore" "'*.txt'"
+                             ;; "--ignore" "'*.json'"
+                             ;; "--ignore" "'*.yaml'"
+                             "--ignore" "TAGS"
+                             "--ignore" "GPATH"
+                             "--ignore" "GRTAGS"
+                             "--ignore" "GTAGS"
+                             "--ignore-dir" "'contrib'"
+
+)
+                           ag-arguments))
       (use-package wgrep)
       (use-package wgrep-ag)))
 
@@ -4661,7 +4674,6 @@ Keys are in kbd format."
 
     (add-hook 'wg-switch-hook
               '(lambda ()
-                 (awesome-button-say)
                  ;; (message "ho")
      ))
 

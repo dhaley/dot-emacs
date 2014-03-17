@@ -19,6 +19,7 @@
  '(ac-ignore-case nil)
  '(ac-use-fuzzy nil)
  '(after-save-hook (quote (executable-make-buffer-file-executable-if-script-p)))
+ '(ag-highlight-search t)
  '(alert-default-style (quote notifier))
  '(alert-notifier-command "/usr/local/bin/terminal-notifier")
  '(align-c++-modes (quote (csharp-mode c++-mode c-mode java-mode groovy-mode)))
