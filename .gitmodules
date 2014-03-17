@@ -496,9 +496,6 @@
 [submodule "override/bbdb"]
         path = override/bbdb
         url = git://git.savannah.nongnu.org/bbdb.git
-[submodule "free-keys"]
-        path = free-keys
-        url = git://github.com/Fuco1/free-keys.git
 [submodule "site-lisp/auctex"]
         path = site-lisp/auctex
         url = git://git.savannah.gnu.org/auctex.git
@@ -596,5 +593,5 @@
         path = site-lisp/workgroups
         url = git@github.com:dhaley/workgroups.el.git
 [submodule "site-lisp/emmet-mode"]
-	path = site-lisp/emmet-mode
-	url = https://github.com/smihica/emmet-mode.git
+        path = site-lisp/emmet-mode
+        url = https://github.com/smihica/emmet-mode.git
