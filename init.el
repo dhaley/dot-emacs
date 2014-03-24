@@ -3653,9 +3653,6 @@ and view local index.html url"
 ;;;_ , php-mode
 
 (use-package php-mode
-  :commands php-mode
-  :mode ("\\.php[s345t]?\\|inc\\|[ip]html$" . php-mode)
-  :diminish php-mode
   :init
   (progn
     (defun prog-mode-setup ()
@@ -4062,7 +4059,7 @@ Keys are in kbd format."
 
 ;;;_ , sh-mode
 (use-package sh-mode
-  :mode ("\\.bashrc\\|\\.bash_alias\\|\\.sh\\|.bash_history\\|alias" . sh-mode))
+  :mode ("\\.bashrc\\|\\.bash_alias\\|\\.sh\\|.bash_history\\|alias$" . sh-mode))
 
 
 ;;;_ , sh-script
