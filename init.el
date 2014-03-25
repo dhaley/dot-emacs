@@ -1744,7 +1744,7 @@ Require unix zip commandline tool."
 ;;;_ , drupal-mode
 
 (use-package drupal-mode
-  :mode ("\\.\\(module\\|test\\|install\\|theme\\)$" . drupal-mode)
+  :mode ("\\.\\(module\\|test\\|install\\|theme\\|inc\\|profile\\)$" . drupal-mode)
   :init
   (progn
     ;; (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
@@ -3786,7 +3786,49 @@ Keys are in kbd format."
 
   (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
-  (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)))
+  (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
+
+  (defun projectile-switch-to-last-buffer ()
+    (interactive)
+    (if (buffer-live-p projectile-last-buffer)
+        (switch-to-buffer projectile-last-buffer)))
+
+  (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-buffer)
+
+  (defun dkh-projectile-dired (&optional arg)
+    "Open `dired' at the root of the project."
+    (interactive)
+    (if arg
+        (dired arg))
+    (dired (projectile-project-root)))
+
+  (defun projectile-switch-to-last-project ()
+    (interactive)
+    (funcall projectile-switch-project-action (last projectile-known-projects)))
+
+  (global-set-key (kbd "C-c p S") 'projectile-switch-to-last-project)
+
+
+  ;; (with-current-buffer (dired-noselect (last projectile-known-projects))
+  ;;      major-mode)
+
+  (defun buffer-projectile (change-buffer-fun)
+      (let ((current-mode major-mode)
+            (next-mode nil))
+    (while (not (eq next-mode current-mode))
+      (funcall change-buffer-fun)
+      (setq next-mode major-mode))))
+
+  (defun projectile-previous-buffer ()
+  (interactive)
+  (buffer-projectile #'previous-buffer))
+
+  (defun projectile-next-buffer ()
+  (interactive)
+  (buffer-projectile #'next-buffer))
+
+  (global-set-key (kbd "C-c p <left>") 'projectile-previous-buffer)
+  (global-set-key (kbd "C-c p <right>") 'projectile-next-buffer)))
 
 ;;;_ , popup-ruler
 
