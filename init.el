@@ -3799,7 +3799,7 @@ Keys are in kbd format."
     "Open `dired' at the root of the project."
     (interactive)
     (if arg
-        (dired arg))
+        (dired (car arg)))
     (dired (projectile-project-root)))
 
   (defun projectile-switch-to-last-project ()
