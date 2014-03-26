@@ -3802,6 +3802,13 @@ Keys are in kbd format."
 
     (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-project-root-buffer)
 
+    (defun projectile-switch-to-last-project-buffer ()
+      (interactive)
+      (projectile-switch-to-last-project)
+      (projectile-project-buffers-other-buffer))
+
+    (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-project-buffer)
+
     (defun dkh-project-record ()
       (setq projectile-last-project-root (projectile-project-root))
       (setq projectile-last-project-root-buffer (current-buffer)))
