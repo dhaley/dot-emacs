@@ -3803,11 +3803,13 @@ Keys are in kbd format."
     (interactive)
     (if arg
         (dired (car arg)))
-    (dired (projectile-project-root)))
+    (dired (projectile-project-root))
+    (setq projectile-last-buffer (current-buffer)))
 
   (defun projectile-switch-to-last-project ()
     (interactive)
-    (funcall projectile-switch-project-action (last projectile-known-projects)))
+    ;; (funcall projectile-switch-project-action (last projectile-known-projects))
+    (switch-to-buffer projectile-last-buffer))
 
   (global-set-key (kbd "C-c p S") 'projectile-switch-to-last-project)
 
