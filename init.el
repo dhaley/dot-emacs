@@ -3854,7 +3854,7 @@ found."
       (let* ((window (window-normalize-window window t))
              (frame (window-frame window))
              (old-buffer (window-buffer window))
-             (next-buffers (projectile-project-buffers))
+             (next-buffers (window-next-buffers window))
              (pred (frame-parameter frame 'buffer-predicate))
              new-buffer entry killed-buffers visible)
         (when (window-minibuffer-p window)
@@ -3949,7 +3949,7 @@ to it."
              (frame (window-frame window))
              (old-buffer (window-buffer window))
              ;; Save this since it's destroyed by `set-window-buffer'.
-             (next-buffers (projectile-project-buffers))
+             (next-buffers (window-next-buffers window))
              (pred (frame-parameter frame 'buffer-predicate))
              entry new-buffer killed-buffers visible)
         (when (window-minibuffer-p window)
@@ -3989,8 +3989,8 @@ to it."
           ;; buffer list in order to make sure that switching to the
           ;; previous/next buffer traverse it in opposite directions.
           (dolist (buffer (if bury-or-kill
-                              (projectile-project-buffers)
-                            (nreverse (projectile-project-buffers))))
+                              (buffer-list frame)
+                            (nreverse (buffer-list frame))))
             (when (and (buffer-live-p buffer)
                        (not (eq buffer old-buffer))
                        (or (null pred) (funcall pred buffer))
