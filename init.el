@@ -3798,24 +3798,22 @@ Keys are in kbd format."
 
   (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-buffer)
 
+  (defun dkh-project-record ()
+    (setq projectile-last-project-root (projectile-project-root)))
+
+  (defun projectile-switch-to-last-project ()
+    (interactive)
+    (funcall projectile-switch-project-action projectile-last-project-root))
+
+  (global-set-key (kbd "C-c p S") 'projectile-switch-to-last-project)
+
   (defun dkh-projectile-dired (&optional arg)
     "Open `dired' at the root of the project."
     (interactive)
     (if arg
-        (dired (car arg)))
+        (dired arg))
     (dired (projectile-project-root))
     (setq projectile-last-buffer (current-buffer)))
-
-  (defun projectile-switch-to-last-project ()
-    (interactive)
-    ;; (funcall projectile-switch-project-action (last projectile-known-projects))
-    (switch-to-buffer projectile-last-buffer))
-
-  (global-set-key (kbd "C-c p S") 'projectile-switch-to-last-project)
-
-
-  ;; (with-current-buffer (dired-noselect (last projectile-known-projects))
-  ;;      major-mode)
 
   (defun buffer-projectile (change-buffer-fun)
       (let ((current-mode major-mode)
