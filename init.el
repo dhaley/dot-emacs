@@ -3799,7 +3799,8 @@ Keys are in kbd format."
   (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-buffer)
 
   (defun dkh-project-record ()
-    (setq projectile-last-project-root (projectile-project-root)))
+    (setq projectile-last-project-root (projectile-project-root))
+    (setq projectile-last-buffer (current-buffer)))
 
   (defun projectile-switch-to-last-project ()
     (interactive)
@@ -3812,8 +3813,7 @@ Keys are in kbd format."
     (interactive)
     (if arg
         (dired arg))
-    (dired (projectile-project-root))
-    (setq projectile-last-buffer (current-buffer)))
+    (dired (projectile-project-root)))
 
   (defun buffer-projectile (change-buffer-fun)
       (let ((current-mode major-mode)
