@@ -3791,16 +3791,20 @@ Keys are in kbd format."
 
   (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
 
-  (defun projectile-switch-to-last-buffer ()
+  (defun projectile-switch-to-last-project-root-buffer ()
     (interactive)
-    (if (buffer-live-p projectile-last-buffer)
-        (switch-to-buffer projectile-last-buffer)))
+    (if (boundp 'projectile-last-project-root-buffer)
+        (if (buffer-live-p projectile-last-project-root-buffer)
+            (switch-to-buffer projectile-last-project-root-buffer)))
+    (if (boundp 'projectile-last-project-root)
+        (projectile-switch-to-last-project))
+    (message "projectile-last-project-root is not defined"))
 
-  (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-buffer)
+  (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-project-root-buffer)
 
   (defun dkh-project-record ()
     (setq projectile-last-project-root (projectile-project-root))
-    (setq projectile-last-buffer (current-buffer)))
+    (setq projectile-last-project-root-buffer (current-buffer)))
 
   (defun projectile-switch-to-last-project ()
     (interactive)
