@@ -127,7 +127,7 @@
   "toggle fullscreen mode in Emacs mac (by Yamamoto Mitsuharu)"
   (interactive)
   ;; check we are in the emacs mac build
-  ; (when (functionp 'mac-process-hi-command)
+                                        ; (when (functionp 'mac-process-hi-command)
   (if (eq mac-fullscreen-on t)
       (progn
         (mac-mouse-turn-off-fullscreen t)
@@ -137,7 +137,7 @@
       (setq mac-fullscreen-on t))))
 
 (when (and (window-system) (fboundp 'mac-mouse-turn-on-fullscreen))
-   (bind-key "C-H-f" 'mac-toggle-fullscreen))
+  (bind-key "C-H-f" 'mac-toggle-fullscreen))
 
 (defun double-quote ()
   (interactive)
@@ -289,7 +289,7 @@
   (delete-indentation t))
 
 (bind-key "M-s n" 'find-name-dired)
-;(bind-key "M-s o" 'occur)
+                                        ;(bind-key "M-s o" 'occur)
 (bind-key "M-s o" 'helm-swoop)
 
 ;;;_  . M-C-?
@@ -553,7 +553,7 @@
                 mode (list (list (concat "\\<\\(" value " [^:\n]+\\):")
                                  1 font-lock-warning-face t))))
            '(emacs-lisp-mode lisp-mode php-mode
-                    python-mode perl-mode)))
+                             python-mode perl-mode)))
       (set symbol value))
   :type 'string
   :group 'mail)
@@ -615,8 +615,8 @@
 (bind-key "C-c z" 'clean-buffer-list)
 
 (global-set-key (kbd "C-M-y") '(lambda ()
-   (interactive)
-   (popup-menu 'yank-menu)))
+                                 (interactive)
+                                 (popup-menu 'yank-menu)))
 (bind-key "C-c [" 'align-regexp)
 (bind-key "C-c =" 'count-matches)
 (bind-key "C-c ;" 'comment-or-uncomment-region)
@@ -771,9 +771,9 @@
 (bind-key "C-h e V" 'apropos-value)
 
 (defun untabify-buffer ()
-    "Untabify current buffer"
-    (interactive)
-    (save-excursion (untabify (point-min) (point-max))))
+  "Untabify current buffer"
+  (interactive)
+  (save-excursion (untabify (point-min) (point-max))))
 
 (defun cleanup-buffer-safe ()
   "Perform a bunch of safe operations on the whitespace content of a buffer.
@@ -839,13 +839,13 @@ Including indent-buffer, which should not be called automatically on save."
 
   :config
   (progn
-   (if (file-exists-p abbrev-file-name)
-       (quietly-read-abbrev-file))
+    (if (file-exists-p abbrev-file-name)
+        (quietly-read-abbrev-file))
 
-   (add-hook 'expand-load-hook
-             (lambda ()
-               (add-hook 'expand-expand-hook 'indent-according-to-mode)
-               (add-hook 'expand-jump-hook 'indent-according-to-mode)))))
+    (add-hook 'expand-load-hook
+              (lambda ()
+                (add-hook 'expand-expand-hook 'indent-according-to-mode)
+                (add-hook 'expand-jump-hook 'indent-according-to-mode)))))
 
 ;;;_ , ace-jump-mode
 
@@ -1120,16 +1120,16 @@ Including indent-buffer, which should not be called automatically on save."
     (defun syncbasecamp ()
       (interactive)
       (http-get
-      "http://floatsolutions.com/docs/basecamp/index.php?accesskey=sdf6SDFwr88sdfASDdye76qw76876DFGDfgsdf"
-      nil 'ignore nil "basecamp.org" nil)
+       "http://floatsolutions.com/docs/basecamp/index.php?accesskey=sdf6SDFwr88sdfASDdye76qw76876DFGDfgsdf"
+       nil 'ignore nil "basecamp.org" nil)
       (org-mode)
       (save-buffer))
 
     (defun completebasecamp (todoid)
       (interactive)
       (http-get (concatenate 'string
-      "http://floatsolutions.com/docs/basecamp/index.php?accesskey=sdf6SDFwr88sdfASDdye76qw76876DFGDfgsdf&complete="
-      todoid) nil 'ignore nil "basecamp.org" nil)
+                             "http://floatsolutions.com/docs/basecamp/index.php?accesskey=sdf6SDFwr88sdfASDdye76qw76876DFGDfgsdf&complete="
+                             todoid) nil 'ignore nil "basecamp.org" nil)
       (org-mode)
       (save-buffer))
 
@@ -1148,7 +1148,7 @@ Including indent-buffer, which should not be called automatically on save."
   :commands bbdb-create
   :bind ("M-B" . bbdb))
 
-;_ , bm
+                                        ;_ , bm
 (use-package bm
   :pre-init
   (progn
@@ -1195,9 +1195,9 @@ Including indent-buffer, which should not be called automatically on save."
          ("<C-S-right>" . buf-move-right)))
 
 (use-package caffeine
-    :commands (caffeine-toggle)
-    :config
-    (caffeine-mode))
+  :commands (caffeine-toggle)
+  :config
+  (caffeine-mode))
 
 ;;;; calfw
 (use-package calfw
@@ -1389,214 +1389,214 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
   :bind ("C-x C-j" . dired-jump)
   :init
   (progn
-     (defvar mark-files-cache (make-hash-table :test #'equal))
+    (defvar mark-files-cache (make-hash-table :test #'equal))
 
-     (defun mark-similar-versions (name)
-       (let ((pat name))
-         (if (string-match "^\\(.+?\\)-[0-9._-]+$" pat)
-             (setq pat (match-string 1 pat)))
-         (or (gethash pat mark-files-cache)
-             (ignore (puthash pat t mark-files-cache))))
+    (defun mark-similar-versions (name)
+      (let ((pat name))
+        (if (string-match "^\\(.+?\\)-[0-9._-]+$" pat)
+            (setq pat (match-string 1 pat)))
+        (or (gethash pat mark-files-cache)
+            (ignore (puthash pat t mark-files-cache))))
 
-       (defun dired-mark-similar-version ()
-         (interactive)
-         (setq mark-files-cache (make-hash-table :test #'equal))
-         (dired-mark-sexp '(mark-similar-versions name)))))
-     :config
-     (progn
-       ;; Also auto refresh dired, but be quiet about it
-       (setq global-auto-revert-non-file-buffers t)
-       (setq auto-revert-verbose nil)
+      (defun dired-mark-similar-version ()
+        (interactive)
+        (setq mark-files-cache (make-hash-table :test #'equal))
+        (dired-mark-sexp '(mark-similar-versions name)))))
+  :config
+  (progn
+    ;; Also auto refresh dired, but be quiet about it
+    (setq global-auto-revert-non-file-buffers t)
+    (setq auto-revert-verbose nil)
 
-       (defun dired-package-initialize ()
-         (unless (featurep 'runner)
-           (use-package dired-x)
-           ;; (use-package dired-async)
-           ;; (use-package dired-sort-map)
-           (use-package runner)
+    (defun dired-package-initialize ()
+      (unless (featurep 'runner)
+        (use-package dired-x)
+        ;; (use-package dired-async)
+        ;; (use-package dired-sort-map)
+        (use-package runner)
 
-           (use-package dired-details
-             :commands dired-details-toggle)
+        (use-package dired-details
+          :commands dired-details-toggle)
 
-           (bind-key "l" 'dired-up-directory dired-mode-map)
-           (bind-key "H" 'dired-details-toggle dired-mode-map)
+        (bind-key "l" 'dired-up-directory dired-mode-map)
+        (bind-key "H" 'dired-details-toggle dired-mode-map)
 
-           (defun my-dired-switch-window ()
-             (interactive)
-             (if (eq major-mode 'sr-mode)
-                 (call-interactively #'sr-change-window)
-               (call-interactively #'other-window)))
+        (defun my-dired-switch-window ()
+          (interactive)
+          (if (eq major-mode 'sr-mode)
+              (call-interactively #'sr-change-window)
+            (call-interactively #'other-window)))
 
-           (bind-key "<tab>" 'my-dired-switch-window dired-mode-map)
+        (bind-key "<tab>" 'my-dired-switch-window dired-mode-map)
 
-           (bind-key "M-!" 'async-shell-command dired-mode-map)
-           (unbind-key "M-G" dired-mode-map)
-           (unbind-key "M-s f" dired-mode-map)
+        (bind-key "M-!" 'async-shell-command dired-mode-map)
+        (unbind-key "M-G" dired-mode-map)
+        (unbind-key "M-s f" dired-mode-map)
 
-           (defadvice dired-omit-startup (after diminish-dired-omit activate)
-             "Make sure to remove \"Omit\" from the modeline."
-             (diminish 'dired-omit-mode) dired-mode-map)
+        (defadvice dired-omit-startup (after diminish-dired-omit activate)
+          "Make sure to remove \"Omit\" from the modeline."
+          (diminish 'dired-omit-mode) dired-mode-map)
 
-           (defadvice dired-next-line (around dired-next-line+ activate)
-             "Replace current buffer if file is a directory."
-             ad-do-it
-             (while (and  (not  (eobp)) (not ad-return-value))
-               (forward-line)
-               (setq ad-return-value(dired-move-to-filename)))
-             (when (eobp)
-               (forward-line -1)
-               (setq ad-return-value(dired-move-to-filename))))
+        (defadvice dired-next-line (around dired-next-line+ activate)
+          "Replace current buffer if file is a directory."
+          ad-do-it
+          (while (and  (not  (eobp)) (not ad-return-value))
+            (forward-line)
+            (setq ad-return-value(dired-move-to-filename)))
+          (when (eobp)
+            (forward-line -1)
+            (setq ad-return-value(dired-move-to-filename))))
 
-           (defadvice dired-previous-line (around dired-previous-line+ activate)
-             "Replace current buffer if file is a directory."
-             ad-do-it
-             (while (and  (not  (bobp)) (not ad-return-value))
-               (forward-line -1)
-               (setq ad-return-value(dired-move-to-filename)))
-             (when (bobp)
-               (call-interactively 'dired-next-line)))
+        (defadvice dired-previous-line (around dired-previous-line+ activate)
+          "Replace current buffer if file is a directory."
+          ad-do-it
+          (while (and  (not  (bobp)) (not ad-return-value))
+            (forward-line -1)
+            (setq ad-return-value(dired-move-to-filename)))
+          (when (bobp)
+            (call-interactively 'dired-next-line)))
 
-           (defvar dired-omit-regexp-orig (symbol-function 'dired-omit-regexp))
+        (defvar dired-omit-regexp-orig (symbol-function 'dired-omit-regexp))
 
-           ;; Omit files that Git would ignore
-           (defun dired-omit-regexp ()
-             (let ((file (expand-file-name ".git"))
-                   parent-dir)
-               (while (and (not (file-exists-p file))
-                           (progn
-                             (setq parent-dir
-                                   (file-name-directory
-                                    (directory-file-name
-                                     (file-name-directory file))))
-                             ;; Give up if we are already at the root dir.
-                             (not (string= (file-name-directory file)
-                                           parent-dir))))
-                 ;; Move up to the parent dir and try again.
-                 (setq file (expand-file-name ".git" parent-dir)))
-               ;; If we found a change log in a parent, use that.
-               (if (file-exists-p file)
-                   (let ((regexp (funcall dired-omit-regexp-orig))
-                         (omitted-files
-                          (shell-command-to-string "git clean -d -x -n")))
-                     (if (= 0 (length omitted-files))
-                         regexp
-                       (concat
-                        regexp
-                        (if (> (length regexp) 0)
-                            "\\|" "")
-                        "\\("
-                        (mapconcat
-                         #'(lambda (str)
-                             (concat
-                              "^"
-                              (regexp-quote
-                               (substring str 13
-                                          (if (= ?/ (aref str (1- (length str))))
-                                              (1- (length str))
-                                            nil)))
-                              "$"))
-                         (split-string omitted-files "\n" t)
-                         "\\|")
-                        "\\)")))
-                 (funcall dired-omit-regexp-orig)
+        ;; Omit files that Git would ignore
+        (defun dired-omit-regexp ()
+          (let ((file (expand-file-name ".git"))
+                parent-dir)
+            (while (and (not (file-exists-p file))
+                        (progn
+                          (setq parent-dir
+                                (file-name-directory
+                                 (directory-file-name
+                                  (file-name-directory file))))
+                          ;; Give up if we are already at the root dir.
+                          (not (string= (file-name-directory file)
+                                        parent-dir))))
+              ;; Move up to the parent dir and try again.
+              (setq file (expand-file-name ".git" parent-dir)))
+            ;; If we found a change log in a parent, use that.
+            (if (file-exists-p file)
+                (let ((regexp (funcall dired-omit-regexp-orig))
+                      (omitted-files
+                       (shell-command-to-string "git clean -d -x -n")))
+                  (if (= 0 (length omitted-files))
+                      regexp
+                    (concat
+                     regexp
+                     (if (> (length regexp) 0)
+                         "\\|" "")
+                     "\\("
+                     (mapconcat
+                      #'(lambda (str)
+                          (concat
+                           "^"
+                           (regexp-quote
+                            (substring str 13
+                                       (if (= ?/ (aref str (1- (length str))))
+                                           (1- (length str))
+                                         nil)))
+                           "$"))
+                      (split-string omitted-files "\n" t)
+                      "\\|")
+                     "\\)")))
+              (funcall dired-omit-regexp-orig)
 
-                 (define-key dired-mode-map [?@] 'dired-up-directory)
+              (define-key dired-mode-map [?@] 'dired-up-directory)
 
-                 )))))
+              )))))
 
-       ;; (eval-after-load "dired-aux"
-       ;;   '(defun dired-do-async-shell-command (command &optional arg file-list)
-       ;;      "Run a shell command COMMAND on the marked files asynchronously.
+    ;; (eval-after-load "dired-aux"
+    ;;   '(defun dired-do-async-shell-command (command &optional arg file-list)
+    ;;      "Run a shell command COMMAND on the marked files asynchronously.
 
- ;; Like `dired-do-shell-command' but if COMMAND doesn't end in ampersand,
- ;; adds `* &' surrounded by whitespace and executes the command asynchronously.
- ;; The output appears in the buffer `*Async Shell Command*'."
- ;;            (interactive
- ;;             (let ((files (dired-get-marked-files t current-prefix-arg)))
- ;;               (list
- ;;                ;; Want to give feedback whether this file or marked files are
- ;;                ;; used:
- ;;                (dired-read-shell-command "& on %s: " current-prefix-arg files)
- ;;                current-prefix-arg
- ;;                files)))
- ;;            (unless (string-match "[ \t][*?][ \t]" command)
- ;;              (setq command (concat command " *")))
- ;;            (unless (string-match "&[ \t]*\\'" command)
- ;;              (setq command (concat command " &")))
- ;;            (dired-do-shell-command command arg file-list)))
+    ;; Like `dired-do-shell-command' but if COMMAND doesn't end in ampersand,
+    ;; adds `* &' surrounded by whitespace and executes the command asynchronously.
+    ;; The output appears in the buffer `*Async Shell Command*'."
+    ;;            (interactive
+    ;;             (let ((files (dired-get-marked-files t current-prefix-arg)))
+    ;;               (list
+    ;;                ;; Want to give feedback whether this file or marked files are
+    ;;                ;; used:
+    ;;                (dired-read-shell-command "& on %s: " current-prefix-arg files)
+    ;;                current-prefix-arg
+    ;;                files)))
+    ;;            (unless (string-match "[ \t][*?][ \t]" command)
+    ;;              (setq command (concat command " *")))
+    ;;            (unless (string-match "&[ \t]*\\'" command)
+    ;;              (setq command (concat command " &")))
+    ;;            (dired-do-shell-command command arg file-list)))
 
-       (add-hook 'dired-mode-hook '(lambda ()
-                                     (dired-package-initialize)
-                                     (hl-line-mode 1)
-                                     (setq cursor-type t)))
+    (add-hook 'dired-mode-hook '(lambda ()
+                                  (dired-package-initialize)
+                                  (hl-line-mode 1)
+                                  (setq cursor-type t)))
 
-       (defun dired-double-jump (first-dir second-dir)
-         (interactive
-          (list (ido-read-directory-name "First directory: "
-                                         (expand-file-name "~")
-                                         nil nil "dl/")
-                (ido-read-directory-name "Second directory: "
-                                         (expand-file-name "~")
-                                         nil nil "Archives/")))
-         (dired first-dir)
-         (dired-other-window second-dir))
+    (defun dired-double-jump (first-dir second-dir)
+      (interactive
+       (list (ido-read-directory-name "First directory: "
+                                      (expand-file-name "~")
+                                      nil nil "dl/")
+             (ido-read-directory-name "Second directory: "
+                                      (expand-file-name "~")
+                                      nil nil "Archives/")))
+      (dired first-dir)
+      (dired-other-window second-dir))
 
-       (bind-key "C-c J" 'dired-double-jump)
+    (bind-key "C-c J" 'dired-double-jump)
 
-       (defun scale-image (fileList scalePercentage)
-         "Create a scaled jpg version of images of marked files in dired.
+    (defun scale-image (fileList scalePercentage)
+      "Create a scaled jpg version of images of marked files in dired.
 The new names have “-s” appended before the file name extension.
 Requires ImageMagick shell tool."
-         (interactive
-          (list (dired-get-marked-files) (read-from-minibuffer "scale percentage:")))
-         (require 'dired)
+      (interactive
+       (list (dired-get-marked-files) (read-from-minibuffer "scale percentage:")))
+      (require 'dired)
 
-         (mapc
-          (lambda (ξf)
-            (let ( newName cmdStr )
-              (setq newName (concat (file-name-sans-extension ξf) "-s" ".jpg") )
-              (while (file-exists-p newName)
-                (setq newName (concat (file-name-sans-extension newName) "-s" (file-name-extension newName t))) )
+      (mapc
+       (lambda (ξf)
+         (let ( newName cmdStr )
+           (setq newName (concat (file-name-sans-extension ξf) "-s" ".jpg") )
+           (while (file-exists-p newName)
+             (setq newName (concat (file-name-sans-extension newName) "-s" (file-name-extension newName t))) )
 
-              ;; relative paths used to get around Windows/Cygwin path remapping problem
-              (setq cmdStr (concat "convert -scale " scalePercentage "% -quality 85% " (file-relative-name ξf) " " (file-relative-name newName)) )
-              (shell-command cmdStr)
-              ))
-          fileList ))
+           ;; relative paths used to get around Windows/Cygwin path remapping problem
+           (setq cmdStr (concat "convert -scale " scalePercentage "% -quality 85% " (file-relative-name ξf) " " (file-relative-name newName)) )
+           (shell-command cmdStr)
+           ))
+       fileList ))
 
-       (defun 2jpg (fileList)
-         "Create a jpg version of images of marked files in dired.
+    (defun 2jpg (fileList)
+      "Create a jpg version of images of marked files in dired.
 Requires ImageMagick shell tool.
 "
-         (interactive (list (dired-get-marked-files) ))
-         (require 'dired)
+      (interactive (list (dired-get-marked-files) ))
+      (require 'dired)
 
-         (mapc
-          (lambda (ξf)
-            (let ( newName cmdStr )
-              (setq newName (concat (file-name-sans-extension ξf) ".jpg") )
-              (while (file-exists-p newName)
-                (setq newName (concat (file-name-sans-extension newName) "-2" (file-name-extension newName t))) )
+      (mapc
+       (lambda (ξf)
+         (let ( newName cmdStr )
+           (setq newName (concat (file-name-sans-extension ξf) ".jpg") )
+           (while (file-exists-p newName)
+             (setq newName (concat (file-name-sans-extension newName) "-2" (file-name-extension newName t))) )
 
-              ;; relative paths used to get around Windows/Cygwin path remapping problem
-              (setq cmdStr (concat "convert " (file-relative-name ξf) " " (file-relative-name newName)) )
+           ;; relative paths used to get around Windows/Cygwin path remapping problem
+           (setq cmdStr (concat "convert " (file-relative-name ξf) " " (file-relative-name newName)) )
 
-              ;; (async-shell-command cmdStr)
-              (shell-command cmdStr)
-              ))
-          fileList ))
+           ;; (async-shell-command cmdStr)
+           (shell-command cmdStr)
+           ))
+       fileList ))
 
-       ;;Command to zip File/Dir
+    ;;Command to zip File/Dir
 
-       (defun 2zip ()
-         "Zip the current file/dir in `dired'.
+    (defun 2zip ()
+      "Zip the current file/dir in `dired'.
 If multiple files are marked, only zip the first one.
 Require unix zip commandline tool."
-         (interactive)
-         (require 'dired)
-         (let ( (fileName (elt (dired-get-marked-files) 0))  )
-           (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
-           ))))
+      (interactive)
+      (require 'dired)
+      (let ( (fileName (elt (dired-get-marked-files) 0))  )
+        (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
+        ))))
 
 ;;;_ , discover
 
@@ -1662,7 +1662,7 @@ Require unix zip commandline tool."
   (progn
     ;; (add-hook 'after-init-hook 'server-start t)
     ;; (add-hook 'after-init-hook 'edit-server-start t)
-))
+    ))
 
 ;;;_ , emmet-mode
 
@@ -1674,10 +1674,10 @@ Require unix zip commandline tool."
     (add-hook 'html-mode-hook 'emmet-mode)
     (add-hook 'html-mode-hook
               #'(lambda ()
-                (bind-key "<return>" 'newline-and-indent html-mode-map)))
+                  (bind-key "<return>" 'newline-and-indent html-mode-map)))
     (add-hook 'php-mode-hook 'emmet-mode)
     (add-hook 'web-mode-hook 'emmet-mode)
-)
+    )
 
   :config
   (progn
@@ -1733,7 +1733,7 @@ Require unix zip commandline tool."
     (bind-key "C-. C--" 'emms-player-mplayer-volume-down)
     (bind-key "C-. C-=" 'emms-player-mplayer-volume-up)
     (add-to-list 'Info-directory-list
-             (expand-file-name "~/.emacs.d/site-lisp/emms/doc") t)
+                 (expand-file-name "~/.emacs.d/site-lisp/emms/doc") t)
      ;;;  Highlight current line in browser
     (add-hook 'emms-browser-show-display-hook '(lambda () (hl-line-mode 1)))))
 
@@ -2017,16 +2017,16 @@ FORM => (eval FORM)."
    If no TARGET argument is specified, list contents of `erc-track-exclude'."
       (when target
         (erc-with-server-buffer
-          (let ((tracked
-                 (not (car (erc-member-ignore-case target erc-track-exclude)))))
-            (if tracked
-                (erc-display-line
-                 (erc-make-notice (format "%s is currently tracked!" target))
-                 'active)
-              (setq erc-track-exclude (remove target erc-track-exclude))
-              (erc-display-line
-               (erc-make-notice (format "Now tracking %s" target))
-               'active)))))
+         (let ((tracked
+                (not (car (erc-member-ignore-case target erc-track-exclude)))))
+           (if tracked
+               (erc-display-line
+                (erc-make-notice (format "%s is currently tracked!" target))
+                'active)
+             (setq erc-track-exclude (remove target erc-track-exclude))
+             (erc-display-line
+              (erc-make-notice (format "Now tracking %s" target))
+              'active)))))
       t)
     ;; turn on abbrevs
     (abbrev-mode 1)
@@ -2436,7 +2436,7 @@ at the beginning of line, if already there."
 (use-package geben
   :commands (geben my-php-debug)
   :config
-    (progn
+  (progn
 
     ;; Debug a simple PHP script.
     (defun my-php-debug ()
@@ -2446,7 +2446,7 @@ at the beginning of line, if already there."
       (shell-command
        (concat
         "XDEBUG_CONFIG='idekey=my-php-54'  /usr/local/opt/php54/bin/php "
-               (buffer-file-name) " status" " &")))
+        (buffer-file-name) " status" " &")))
 
     ;; geben won't connect because its "Already in debugging"  This might help.
     (defun my-geben-release ()
@@ -2615,7 +2615,7 @@ at the beginning of line, if already there."
 (use-package helm-dash
   :load-path "site-lisp/esqlite/Emacs-pcsv"
   :init
-    (helm-dash-activate-docset "Drupal"))
+  (helm-dash-activate-docset "Drupal"))
 
 ;;;_ , hi-lock
 
@@ -2936,7 +2936,7 @@ at the beginning of line, if already there."
                ("(\\(ert-deftest\\)\\>[         '(]*\\(setf[    ]+\\sw+\\|\\sw+\\)?"
                 (1 font-lock-keyword-face)
                 (2 font-lock-function-name-face
-                 nil t)))))
+                   nil t)))))
           lisp-modes)
 
     (defvar slime-mode nil)
@@ -3503,7 +3503,7 @@ and view local index.html url"
     (unless running-alternate-emacs
       (run-with-idle-timer 600 t 'jump-to-org-agenda))
 
-  (unless running-alternate-emacs
+    (unless running-alternate-emacs
       (add-hook 'after-init-hook
                 #'(lambda ()
                     (org-agenda-list)
@@ -3568,7 +3568,7 @@ and view local index.html url"
     (bind-key "M-)" 'paredit-close-round paredit-mode-map)
 
     (bind-key "M-k" 'paredit-raise-sexp paredit-mode-map)
-;;    (bind-key "M-h" 'mark-containing-sexp paredit-mode-map)
+    ;;    (bind-key "M-h" 'mark-containing-sexp paredit-mode-map)
     (bind-key "M-I" 'paredit-splice-sexp paredit-mode-map)
 
     (unbind-key "M-r" paredit-mode-map)
@@ -3627,8 +3627,8 @@ and view local index.html url"
     (add-hook 'allout-mode-hook
               #'(lambda ()
                   (bind-key "M-k" 'paredit-raise-sexp allout-mode-map)
-;;                  (bind-key "M-h" 'mark-containing-sexp allout-mode-map)
-))))
+                  ;;                  (bind-key "M-h" 'mark-containing-sexp allout-mode-map)
+                  ))))
 
 ;;;_ , paren
 
@@ -3692,8 +3692,8 @@ unless return was pressed outside the comment"
     (defun my-php-indent-or-complete ()
       (interactive)
       (let (
-      (call-interactively 'indent-according-to-mode)
-      (call-interactively 'php-complete-function))))
+            (call-interactively 'indent-according-to-mode)
+            (call-interactively 'php-complete-function))))
 
     (defun my-php-mode-hook ()
       (set (make-local-variable 'yas-fallback-behavior)
@@ -3758,84 +3758,84 @@ unless return was pressed outside the comment"
 
     (bind-key "C-c j" `projectile-switch-project)
 
-  (defun define-keys (mode-map keybindings)
-    "Takes a mode map, and a list of (key function-designator)
+    (defun define-keys (mode-map keybindings)
+      "Takes a mode map, and a list of (key function-designator)
 lists.  The functions are bound to the keys in the given mode-map.
 Keys are in kbd format."
-    (mapc (lambda (keybinding)
-            (destructuring-bind (key function) keybinding
-              (define-key mode-map (read-kbd-macro key) function)))
-          keybindings))
+      (mapc (lambda (keybinding)
+              (destructuring-bind (key function) keybinding
+                (define-key mode-map (read-kbd-macro key) function)))
+            keybindings))
 
-  (use-package ag
-    :init
-    (progn
+    (use-package ag
+      :init
+      (progn
 
-      (use-package wgrep)
-      (use-package wgrep-ag)))
+        (use-package wgrep)
+        (use-package wgrep-ag)))
 
-  (use-package projectile-drupal
-    :init
-    (progn
-      (defun dkh-get-site-name ()
-        "Gets site name based on University WWNG standard or standalone."
-        (if (locate-dominating-file default-directory
-                                                             "current")
-            (let* ((project-root-dir (locate-dominating-file default-directory
-                                                             "current"))
-                   (path (split-string project-root-dir "/")))     ; path as list
-              (car (last (nbutlast path 1))))
+    (use-package projectile-drupal
+      :init
+      (progn
+        (defun dkh-get-site-name ()
+          "Gets site name based on University WWNG standard or standalone."
+          (if (locate-dominating-file default-directory
+                                      "current")
+              (let* ((project-root-dir (locate-dominating-file default-directory
+                                                               "current"))
+                     (path (split-string project-root-dir "/")))     ; path as list
+                (car (last (nbutlast path 1))))
             (projectile-project-name)))))
 
-  (add-hook 'projectile-mode-hook 'projectile-drupal-on)
+    (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
-  (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
+    (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
 
-  (defun projectile-switch-to-last-project-root-buffer ()
-    (interactive)
-    (if (boundp 'projectile-last-project-root-buffer)
-        (if (buffer-live-p projectile-last-project-root-buffer)
-            (switch-to-buffer projectile-last-project-root-buffer)))
-    (if (boundp 'projectile-last-project-root)
-        (projectile-switch-to-last-project))
-    (message "projectile-last-project-root is not defined"))
+    (defun projectile-switch-to-last-project-root-buffer ()
+      (interactive)
+      (if (boundp 'projectile-last-project-root-buffer)
+          (if (buffer-live-p projectile-last-project-root-buffer)
+              (switch-to-buffer projectile-last-project-root-buffer)))
+      (if (boundp 'projectile-last-project-root)
+          (projectile-switch-to-last-project))
+      (message "projectile-last-project-root is not defined"))
 
-  (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-project-root-buffer)
+    (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-project-root-buffer)
 
-  (defun dkh-project-record ()
-    (setq projectile-last-project-root (projectile-project-root))
-    (setq projectile-last-project-root-buffer (current-buffer)))
+    (defun dkh-project-record ()
+      (setq projectile-last-project-root (projectile-project-root))
+      (setq projectile-last-project-root-buffer (current-buffer)))
 
-  (defun projectile-switch-to-last-project ()
-    (interactive)
-    (funcall projectile-switch-project-action projectile-last-project-root))
+    (defun projectile-switch-to-last-project ()
+      (interactive)
+      (funcall projectile-switch-project-action projectile-last-project-root))
 
-  (global-set-key (kbd "C-c p S") 'projectile-switch-to-last-project)
+    (global-set-key (kbd "C-c p S") 'projectile-switch-to-last-project)
 
-  (defun dkh-projectile-dired (&optional arg)
-    "Open `dired' at the root of the project."
-    (interactive)
-    (if arg
-        (dired arg))
-    (dired (projectile-project-root)))
+    (defun dkh-projectile-dired (&optional arg)
+      "Open `dired' at the root of the project."
+      (interactive)
+      (if arg
+          (dired arg))
+      (dired (projectile-project-root)))
 
-  (defun buffer-projectile (change-buffer-fun)
+    (defun buffer-projectile (change-buffer-fun)
       (let ((current-mode major-mode)
             (next-mode nil))
-    (while (not (eq next-mode current-mode))
-      (funcall change-buffer-fun)
-      (setq next-mode major-mode))))
+        (while (not (eq next-mode current-mode))
+          (funcall change-buffer-fun)
+          (setq next-mode major-mode))))
 
-  (defun projectile-previous-buffer ()
-  (interactive)
-  (buffer-projectile #'previous-buffer))
+    (defun projectile-previous-buffer ()
+      (interactive)
+      (buffer-projectile #'previous-buffer))
 
-  (defun projectile-next-buffer ()
-  (interactive)
-  (buffer-projectile #'next-buffer))
+    (defun projectile-next-buffer ()
+      (interactive)
+      (buffer-projectile #'next-buffer))
 
-  (global-set-key (kbd "C-c p <left>") 'projectile-previous-buffer)
-  (global-set-key (kbd "C-c p <right>") 'projectile-next-buffer)))
+    (global-set-key (kbd "C-c p <left>") 'projectile-previous-buffer)
+    (global-set-key (kbd "C-c p <right>") 'projectile-next-buffer)))
 
 ;;;_ , popup-ruler
 
@@ -4101,10 +4101,10 @@ Keys are in kbd format."
 (use-package shift-text
   :commands (shfit-text-right shfit-text-left shift-text-up shift-text-down)
   :bind (("<M-right>" . shift-text-right)
-  ("<M-left>" .  shift-text-left)
-  ("<M-up>" .  shift-text-up)
-  ("<M-down>" .  shift-text-down))
-)
+         ("<M-left>" .  shift-text-left)
+         ("<M-up>" .  shift-text-up)
+         ("<M-down>" .  shift-text-down))
+  )
 
 ;;;_ , sh-mode
 (use-package sh-mode
@@ -4397,13 +4397,13 @@ Keys are in kbd format."
 ;;;_ , textexpander
 
 ;; (when (= 0 (call-process "using-textexpander"))
-  ;; (bind-key "A-v" 'scroll-down)
-  (bind-key "H-v" 'yank)
-  ;; (bind-key "M-v" 'scroll-down)
+;; (bind-key "A-v" 'scroll-down)
+(bind-key "H-v" 'yank)
+;; (bind-key "M-v" 'scroll-down)
 ;; )
 
-  ;; (bind-key "M-v" 'scroll-down)
-  ;; (bind-key "A-v" 'yank)
+;; (bind-key "M-v" 'scroll-down)
+;; (bind-key "A-v" 'yank)
 
 
 ;; https://github.com/anthracite/emacs-config/blob/master/init.el
@@ -4725,7 +4725,7 @@ Keys are in kbd format."
     (add-hook 'wg-switch-hook
               '(lambda ()
                  ;; (message "ho")
-     ))
+                 ))
 
     (defun wg-create-workgroup-awesome ()
       "create workgroups using names from awesome button"
@@ -4889,7 +4889,7 @@ Keys are in kbd format."
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
 
 (defvar blink-cursor-colors (list  "#b58900" "#cb4b16" "#dc322f" "#d33682"
-  "#6c71c4" "#268bd2" "#2aa198" "#859900")
+                                   "#6c71c4" "#268bd2" "#2aa198" "#859900")
   "On each blink the cursor will cycle to the next color in this list.")
 
 (setq blink-cursor-count 0)
@@ -5047,8 +5047,8 @@ file of a buffer in an external program."
    (concat
     "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
     (url-hexify-string (if mark-active
-         (buffer-substring (region-beginning) (region-end))
-       (read-string "Google: "))))))
+                           (buffer-substring (region-beginning) (region-end))
+                         (read-string "Google: "))))))
 
 
 ;;;; Emoji composition tests
@@ -5129,7 +5129,7 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
 (use-package my-modeline
   :if (not running-alternate-emacs)
   :defer t
-)
+  )
 
 ;; http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
 ;; (bind-key "C-<tab>" 'mode-line-other-buffer)
