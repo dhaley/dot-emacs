@@ -3795,10 +3795,6 @@ Keys are in kbd format."
                      (concat "colorado.dev/" projectile-drupal-site-name))))
                  (concat "http://" uri)))))
 
- ;; '(projectile-globally-ignored-directories (quote (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" "sites/default/files" ".shelly" "FirePHPCore" "sites/all" "libraries")))
- ;; '(projectile-globally-ignored-files (quote ("TAGS" ".gitignore" ".gitmodules" ".htaccess" "authorize.php" "cron.php" "install.php" "robots.txt" "update.php" "xmlrpc.php" "web.config" "GTAGS" "GRTAGS" "GPATH")))
- ;; '(projectile-project-root-files (quote (".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs" "rebar.config" "project.clj" "pom.xml" "build.sbt" "Gemfile" "Makefile")))
-
     (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
     (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
