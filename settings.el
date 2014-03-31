@@ -279,6 +279,7 @@
  '(pp^L-^L-string "                                                                              ")
  '(projectile-drupal-base-url-function (quote dkh-get-base-url))
  '(projectile-drupal-site-name-function (quote dkh-get-site-name))
+ '(projectile-generic-command "find -L . -type f -print0")
  '(projectile-switch-project-action (quote dkh-projectile-dired))
  '(projectile-switch-project-hook (quote dkh-project-record))
  '(ps-font-size (quote (8 . 10)))
