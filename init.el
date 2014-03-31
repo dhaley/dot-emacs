@@ -3785,7 +3785,15 @@ Keys are in kbd format."
                                                                "current"))
                      (path (split-string project-root-dir "/")))     ; path as list
                 (car (last (nbutlast path 1))))
-            (projectile-project-name)))))
+            (projectile-project-name)))
+
+        (defun dkh-get-base-url ()
+          "Gets the projectile-drupal-base-url based on University WWNG standard or standalone."
+          (let* ((uri
+                 (if (equal projectile-drupal-site-name "admissions_undergraduate")
+                     "ww/admissions/undergraduate"
+                     (concat "colorado.dev/" projectile-drupal-site-name))))
+                 (concat "http://" uri)))))
 
     (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
