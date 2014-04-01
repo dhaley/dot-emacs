@@ -3793,7 +3793,10 @@ Keys are in kbd format."
                  (if (equal projectile-drupal-site-name "admissions_undergraduate")
                      "ww/admissions/undergraduate"
                      (concat "colorado.dev/" projectile-drupal-site-name))))
-                 (concat "http://" uri)))))
+                 (concat "http://" uri)))
+
+        (bind-key "C-H-M-<" 'projectile-switch-to-prev-buffer)
+        (bind-key "C-H-M->" 'projectile-switch-to-next-buffer)))
 
     (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
