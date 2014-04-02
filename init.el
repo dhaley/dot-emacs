@@ -3796,7 +3796,9 @@ Keys are in kbd format."
                  (concat "http://" uri)))
 
         (bind-key "C-H-M-<" 'projectile-switch-to-prev-buffer)
-        (bind-key "C-H-M->" 'projectile-switch-to-next-buffer)))
+        (bind-key "C-H-M->" 'projectile-switch-to-next-buffer)
+        (bind-key "C-H-M->" 'revert-buffer)
+        (bind-key "C-H-M-\"" 'kill-buffer)))
 
     (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
