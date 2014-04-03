@@ -4789,7 +4789,6 @@ The current directory is assumed to be the project's root otherwise."
       (wg-create-workgroup (get-awesome-button)))
 
     (use-package awesome-button
-      :bind ("H-a" . awesome-button-say)
       :commands (get-awesome-button awesome-button-say)
       :init
       (progn
