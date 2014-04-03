@@ -1527,8 +1527,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
     (add-hook 'dired-mode-hook '(lambda ()
                                   (dired-package-initialize)
-                                  (hl-line-mode 1)
-                                  (setq cursor-type t)))
+                                  (hl-line-mode 1)))
 
     (defun dired-double-jump (first-dir second-dir)
       (interactive
@@ -1740,6 +1739,14 @@ Require unix zip commandline tool."
 ;;;_ , conf-mode
 (use-package conf-mode
   :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
+
+;;;_ , cursor-chg
+
+(use-package cursor-chg
+  :init
+  (progn
+    (change-cursor-mode 1)
+    (toggle-cursor-type-when-idle 1)))
 
 ;;;_ , drupal-mode
 
@@ -4942,25 +4949,6 @@ The current directory is assumed to be the project's root otherwise."
 
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
-
-(defvar blink-cursor-colors (list  "#b58900" "#cb4b16" "#dc322f" "#d33682"
-                                   "#6c71c4" "#268bd2" "#2aa198" "#859900")
-  "On each blink the cursor will cycle to the next color in this list.")
-
-(setq blink-cursor-count 0)
-
-(defun blink-cursor-timer-function ()
-  "Cyberpunk variant of timer `blink-cursor-timer'. OVERWRITES original version in `frame.el'.
-
-This one changes the cursor color on each blink. Define colors in `blink-cursor-colors'."
-  (when (not (internal-show-cursor-p))
-    (when (>= blink-cursor-count (length blink-cursor-colors))
-      (setq blink-cursor-count 0))
-    (set-cursor-color (nth blink-cursor-count blink-cursor-colors))
-    (setq blink-cursor-count (+ 1 blink-cursor-count))
-    )
-  (internal-show-cursor nil (not (internal-show-cursor-p)))
-  )
 
 ;; OS X Specific configuration
 
