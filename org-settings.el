@@ -86,6 +86,7 @@ SCHEDULED: %t
  '(org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00") ("Confidence_ALL" . "low medium high") ("STYLE_ALL" . "habit"))))
  '(org-habit-graph-column 50)
  '(org-hide-leading-stars nil)
+ '(org-html-checkbox-type "unicode")
  '(org-id-link-to-org-use-id (quote create-if-interactive-and-no-custom-id))
  '(org-id-method (quote uuidgen))
  '(org-indirect-buffer-display (quote current-window))

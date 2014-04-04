@@ -12,7 +12,7 @@
 (require 'org-magit)
 (require 'ob-emacs-lisp)
 (require 'ob-sh)
-
+(require 'ox-html)
 (require 'async)
 
 (defun org-link-to-named-task ()
