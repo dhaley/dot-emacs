@@ -598,3 +598,6 @@
 [submodule "site-lisp/free-keys"]
 	path = site-lisp/free-keys
 	url = git://github.com/Fuco1/free-keys.git
+[submodule "site-lisp/fancy-narrow"]
+	path = site-lisp/fancy-narrow
+	url = https://github.com/Bruce-Connor/fancy-narrow.git

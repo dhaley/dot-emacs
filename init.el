@@ -3340,7 +3340,8 @@ at the beginning of line, if already there."
   (progn
     (prefer-coding-system 'utf-8)
     (set-terminal-coding-system 'utf-8)
-    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))))
+    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+    (set-fontset-font t 'unicode "Symbola" nil 'prepend)))
 
 ;;;_ , multi-term
 
@@ -3406,6 +3407,11 @@ at the beginning of line, if already there."
          ("C-c C-<" . mc/mark-all-like-this))
   :init
   (setq mc/list-file (expand-file-name "mc-lists.el" user-data-directory)))
+
+;;;_ , fancy-narrow
+
+(use-package fancy-narrow
+  :commands fancy-narrow-mode)
 
 ;;;_ , nf-procmail-mode
 
