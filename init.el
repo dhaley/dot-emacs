@@ -3719,7 +3719,6 @@ unless return was pressed outside the comment"
                  (abbrev-mode 1)
                  (hs-minor-mode 1)
                  (turn-on-eldoc-mode)
-                 (which-func-mode 1)
                  (diminish 'hs-minor-mode)
                  (setq indicate-empty-lines t)
                  'my-php-mode-hook
@@ -4679,6 +4678,20 @@ The current directory is assumed to be the project's root otherwise."
                        "www.urbandictionary.com"
                        "http://www.urbandictionary.com/define.php?term="
                        ""])))))
+
+
+(use-package which-func
+  :init
+  (progn
+    (hook-into-modes 'which-function-mode
+                     '(prog-mode-hook))
+    (setq-default header-line-format
+                  '((which-func-mode ("" which-func-format " "))))
+    (setq mode-line-misc-info
+          ;; We remove Which Function Mode from the mode line, because it's mostly
+          ;; invisible here anyway.
+          (assq-delete-all 'which-func-mode mode-line-misc-info)
+)))
 
 ;;;_ , whitespace
 
