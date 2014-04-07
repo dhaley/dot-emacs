@@ -601,3 +601,6 @@
 [submodule "site-lisp/fancy-narrow"]
 	path = site-lisp/fancy-narrow
 	url = https://github.com/Bruce-Connor/fancy-narrow.git
+[submodule "site-lisp/ipretty"]
+	path = site-lisp/ipretty
+	url = https://github.com/steckerhalter/ipretty.git
