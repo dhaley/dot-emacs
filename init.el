@@ -3505,14 +3505,14 @@ and view local index.html url"
   ;;        ("C-c S" . org-store-link)
   ;;        ("C-c l" . org-insert-link))
   :init
-  (bind-key "M-C"   'jump-to-org-agenda)
-  (bind-key "M-m"   'org-smart-capture)
-  (bind-key "M-M"   'org-inline-note)
-  (bind-key "C-c a" 'org-agenda)
-  (bind-key "C-c S" 'org-store-link)
-  (bind-key "C-c l" 'org-insert-link)
-
   (progn
+    (bind-key "M-C"   'jump-to-org-agenda)
+    (bind-key "M-m"   'org-smart-capture)
+    (bind-key "M-M"   'org-inline-note)
+    (bind-key "C-c a" 'org-agenda)
+    (bind-key "C-c S" 'org-store-link)
+    (bind-key "C-c l" 'org-insert-link)
+
     (unless running-alternate-emacs
       (run-with-idle-timer 600 t 'jump-to-org-agenda))
 
@@ -3521,7 +3521,34 @@ and view local index.html url"
                 #'(lambda ()
                     (org-agenda-list)
                     (org-fit-agenda-window)
-                    (org-resolve-clocks))) t)))
+                    (org-resolve-clocks))) t))
+  :config
+  (progn
+    (defun org-cycle-current-entry ()
+      "toggle visibility of current entry from within the entry."
+      (interactive)
+      (save-excursion)
+      (outline-back-to-heading)
+      (org-cycle))
+
+    (define-key org-mode-map (kbd "C-c C-/") 'org-cycle-current-entry)
+
+
+    (defun org-select-heading ()
+      "Go to heading of current node, select heading."
+      (interactive)
+      (outline-previous-heading)
+      (search-forward (plist-get (cadr (org-element-at-point)) :raw-value))
+      (set-mark (point))
+      (beginning-of-line)
+      (search-forward " "))
+
+    (define-key org-mode-map (kbd "C-c C-h") 'org-select-heading)
+
+    (fset 'org-toggle-drawer
+          (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([67108896 3 16 14 tab 24 24] 0 "%d")) arg)))
+
+    (define-key org-mode-map (kbd "C-c M-d") 'org-toggle-drawer)))
 
 ;;;_ , org-jira
 
