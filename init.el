@@ -966,6 +966,7 @@ Including indent-buffer, which should not be called automatically on save."
   :load-path ("site-lisp/ac/auto-complete"
               "site-lisp/ac/ac-source-elisp"
               "site-lisp/ac/ac-source-semantic"
+              "site-lisp/ac/ac-source-emmet"
               "site-lisp/ac/ac-yasnippet"
               "site-lisp/ac/fuzzy-el"
               "site-lisp/ac/popup-el")
@@ -1297,7 +1298,8 @@ Including indent-buffer, which should not be called automatically on save."
       '(("<return>" newline-and-indent)))
     (add-hook 'css-mode-hook
               (lambda ()
-                (rainbow-mode 1)))))
+                (rainbow-mode 1)
+                (ac-emmet-css-setup)))))
 
 ;;;_ , ibuffer
 
@@ -1662,26 +1664,6 @@ Require unix zip commandline tool."
     ;; (add-hook 'after-init-hook 'server-start t)
     ;; (add-hook 'after-init-hook 'edit-server-start t)
     ))
-
-;;;_ , emmet-mode
-
-(use-package emmet-mode
-  :commands emmet-mode
-  :init
-  (progn
-    (add-hook 'nxml-mode-hook 'emmet-mode)
-    (add-hook 'html-mode-hook 'emmet-mode)
-    (add-hook 'html-mode-hook
-              #'(lambda ()
-                  (bind-key "<return>" 'newline-and-indent html-mode-map)))
-    (add-hook 'php-mode-hook 'emmet-mode)
-    (add-hook 'web-mode-hook 'emmet-mode)
-    )
-
-  :config
-  (progn
-    (defvar emmet-mode-keymap (make-sparse-keymap))
-    (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap)))
 
 ;;_ ,  emoji-cheat-sheet
 
@@ -3768,7 +3750,23 @@ and view local index.html url"
 
     (defun prog-mode-setup ()
       (run-hooks 'prog-mode-hook))
-    (add-hook 'php-mode-hook 'prog-mode-setup))
+    (add-hook 'php-mode-hook 'prog-mode-setup)
+
+    (use-package emmet-mode
+      :commands emmet-mode
+      :init
+      (progn
+        (add-hook 'nxml-mode-hook 'emmet-mode)
+        (add-hook 'html-mode-hook 'emmet-mode)
+        (add-hook 'html-mode-hook
+                  #'(lambda ()
+                      (bind-key "<return>" 'newline-and-indent html-mode-map)))
+        (add-hook 'web-mode-hook 'emmet-mode))
+
+      :config
+      (progn
+        (defvar emmet-mode-keymap (make-sparse-keymap))
+        (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap))))
   :config
   (progn
     (defun my-php-return ()
@@ -3820,6 +3818,7 @@ unless return was pressed outside the comment"
                  (hs-minor-mode 1)
                  (turn-on-eldoc-mode)
                  (diminish 'hs-minor-mode)
+                 (emmet-mode 1)
                  (setq indicate-empty-lines t)
                  'my-php-mode-hook
                  (local-set-key "\r" 'my-php-return)))

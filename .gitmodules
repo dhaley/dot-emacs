@@ -610,3 +610,6 @@
 [submodule "site-lisp/grizzl"]
 	path = site-lisp/grizzl
 	url = https://github.com/d11wtq/grizzl.git
+[submodule "site-lisp/ac/ac-source-emmet"]
+	path = site-lisp/ac/ac-source-emmet
+	url = https://github.com/yasuyk/ac-emmet.git
