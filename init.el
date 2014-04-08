@@ -3832,7 +3832,12 @@ unless return was pressed outside the comment"
                    (add-to-list 'yas-extra-modes 'drupal-mode))))
 
     (bind-key "C-c C-F" 'php-search-local-documentation)
-    (require 'php-extras)
+    (use-package php-extras
+      :init
+      (progn
+        (require 'php-extras-gen-eldoc)
+        (php-extras-autocomplete-setup)
+        (php-extras-eldoc-setup)))
 
     (use-package php-boris)
 
