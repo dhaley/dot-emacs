@@ -1759,12 +1759,14 @@ Require unix zip commandline tool."
   :config
   (progn
 
-    (use-package ggtags)
     (add-hook 'drupal-mode-hook
               '(lambda ()
                  (ggtags-mode 1)
-                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")))
-    (add-to-list 'yas-extra-modes 'drupal-mode)))
+                 (diminish 'ggtags-mode)
+                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+                (auto-complete-mode 1)
+                (setq ac-sources (list 'ac-source-gtags))
+              (add-to-list 'yas-extra-modes 'drupal-mode)))))
 
 ;;;_ , erc
 
@@ -2440,8 +2442,9 @@ at the beginning of line, if already there."
     (hook-into-modes #'flycheck-mode '(prog-mode-hook))
 
     (use-package google-this
+      :diminish google-this-mode
       :init
-      (google-this-mode 1)))
+      (google-this-mode)))
   :config
   (progn
     (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
@@ -2496,6 +2499,49 @@ at the beginning of line, if already there."
   :bind (("<f13>" . fold-dwim-toggle)
          ("<f14>" . fold-dwim-hide-all)
          ("<f15>" . fold-dwim-show-all)))
+
+;;;_ , ggtags
+
+(use-package ggtags
+  :commands ggtags-mode
+  :diminish ggtags-mode
+  :config
+  (progn
+    (defun my-gtags-or-semantic-find-tag ()
+      (interactive)
+      (if (and (fboundp 'semantic-active-p)
+               (funcall #'semantic-active-p))
+          (call-interactively #'semantic-complete-jump)
+        (call-interactively #'ggtags-find-tag-dwim)))
+
+    (bind-key "M-." 'my-gtags-or-semantic-find-tag ggtags-mode-map)
+
+    ;; M-]             ggtags-find-reference
+    ;; C-M-.           ggtags-find-tag-regexp
+
+    ;; C-c M-SPC       ggtags-save-to-register
+    ;; C-c M-%         ggtags-query-replace
+    ;; C-c M-/         ggtags-global-rerun-search
+    ;; C-c M-?         ggtags-show-definition
+    ;; C-c M-b         ggtags-browse-file-as-hypertext
+    ;; C-c M-f         ggtags-find-file
+    (bind-key "C-c t f" 'ggtags-find-file)
+    ;; C-c M-g         ggtags-grep
+    (bind-key "C-c t g" 'ggtags-grep)
+    ;; C-c M-h         ggtags-view-tag-history
+    ;; C-c M-i         ggtags-idutils-query
+    ;; C-c M-j         ggtags-visit-project-root
+    (bind-key "C-c t v" 'ggtags-visit-project-root)
+    ;; C-c M-k         ggtags-kill-file-buffers
+    ;; C-c M-n         ggtags-next-mark
+    ;; C-c M-o         ggtags-find-other-symbol
+    ;; C-c M-p         ggtags-prev-mark
+    ;; C-c M-DEL       ggtags-delete-tags
+
+    (use-package helm-gtags
+      :bind ("M-T" . helm-gtags-select)
+      :config
+      (bind-key "M-," 'helm-gtags-resume ggtags-mode-map))))
 
 ;;;_ , gist
 
@@ -2605,6 +2651,11 @@ at the beginning of line, if already there."
     (bind-key "M-s a" 'helm-do-grep)
     (bind-key "M-s b" 'helm-occur)
     (bind-key "M-s F" 'helm-for-files)
+    ;; (bind-key "M-s f" 'helm-find-files)
+    (bind-key "M-s r" 'helm-resume)
+    (bind-key "M-s B" 'helm-bookmarks)
+    (bind-key "M-s l" 'helm-buffers-list)
+    (bind-key "M-s P" 'helm-projectile)
 
     (use-package helm-commands)
 
@@ -2622,13 +2673,26 @@ at the beginning of line, if already there."
     (use-package helm-ag)
 
     (bind-key "C-h b" 'helm-descbinds)
-    (use-package helm-gtags
-      :bind ("M-T" . helm-gtags-select)
-      :config
-      (bind-key "M-," 'helm-gtags-resume ggtags-mode-map))
 
     (use-package helm-projectile
-      :bind ("C-c h" . helm-projectile)))
+      :init
+      (progn
+        ;; Add add-to-projectile action after helm-find-files.
+        (let ((find-files-action (assoc 'action helm-source-find-files)))
+          (setcdr find-files-action
+                  (cons
+                   (cadr find-files-action)
+                   (cons '("Add to projectile" . helm-add-to-projectile)
+                         (cddr find-files-action)))))
+
+        ;; Use helm-find-files actions in helm-projectile
+        (let ((projectile-files-action (assoc 'action helm-source-projectile-files-list)))
+          (setcdr projectile-files-action (cdr (assoc 'action helm-source-find-files))))
+
+        (defun helm-add-to-projectile (path)
+          "Add directory of file to projectile projects.
+  Used as helm action in helm-source-find-files"
+          (projectile-add-known-project (file-name-directory path))))))
   :config
   (helm-match-plugin-mode t))
 
