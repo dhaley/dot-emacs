@@ -2403,6 +2403,14 @@ at the beginning of line, if already there."
   :commands fetchmail-mode
   )
 
+;;;_ , ipretty
+
+(use-package ipretty
+  :init
+  (progn
+    (global-set-key (kbd "C-h C-j") 'ipretty-last-sexp)
+    (global-set-key (kbd "C-h C-k") 'ipretty-last-sexp-other-buffer)))
+
 ;;;_ , flyspell
 
 (use-package ispell
