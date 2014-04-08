@@ -279,6 +279,7 @@
  '(php-manual-path "~/Documents/php/php-chunked-xhtml")
  '(ping-program-options (quote ("-c" "4")))
  '(pp^L-^L-string "                                                                              ")
+ '(projectile-completion-system 'grizzl)
  '(projectile-drupal-base-url-function (quote dkh-get-base-url))
  '(projectile-drupal-site-name-function (quote dkh-get-site-name))
  '(projectile-generic-command "find -L . -type f -print0")

@@ -607,3 +607,6 @@
 [submodule "site-lisp/highlight-sexp"]
 	path = site-lisp/highlight-sexp
 	url = https://github.com/daimrod/highlight-sexp.git
+[submodule "site-lisp/grizzl"]
+	path = site-lisp/grizzl
+	url = https://github.com/d11wtq/grizzl.git
