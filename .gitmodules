@@ -604,3 +604,6 @@
 [submodule "site-lisp/ipretty"]
 	path = site-lisp/ipretty
 	url = https://github.com/steckerhalter/ipretty.git
+[submodule "site-lisp/highlight-sexp"]
+	path = site-lisp/highlight-sexp
+	url = https://github.com/daimrod/highlight-sexp.git

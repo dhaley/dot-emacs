@@ -2465,6 +2465,14 @@ at the beginning of line, if already there."
 
     (use-package my-geben)))
 
+;;;_ , highlight-sexp
+
+(use-package hl-sexp
+  :init
+  (progn
+    (hook-into-modes 'hl-sexp-mode
+                     '(prog-mode-hook))))
+
 ;;;_ , highlight-symbol
 (use-package highlight-symbol
   :disabled t
@@ -2473,7 +2481,6 @@ at the beginning of line, if already there."
 ;;;_ , highlight-tail
 (use-package highlight-tail
   :commands highlight-tail-mode)
-
 
 ;;;_ , fold-dwim
 
