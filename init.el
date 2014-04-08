@@ -2657,6 +2657,7 @@ at the beginning of line, if already there."
     (bind-key "M-s l" 'helm-buffers-list)
     (bind-key "M-s P" 'helm-projectile)
 
+    (require 'grizzl)
     (use-package helm-commands)
 
     (bind-key "C-h e a" 'my-helm-apropos)
