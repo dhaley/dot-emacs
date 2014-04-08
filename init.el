@@ -1748,26 +1748,6 @@ Require unix zip commandline tool."
     (change-cursor-mode 1)
     (toggle-cursor-type-when-idle 1)))
 
-;;;_ , drupal-mode
-
-(use-package drupal-mode
-  :mode ("\\.\\(module\\|test\\|install\\|theme\\|inc\\|profile\\)$" . drupal-mode)
-  :init
-  (progn
-    ;; (add-to-list 'auto-mode-alist '("data.*\\.\\(php\\|inc\\)$" . drupal-mode))
-    (require 'cl-macs))
-  :config
-  (progn
-
-    (add-hook 'drupal-mode-hook
-              '(lambda ()
-                 (ggtags-mode 1)
-                 (diminish 'ggtags-mode)
-                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                (auto-complete-mode 1)
-                (setq ac-sources (list 'ac-source-gtags))
-              (add-to-list 'yas-extra-modes 'drupal-mode)))))
-
 ;;;_ , erc
 
 (use-package erc
@@ -3776,10 +3756,18 @@ and view local index.html url"
 ;;;_ , php-mode
 
 (use-package php-mode
+  :commands php-mode
+  :mode "\\.\\(php\\|module\\|test\\|install\\|theme\\|inc\\|profile\\)$"
+  :interpreter "php"
   :init
   (progn
+
+    (use-package conf-windows-mode
+      :mode "\\.info")
+
     (defun prog-mode-setup ()
-      (run-hooks 'prog-mode-hook)))
+      (run-hooks 'prog-mode-hook))
+    (add-hook 'php-mode-hook 'prog-mode-setup))
   :config
   (progn
     (defun my-php-return ()
@@ -3822,6 +3810,10 @@ unless return was pressed outside the comment"
 
     (add-hook 'php-mode-hook
               '(lambda ()
+                 (ggtags-mode 1)
+                 (diminish 'ggtags-mode)
+                 (auto-complete-mode 1)
+                 (setq ac-sources (list 'ac-source-gtags))
                  (define-abbrev php-mode-abbrev-table "ex" "extends")
                  (abbrev-mode 1)
                  (hs-minor-mode 1)
@@ -3830,6 +3822,13 @@ unless return was pressed outside the comment"
                  (setq indicate-empty-lines t)
                  'my-php-mode-hook
                  (local-set-key "\r" 'my-php-return)))
+
+    (use-package drupal-mode
+      :init
+      (add-hook 'drupal-mode-hook
+                '(lambda ()
+                   (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+                   (add-to-list 'yas-extra-modes 'drupal-mode))))
 
     (bind-key "C-c C-F" 'php-search-local-documentation)
     (require 'php-extras)
@@ -3864,8 +3863,9 @@ unless return was pressed outside the comment"
             (man (symbol-name function))))))
     (define-key php-mode-map "\C-hf" 'describe-function-via-pman)
     (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
-
     (use-package php-auto-yasnippets)))
+
+
 
 ;;;_ , projectile
 
