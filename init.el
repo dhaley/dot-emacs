@@ -2459,6 +2459,7 @@ at the beginning of line, if already there."
 ;;;_ , highlight-sexp
 
 (use-package hl-sexp
+  :commands hl-sexp-mode
   :init
   (progn
     (hook-into-modes 'hl-sexp-mode
