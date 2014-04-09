@@ -282,7 +282,7 @@
  '(projectile-completion-system 'grizzl)
  '(projectile-drupal-base-url-function (quote dkh-get-base-url))
  '(projectile-drupal-site-base-url-dev "http://www-dev.colorado.edu")
- '(projectile-drupal-site-base-url-name-function (quote dkh-get-site-name))
+ '(projectile-drupal-site-name-function (quote dkh-get-site-name))
  '(projectile-drupal-site-base-url-prod "http://www.colorado.edu")
  '(projectile-drupal-site-base-url-stage "http://www-stage.colorado.edu")
  '(projectile-drupal-site-base-url-test "http://www-test.colorado.edu")
