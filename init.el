@@ -4998,7 +4998,6 @@ The current directory is assumed to be the project's root otherwise."
           fill-column 65)
     (set-window-margins (selected-window) 50 50)))
 
-
 ;;;_ , xmsi-mode
 
 (use-package xmsi-math-symbols-input
@@ -5137,7 +5136,6 @@ The current directory is assumed to be the project's root otherwise."
             (lambda ()
               (cycle-my-theme) t)))
 
-
 ;; Even though we may have set the Mac OS X Terminal's Alt key as the
 ;; emacs Meta key, we want to be able to insert a '#' using Alt-3 in
 ;; emacs as we would in other programs.
@@ -5147,36 +5145,12 @@ The current directory is assumed to be the project's root otherwise."
 ;; OS X ls doesn't support --dired
 (setq dired-use-ls-dired nil)
 
-
-
-;; (defun offlineimap-get-password (host port)
-;;   (let* ((netrc (netrc-parse (expand-file-name "~/Documents/.autinfo.gpg")))
-;;          (hostentry (netrc-machine netrc host port port)))
-;;     (when hostentry (netrc-get hostentry "password"))))
-
-;; (setq
-;;  epa-file-cache-passphrase-for-symmetric-encryption t
-;;  user-full-name "Damon Haley"
-;;  user-mail-address "damon.haley@colorado.edu"
-;;  )
-
-
 (defalias 'list-matching-lines 'occur)
 (defalias 'delete-matching-lines 'flush-lines)
 (defalias 'delete-non-matching-lines 'keep-lines)
 
-(defalias 'td 'toggle-debug-on-error)
-
 ;; Allow "y or n" instead of "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
-
-
-
-;; this interferes with 7.10 Numeric Arguments
-;; (require 'window-number)
-;; (window-number-mode)
-;; (window-number-meta-mode)
-
 
 ;; Various superfluous white-space. Just say no.
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
