@@ -460,7 +460,6 @@
  '(erc-error-face ((t (:foreground "#dc322f"))))
  '(erc-header-line ((t (:background "#fdf6e3" :foreground "#586e75"))))
  '(erc-inverse-face ((t (:background "#fdf6e3" :foreground "#586e75"))))
- '(erc-my-nick-face ((t (:foreground "#586e75" :weight bold))))
  '(erc-nick-msg-face ((t (:foreground "#268bd2" :weight bold))))
  '(erc-pal-face ((t (:foreground "#d33682" :weight bold))))
  '(erc-prompt-face ((t (:background "#002b36" :foreground "#b58900" :weight bold))))
