@@ -2472,9 +2472,7 @@ at the beginning of line, if already there."
     ;; C-c M-DEL       ggtags-delete-tags
 
     (use-package helm-gtags
-      :bind ("M-T" . helm-gtags-select)
-      :config
-      (bind-key "M-," 'helm-gtags-resume ggtags-mode-map))))
+      :bind ("M-T" . helm-gtags-select))))
 
 ;;;_ , gist
 
