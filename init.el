@@ -2336,10 +2336,9 @@ at the beginning of line, if already there."
       (set-syntax-table emacs-lisp-mode-syntax-table)
       (paredit-mode))))
 
-;; (add-to-list 'load-path "~/.emacs.d/site-lisp/expand-region.el")
 ;; expand-region
 (use-package expand-region
-  :bind (("C-c =" . er/expand-region))
+  :bind (("H-=" . er/expand-region))
   :config
   (progn
     (defun er/add-text-mode-expansions ()
@@ -2349,8 +2348,7 @@ at the beginning of line, if already there."
                                 '(mark-paragraph
                                   mark-page))))
 
-    (add-hook 'text-mode-hook 'er/add-text-mode-expansions)
-    ))
+    (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
 
 ;;;_ , features-mode
 
@@ -2493,11 +2491,6 @@ at the beginning of line, if already there."
       :config
       (git-gutter-fr+-minimal))
     (global-git-gutter+-mode 1)))
-
-;;;_ , magit-blame
-
-(use-package magit-blame
-  :commands magit-blame-mode)
 
 ;;;_ , gnus
 (use-package dot-gnus
@@ -3207,8 +3200,14 @@ at the beginning of line, if already there."
                   (concat "*" command)
                   (eshell-stringify-list (eshell-flatten-list args)))))))
 
-    (add-hook 'magit-mode-hook 'hl-line-mode))
+    (add-hook 'magit-mode-hook 'hl-line-mode)
 
+    (use-package magit-blame
+      :commands magit-blame-mode)
+
+    (use-package git-messenger
+      :bind (("C-x v p" . git-messenger:popup-message))
+      :config (define-key git-messenger-map (kbd "m") 'git-messenger:copy-message)))
   :config
   (progn
     (setenv "GIT_PAGER" "")
@@ -3247,7 +3246,7 @@ at the beginning of line, if already there."
                              "-d" (expand-file-name default-directory)))))
 
     ;; (add-hook 'magit-status-mode-hook 'start-git-monitor)
-    ))
+))
 
 (use-package github-browse-file
   :bind ("H-o" . github-browse-file))
