@@ -955,10 +955,7 @@ Including indent-buffer, which should not be called automatically on save."
                               :regexp ".*"
                               :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
                               :doc-spec '(("(latex2e)Concept Index" )
-                                          ("(latex2e)Command Index"))))))
-  ;; (org-babel-load-file
-  ;; "~/git/foss/emacs-starter-kit-social-sciences/starter-kit-latex.org")
-  )
+                                          ("(latex2e)Command Index")))))))
 
 ;;;_ , auto-complete
 
@@ -2614,7 +2611,8 @@ at the beginning of line, if already there."
     (bind-key "C-h b" 'helm-descbinds)
 
     (use-package helm-projectile
-      :init
+      :bind ("C-c p h" . helm-projectile)
+      :config
       (progn
         ;; Add add-to-projectile action after helm-find-files.
         (let ((find-files-action (assoc 'action helm-source-find-files)))
@@ -3515,22 +3513,15 @@ and view local index.html url"
 ;; ;;;_ , org-mode
 
 (use-package dot-org
-  ;; :commands org-agenda-list
-  ;; :bind (("M-C"   . jump-to-org-agenda)
-  ;;        ("M-m"   . org-smart-capture)
-  ;;        ("M-M"   . org-inline-note)
-  ;;        ("C-c a" . org-agenda)
-  ;;        ("C-c S" . org-store-link)
-  ;;        ("C-c l" . org-insert-link))
+  :commands org-agenda-list
+  :bind (("M-C"   . jump-to-org-agenda)
+         ("M-m"   . org-smart-capture)
+         ("M-M"   . org-inline-note)
+         ("C-c a" . org-agenda)
+         ("C-c S" . org-store-link)
+         ("C-c l" . org-insert-link))
   :init
   (progn
-    (bind-key "M-C"   'jump-to-org-agenda)
-    (bind-key "M-m"   'org-smart-capture)
-    (bind-key "M-M"   'org-inline-note)
-    (bind-key "C-c a" 'org-agenda)
-    (bind-key "C-c S" 'org-store-link)
-    (bind-key "C-c l" 'org-insert-link)
-
     (unless running-alternate-emacs
       (run-with-idle-timer 600 t 'jump-to-org-agenda))
 
@@ -3571,6 +3562,7 @@ and view local index.html url"
 ;;;_ , org-jira
 
 (use-package org-jira
+  :disabled t
   :load-path ("~/.emacs.d/lisp/org-jira")
   :init
   (progn
@@ -3912,10 +3904,10 @@ Keys are in kbd format."
         (defun dkh-get-base-url ()
           "Gets the projectile-drupal-base-url based on University WWNG standard or standalone."
           (let* ((uri
-                 (if (equal projectile-drupal-site-name "admissions_undergraduate")
-                     "ww/admissions/undergraduate"
-                     (concat "colorado.dev/" projectile-drupal-site-name))))
-                 (concat "http://" uri)))
+                  (if (equal projectile-drupal-site-name "admissions_undergraduate")
+                      "ww/admissions/undergraduate"
+                    (concat "colorado.dev/" projectile-drupal-site-name))))
+            (concat "http://" uri)))
 
         (bind-key "C-H-M-<" 'projectile-switch-to-prev-buffer)
         (bind-key "C-H-M->" 'projectile-switch-to-next-buffer)
@@ -4816,7 +4808,7 @@ The current directory is assumed to be the project's root otherwise."
           ;; We remove Which Function Mode from the mode line, because it's mostly
           ;; invisible here anyway.
           (assq-delete-all 'which-func-mode mode-line-misc-info)
-)))
+          )))
 
 ;;;_ , whitespace
 

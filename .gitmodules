@@ -610,3 +610,6 @@
 [submodule "site-lisp/ac/ac-source-emmet"]
         path = site-lisp/ac/ac-source-emmet
         url = https://github.com/yasuyk/ac-emmet.git
+[submodule "site-lisp/helm-css-scss"]
+	path = site-lisp/helm-css-scss
+	url = git://github.com/ShingoFukuyama/helm-css-scss.git
