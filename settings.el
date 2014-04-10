@@ -546,4 +546,4 @@
  '(wg-mode-line-face ((t (:foreground "#b58900"))))
  '(wg-other-workgroup-face ((((class color)) (:foreground "#586e75"))))
  '(wg-previous-workgroup-face ((t (:foreground "#268bd2"))))
- '(which-func ((t (:foreground "#268bd2"))) t)
+ '(which-func ((t (:foreground "#268bd2"))) t))

@@ -12,7 +12,7 @@
  '(org-agenda-diary-file "~/Documents/Tasks/diary.org")
  '(org-agenda-dim-blocked-tasks nil)
  '(org-agenda-exporter-settings (quote ((org-agenda-write-buffer-name "Damon's VC-Rsrch/Dean-Grad Agenda"))))
- '(org-agenda-files (quote ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/from-mobile.org" "~/Documents/Tasks/.org-jira")))
+ '(org-agenda-files (quote ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/from-mobile.org")))
  '(org-agenda-include-diary nil)
  '(org-agenda-insert-diary-extract-time t)
  '(org-agenda-log-mode-items (quote (closed state)))
