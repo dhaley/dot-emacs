@@ -2370,10 +2370,8 @@ at the beginning of line, if already there."
 ;;;_ , ipretty
 
 (use-package ipretty
-  :init
-  (progn
-    (global-set-key (kbd "C-h C-j") 'ipretty-last-sexp)
-    (global-set-key (kbd "C-h C-k") 'ipretty-last-sexp-other-buffer)))
+  :bind (("C-h C-j" . ipretty-last-sexp)
+         ("C-h C-k" . ipretty-last-sexp-other-buffer)))
 
 ;;;_ , flyspell
 
@@ -2401,42 +2399,19 @@ at the beginning of line, if already there."
     (use-package f)
     (use-package pkg-info)
 
-    (hook-into-modes #'flycheck-mode '(prog-mode-hook))
-
-    (use-package google-this
-      :diminish google-this-mode
-      :init
-      (google-this-mode)))
+    (hook-into-modes #'flycheck-mode '(prog-mode-hook)))
   :config
   (progn
     (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
     (defalias 's-collapse-whitespace 'identity)))
 
+;;;_ , google-this
 
-(use-package geben
-  :commands (geben my-php-debug)
+(use-package google-this
+  :commands (google-region google-translate-query-or-region google-error google-forecast google-lucky-search google-lucky-and-insert-url google-line google-maps google-cpp-reference google-symbol google-this google-word google-search)
+  :diminish google-this-mode
   :config
-  (progn
-
-    ;; Debug a simple PHP script.
-    (defun my-php-debug ()
-      "Run current PHP script for debugging with geben"
-      (interactive)
-      (call-interactively 'geben)
-      (shell-command
-       (concat
-        "XDEBUG_CONFIG='idekey=my-php-54'  /usr/local/opt/php54/bin/php "
-        (buffer-file-name) " status" " &")))
-
-    ;; geben won't connect because its "Already in debugging"  This might help.
-    (defun my-geben-release ()
-      (interactive)
-      (geben-stop)
-      (dolist (session geben-sessions)
-        (ignore-errors
-          (geben-session-release session))))
-
-    (use-package my-geben)))
+  (google-this-mode))
 
 ;;;_ , highlight-sexp
 
@@ -3868,9 +3843,32 @@ unless return was pressed outside the comment"
             (man (symbol-name function))))))
     (define-key php-mode-map "\C-hf" 'describe-function-via-pman)
     (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
-    (use-package php-auto-yasnippets)))
+    (use-package php-auto-yasnippets)
 
+    (use-package geben
+      :commands (geben my-php-debug)
+      :config
+      (progn
 
+        ;; Debug a simple PHP script.
+        (defun my-php-debug ()
+          "Run current PHP script for debugging with geben"
+          (interactive)
+          (call-interactively 'geben)
+          (shell-command
+           (concat
+            "XDEBUG_CONFIG='idekey=my-php-54'  /usr/local/opt/php54/bin/php "
+            (buffer-file-name) " status" " &")))
+
+        ;; geben won't connect because its "Already in debugging"  This might help.
+        (defun my-geben-release ()
+          (interactive)
+          (geben-stop)
+          (dolist (session geben-sessions)
+            (ignore-errors
+              (geben-session-release session))))
+
+        (use-package my-geben)))))
 
 ;;;_ , projectile
 
@@ -5203,17 +5201,6 @@ file of a buffer in an external program."
                     " "
                     buffer-file-name))))
 
-(defun prelude-google ()
-  "Googles a query or region if any."
-  (interactive)
-  (browse-url
-   (concat
-    "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
-    (url-hexify-string (if mark-active
-                           (buffer-substring (region-beginning) (region-end))
-                         (read-string "Google: "))))))
-
-
 ;;;; Emoji composition tests
 ;;; Regional indicators (#x1F1E6 - #x1F1FF)
 
@@ -5239,23 +5226,6 @@ file of a buffer in an external program."
 
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
-
-;; Registers
-
-(dolist (r `(
-             (?O (file . "~/.emacs.d/dot-org.org"))
-             (?a (file . "~/.emacs.d/.abbrev_defs"))
-             (?g (file . "~/.emacs.d/gnus-settings.el"))
-             (?G (file . "~/.emacs.d/dot-gnus.el"))
-             (?s (file . "~/.emacs.d/settings.el"))
-             (?t (file . "~/Documents/Tasks/todo.txt"))
-             (?u (file . "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el"))
-             (?v (file . "~/.emacs.d/dkh-core.org"))
-             (?z (file . "~/.zshrc"))
-             ))
-  (set-register (car r) (cadr r)))
-
-
 
 (defun replace-latin-alphabet-to-gothic (p1 p2 reverse-direction-p)
   "Replace English alphabets to Unicode gothic characters.
@@ -5341,8 +5311,11 @@ point reaches the beginning or end of the buffer, stop there."
                  (forward-char)
                  (kill-word 1)))
 
+;; Registers
+
 (dolist
     (r `((?i (file . "~/.emacs.d/init.el"))
+         (?a (file . "~/.emacs.d/.abbrev_defs"))
          (?e (file . "~/.emacs.d"))
          (?t (file . "~/Documents/Tasks/todo.txt"))
          (?s (file . "~/.emacs.d/settings.el"))
@@ -5350,8 +5323,10 @@ point reaches the beginning or end of the buffer, stop there."
          (?g (file . "~/.emacs.d/dot-gnus.el"))
          (?O (file . "~/.emacs.d/org-settings.el"))
          (?G (file . "~/.emacs.d/gnus-settings.el"))
-         ))
+         (?u (file . "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el"))
+         (?z (file . "~/.zshrc"))))
   (set-register (car r) (cadr r)))
+
 
 ;; Local Variables:
 ;;   mode: emacs-lisp

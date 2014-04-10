@@ -469,9 +469,6 @@
 [submodule "site-lisp/emacs-cl"]
         path = site-lisp/emacs-cl
         url = git://github.com/larsbrinkhoff/emacs-cl.git
-[submodule "site-lisp/helm-css-scss"]
-        path = site-lisp/helm-css-scss
-        url = git://github.com/ShingoFukuyama/helm-css-scss.git
 [submodule "site-lisp/scss-mode"]
         path = site-lisp/scss-mode
         url = git://github.com/antonj/scss-mode.git
@@ -596,20 +593,20 @@
         path = site-lisp/emmet-mode
         url = https://github.com/smihica/emmet-mode.git
 [submodule "site-lisp/free-keys"]
-	path = site-lisp/free-keys
-	url = git://github.com/Fuco1/free-keys.git
+        path = site-lisp/free-keys
+        url = git://github.com/Fuco1/free-keys.git
 [submodule "site-lisp/fancy-narrow"]
-	path = site-lisp/fancy-narrow
-	url = https://github.com/Bruce-Connor/fancy-narrow.git
+        path = site-lisp/fancy-narrow
+        url = https://github.com/Bruce-Connor/fancy-narrow.git
 [submodule "site-lisp/ipretty"]
-	path = site-lisp/ipretty
-	url = https://github.com/steckerhalter/ipretty.git
+        path = site-lisp/ipretty
+        url = https://github.com/steckerhalter/ipretty.git
 [submodule "site-lisp/highlight-sexp"]
-	path = site-lisp/highlight-sexp
-	url = https://github.com/daimrod/highlight-sexp.git
+        path = site-lisp/highlight-sexp
+        url = https://github.com/daimrod/highlight-sexp.git
 [submodule "site-lisp/grizzl"]
-	path = site-lisp/grizzl
-	url = https://github.com/d11wtq/grizzl.git
+        path = site-lisp/grizzl
+        url = https://github.com/d11wtq/grizzl.git
 [submodule "site-lisp/ac/ac-source-emmet"]
-	path = site-lisp/ac/ac-source-emmet
-	url = https://github.com/yasuyk/ac-emmet.git
+        path = site-lisp/ac/ac-source-emmet
+        url = https://github.com/yasuyk/ac-emmet.git
