@@ -562,7 +562,6 @@
  '(w3m-tab-unselected ((t (:background "#073642" :foreground "#586e75" :box (:line-width -1 :style released-button)))))
  '(w3m-tab-unselected-retrieving ((t (:background "#eee8d5" :foreground "#cb4b16" :box (:line-width -1 :style released-button)))))
  '(w3m-tab-unselected-unseen ((t (:background "#fdf6e3" :foreground "#586e75" :box (:line-width -1 :style released-button)))))
- '(wgrep-auto-save-buffer t)
  '(wg-brace-face ((((class color)) (:foreground "#6c71c4"))))
  '(wg-command-face ((((class color)) (:foreground "#2aa198"))))
  '(wg-current-workgroup-face ((t (:foreground "#93a1a1"))))
