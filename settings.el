@@ -287,6 +287,7 @@
  '(projectile-drupal-site-name-function (quote dkh-get-site-name))
  '(projectile-enable-caching t)
  '(projectile-generic-command "find -L . -type f -print0")
+ '(projectile-project-root-files-bottom-up (quote ("includes/common.inc" "includes/bootstrap.inc" ".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs")))
  '(projectile-switch-project-action (quote dkh-projectile-dired))
  '(projectile-switch-project-hook (quote dkh-project-record))
  '(ps-font-size (quote (8 . 10)))
