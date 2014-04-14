@@ -3953,7 +3953,7 @@ Keys are in kbd format."
       (interactive)
       (if arg
           (dired arg))
-      (dired (projectile-project-root)))
+      (dired default-directory))
 
     (defun buffer-projectile (change-buffer-fun)
       (let ((current-project-root (projectile-project-p))
@@ -3990,39 +3990,40 @@ Keys are in kbd format."
   :config
   (progn
     ;; https://bitbucket.org/Fuco/.emacs.d/commits/6cad2a240aa849eb3ba9436fe2f342e7ad7b7da7
-    (defun projectile-project-root ()
-      "Retrieves the root directory of a project if available.
-The current directory is assumed to be the project's root otherwise."
-      (let ((project-root
-             (or (->> projectile-project-root-files
-                   (--map (locate-dominating-file (file-truename default-directory) it))
-                   (-remove #'null)
-                   (--max-by (> (s-count-matches "/" it) (s-count-matches "/" other))) ;;; return the closest "parent dir" for this (possible) subproject
-                   (projectile-file-truename))
-                 (if projectile-require-project-root
-                     (error "You're not in a project")
-                   default-directory))))
-        project-root))
+;;     (defun projectile-project-root ()
+;;       "Retrieves the root directory of a project if available.
+;; The current directory is assumed to be the project's root otherwise."
+;;       (let ((project-root
+;;              (or (->> projectile-project-root-files
+;;                    (--map (locate-dominating-file (file-truename default-directory) it))
+;;                    (-remove #'null)
+;;                    (--max-by (> (s-count-matches "/" it) (s-count-matches "/" other))) ;;; return the closest "parent dir" for this (possible) subproject
+;;                    (projectile-file-truename))
+;;                  (if projectile-require-project-root
+;;                      (error "You're not in a project")
+;;                    default-directory))))
+;;         project-root))
 
-    (defun projectile-get-ext-command ()
-      "Determine which external command to invoke based on the project's VCS."
-      (concat
-       "find -L . -not \\( \\( "
-       (mapconcat (lambda (x)
-                    (concat "-path \"*/" x "/*\"")) projectile-globally-ignored-directories " -or ")
-       (let ((proj-ig-dirs (projectile-project-ignored-directories)))
-         (if (not proj-ig-dirs) ""
-           (concat
-            " -or "
-            (mapconcat (lambda (x)
-                         (concat "-path \"" x "\""))
-                       (let ((project-root (projectile-project-root)))
-                         (--map (concat "./" (file-relative-name it project-root)) proj-ig-dirs)) " -or "))))
-       " \\) -prune \\)"
-       " -not "
-       (mapconcat (lambda (x)
-                    (concat "-path \"*/" x "\"")) projectile-globally-ignored-directories " -not ")
-       " -type f -print0"))))
+    ;; (defun projectile-get-ext-command ()
+    ;;   "Determine which external command to invoke based on the project's VCS."
+    ;;   (concat
+    ;;    "find -L . -not \\( \\( "
+    ;;    (mapconcat (lambda (x)
+    ;;                 (concat "-path \"*/" x "/*\"")) projectile-globally-ignored-directories " -or ")
+    ;;    (let ((proj-ig-dirs (projectile-project-ignored-directories)))
+    ;;      (if (not proj-ig-dirs) ""
+    ;;        (concat
+    ;;         " -or "
+    ;;         (mapconcat (lambda (x)
+    ;;                      (concat "-path \"" x "\""))
+    ;;                    (let ((project-root (projectile-project-root)))
+    ;;                      (--map (concat "./" (file-relative-name it project-root)) proj-ig-dirs)) " -or "))))
+    ;;    " \\) -prune \\)"
+    ;;    " -not "
+    ;;    (mapconcat (lambda (x)
+    ;;                 (concat "-path \"*/" x "\"")) projectile-globally-ignored-directories " -not ")
+    ;;    " -type f -print0"))
+    ))
 
 ;;;_ , popup-ruler
 
