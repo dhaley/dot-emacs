@@ -3717,10 +3717,6 @@ and view local index.html url"
     (use-package conf-windows-mode
       :mode "\\.info")
 
-    (defun prog-mode-setup ()
-      (run-hooks 'prog-mode-hook))
-    (add-hook 'php-mode-hook 'prog-mode-setup)
-
     (use-package emmet-mode
       :commands emmet-mode
       :init
@@ -3790,7 +3786,8 @@ unless return was pressed outside the comment"
                  (emmet-mode 1)
                  (setq indicate-empty-lines t)
                  'my-php-mode-hook
-                 (local-set-key "\r" 'my-php-return)))
+                 (local-set-key "\r" 'my-php-return)
+                 (local-unset-key (kbd "C-c ."))))
 
     (use-package drupal-mode
       :init
