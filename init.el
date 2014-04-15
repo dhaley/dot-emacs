@@ -3983,7 +3983,34 @@ Keys are in kbd format."
            (file-name-directory (buffer-file-name (current-buffer))))))
 
     (global-set-key (kbd "C-c p w") 'projectile-post-project)
-    (global-set-key (kbd "C-c p +") 'projectile-add-project))
+    (global-set-key (kbd "C-c p +") 'projectile-add-project)
+
+    (defun projectile-switch-project (&optional arg)
+  "Switch to a project we have visited before.
+Invokes the command referenced by `projectile-switch-project-action' on switch.
+With a prefix ARG invokes `projectile-commander' instead of
+`projectile-switch-project-action.'"
+  (interactive "P")
+  (let* ((project-to-switch
+          (projectile-completing-read "Switch to project: "
+                                      (projectile-relevant-known-projects))))
+    (projectile-switch-project-by-name project-to-switch arg)))
+
+    (defun projectile-switch-project-by-name (project-to-switch &optional arg)
+      "Switch to project by project name PROJECT-TO-SWITCH.
+Invokes the command referenced by `projectile-switch-project-action' on switch.
+With a prefix ARG invokes `projectile-commander' instead of
+`projectile-switch-project-action.'"
+      (let* ((default-directory project-to-switch)
+             (switch-project-action (if arg
+                                        'projectile-commander
+                                      projectile-switch-project-action)))
+        (if projectile-remember-window-configs
+            (unless (projectile-restore-window-config (projectile-project-name))
+              (funcall switch-project-action)
+              (delete-other-windows))
+          (funcall switch-project-action))
+        (run-hooks 'projectile-switch-project-hook))))
   :config
   (progn
     ;; https://bitbucket.org/Fuco/.emacs.d/commits/6cad2a240aa849eb3ba9436fe2f342e7ad7b7da7
