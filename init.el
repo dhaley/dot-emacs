@@ -1372,7 +1372,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , dedicated
 
 (use-package dedicated
-  :bind ("C-. d" . dedicated-mode))
+  :bind ("C-. D" . dedicated-mode))
 
 ;;;_ , diff-mode
 
