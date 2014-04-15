@@ -77,7 +77,6 @@ workgroups of the project that we're switching to"
          (name (file-name-nondirectory (directory-file-name project-to-switch)))
 
          (wgroup (wg-get-workgroup 'name name t)))
-    (message (concat name "is name"))
     (if wgroup
         (wg-switch-to-workgroup wgroup)
       (projectile-switch-project-by-name project-to-switch))))
