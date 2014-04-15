@@ -58,7 +58,7 @@ project, this advice creates a new workgroup for that project."
   `(defadvice ,func-name (before projectile-create-workgroups-after-switching-projects activate)
      "Create a dedicated workgroups for current project's window after switching projects."
      (let ((project-name (projectile-project-name)))
-           (wg-switch-to-workgroup project-name))))
+           (wg-create-workgroup project-name))))
 
 
 (projectile-wg-bridge projectile-dired)
@@ -77,9 +77,14 @@ workgroups of the project that we're switching to"
           (projectile-completing-read "Switch to project: "
                                       (projectile-relevant-known-projects)))
          (name (file-name-nondirectory (directory-file-name project-to-switch)))
-         (wgroup (wg-get-workgroup 'name name)))
+
+         (wgroup (wg-get-workgroup 'name name t)))
+    (message (concat name "is name"))
     (if wgroup
-        (wg-switch-to-workgroup name)
+        (progn
+         (message "me made it")
+        (wg-switch-to-workgroup name))
+      (message "no luck")
       (projectile-switch-project-by-name project-to-switch))))
 
 
