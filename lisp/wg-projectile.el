@@ -55,8 +55,8 @@
 The advice provides bridge between workgroups and projectile
 functions when switch between projects.  After switching to a new
 project, this advice creates a new workgroup for that project."
-  `(defadvice ,func-name (before projectile-create-workgroups-after-switching-projects activate)
-     "Create a dedicated workgroups for current project's window after switching projects."
+  `(defadvice ,func-name (before projectile-create-workgroup-after-switching-projects activate)
+     "Create a dedicated workgroup for current project's window after switching projects."
      (let ((project-name (projectile-project-name)))
            (wg-create-workgroup project-name))))
 
