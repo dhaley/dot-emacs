@@ -60,10 +60,8 @@ project, this advice creates a new workgroup for that project."
      (let ((project-name (projectile-project-name)))
            (wg-create-workgroup project-name))))
 
-
 (projectile-wg-bridge projectile-dired)
 (projectile-wg-bridge projectile-find-file)
-
 
 (defun projectile-wg-switch-project ()
   "Switch to a project or workgroups we have visited before. If the workgroups
@@ -81,10 +79,7 @@ workgroups of the project that we're switching to"
          (wgroup (wg-get-workgroup 'name name t)))
     (message (concat name "is name"))
     (if wgroup
-        (progn
-         (message "me made it")
-        (wg-switch-to-workgroup name))
-      (message "no luck")
+        (wg-switch-to-workgroup wgroup)
       (projectile-switch-project-by-name project-to-switch))))
 
 
