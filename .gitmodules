@@ -613,3 +613,9 @@
 [submodule "site-lisp/helm-css-scss"]
 	path = site-lisp/helm-css-scss
 	url = git://github.com/ShingoFukuyama/helm-css-scss.git
+[submodule "site-lisp/bbdb3-csv-import"]
+	path = site-lisp/bbdb3-csv-import
+	url = https://gitlab.com/iankelling/bbdb3-csv-import.git
+[submodule "site-lisp/visible-mark"]
+	path = site-lisp/visible-mark
+	url = https://gitlab.com/iankelling/visible-mark.git
