@@ -951,6 +951,7 @@ Including indent-buffer, which should not be called automatically on save."
 
         (add-to-list 'ac-modes 'latex-mode)
         (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
+
         (info-lookup-add-help :mode 'latex-mode
                               :regexp ".*"
                               :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
