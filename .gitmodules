@@ -619,3 +619,6 @@
 [submodule "site-lisp/visible-mark"]
 	path = site-lisp/visible-mark
 	url = https://gitlab.com/iankelling/visible-mark.git
+[submodule "site-lisp/bbdb-csv-import"]
+	path = site-lisp/bbdb-csv-import
+	url = https://gitlab.com/iankelling/bbdb-csv-import.git
