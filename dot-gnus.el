@@ -66,26 +66,26 @@
 (use-package hl-spotlight)
 (use-package centered-cursor-mode)
 (add-hook 'gnus-summary-mode-hook
-              '(lambda ()
-                 (hl-line-mode 1)
-                 ;; (stripe-listify-buffer)
-                 (hl-spotlight-mode 1)
-                 ;; (centered-cursor-mode 1)
-                 ;; (visual-line-mode 1)
-                 (setq cursor-type t)))
+          '(lambda ()
+             (hl-line-mode 1)
+             ;; (stripe-listify-buffer)
+             (hl-spotlight-mode 1)
+             ;; (centered-cursor-mode 1)
+             ;; (visual-line-mode 1)
+             (setq cursor-type t)))
 
 
 (defun my-message-header-setup-hook ()
   (message-remove-header "From")
   (let ((gcc (message-field-value "Gcc")))
-   (when (or (null gcc)
-             (string-match "nnfolder\\+archive:" gcc))
-     (message-remove-header "Gcc")
-     (message-add-header
-      (format "Gcc: %s"
-              (if (string-match "\\`list\\." (or gnus-newsgroup-name ""))
-                  "mail.sent"
-                "INBOX"))))))
+    (when (or (null gcc)
+              (string-match "nnfolder\\+archive:" gcc))
+      (message-remove-header "Gcc")
+      (message-add-header
+       (format "Gcc: %s"
+               (if (string-match "\\`list\\." (or gnus-newsgroup-name ""))
+                   "mail.sent"
+                 "INBOX"))))))
 
 (add-hook 'message-header-setup-hook 'my-message-header-setup-hook)
 
@@ -110,7 +110,7 @@
 (defun kick-postfix-if-needed ()
   (if (and (quickping "mail.messagingengine.com")
            (= 0 (call-process "/usr/bin/sudo" nil nil nil
-                             "/usr/libexec/postfix/master" "-t")))
+                              "/usr/libexec/postfix/master" "-t")))
       (start-process "postfix" nil "/usr/bin/sudo"
                      "/usr/libexec/postfix/master" "-e" "60")))
 
@@ -156,14 +156,10 @@
 (define-key gnus-summary-mode-map [?B backspace] 'my-gnus-trash-article)
 
 (define-key gnus-article-mode-map [(meta ?q)] 'gnus-article-fill-long-lines)
-
-
-;;(define-key gnus-article-mode-map (kbd "M-w") 'org-w3m-copy-for-org-mode)
 (define-key gnus-article-mode-map (kbd "C-c C-x M-w") 'org-w3m-copy-for-org-mode)
-
 (define-key gnus-article-mode-map (kbd "M-H") 'gnus-summary-catchup-to-here)
 (define-key gnus-article-mode-map (kbd "Z-h") 'gnus-summary-catchup-to-here)
-
+(bind-key "z" 'w3m-toggle-inline-images gnus-article-mode-map)
 
 (defface gnus-summary-expirable-face
   '((((class color) (background dark))
@@ -173,35 +169,35 @@
   "Face used to highlight articles marked as expirable."
   :group 'gnus-summary-visual)
 
- (push '((eq mark gnus-expirable-mark) . gnus-summary-expirable-face)
+(push '((eq mark gnus-expirable-mark) . gnus-summary-expirable-face)
       gnus-summary-highlight)
 
 (if window-system
-(setq
-      gnus-summary-to-prefix "→"
-      gnus-summary-newsgroup-prefix "⇶"
-      gnus-ticked-mark ?⚑
-      gnus-dormant-mark ?⚐
-      gnus-expirable-mark ?♻
-      gnus-read-mark ?✓
-      gnus-del-mark ?✗
-      gnus-killed-mark ?☠
-      gnus-replied-mark ?⟲
-      gnus-forwarded-mark ?⤳
-      gnus-cached-mark ?☍
-      gnus-recent-mark ?★
-      gnus-unseen-mark ?✩
-      gnus-unread-mark ?✉
-      gnus-score-over-mark ?↑           ; ↑ ☀
-      gnus-score-below-mark ?↓         ; ↓ ☂
-      gnus-sum-thread-tree-false-root " ◌ "
-      gnus-sum-thread-tree-single-indent "◎ "
-      gnus-sum-thread-tree-indent "   "
-      gnus-sum-thread-tree-root "● "
-      gnus-sum-thread-tree-leaf-with-other "├─▶ "
-      gnus-sum-thread-tree-single-leaf     "└─▶ " ; "╰─►"
-      gnus-sum-thread-tree-vertical        "│ "
-))
+    (setq
+     gnus-summary-to-prefix "→"
+     gnus-summary-newsgroup-prefix "⇶"
+     gnus-ticked-mark ?⚑
+     gnus-dormant-mark ?⚐
+     gnus-expirable-mark ?♻
+     gnus-read-mark ?✓
+     gnus-del-mark ?✗
+     gnus-killed-mark ?☠
+     gnus-replied-mark ?⟲
+     gnus-forwarded-mark ?⤳
+     gnus-cached-mark ?☍
+     gnus-recent-mark ?★
+     gnus-unseen-mark ?✩
+     gnus-unread-mark ?✉
+     gnus-score-over-mark ?↑           ; ↑ ☀
+     gnus-score-below-mark ?↓         ; ↓ ☂
+     gnus-sum-thread-tree-false-root " ◌ "
+     gnus-sum-thread-tree-single-indent "◎ "
+     gnus-sum-thread-tree-indent "   "
+     gnus-sum-thread-tree-root "● "
+     gnus-sum-thread-tree-leaf-with-other "├─▶ "
+     gnus-sum-thread-tree-single-leaf     "└─▶ " ; "╰─►"
+     gnus-sum-thread-tree-vertical        "│ "
+     ))
 
 (defsubst dot-gnus-tos (time)
   "Convert TIME to a floating point number."
@@ -352,7 +348,7 @@ is:
                     (gnus-group-get-new-news gnus-activate-level))))
             (set-window-configuration win)))))
 
-        ;; (gnus-demon-add-handler 'gnus-demon-scan-news-2 5 2)
+    ;; (gnus-demon-add-handler 'gnus-demon-scan-news-2 5 2)
 
     (defun save-gnus-newsrc ()
       (if (and (fboundp 'gnus-group-exit)
@@ -372,11 +368,11 @@ is:
     (defun gnus-goto-article (message-id)
       (activate-gnus)
 
-    (defun gnus-goto-article (message-id)
-      (activate-gnus)
-      (gnus-summary-read-group "INBOX" 15 t)
-      (let ((nnir-imap-default-search-key "imap")
-            (nnir-ignored-newsgroups "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")))
+      (defun gnus-goto-article (message-id)
+        (activate-gnus)
+        (gnus-summary-read-group "INBOX" 15 t)
+        (let ((nnir-imap-default-search-key "imap")
+              (nnir-ignored-newsgroups "mail\\.\\(spam\\|save\\|trash\\|sent\\)\\)")))
         (gnus-summary-refer-article message-id)))
 
     (defvar gnus-query-history nil)
@@ -591,15 +587,15 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
         ":.*Gnus.*")
        nil 'gnus-server-opened))
 
- (eval-after-load "gnus-art"
+(eval-after-load "gnus-art"
   '(progn
      (setq gnus-visible-headers
-         (concat (format
-                  "^\\(%s\\):"
-                  (regexp-opt '("User-Agent" "X-Mailer" "X-Newsreader"
-                                "X-Spam-Level" "List-Id" "X-Report-Spam"
-                                "Archived-At" "Comments")))
-                 "\\|" gnus-visible-headers))
+           (concat (format
+                    "^\\(%s\\):"
+                    (regexp-opt '("User-Agent" "X-Mailer" "X-Newsreader"
+                                  "X-Spam-Level" "List-Id" "X-Report-Spam"
+                                  "Archived-At" "Comments")))
+                   "\\|" gnus-visible-headers))
      (add-to-list 'gnus-picon-databases "/usr/share/picons")
      ))
 
@@ -674,8 +670,8 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 (defun my-alter-summary-map ()
   (local-set-key "i" '(lambda () (interactive)
-                                 (gnus-goto-last-link)
-                                 ))
+                        (gnus-goto-last-link)
+                        ))
   ;; (local-set-key "z" 'gnus-summary-mark-as-read-forward)
   (local-set-key ":" 'bbdb-mua-display-records)
   (local-set-key "d" [?M ?M ?e ?e down]))
@@ -695,7 +691,7 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
 
 
 (fset 'blow_up_article
-   [S-down ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ S-up])
+      [S-down ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ ?\C-x ?\C-+ S-up])
 
 (define-key gnus-summary-mode-map (kbd "C-c 5") 'blow_up_article)
 ;; (define-key gnus-summary-mode-map (kbd "C-c 5") 'gnus-summary-select-article-buffer)
