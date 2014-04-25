@@ -1277,7 +1277,7 @@ Including indent-buffer, which should not be called automatically on save."
   (progn
     (toggle-crosshairs-when-idle 1)
     (col-highlight-set-interval 120)
-    ;; (setq col-highlight-face hl-line-face)
+    (setq col-highlight-face hl-line-face)
 
     (defadvice switch-to-buffer (after switch-to-buffer-flash-crosshairs activate)
       "Call `flash-crosshairs' after `switch-to-buffer'"
@@ -1291,12 +1291,7 @@ The check is necessary to prevent issues with mini-buffer switching."
         ad-do-it
         (unless (string= (buffer-name (window-buffer window))
                          cur-buffer-name)
-          (flash-crosshairs))))
-
-    ;; To deactivate the advices use:
-    ;; (ad-remove-advice 'select-window 'around 'select-window-flash-crosshairs)
-    ;; (ad-remove-advice 'switch-to-buffer 'after 'switch-to-buffer-flash-crosshairs)
-))
+          (flash-crosshairs))))))
 
 (use-package csv-mode
   :commands csv-mode
