@@ -1272,7 +1272,31 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , crosshairs
 
 (use-package crosshairs
-  :bind ("M-o c" . crosshairs-mode))
+  ;; :bind ("M-o c" . crosshairs-mode)
+  :init
+  (progn
+    (toggle-crosshairs-when-idle 1)
+
+    ;; (setq col-highlight-face hl-line-face)
+
+    (defadvice switch-to-buffer (after switch-to-buffer-flash-crosshairs activate)
+      "Call `flash-crosshairs' after `switch-to-buffer'"
+      (flash-crosshairs))
+
+    (defadvice select-window (around select-window-flash-crosshairs activate)
+      "Call `flash-crosshairs' after `select-window', if switching to another buffer.
+The check is necessary to prevent issues with mini-buffer switching."
+      (let (cons (cur-buffer-name (buffer-name (current-buffer)))
+                 ad-arg-bindings)
+        ad-do-it
+        (unless (string= (buffer-name (window-buffer window))
+                         cur-buffer-name)
+          (flash-crosshairs))))
+
+    ;; To deactivate the advices use:
+    ;; (ad-remove-advice 'select-window 'around 'select-window-flash-crosshairs)
+    ;; (ad-remove-advice 'switch-to-buffer 'after 'switch-to-buffer-flash-crosshairs)
+))
 
 (use-package csv-mode
   :commands csv-mode
