@@ -1276,7 +1276,7 @@ Including indent-buffer, which should not be called automatically on save."
   :init
   (progn
     (toggle-crosshairs-when-idle 1)
-
+    (col-highlight-set-interval 120)
     ;; (setq col-highlight-face hl-line-face)
 
     (defadvice switch-to-buffer (after switch-to-buffer-flash-crosshairs activate)
