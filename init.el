@@ -1272,9 +1272,10 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , crosshairs
 
 (use-package crosshairs
-  :bind ("M-o c" . crosshairs-mode)
-  :init (add-hook 'after-init-hook 'crosshairs-mode t)
-  :config
+  :init
+
+  (bind-key "M-o c" 'crosshairs-mode)
+
   (progn
     (toggle-crosshairs-when-idle 1)
     (col-highlight-set-interval 120)
