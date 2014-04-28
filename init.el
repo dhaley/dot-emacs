@@ -1272,12 +1272,13 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , crosshairs
 
 (use-package crosshairs
-  ;; :bind ("M-o c" . crosshairs-mode)
-  :init
+  :bind ("M-o c" . crosshairs-mode)
+  :init (add-hook 'after-init-hook 'crosshairs-mode t)
+  :config
   (progn
     (toggle-crosshairs-when-idle 1)
     (col-highlight-set-interval 120)
-    (setq col-highlight-face hl-line-face)
+    ;; (setq col-highlight-face hl-line-face)
 
     (defadvice switch-to-buffer (after switch-to-buffer-flash-crosshairs activate)
       "Call `flash-crosshairs' after `switch-to-buffer'"
