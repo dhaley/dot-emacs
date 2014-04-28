@@ -1272,7 +1272,26 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , crosshairs
 
 (use-package crosshairs
-  :bind ("M-o c" . crosshairs-mode))
+  ;; :bind ("M-o c" . crosshairs-mode)
+  :init
+  (progn
+    (toggle-crosshairs-when-idle 1)
+    (col-highlight-set-interval 120)
+    (setq col-highlight-face hl-line-face)
+
+    (defadvice switch-to-buffer (after switch-to-buffer-flash-crosshairs activate)
+      "Call `flash-crosshairs' after `switch-to-buffer'"
+      (flash-crosshairs))
+
+    (defadvice select-window (around select-window-flash-crosshairs activate)
+      "Call `flash-crosshairs' after `select-window', if switching to another buffer.
+The check is necessary to prevent issues with mini-buffer switching."
+      (let (cons (cur-buffer-name (buffer-name (current-buffer)))
+                 ad-arg-bindings)
+        ad-do-it
+        (unless (string= (buffer-name (window-buffer window))
+                         cur-buffer-name)
+          (flash-crosshairs))))))
 
 (use-package csv-mode
   :commands csv-mode
@@ -4794,9 +4813,7 @@ With a prefix ARG invokes `projectile-commander' instead of
 
       (bind-key "<return>" 'w3m-view-url-with-external-browser
                 w3m-minor-mode-map)
-      (bind-key "S-<return>" 'w3m-safe-view-this-url w3m-minor-mode-map)
-
-      )))
+      (bind-key "S-<return>" 'w3m-safe-view-this-url w3m-minor-mode-map))))
 
 ;;;_ , wcount-mode
 
