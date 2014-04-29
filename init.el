@@ -3736,7 +3736,7 @@ and view local index.html url"
   :init
   (progn
 
-    (use-package conf-windows-mode
+    (use-package conf-mode
       :mode "\\.info")
 
     (use-package emmet-mode

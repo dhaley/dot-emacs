@@ -63,8 +63,6 @@
 
 (define-abbrev-table 'conf-unix-mode-abbrev-table '())
 
-(define-abbrev-table 'conf-windows-mode-abbrev-table '())
-
 (define-abbrev-table 'conf-xdefaults-mode-abbrev-table '())
 
 (define-abbrev-table 'css-mode-abbrev-table '())
