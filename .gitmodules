@@ -622,3 +622,27 @@
 [submodule "site-lisp/bbdb-csv-import"]
 	path = site-lisp/bbdb-csv-import
 	url = https://gitlab.com/iankelling/bbdb-csv-import.git
+[submodule "site-lisp/auto-dim-other-buffers"]
+	path = site-lisp/auto-dim-other-buffers
+	url = https://github.com/mina86/auto-dim-other-buffers.el.git
+[submodule "site-lisp/smart-cursor-color"]
+	path = site-lisp/smart-cursor-color
+	url = https://github.com/7696122/smart-cursor-color.git
+[submodule "site-lisp/engine-mode"]
+	path = site-lisp/engine-mode
+	url = https://github.com/hrs/engine-mode.git
+[submodule "site-lisp/magit-gerrit"]
+	path = site-lisp/magit-gerrit
+	url = https://github.com/terranpro/magit-gerrit.git
+[submodule "site-lisp/org-caldav"]
+	path = site-lisp/org-caldav
+	url = https://github.com/dengste/org-caldav.git
+[submodule "site-lisp/org-link-minor-mode"]
+	path = site-lisp/org-link-minor-mode
+	url = https://github.com/seanohalpin/org-link-minor-mode.git
+[submodule "site-lisp/peep-dired"]
+	path = site-lisp/peep-dired
+	url = https://github.com/asok/peep-dired.git
+[submodule "site-lisp/erc-image"]
+	path = site-lisp/erc-image
+	url = https://github.com/kidd/erc-image.el.git
