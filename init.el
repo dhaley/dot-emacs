@@ -1756,6 +1756,7 @@ Require unix zip commandline tool."
   :if running-alternate-emacs
   :init
   (progn
+    (use-package erc-image)
     (defun setup-irc-environment ()
       (interactive)
 
