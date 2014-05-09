@@ -982,6 +982,10 @@ Including indent-buffer, which should not be called automatically on save."
     (bind-key "H-M-?" 'ac-last-help)
     (unbind-key "C-s" ac-completing-map)))
 
+;;;_ , auto-dim-other-buffers
+
+(use-package auto-dim-other-buffers)
+
 ;;;_ , autorevert
 
 (use-package autorevert
@@ -2433,15 +2437,21 @@ at the beginning of line, if already there."
 
 ;;;_ , google-translate
 
+;; (use-package google-translate
+;;   :bind (
+;;          ("\C-ct" . google-translate-at-point)
+;;          ("\C-cT" . google-translate-query-translate))
+;;   :init
+;;   (progn
+;;         (require 'google-translate-default-ui)))
+
+
 (use-package google-translate
-  :bind (
-         ("\C-ct" . google-translate-at-point)
-         ("\C-cT" . google-translate-query-translate))
+  :bind ("\C-ct" . google-translate-smooth-translate)
   :init
   (progn
-        (require 'google-translate-default-ui)))
-
-
+        (require 'google-translate-smooth-ui)
+        (setq google-translate-translation-directions-alist '(("ja" . "en")))))
 
 ;;;_ , highlight-sexp
 
@@ -3567,7 +3577,9 @@ and view local index.html url"
                 #'(lambda ()
                     (org-agenda-list)
                     (org-fit-agenda-window)
-                    (org-resolve-clocks))) t))
+                    (org-resolve-clocks))
+                (when (fboundp 'auto-dim-other-buffers-mode)
+                  (auto-dim-other-buffers-mode t))) t))
   :config
   (progn
     (defun org-cycle-current-entry ()
