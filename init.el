@@ -2431,6 +2431,18 @@ at the beginning of line, if already there."
   :config
   (google-this-mode))
 
+;;;_ , google-translate
+
+(use-package google-translate
+  :bind (
+         ("\C-ct" . google-translate-at-point)
+         ("\C-cT" . google-translate-query-translate))
+  :init
+  (progn
+        (require 'google-translate-default-ui)))
+
+
+
 ;;;_ , highlight-sexp
 
 (use-package hl-sexp

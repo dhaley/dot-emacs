@@ -118,7 +118,7 @@
  '(emms-stream-bookmarks-file "~/Documents/emms/streams")
  '(enable-recursive-minibuffers t)
  '(erc-autoawayo-message "I'm at the cappuccino bar(after %i seconds of idle-time)")
- '(erc-autojoin-channels-alist (quote (("freenode.net" "#drupal-colorado" "#emacs") ("localhost"))))
+ '(erc-autojoin-channels-alist (quote (("freenode.net" "#drupal-colorado" "#emacs" "#thoughtbot") ("localhost"))))
  '(erc-fill-function (quote erc-fill-variable))
  '(erc-fill-static-center 12)
  '(erc-generate-log-file-name-function (quote erc-generate-log-file-name-short))

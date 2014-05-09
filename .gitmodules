@@ -646,3 +646,9 @@
 [submodule "site-lisp/erc-image"]
 	path = site-lisp/erc-image
 	url = https://github.com/kidd/erc-image.el.git
+[submodule "site-lisp/google-translate"]
+	path = site-lisp/google-translate
+	url = https://github.com/atykhonov/google-translate.git
+[submodule "site-lisp/popwin"]
+	path = site-lisp/popwin
+	url = https://github.com/m2ym/popwin-el.git
