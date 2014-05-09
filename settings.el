@@ -178,6 +178,7 @@
  '(global-auto-revert-mode t)
  '(global-font-lock-mode t nil (font-lock))
  '(gnutls-min-prime-bits 1024)
+ '(google-translate-default-target-language "en")
  '(grep-find-command (quote ("ag --noheading --column --ignore branches " . 43)))
  '(hippie-expand-try-functions-list (quote (yas/hippie-try-expand try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(history-delete-duplicates t)
