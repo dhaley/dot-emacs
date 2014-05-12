@@ -63,13 +63,11 @@
 (add-hook 'gnus-group-mode-hook 'hl-line-mode)
 
 ;; (require 'auto-show)
-(use-package hl-spotlight)
 (use-package centered-cursor-mode)
 (add-hook 'gnus-summary-mode-hook
           '(lambda ()
              (hl-line-mode 1)
              ;; (stripe-listify-buffer)
-             (hl-spotlight-mode 1)
              ;; (centered-cursor-mode 1)
              ;; (visual-line-mode 1)
              (setq cursor-type t)))
