@@ -19,9 +19,6 @@
 [submodule "lisp/gnus-harvest"]
         path = lisp/gnus-harvest
         url = git://github.com/jwiegley/gnus-harvest.git
-[submodule "lisp/initsplit"]
-        path = lisp/initsplit
-        url = git://github.com/dabrahams/initsplit.git
 [submodule "lisp/muse"]
         path = lisp/muse
         url = git://github.com/jwiegley/muse.git
@@ -493,9 +490,6 @@
 [submodule "override/bbdb"]
         path = override/bbdb
         url = git://git.savannah.nongnu.org/bbdb.git
-[submodule "site-lisp/auctex"]
-        path = site-lisp/auctex
-        url = git@github.com:dhaley/auctex.git
 [submodule "site-lisp/magit"]
         path = site-lisp/magit
         url = git://github.com/magit/magit.git
