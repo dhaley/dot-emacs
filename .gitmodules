@@ -495,7 +495,7 @@
         url = git://git.savannah.nongnu.org/bbdb.git
 [submodule "site-lisp/auctex"]
         path = site-lisp/auctex
-        url = git://git.savannah.gnu.org/auctex.git
+        url = git@github.com:dhaley/auctex.git
 [submodule "site-lisp/magit"]
         path = site-lisp/magit
         url = git://github.com/magit/magit.git
