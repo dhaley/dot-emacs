@@ -21,7 +21,7 @@
         url = git://github.com/jwiegley/gnus-harvest.git
 [submodule "lisp/initsplit"]
         path = lisp/initsplit
-        url = git://github.com/jwiegley/initsplit.git
+        url = git://github.com/dabrahams/initsplit.git
 [submodule "lisp/muse"]
         path = lisp/muse
         url = git://github.com/jwiegley/muse.git
@@ -611,44 +611,44 @@
         path = site-lisp/ac/ac-source-emmet
         url = https://github.com/yasuyk/ac-emmet.git
 [submodule "site-lisp/helm-css-scss"]
-	path = site-lisp/helm-css-scss
-	url = git://github.com/ShingoFukuyama/helm-css-scss.git
+        path = site-lisp/helm-css-scss
+        url = git://github.com/ShingoFukuyama/helm-css-scss.git
 [submodule "site-lisp/bbdb3-csv-import"]
-	path = site-lisp/bbdb3-csv-import
-	url = https://gitlab.com/iankelling/bbdb3-csv-import.git
+        path = site-lisp/bbdb3-csv-import
+        url = https://gitlab.com/iankelling/bbdb3-csv-import.git
 [submodule "site-lisp/visible-mark"]
-	path = site-lisp/visible-mark
-	url = https://gitlab.com/iankelling/visible-mark.git
+        path = site-lisp/visible-mark
+        url = https://gitlab.com/iankelling/visible-mark.git
 [submodule "site-lisp/bbdb-csv-import"]
-	path = site-lisp/bbdb-csv-import
-	url = https://gitlab.com/iankelling/bbdb-csv-import.git
+        path = site-lisp/bbdb-csv-import
+        url = https://gitlab.com/iankelling/bbdb-csv-import.git
 [submodule "site-lisp/auto-dim-other-buffers"]
-	path = site-lisp/auto-dim-other-buffers
-	url = https://github.com/mina86/auto-dim-other-buffers.el.git
+        path = site-lisp/auto-dim-other-buffers
+        url = https://github.com/mina86/auto-dim-other-buffers.el.git
 [submodule "site-lisp/smart-cursor-color"]
-	path = site-lisp/smart-cursor-color
-	url = https://github.com/7696122/smart-cursor-color.git
+        path = site-lisp/smart-cursor-color
+        url = https://github.com/7696122/smart-cursor-color.git
 [submodule "site-lisp/engine-mode"]
-	path = site-lisp/engine-mode
-	url = https://github.com/hrs/engine-mode.git
+        path = site-lisp/engine-mode
+        url = https://github.com/hrs/engine-mode.git
 [submodule "site-lisp/magit-gerrit"]
-	path = site-lisp/magit-gerrit
-	url = https://github.com/terranpro/magit-gerrit.git
+        path = site-lisp/magit-gerrit
+        url = https://github.com/terranpro/magit-gerrit.git
 [submodule "site-lisp/org-caldav"]
-	path = site-lisp/org-caldav
-	url = https://github.com/dengste/org-caldav.git
+        path = site-lisp/org-caldav
+        url = https://github.com/dengste/org-caldav.git
 [submodule "site-lisp/org-link-minor-mode"]
-	path = site-lisp/org-link-minor-mode
-	url = https://github.com/seanohalpin/org-link-minor-mode.git
+        path = site-lisp/org-link-minor-mode
+        url = https://github.com/seanohalpin/org-link-minor-mode.git
 [submodule "site-lisp/peep-dired"]
-	path = site-lisp/peep-dired
-	url = https://github.com/asok/peep-dired.git
+        path = site-lisp/peep-dired
+        url = https://github.com/asok/peep-dired.git
 [submodule "site-lisp/erc-image"]
-	path = site-lisp/erc-image
-	url = https://github.com/kidd/erc-image.el.git
+        path = site-lisp/erc-image
+        url = https://github.com/kidd/erc-image.el.git
 [submodule "site-lisp/google-translate"]
-	path = site-lisp/google-translate
-	url = https://github.com/atykhonov/google-translate.git
+        path = site-lisp/google-translate
+        url = https://github.com/atykhonov/google-translate.git
 [submodule "site-lisp/popwin"]
-	path = site-lisp/popwin
-	url = https://github.com/m2ym/popwin-el.git
+        path = site-lisp/popwin
+        url = https://github.com/m2ym/popwin-el.git
