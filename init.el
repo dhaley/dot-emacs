@@ -2699,7 +2699,9 @@ at the beginning of line, if already there."
   :commands hl-line-mode
   :bind ("M-o h" . hl-line-mode)
   :config
-  (use-package hl-line+))
+  (progn
+  (use-package hl-line+)
+  (copy-face 'hl-line 'auto-dim-other-buffers-face)))
 
 ;;;_ , identica
 
