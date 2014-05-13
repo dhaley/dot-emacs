@@ -646,3 +646,9 @@
 [submodule "site-lisp/popwin"]
         path = site-lisp/popwin
         url = https://github.com/m2ym/popwin-el.git
+[submodule "lisp/initsplit"]
+	path = lisp/initsplit
+	url = https://github.com/dabrahams/initsplit
+[submodule "site-lisp/auctex"]
+	path = site-lisp/auctex
+	url = git@github.com:dhaley/auctex.git
