@@ -2494,35 +2494,8 @@ at the beginning of line, if already there."
 
     (bind-key "M-." 'my-gtags-or-semantic-find-tag ggtags-mode-map)
 
-    ;; M-]             ggtags-find-reference
-    ;; C-M-.           ggtags-find-tag-regexp
-
-    ;; C-c M-SPC       ggtags-save-to-register
-    ;; C-c M-%         ggtags-query-replace
-    ;; C-c M-/         ggtags-global-rerun-search
-    ;; C-c M-?         ggtags-show-definition
-    ;; C-c M-b         ggtags-browse-file-as-hypertext
-    ;; C-c M-f         ggtags-find-file
-    (bind-key "C-c t f" 'ggtags-find-file)
-    ;; C-c M-g         ggtags-grep
-    (bind-key "C-c t g" 'ggtags-grep)
-    ;; C-c M-h         ggtags-view-tag-history
-    ;; C-c M-i         ggtags-idutils-query
-    ;; C-c M-j         ggtags-visit-project-root
-    (bind-key "C-c t v" 'ggtags-visit-project-root)
-    ;; C-c M-k         ggtags-kill-file-buffers
-    ;; C-c M-n         ggtags-next-mark
-    ;; C-c M-o         ggtags-find-other-symbol
-    ;; C-c M-p         ggtags-prev-mark
-    ;; C-c M-DEL       ggtags-delete-tags
-
     (use-package helm-gtags
-      :bind ("M-T" . helm-gtags-select)
-      :config
-      ;; (defun my/helm-gtags-select ()
-      ;;   (interactive)
-      ;;   (helm-gtags-common '(helm-source-gtags-select helm-source-ls-git)))
-      )))
+      :bind ("M-T" . helm-gtags-select))))
 
 ;;;_ , gist
 
@@ -3839,6 +3812,7 @@ unless return was pressed outside the comment"
                  (local-unset-key (kbd "C-c ."))))
 
     (use-package drupal-mode
+      :mode ("[^/]\\.\\(module\\|test\\|install\\|profile\\|tpl\\.php\\|theme\\|inc\\)\\'" . drupal-mode)
       :init
       (add-hook 'drupal-mode-hook
                 '(lambda ()
@@ -5159,7 +5133,8 @@ Keys are in kbd format."
     (disable-theme my-cur-theme)
     (setq my-themes (append my-themes (list my-cur-theme))))
   (setq my-cur-theme (pop my-themes))
-  (load-theme my-cur-theme t))
+  (load-theme my-cur-theme t)
+  (copy-face 'hl-line 'auto-dim-other-buffers-face))
 
 ;; Bind this to C-t
 (bind-key "C-H-t" 'cycle-my-theme)
