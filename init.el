@@ -985,7 +985,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , auto-dim-other-buffers
 
 (use-package auto-dim-other-buffers
-  :diminish)
+  :commands auto-dim-other-buffers-mode
+  :diminish auto-dim-other-buffers-mode)
 
 ;;;_ , autorevert
 
@@ -4449,6 +4450,11 @@ Keys are in kbd format."
          ("A-n"   . next-error)
          ("A-p"   . previous-error)))
 
+;;;_ , smart-mode-line
+(use-package smart-mode-line
+  ;; :ensure smart-mode-line
+  :config (progn (sml/setup) (setq sml/theme 'light)))
+
 ;;;_ , smartparens
 
 (use-package smartparens
@@ -4824,14 +4830,7 @@ Keys are in kbd format."
   :init
   (progn
     (hook-into-modes 'which-function-mode
-                     '(prog-mode-hook))
-    (setq-default header-line-format
-                  '((which-func-mode ("" which-func-format " "))))
-    (setq mode-line-misc-info
-          ;; We remove Which Function Mode from the mode line, because it's mostly
-          ;; invisible here anyway.
-          (assq-delete-all 'which-func-mode mode-line-misc-info)
-          )))
+                     '(prog-mode-hook))))
 
 ;;;_ , whitespace
 
@@ -5135,6 +5134,10 @@ Keys are in kbd format."
     (setq my-themes (append my-themes (list my-cur-theme))))
   (setq my-cur-theme (pop my-themes))
   (load-theme my-cur-theme t)
+  (if
+      (string-equal my-cur-theme "solarized-light")
+      (sml/apply-theme 'light)
+    (sml/apply-theme 'dark))
   (copy-face 'fringe 'auto-dim-other-buffers-face))
 
 ;; Bind this to C-t
