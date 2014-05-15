@@ -2674,7 +2674,7 @@ at the beginning of line, if already there."
   :config
   (progn
   (use-package hl-line+)
-  (copy-face 'hl-line 'auto-dim-other-buffers-face)))
+  (copy-face 'fringe 'auto-dim-other-buffers-face)))
 
 ;;;_ , identica
 
@@ -5134,7 +5134,7 @@ Keys are in kbd format."
     (setq my-themes (append my-themes (list my-cur-theme))))
   (setq my-cur-theme (pop my-themes))
   (load-theme my-cur-theme t)
-  (copy-face 'hl-line 'auto-dim-other-buffers-face))
+  (copy-face 'fringe 'auto-dim-other-buffers-face))
 
 ;; Bind this to C-t
 (bind-key "C-H-t" 'cycle-my-theme)
