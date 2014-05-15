@@ -984,7 +984,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;;_ , auto-dim-other-buffers
 
-(use-package auto-dim-other-buffers)
+(use-package auto-dim-other-buffers
+  :diminish)
 
 ;;;_ , autorevert
 
