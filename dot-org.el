@@ -15,6 +15,8 @@
 (require 'ox-html)
 (require 'async)
 
+(require 'orgbox)
+
 (defun org-link-to-named-task ()
   (interactive))
 (fset 'org-link-to-named-task
