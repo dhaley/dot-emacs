@@ -691,3 +691,12 @@
 [submodule "site-lisp/ace-link"]
 	path = site-lisp/ace-link
 	url = https://github.com/abo-abo/ace-link.git
+[submodule "site-lisp/smartrep"]
+	path = site-lisp/smartrep
+	url = https://github.com/myuhe/smartrep.el.git
+[submodule "site-lisp/log4e"]
+	path = site-lisp/log4e
+	url = https://github.com/aki2o/log4e.git
+[submodule "site-lisp/yaxception"]
+	path = site-lisp/yaxception
+	url = https://github.com/aki2o/yaxception.git

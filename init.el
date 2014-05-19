@@ -3679,6 +3679,19 @@ and view local index.html url"
   :config
   (eval-after-load "outline" '(require 'foldout)))
 
+;;;_ , owdriver
+(use-package owdriver
+  :init
+  (progn
+    (require 'smartrep)
+    (require 'log4e)
+    (require 'yaxception)
+
+    (global-unset-key (kbd "M-o"))
+    (setq owdriver-prefix-key "M-o")
+    (owdriver-config-default)
+    (owdriver-mode 1)))
+
 ;;;_ , pabbrev
 
 (use-package pabbrev
