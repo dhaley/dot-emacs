@@ -4452,7 +4452,6 @@ Keys are in kbd format."
 
 ;;;_ , smart-mode-line
 (use-package smart-mode-line
-  ;; :ensure smart-mode-line
   :config (progn (sml/setup) (setq sml/theme 'light)))
 
 ;;;_ , smartparens
