@@ -2529,6 +2529,15 @@ at the beginning of line, if already there."
 (use-package highlight-tail
   :commands highlight-tail-mode)
 
+;;;_ , highlight-indentation
+
+(use-package highlight-indentation
+  :init
+  (progn
+    (set-face-background 'highlight-indentation-face "#e3e3d3")
+    (set-face-background 'highlight-indentation-current-column-face "#c3b3b3")
+    ))
+
 ;;;_ , fold-dwim
 
 (use-package fold-dwim
@@ -4203,7 +4212,29 @@ Keys are in kbd format."
 ;;;_ , quickrun
 
 (use-package quickrun
-  :bind ("C-c C-r" . quickrun))
+  :bind ("C-c C-r" . quickrun)
+  :init
+  (progn
+
+    (defface phpunit-pass
+      '((t (:foreground "white" :background "green" :weight bold))) nil)
+    (defface phpunit-fail
+      '((t (:foreground "white" :background "red" :weight bold))) nil)
+
+    (defun quickrun/phpunit-outputter ()
+      (save-excursion
+        (goto-char (point-min))
+        (while (replace-regexp "^M" "")
+          nil))
+      (highlight-phrase "^OK.*$" 'phpunit-pass)
+      (highlight-phrase "^FAILURES.*$" 'phpunit-fail))
+
+    (quickrun-add-command "phpunit" '((:command . "phpunit")
+                                      (:exec . "%c %s")
+                                      (:outputter .
+                                      quickrun/phpunit-outputter)))
+
+    (add-to-list 'quickrun-file-alist '("Test\\.php$" . "phpunit")))
 
 
 ;;;;_ , rainbow-delimiters
