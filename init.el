@@ -847,10 +847,18 @@ Including indent-buffer, which should not be called automatically on save."
                 (add-hook 'expand-expand-hook 'indent-according-to-mode)
                 (add-hook 'expand-jump-hook 'indent-according-to-mode)))))
 
+
+(use-package ace-link
+  :commands ace-link-setup-default
+  :config (ace-link-setup-default))
+
 ;;;_ , ace-jump-mode
 
 (use-package ace-jump-mode
-  :bind ("M-h" . ace-jump-mode))
+  :bind ("M-h" . ace-jump-mode)
+  :init
+  (use-package ace-window
+    :bind ("S-<return>" . ace-window)))
 
 ;;;_ , agda
 
@@ -912,6 +920,10 @@ Including indent-buffer, which should not be called automatically on save."
         (ascii-on)))
 
     (bind-key "C-c e A" 'ascii-toggle)))
+
+;;;_ , ascii-art-to-unicode
+
+(use-package ascii-art-to-unicode)
 
 ;;;_ , auctex
 
@@ -1743,6 +1755,28 @@ Require unix zip commandline tool."
      ;;;  Highlight current line in browser
     (add-hook 'emms-browser-show-display-hook '(lambda () (hl-line-mode 1)))))
 
+
+;;; Engine Mode:
+
+(use-package engine-mode
+  :load-path "lisp/engine-mode/"
+  :commands (engine-mode defengine)
+  :init (engine-mode t)
+  :config
+  (progn
+    (defengine duckduckgo
+      "https://duckduckgo.com/?q=%s"
+      "C-c e d")
+    (defengine github
+      "https://github.com/search?ref=simplesearch&q=%s"
+      "C-c e g")
+    (defengine wikipedia
+      "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
+      "C-c e w")))
+
+(use-package eyebrowse
+  :commands eyebrowse-mode)
+
 ;;;_ , conf-mode
 (use-package conf-mode
   :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
@@ -2366,10 +2400,15 @@ at the beginning of line, if already there."
       (paredit-mode))))
 
 ;; expand-region
+
 (use-package expand-region
-  :bind (("H-=" . er/expand-region))
+  :bind ("C-=" . er/expand-region)
   :config
   (progn
+    (use-package change-inner
+      :load-path "lisp/change-inner.el/"
+      :bind (("M-i" . change-inner)
+             ("M-o" . change-outer)))
     (defun er/add-text-mode-expansions ()
       (make-variable-buffer-local 'er/try-expand-list)
       (setq er/try-expand-list (append
@@ -2378,6 +2417,23 @@ at the beginning of line, if already there."
                                   mark-page))))
 
     (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
+
+
+;;; I use these packages to navigate and edit text in semantic terms,
+;;; with the Expand Region package being the foundation for the rest.
+
+(use-package expand-region
+  :load-path "lisp/expand-region.el/"
+  :bind ("C-=" . er/expand-region)
+  :config
+  (progn
+    (use-package change-inner
+      :bind (("M-i" . change-inner)
+             ("M-o" . change-outer)))))
+
+;;;_ , fancy-narrow
+
+(use-package fancy-narrow)
 
 ;;;_ , features-mode
 
@@ -2645,7 +2701,13 @@ at the beginning of line, if already there."
         (defun helm-add-to-projectile (path)
           "Add directory of file to projectile projects.
   Used as helm action in helm-source-find-files"
-          (projectile-add-known-project (file-name-directory path))))))
+          (projectile-add-known-project (file-name-directory path)))))
+
+    (use-package helm-open-github
+  :bind (("C-. o f" . helm-open-github-from-file)
+         ("C-. o c" . helm-open-github-from-commit)
+         ("C-. o i" . helm-open-github-from-issues)
+         ("C-. o p" . helm-open-github-from-pull-requests))))
   :config
   (helm-match-plugin-mode t))
 
@@ -3819,7 +3881,8 @@ unless return was pressed outside the comment"
       (add-hook 'drupal-mode-hook
                 '(lambda ()
                    (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                   (add-to-list 'yas-extra-modes 'drupal-mode))))
+                   (add-to-list 'yas-extra-modes 'drupal-mode)
+                   (eyebrowse-mode t))))
 
     (bind-key "C-c C-F" 'php-search-local-documentation)
     (use-package php-extras
@@ -4452,7 +4515,15 @@ Keys are in kbd format."
 
 ;;;_ , smart-mode-line
 (use-package smart-mode-line
-  :config (progn (sml/setup) (setq sml/theme 'light)))
+  ;; :ensure smart-mode-line
+  :config
+  (progn
+    (add-to-list 'sml/replacer-regexp-list '("^~/data/web/custom" ":Custom:"))
+        (add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d" ":Yak:"))
+    (add-to-list 'sml/replacer-regexp-list '("^~/data/releases" ":Releases:"))
+    (add-to-list 'sml/replacer-regexp-list '("^~/Documents/Tasks/" ":Task:"))
+    (setq sml/theme 'light)
+    (sml/setup)))
 
 ;;;_ , smartparens
 
@@ -4897,7 +4968,7 @@ Keys are in kbd format."
 ;;;_ , web-mode
 
 (use-package web-mode
-  :mode ("\\.tpl\\.php$" . web-mode)
+  :mode (("\\.tpl\\.php$" . web-mode)("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode)("\\.blade\\.php\\'" . web-mode))
   :init
   (progn
     (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))))
@@ -5081,6 +5152,10 @@ Keys are in kbd format."
          ("C-c w e" . yaoddmuse-edit-default)
          ("C-c w p" . yaoddmuse-post-library-default)))
 
+;;;_ , zoom-window
+
+(use-package zoom-window
+  :bind ("H-z" . zoom-window-zoom))
 
 ;;;_. Post initialization
 
