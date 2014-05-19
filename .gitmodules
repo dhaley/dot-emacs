@@ -700,3 +700,9 @@
 [submodule "site-lisp/yaxception"]
 	path = site-lisp/yaxception
 	url = https://github.com/aki2o/yaxception.git
+[submodule "lisp/phpunit"]
+	path = lisp/phpunit
+	url = git@github.com:dhaley/phpunit-el.git
+[submodule "site-lisp/restclient"]
+	path = site-lisp/restclient
+	url = https://github.com/pashky/restclient.el.git
