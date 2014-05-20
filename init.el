@@ -3680,6 +3680,10 @@ and view local index.html url"
       (cons "Joanna Bertrand" "joanna")
       (cons "Wendy Turnbull" "wendy")))))
 
+;;;_ , org-link-minor-mode
+
+(use-package org-link-minor-mode
+  :commands org-link-minor-mode)
 
 ;;;_ , outline-mode
 (use-package outline-mode
@@ -4853,12 +4857,16 @@ Keys are in kbd format."
   end tell"))))
         (w3m-browse-url (substring url 1 (1- (length url))) t)))
 
-    (defun choose-browser (url &rest args)
-      (interactive "sURL: ")
-      (if current-prefix-arg
-          (w3m-browse-url url)
-        (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
-          (browse-url url))))
+    (use-package popwin-w3m
+      :load-path "site-lisp/popwin/misc/"
+      :init
+      (progn
+        (defun choose-browser (url &rest args)
+          (interactive "sURL: ")
+          (if current-prefix-arg
+              (popwin:w3m-browse-url url)
+            (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
+              (browse-url url))))))
 
     (bind-key "H-M-e" 'goto-emacswiki)
     (bind-key "H-M-g" 'w3m-search)
