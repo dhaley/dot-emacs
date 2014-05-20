@@ -4919,35 +4919,79 @@ Keys are in kbd format."
                 w3m-minor-mode-map)
       (bind-key "S-<return>" 'w3m-safe-view-this-url w3m-minor-mode-map))))
 
-;;; Wand:
+;;; wand:
 
 (use-package wand
-  :bind ("C-c RET" . wand:execute)
+  :bind (("C-c RET" . wand:execute) ("<C-mouse-1>" . wand:execute))
   :init
   (progn
     (use-package popwin
       :init
       (progn
-        (popwin-mode 1))))
+        (popwin-mode 1)
+        (add-to-list 'popwin:special-display-config `("*ag*" :noselect t))))
+
+        (defun toolbox:open-file (path)
+          "Open path and open with external program if necessary."
+          (condition-case description
+              (progn
+                (find-file path))))
+
+        (defun toolbox:execute-and-replace ()
+          "Execute command on selection using `wand:execute' then replace
+selection with command output."
+          (interactive)
+          (let* ((text (save-excursion
+                         (get-selection)))
+                 (output (wand:execute text)))
+            (call-interactively 'kill-region)
+            (insert output))))
   :config
   (progn
-    (bind-key "<C-c return>" 'wand:execute)
-    (bind-key "<C-mouse-1>" 'wand:execute)
+          (lambda ()
+            (global-set-key (kbd "<C-return>")  'wand:execute)
+            (global-set-key (kbd "<C-mouse-1>") 'wand:execute)
+            (dolist (rule (list (wand:create-rule :match "\\$ "
+                                                  :capture :after
+                                                  :action ~popup-shell-command)
+                                (wand:create-rule :match "https?://"
+                                                  :capture :whole
+                                                  :action ~open-url-in-firefox)
+                                (wand:create-rule :match "file:"
+                                                  :capture :after
+                                                  :action toolbox:open-file)
+                                (wand:create-rule :match "#> "
+                                                  :capture :after
+                                                  :action ~add-bracket-and-eval)
+                                (wand:create-rule :match "window:"
+                                                  :capture :after
+                                                  :action ~switch-to-window)
+                                (wand:create-rule :match "eshell-cd:"
+                                                  :capture :after
+                                                  :action ~change-dir-in-eshell)
+                                ))
+              (wand:add-rule rule))
+            (wand:create-rule :match "window:"
+                              :capture :after
+                              :action $switch-to-window)
+            (wand:create-rule :match "eshell-cd:"
+                              :capture :after
+                              :action $change-dir-in-eshell))
 
+          (setq wand:*rules*
+                (list (wand:create-rule :match "\\$ "
+                                        :capture :after
+                                        :action ~popup-shell-command)
+                      (wand:create-rule :match "https?://"
+                                        :capture :whole
+                                        :action ~firefox)
+                      (wand:create-rule :match "file:"
+                                        :capture :after
+                                        :action toolbox:open-file)
+                      (wand:create-rule :match "#> "
+                                        :capture :after
+                                        :action ~add-bracket-and-eval)))))
 
-    (setq wand:*rules*
-          (list
-           (wand:create-rule :match "https?://"
-                             :capture :whole
-                             :action browse-url)
-           (wand:create-rule :match "file://"
-                             :capture :after
-                             :action find-file-other-window)
-           (wand:create-rule :match "\\$ "
-                             :capture :after
-                             :action ~popup-shell-command)
-
-))))
 ;;;_ , wcount-mode
 
 (use-package wcount-mode
