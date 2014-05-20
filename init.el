@@ -4213,7 +4213,7 @@ Keys are in kbd format."
 
 (use-package quickrun
   :bind ("C-c C-r" . quickrun)
-  :init
+  :config
   (progn
 
     (defface phpunit-pass
@@ -4234,7 +4234,14 @@ Keys are in kbd format."
                                       (:outputter .
                                       quickrun/phpunit-outputter)))
 
-    (add-to-list 'quickrun-file-alist '("Test\\.php$" . "phpunit")))
+    (add-to-list 'quickrun-file-alist '("Test\\.php$" . "phpunit"))
+
+    (quickrun-add-command "phing" '((:command . "phing")
+                                      (:exec . "%c %s")
+                                      (:outputter .
+                                      quickrun/phpunit-outputter)))
+
+    (add-to-list 'quickrun-file-alist '("Test\\.php$" . "phpunit"))))
 
 
 ;;;;_ , rainbow-delimiters
