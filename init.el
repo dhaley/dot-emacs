@@ -4919,6 +4919,35 @@ Keys are in kbd format."
                 w3m-minor-mode-map)
       (bind-key "S-<return>" 'w3m-safe-view-this-url w3m-minor-mode-map))))
 
+;;; Wand:
+
+(use-package wand
+  :bind ("C-c RET" . wand:execute)
+  :init
+  (progn
+    (use-package popwin
+      :init
+      (progn
+        (popwin-mode 1))))
+  :config
+  (progn
+    (bind-key "<C-c return>" 'wand:execute)
+    (bind-key "<C-mouse-1>" 'wand:execute)
+
+
+    (setq wand:*rules*
+          (list
+           (wand:create-rule :match "https?://"
+                             :capture :whole
+                             :action browse-url)
+           (wand:create-rule :match "file://"
+                             :capture :after
+                             :action find-file-other-window)
+           (wand:create-rule :match "\\$ "
+                             :capture :after
+                             :action ~popup-shell-command)
+
+))))
 ;;;_ , wcount-mode
 
 (use-package wcount-mode
