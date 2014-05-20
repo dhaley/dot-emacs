@@ -167,17 +167,4 @@ Bcc:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(gnus-emphasis-highlight-words ((t (:background "#073642" :foreground "#b58900" :inverse-video nil :underline nil :slant normal :weight normal))))
- '(gnus-header-content ((t (:foreground "#657b83" :inverse-video nil :underline nil :slant normal :weight normal))))
- '(gnus-header-subject ((t (:foreground "#d33682" :inverse-video nil :underline nil :slant normal :weight normal))))
- '(gnus-summary-cancelled ((t (:background "#002b36" :foreground "#dc322f" :inverse-video nil :underline nil :slant normal :weight normal))))
- '(gnus-summary-expirable-face ((t (:foreground "#586e75" :strike-through t :slant italic))))
- '(gnus-summary-high-ancient ((t (:inherit gnus-summary-normal-ancient :foreground "#268bd2" :inverse-video nil :underline nil :slant normal :weight bold))))
- '(gnus-summary-high-read ((t (:inherit gnus-summary-normal-read :foreground "#859900" :inverse-video nil :underline nil :slant normal :weight bold))))
- '(gnus-summary-high-ticked ((t (:inherit gnus-summary-normal-ticked :foreground "#d33682" :inverse-video nil :underline nil :slant normal :weight bold))))
- '(gnus-summary-low-ancient ((t (:inherit gnus-summary-normal-ancient :foreground "#6c71c4" :inverse-video nil :underline nil :slant italic :weight normal))))
- '(gnus-summary-low-read ((t (:inherit gnus-summary-normal-ancient :foreground "#2aa198" :inverse-video nil :underline nil :slant italic :weight normal))))
- '(gnus-summary-low-ticked ((t (:inherit gnus-summary-normal-ancient :foreground "#cb4b16" :inverse-video nil :underline nil :slant italic :weight normal))))
- '(gnus-summary-low-undownloaded ((t (:inherit gnus-summary-normal-ancient :foreground "#93a1a1" :inverse-video nil :underline nil :slant italic :weight normal))))
- '(gnus-x-face ((t (:background "#fdf6e3" :foreground "#586e75"))))
- '(mm-uu-extract ((t (:background "#073642" :foreground "#b58900")))))
+ )
