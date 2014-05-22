@@ -855,7 +855,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , ace-jump-mode
 
 (use-package ace-jump-mode
-  :bind ("M-h" . ace-jump-mode))
+  :bind ("H-h" . ace-jump-mode))
 
 ;;;_ , ace-window
 (use-package ace-window
@@ -2747,8 +2747,7 @@ at the beginning of line, if already there."
   :bind ("M-o h" . hl-line-mode)
   :config
   (progn
-  (use-package hl-line+)
-  (copy-face 'fringe 'auto-dim-other-buffers-face)))
+  (use-package hl-line+)))
 
 ;;;_ , identica
 
