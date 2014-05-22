@@ -413,6 +413,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-dim-other-buffers-face ((t (:inherit fringe))))
+ '(diary ((t (:inherit eshell-ls-backup))))
  '(diff-added ((((background dark)) (:foreground "#FFFF9B9BFFFF")) (t (:foreground "DarkGreen"))))
  '(diff-changed ((((background dark)) (:foreground "Yellow")) (t (:foreground "MediumBlue"))))
  '(diff-context ((((background dark)) (:foreground "White")) (t (:foreground "Black"))))
@@ -420,6 +421,7 @@
  '(diff-header ((((background dark)) (:foreground "Cyan")) (t (:foreground "Red"))))
  '(diff-index ((((background dark)) (:foreground "Magenta")) (t (:foreground "Green"))))
  '(diff-nonexistent ((((background dark)) (:foreground "#FFFFFFFF7474")) (t (:foreground "DarkBlue"))))
+ '(holiday ((t (:inherit fringe))))
  '(sml/filename ((t (:inherit (font-lock-function-name-face sml/global) :foreground "#6c71c4" :weight bold))))
  '(sml/modes ((t (:inherit sml/global :foreground "#268bd2"))))
  '(wg-brace-face ((t (:inherit comint-highlight-prompt))))
@@ -428,7 +430,7 @@
  '(wg-filename-face ((t (:inherit eshell-ls-archive))))
  '(wg-frame-face ((t (:inherit eshell-ls-backup))))
  '(wg-message-face ((t (:inherit eshell-ls-clutter))))
- '(wg-mode-line-face ((t (:inherit eshell-ls-backup))))
+ '(wg-mode-line-face ((t (:inherit eshell-ls-readonly))))
  '(wg-other-workgroup-face ((t (:inherit eshell-ls-readonly))))
  '(wg-previous-workgroup-face ((t (:inherit eshell-ls-symlink))))
  '(which-func ((t (:inherit comint-highlight-prompt)))))
