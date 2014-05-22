@@ -169,6 +169,7 @@ SCHEDULED: %t
  '(org-tags-exclude-from-inheritance (quote ("crypt")))
  '(org-tags-match-list-sublevels t)
  '(org-time-clocksum-format (quote (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
+ '(org-todo-keyword-faces (quote (("TODO" :inherit org-todo) ("NEXT" :inherit org-started-kwd-face) ("DONE" :inherit org-done-kwd-face) ("WAITING" :inherit org-waiting-kwd-face) ("HOLD" :inherit org-delegated-kwd-face) ("CANCELLED" :inherit org-cancelled-kwd-face) ("MEETING" :inherit org-someday-kwd-face) ("PHONE" :foreground "forest green" :weight bold))))
  '(org-todo-keywords (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)") (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
  '(org-todo-state-tags-triggers (quote (("CANCELLED" ("CANCELLED" . t)) ("WAITING" ("WAITING" . t)) ("HOLD" ("WAITING") ("HOLD" . t)) (done ("WAITING") ("HOLD")) ("TODO" ("WAITING") ("CANCELLED") ("HOLD")) ("NEXT" ("WAITING") ("CANCELLED") ("HOLD")) ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
  '(org-treat-S-cursor-todo-selection-as-state-change nil)
