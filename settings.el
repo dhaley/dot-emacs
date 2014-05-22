@@ -421,3 +421,4 @@
  '(diff-index ((((background dark)) (:foreground "Magenta")) (t (:foreground "Green"))))
  '(diff-nonexistent ((((background dark)) (:foreground "#FFFFFFFF7474")) (t (:foreground "DarkBlue"))))
  '(wg-current-workgroup-face ((t (:foreground "brightcyan")))))
+ '(which-func ((t (:inherit comint-highlight-prompt)))))
