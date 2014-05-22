@@ -4577,7 +4577,8 @@ Keys are in kbd format."
         (add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d" ":Yak:"))
     (add-to-list 'sml/replacer-regexp-list '("^~/data/releases" ":Releases:"))
     (add-to-list 'sml/replacer-regexp-list '("^~/Documents/Tasks/" ":Task:"))
-    (setq sml/theme 'light)
+    ;; (setq sml/theme 'light)
+    (setq sml/theme 'respectful)
     (sml/setup)))
 
 ;;;_ , smartparens
@@ -5339,11 +5340,8 @@ selection with command output."
     (setq my-themes (append my-themes (list my-cur-theme))))
   (setq my-cur-theme (pop my-themes))
   (load-theme my-cur-theme t)
-  (if
-      (string-equal my-cur-theme "solarized-light")
-      (sml/apply-theme 'light)
-    (sml/apply-theme 'dark))
-  (copy-face 'fringe 'auto-dim-other-buffers-face))
+  (setq sml/theme 'respectful)
+  (sml/setup))
 
 ;; Bind this to C-t
 (bind-key "C-H-t" 'cycle-my-theme)
