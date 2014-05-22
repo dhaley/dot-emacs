@@ -709,3 +709,12 @@
 [submodule "site-lisp/wand"]
 	path = site-lisp/wand
 	url = https://github.com/cmpitg/wand.git
+[submodule "site-lisp/syslog-mode"]
+	path = site-lisp/syslog-mode
+	url = https://github.com/vapniks/syslog-mode.git
+[submodule "site-lisp/emm-mark-ext"]
+	path = site-lisp/emm-mark-ext
+	url = https://github.com/vapniks/emms-mark-ext.git
+[submodule "site-lisp/one-key"]
+	path = site-lisp/one-key
+	url = https://github.com/vapniks/one-key.git

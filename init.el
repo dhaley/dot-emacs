@@ -855,10 +855,11 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , ace-jump-mode
 
 (use-package ace-jump-mode
-  :bind ("M-h" . ace-jump-mode)
-  :init
-  (use-package ace-window
-    :bind ("S-<return>" . ace-window)))
+  :bind ("M-h" . ace-jump-mode))
+
+;;;_ , ace-window
+(use-package ace-window
+  :bind ("C-x o" . ace-window))
 
 ;;;_ , agda
 
