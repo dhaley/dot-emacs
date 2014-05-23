@@ -1639,7 +1639,30 @@ Require unix zip commandline tool."
 
 ;;;_ , direx
 (use-package direx
-  :bind ("C-H-M-S-j" . direx:jump-to-directory))
+  :bind ("C-H-M-S-j" . direx:jump-to-directory)
+  :config
+  (progn
+
+    (require 'direx-project)
+    (setq direx:leaf-icon "  "
+          direx:open-icon "▾ "
+          direx:closed-icon "▸ ")
+
+    (defun e2wm:def-plugin-direx (frame wm winfo)
+      (let* ((buf (e2wm:history-get-main-buffer))
+             (dbuf (with-current-buffer buf
+                     (or
+                      (ignore-errors
+                        (direx-project:jump-to-project-root-noselect))
+                      (direx:find-directory-noselect
+                       (or default-directory "."))))))
+        (with-current-buffer dbuf
+          (direx:item-expand direx:root-item))
+        (wlf:set-buffer wm (wlf:window-name winfo) dbuf)))
+
+    (e2wm:plugin-register 'direx
+                          "DireX"
+                          'e2wm:def-plugin-direx)))
 
 ;;;_ , discover
 
