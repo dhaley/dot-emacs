@@ -2565,6 +2565,20 @@ at the beginning of line, if already there."
         (require 'google-translate-smooth-ui)
         (setq google-translate-translation-directions-alist '(("ja" . "en")))))
 
+;;;_ , guide-key
+
+(use-package guide-key
+  :init
+  (progn
+    (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
+    (guide-key-mode 1))
+  :config
+  (use-package guide-key-tip
+    :init
+    (progn
+      (require 'pos-tip)
+      (setq guide-key-tip/enabled t))))
+
 ;;;_ , highlight-sexp
 
 (use-package hl-sexp
@@ -3000,8 +3014,6 @@ at the beginning of line, if already there."
   :disabled t
   :load-path "nodejs-mode"
   :commands (nodejs))
-
-
 
 ;; JSON files
 (use-package json-mode
@@ -4632,16 +4644,24 @@ Keys are in kbd format."
 
 ;;;_ , smart-mode-line
 (use-package smart-mode-line
-  ;; :ensure smart-mode-line
   :config
   (progn
     (add-to-list 'sml/replacer-regexp-list '("^~/data/web/custom" ":Custom:"))
-        (add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d" ":Yak:"))
+    (add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d" ":Yak:"))
     (add-to-list 'sml/replacer-regexp-list '("^~/data/releases" ":Releases:"))
     (add-to-list 'sml/replacer-regexp-list '("^~/Documents/Tasks/" ":Task:"))
     ;; (setq sml/theme 'light)
     (setq sml/theme 'respectful)
-    (sml/setup)))
+    (sml/setup))
+
+  (use-package nyan-mode
+    :disabled t
+    :init
+    (progn
+      (nyan-mode)
+      ;; (setq nyan-wavy-trail t)
+      )
+    :config (nyan-start-animation)))
 
 ;;;_ , smartparens
 
@@ -4836,7 +4856,16 @@ Keys are in kbd format."
         ("k" twittering-goto-previous-status-of-user)))
     ))
 
-;;;_ , vkill
+;;;_ , undo-tree
+
+(use-package undo-tree
+  :init
+  (progn
+    (global-undo-tree-mode)
+    (setq undo-tree-visualizer-timestamps t)
+    (setq undo-tree-visualizer-diff t)))
+
+;;;_ , VKILL
 
 (use-package vkill
   :commands vkill

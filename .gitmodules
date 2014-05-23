@@ -727,3 +727,12 @@
 [submodule "site-lisp/direx"]
 	path = site-lisp/direx
 	url = https://github.com/m2ym/direx-el.git
+[submodule "site-lisp/nyan-mode"]
+	path = site-lisp/nyan-mode
+	url = https://github.com/TeMPOraL/nyan-mode.git
+[submodule "site-lisp/guide-key"]
+	path = site-lisp/guide-key
+	url = https://github.com/kbkbkbkb1/guide-key.git
+[submodule "site-lisp/guide-key-tip"]
+	path = site-lisp/guide-key-tip
+	url = https://github.com/aki2o/guide-key-tip.git
