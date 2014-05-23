@@ -1637,6 +1637,10 @@ Require unix zip commandline tool."
         (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
         ))))
 
+;;;_ , direx
+(use-package direx
+  :bind ("C-H-M-S-j" . direx:jump-to-directory))
+
 ;;;_ , discover
 
 ;;(use-package discover
@@ -1652,6 +1656,32 @@ Require unix zip commandline tool."
   :commands doxymacs-mode
   :diminish doxymacs-mode
   :load-path "~/.emacs.d/site-lisp/doxymacs-1.8.0/lisp")
+
+;;;_ , e2wm
+
+(use-package e2wm
+  :bind ("M-+" . e2wm:start-management)
+  :config
+  (progn
+    (use-package e2wm-direx
+      :init
+      (progn
+        (setq e2wm:c-code-recipe
+              '(| (:left-max-size 40)
+                  (- (:upper-size-ratio 0.6)
+                     tree history)
+                  (- (:lower-max-size 150)
+                     (| (:right-max-size 40)
+                        main imenu)
+                     sub)))
+
+        (setq e2wm:c-code-winfo
+              '((:name main)
+                (:name tree    :plugin direx)
+                (:name history :plugin history-list)
+                (:name imenu   :plugin imenu :default-hide nil)
+                (:name sub     :buffer "*info*" :default-hide t)))))))
+
 
 ;;;_ , easy-kill
 

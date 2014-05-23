@@ -718,3 +718,12 @@
 [submodule "site-lisp/one-key"]
 	path = site-lisp/one-key
 	url = https://github.com/vapniks/one-key.git
+[submodule "site-lisp/emacs-window-manager"]
+	path = site-lisp/emacs-window-manager
+	url = https://github.com/kiwanami/emacs-window-manager.git
+[submodule "site-lisp/e2wm-direx"]
+	path = site-lisp/e2wm-direx
+	url = https://github.com/aki2o/e2wm-direx.git
+[submodule "site-lisp/direx"]
+	path = site-lisp/direx
+	url = https://github.com/m2ym/direx-el.git
