@@ -3434,8 +3434,17 @@ at the beginning of line, if already there."
                  (turn-on-pandoc)
                  ))))
 
-;;;_ , mudel
+;;;_ , mouse+
 
+(use-package mouse+
+  :init
+  (progn
+  (global-set-key [mouse-5]        'mouse-flash-position-or-M-x)
+   (global-set-key [S-down-mouse-2]      'mouse-scan-lines-or-M-:)
+  (global-set-key [mode-line C-mouse-1] 'mouse-tear-off-window)
+  ))
+
+;;;_ , mudel
 (use-package mudel
   :commands mudel
   :bind ("C-c M" . mud)
