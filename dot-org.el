@@ -1404,7 +1404,8 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
     (widen)))
 
 (add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "W" (lambda () (interactive) (setq bh/hide-scheduled-and-waiting-next-tasks t) (bh/widen))))
+          '(lambda () (org-defkey org-agenda-mode-map "W" (lambda () (interactive) (setq
+          bh/hide-scheduled-and-waiting-next-tasks t) (bh/widen))) (hl-line-mode 1))
           'append)
 
 (defun bh/restrict-to-file-or-follow (arg)
