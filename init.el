@@ -4859,6 +4859,7 @@ Keys are in kbd format."
 ;;;_ , undo-tree
 
 (use-package undo-tree
+  :diminish global-undo-tree-mode
   :init
   (progn
     (global-undo-tree-mode)

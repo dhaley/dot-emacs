@@ -496,6 +496,10 @@ end tell"))))
   (interactive)
   (insert (org-get-chrome-link)))
 
+(defun org-insert-safari-link ()
+  (interactive)
+  (insert (org-get-safari-link)))
+
 (defun org-set-url-link ()
   "Set a property for the current headline."
   (interactive)
@@ -711,6 +715,7 @@ end tell" (match-string 1))))
 (bind-key "C-c x m" 'org-insert-message-link)
 (bind-key "C-c x M" 'org-set-message-link)
 (bind-key "C-c x u" 'org-insert-url-link)
+(bind-key "C-c x s" 'org-insert-safari-link)
 (bind-key "C-c x U" 'org-set-url-link)
 (bind-key "C-c x f" 'org-insert-file-link)
 (bind-key "C-c x F" 'org-set-file-link)
