@@ -2755,7 +2755,14 @@ at the beginning of line, if already there."
 
     (use-package helm-swoop)
     (use-package helm-css-scss)
-    (use-package helm-ag)
+    (use-package helm-ag
+      :commands (helm-ag projectile-helm-ag)
+      :config
+      (progn
+        (defun projectile-helm-ag ()
+          (interactive)
+          (helm-ag (projectile-project-root)))
+        (bind-key "M-s <escape>" 'projectile-helm-ag)))
 
     (bind-key "C-h b" 'helm-descbinds)
 
@@ -4859,7 +4866,7 @@ Keys are in kbd format."
 ;;;_ , undo-tree
 
 (use-package undo-tree
-  :diminish global-undo-tree-mode
+  :diminish (undo-tree-mode global-undo-tree-mode)
   :init
   (progn
     (global-undo-tree-mode)
