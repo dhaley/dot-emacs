@@ -3823,11 +3823,46 @@ and view local index.html url"
   :commands org-link-minor-mode)
 
 ;;;_ , outline-mode
-(use-package outline-mode
-  :diminish outline-mode
-  :commands outline-mode
+
+(use-package outline
+  ;; :diminish outline-mode
+  :init (add-hook 'prog-mode-hook 'outline-minor-mode)
   :config
-  (eval-after-load "outline" '(require 'foldout)))
+  (progn
+    (use-package outshine
+      :commands outshine-hook-function
+      :diminish ""
+      :init
+      (progn
+        (add-hook  'outline-minor-mode-hook 'outshine-hook-function)))))
+
+(use-package outorg
+  :commands outorg-edit-as-org
+  :config
+  (defun outshine-use-outorg (fun &optional whole-buffer-p &rest funargs)
+    "Use outorg to call FUN with FUNARGS on subtree.
+
+FUN should be an Org-mode function that acts on the subtree at
+point. Optionally, with WHOLE-BUFFER-P non-nil,
+`outorg-edit-as-org' can be called on the whole buffer.
+
+Sets the variable `outshine-use-outorg-last-headline-marker' so
+that it always contains a point-marker to the last headline this
+function was called upon.
+
+The old marker is removed first. Then a new point-marker is
+created before `outorg-edit-as-org' is called on the headline."
+    (save-excursion
+      (unless (outline-on-heading-p)
+        (outline-previous-heading))
+      (outshine--set-outorg-last-headline-marker)
+      (if whole-buffer-p
+          (outorg-edit-as-org '(4))
+        (outorg-edit-as-org))
+      (if funargs
+          (funcall fun funargs)
+        (funcall fun))
+      (outorg-copy-edits-and-exit))))
 
 ;;;_ , owdriver
 (use-package owdriver
