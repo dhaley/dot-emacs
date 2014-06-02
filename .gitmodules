@@ -736,3 +736,9 @@
 [submodule "site-lisp/guide-key-tip"]
 	path = site-lisp/guide-key-tip
 	url = https://github.com/aki2o/guide-key-tip.git
+[submodule "site-lisp/parenface"]
+	path = site-lisp/parenface
+	url = https://github.com/grettke/parenface.git
+[submodule "site-lisp/dircmp-mode"]
+	path = site-lisp/dircmp-mode
+	url = https://github.com/matthewlmcclure/dircmp-mode.git
