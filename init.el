@@ -2985,14 +2985,66 @@ at the beginning of line, if already there."
 (use-package indirect
   :bind ("C-c C" . indirect-region)
   :init
-  (defun narrow-to-region-indirect (start end)
-    "Restrict editing in this buffer to the current region, indirectly."
-    (interactive "r")
-    (deactivate-mark)
-    (let ((buf (clone-indirect-buffer nil nil)))
-      (with-current-buffer buf
-        (narrow-to-region start end))
-      (switch-to-buffer buf))))
+  (progn
+
+    (defun narrow-to-region-indirect (start end)
+      "Restrict editing in this buffer to the current region, indirectly."
+      (interactive "r")
+      (deactivate-mark)
+      (let ((buf (clone-indirect-buffer nil nil)))
+        (with-current-buffer buf
+          (narrow-to-region start end))
+        (switch-to-buffer buf)))
+
+    (defun gcr/narrow-to-region* (boundary-start boundary-end fun)
+      "Edit the current region in a new, cloned, indirect buffer.
+
+This function is responsible for helping the operator to easily
+manipulate a subset of a buffer's contents within a new buffer. The
+newly created clone buffer is created with `clone-indirect-buffer',
+so all of its behaviors apply. You may care specifically about the
+fact that the clone is really just a 'view' of the source buffer, so
+actions performed within the source buffer or its clone(s) are
+actually occurring only within the source buffer itself. When the
+dynamic extent of this function is entered, the operator is prompted
+for a function to call to make upon entering the new buffer. The intent
+is to specify the desired mode for the new buffer, for example by
+calling `scheme-mode', but any function may be called.
+
+The subset chosen for manipulation is narrowed by
+`narrow-to-region'. When the clone buffer is created, the lines in
+which the start and end of the boundary occur are included at the
+end the new clone buffer name to serve as a reminder for its
+'true source'. The intent is to facilitate going back from the clone
+buffer to the source buffer with knowledge of where it originated.
+
+BOUNDARY-START and BOUNDARY-END are provided by delegation of this
+function to `interactive'. FUN is provided interactively by the
+operator via the modeline in the same manner. See Info node
+`(elisp) Eval' for more on why `funcall' was used here instead of
+`eval' for calling the selected function.
+
+Attribution: URL `http://demonastery.org/2013/04/emacs-narrow-to-region-indirect/'
+Attribution: URL `http://paste.lisp.org/display/135818Attribution'"
+      (interactive "*r\naMode name? ")
+      (let* ((boundary-start (if (< boundary-start 1) (point-min)
+                               boundary-start))
+             (boundary-end (if (<= boundary-end boundary-start) (point-max)
+                             boundary-end))
+             (new-name (concat
+                        (buffer-name)
+                        "⊃"
+                        (number-to-string (line-number-at-pos boundary-start))
+                        "-"
+                        (number-to-string (line-number-at-pos boundary-end))))
+             (buf-name (generate-new-buffer-name new-name))
+             (fun (if (fboundp fun) fun
+                    'fundamental-mode)))
+        (with-current-buffer (clone-indirect-buffer buf-name +1 +1)
+          (narrow-to-region boundary-start boundary-end)
+          (deactivate-mark)
+          (goto-char (point-min))
+          (funcall fun))))))
 
 ;;;_ , initsplit
 
@@ -3892,12 +3944,7 @@ and view local index.html url"
 
 ;;;_ , parenface-plus
 
-(use-package parenface-plus
-  :config
-  (progn
-    (set-face-foreground 'parenface-paren-face "SteelBlue4")
-    (set-face-foreground 'parenface-bracket-face "SteelBlue4")
-    (set-face-foreground 'parenface-curly-face "SteelBlue4")))
+(use-package parenface-plus)
 
 ;;;_ , per-window-point
 
