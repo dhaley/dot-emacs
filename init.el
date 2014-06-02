@@ -3890,6 +3890,15 @@ and view local index.html url"
     :init
     (show-paren-mode 1)))
 
+;;;_ , parenface-plus
+
+(use-package parenface-plus
+  :config
+  (progn
+    (set-face-foreground 'parenface-paren-face "SteelBlue4")
+    (set-face-foreground 'parenface-bracket-face "SteelBlue4")
+    (set-face-foreground 'parenface-curly-face "SteelBlue4")))
+
 ;;;_ , per-window-point
 
 (use-package per-window-point
