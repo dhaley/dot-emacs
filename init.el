@@ -2983,7 +2983,16 @@ at the beginning of line, if already there."
 ;;;_ , indirect
 
 (use-package indirect
-  :bind ("C-c C" . indirect-region))
+  :bind ("C-c C" . indirect-region)
+  :init
+  (defun narrow-to-region-indirect (start end)
+    "Restrict editing in this buffer to the current region, indirectly."
+    (interactive "r")
+    (deactivate-mark)
+    (let ((buf (clone-indirect-buffer nil nil)))
+      (with-current-buffer buf
+        (narrow-to-region start end))
+      (switch-to-buffer buf))))
 
 ;;;_ , initsplit
 
@@ -3599,11 +3608,6 @@ at the beginning of line, if already there."
          ("C-c C-<" . mc/mark-all-like-this))
   :init
   (setq mc/list-file (expand-file-name "mc-lists.el" user-data-directory)))
-
-;;;_ , fancy-narrow
-
-(use-package fancy-narrow
-  :commands fancy-narrow-mode)
 
 ;;;_ , nf-procmail-mode
 
@@ -4888,6 +4892,12 @@ Keys are in kbd format."
 
   :config
   (setq vkill-show-all-processes t))
+
+;;;_ , volatile-highlights
+
+(use-package volatile-highlights
+  :init (volatile-highlights-mode t)
+  :diminish volatile-highlights-mode)
 
 ;;;_ , w3m
 
