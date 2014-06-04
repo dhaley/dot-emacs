@@ -742,3 +742,6 @@
 [submodule "site-lisp/dircmp-mode"]
 	path = site-lisp/dircmp-mode
 	url = https://github.com/matthewlmcclure/dircmp-mode.git
+[submodule "site-lisp/indent-guide"]
+	path = site-lisp/indent-guide
+	url = https://github.com/zk-phi/indent-guide.git

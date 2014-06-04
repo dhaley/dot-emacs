@@ -2960,6 +2960,13 @@ at the beginning of line, if already there."
   :init
   (auto-image-file-mode 1))
 
+;;;_ , indent-guide
+
+(use-package indent-guide
+  :init
+  (progn
+    (set-face-background 'indent-guide-face "#e3e3d3")))
+
 ;;;_ , info
 
 (use-package info
@@ -2995,6 +3002,16 @@ at the beginning of line, if already there."
         (with-current-buffer buf
           (narrow-to-region start end))
         (switch-to-buffer buf)))
+
+    (defun org-narrow-to-subtree-indirect (start end)
+      "Restrict editing in this buffer to the current region, indirectly."
+      (interactive "r")
+      (deactivate-mark)
+      (let ((buf (clone-indirect-buffer nil nil)))
+        (with-current-buffer buf
+          (org-narrow-to-subtree))
+        (switch-to-buffer buf)))
+
 
     (defun gcr/narrow-to-region* (boundary-start boundary-end fun)
       "Edit the current region in a new, cloned, indirect buffer.
@@ -3791,7 +3808,12 @@ and view local index.html url"
     (fset 'org-toggle-drawer
           (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([67108896 3 16 14 tab 24 24] 0 "%d")) arg)))
 
-    (define-key org-mode-map (kbd "C-c M-d") 'org-toggle-drawer)))
+    (fset 'org-cut-subtree-append
+          "\227\C-ck")
+
+    (define-key org-mode-map (kbd "C-c M-d") 'org-toggle-drawer)
+
+    (define-key org-mode-map (kbd "C-c M-w") 'org-cut-subtree-append)))
 
 ;;;_ , org-jira
 
@@ -3824,45 +3846,45 @@ and view local index.html url"
 
 ;;;_ , outline-mode
 
-(use-package outline
-  ;; :diminish outline-mode
-  :init (add-hook 'prog-mode-hook 'outline-minor-mode)
-  :config
-  (progn
-    (use-package outshine
-      :commands outshine-hook-function
-      :diminish ""
-      :init
-      (progn
-        (add-hook  'outline-minor-mode-hook 'outshine-hook-function)))))
+;; (use-package outline
+;;   ;; :diminish outline-mode
+;;   :init (add-hook 'prog-mode-hook 'outline-minor-mode)
+;;   :config
+;;   (progn
+;;     (use-package outshine
+;;       :commands outshine-hook-function
+;;       :diminish ""
+;;       :init
+;;       (progn
+;;         (add-hook  'outline-minor-mode-hook 'outshine-hook-function)))))
 
-(use-package outorg
-  :commands outorg-edit-as-org
-  :config
-  (defun outshine-use-outorg (fun &optional whole-buffer-p &rest funargs)
-    "Use outorg to call FUN with FUNARGS on subtree.
+;; (use-package outorg
+;;   :commands outorg-edit-as-org
+;;   :config
+;;   (defun outshine-use-outorg (fun &optional whole-buffer-p &rest funargs)
+;;     "Use outorg to call FUN with FUNARGS on subtree.
 
-FUN should be an Org-mode function that acts on the subtree at
-point. Optionally, with WHOLE-BUFFER-P non-nil,
-`outorg-edit-as-org' can be called on the whole buffer.
+;; FUN should be an Org-mode function that acts on the subtree at
+;; point. Optionally, with WHOLE-BUFFER-P non-nil,
+;; `outorg-edit-as-org' can be called on the whole buffer.
 
-Sets the variable `outshine-use-outorg-last-headline-marker' so
-that it always contains a point-marker to the last headline this
-function was called upon.
+;; Sets the variable `outshine-use-outorg-last-headline-marker' so
+;; that it always contains a point-marker to the last headline this
+;; function was called upon.
 
-The old marker is removed first. Then a new point-marker is
-created before `outorg-edit-as-org' is called on the headline."
-    (save-excursion
-      (unless (outline-on-heading-p)
-        (outline-previous-heading))
-      (outshine--set-outorg-last-headline-marker)
-      (if whole-buffer-p
-          (outorg-edit-as-org '(4))
-        (outorg-edit-as-org))
-      (if funargs
-          (funcall fun funargs)
-        (funcall fun))
-      (outorg-copy-edits-and-exit))))
+;; The old marker is removed first. Then a new point-marker is
+;; created before `outorg-edit-as-org' is called on the headline."
+;;     (save-excursion
+;;       (unless (outline-on-heading-p)
+;;         (outline-previous-heading))
+;;       (outshine--set-outorg-last-headline-marker)
+;;       (if whole-buffer-p
+;;           (outorg-edit-as-org '(4))
+;;         (outorg-edit-as-org))
+;;       (if funargs
+;;           (funcall fun funargs)
+;;         (funcall fun))
+;;       (outorg-copy-edits-and-exit))))
 
 ;;;_ , owdriver
 (use-package owdriver
@@ -4961,6 +4983,7 @@ Keys are in kbd format."
 ;;;_ , undo-tree
 
 (use-package undo-tree
+  :disabled t
   :diminish (undo-tree-mode global-undo-tree-mode)
   :init
   (progn

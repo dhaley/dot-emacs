@@ -1748,17 +1748,17 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
 
-(add-hook 'org-mode-hook
-          'turn-on-visual-line-mode
-          )
+;; (add-hook 'org-mode-hook
+;;           'turn-on-visual-line-mode
+;;           )
 
-(when (fboundp 'adaptive-wrap-prefix-mode)
-  (defun my-activate-adaptive-wrap-prefix-mode ()
-    "Toggle `visual-line-mode' and `adaptive-wrap-prefix-mode' simultaneously."
-    (if visual-line-mode
-        (adaptive-wrap-prefix-mode 1)
-      (adaptive-wrap-prefix-mode -1)))
-  (add-hook 'visual-line-mode-hook 'my-activate-adaptive-wrap-prefix-mode))
+;; (when (fboundp 'adaptive-wrap-prefix-mode)
+;;   (defun my-activate-adaptive-wrap-prefix-mode ()
+;;     "Toggle `visual-line-mode' and `adaptive-wrap-prefix-mode' simultaneously."
+;;     (if visual-line-mode
+;;         (adaptive-wrap-prefix-mode 1)
+;;       (adaptive-wrap-prefix-mode -1)))
+;;   (add-hook 'visual-line-mode-hook 'my-activate-adaptive-wrap-prefix-mode))
 
 (defun myorg-update-parent-cookie ()
   (when (equal major-mode 'org-mode)
