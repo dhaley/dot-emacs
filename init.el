@@ -5162,7 +5162,7 @@ Keys are in kbd format."
         (popwin-mode 1)
         (add-to-list 'popwin:special-display-config `("*ag*" :noselect t))))
 
-        (defun toolbox:open-file (path)
+    (defun toolbox:open-file (path)
           "Open path and open with external program if necessary."
           (condition-case description
               (progn
