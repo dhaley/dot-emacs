@@ -5153,75 +5153,66 @@ Keys are in kbd format."
 ;;; wand:
 
 (use-package wand
-  :bind (("C-c RET" . wand:execute) ("<C-mouse-1>" . wand:execute))
+  :bind (("C-c RET" . wand:execute)
+         ("<C-mouse-1>" . wand:execute)
+         ("C-S-RET" . wand:execute-current-line)
+         ("M-S-RET" . toolbox:execute-and-replace)
+         ("<M-mouse-1>" . toolbox:execute-and-replace)
+         ;; ("<M-down-mouse>" . nil)
+         )
   :init
   (progn
+    (bind-key "<C-S-return>"      'wand:execute-current-line)
+    (bind-key "<M-S-return>"      'toolbox:execute-and-replace)
+    (require 'load-functions)
     (use-package popwin
       :init
       (progn
         (popwin-mode 1)
-        (add-to-list 'popwin:special-display-config `("*ag*" :noselect t))))
-
-    (defun toolbox:open-file (path)
-          "Open path and open with external program if necessary."
-          (condition-case description
-              (progn
-                (find-file path))))
-
-        (defun toolbox:execute-and-replace ()
-          "Execute command on selection using `wand:execute' then replace
-selection with command output."
-          (interactive)
-          (let* ((text (save-excursion
-                         (get-selection)))
-                 (output (wand:execute text)))
-            (call-interactively 'kill-region)
-            (insert output))))
+        (add-to-list 'popwin:special-display-config `("*ag*" :noselect t)))))
   :config
   (progn
-          (lambda ()
-            (global-set-key (kbd "<C-return>")  'wand:execute)
-            (global-set-key (kbd "<C-mouse-1>") 'wand:execute)
-            (dolist (rule (list (wand:create-rule :match "\\$ "
-                                                  :capture :after
-                                                  :action ~popup-shell-command)
-                                (wand:create-rule :match "https?://"
-                                                  :capture :whole
-                                                  :action ~open-url-in-firefox)
-                                (wand:create-rule :match "file:"
-                                                  :capture :after
-                                                  :action toolbox:open-file)
-                                (wand:create-rule :match "#> "
-                                                  :capture :after
-                                                  :action ~add-bracket-and-eval)
-                                (wand:create-rule :match "window:"
-                                                  :capture :after
-                                                  :action ~switch-to-window)
-                                (wand:create-rule :match "eshell-cd:"
-                                                  :capture :after
-                                                  :action ~change-dir-in-eshell)
-                                ))
-              (wand:add-rule rule))
-            (wand:create-rule :match "window:"
-                              :capture :after
-                              :action $switch-to-window)
-            (wand:create-rule :match "eshell-cd:"
-                              :capture :after
-                              :action $change-dir-in-eshell))
+    (lambda ()
+      (dolist (rule (list (wand:create-rule :match "\\$ "
+                                            :capture :after
+                                            :action ~popup-shell-command)
+                          (wand:create-rule :match "https?://"
+                                            :capture :whole
+                                            :action browse-url-at-point)
+                          (wand:create-rule :match "file:"
+                                            :capture :after
+                                            :action toolbox:open-file)
+                          (wand:create-rule :match "#> "
+                                            :capture :after
+                                            :action ~add-bracket-and-eval)
+                          (wand:create-rule :match "window:"
+                                            :capture :after
+                                            :action switch-to-buffer)
+                          (wand:create-rule :match "eshell-cd:"
+                                            :capture :after
+                                            :action ~change-dir-in-eshell)
+                          ))
+        (wand:add-rule rule))
+      (wand:create-rule :match "window:"
+                        :capture :after
+                        :action switch-to-buffer)
+      (wand:create-rule :match "eshell-cd:"
+                        :capture :after
+                        :action $change-dir-in-eshell))
 
-          (setq wand:*rules*
-                (list (wand:create-rule :match "\\$ "
-                                        :capture :after
-                                        :action ~popup-shell-command)
-                      (wand:create-rule :match "https?://"
-                                        :capture :whole
-                                        :action ~firefox)
-                      (wand:create-rule :match "file:"
-                                        :capture :after
-                                        :action toolbox:open-file)
-                      (wand:create-rule :match "#> "
-                                        :capture :after
-                                        :action ~add-bracket-and-eval)))))
+    (setq wand:*rules*
+          (list (wand:create-rule :match "\\$ "
+                                  :capture :after
+                                  :action ~popup-shell-command)
+                (wand:create-rule :match "https?://"
+                                  :capture :whole
+                                  :action browse-url-at-point)
+                (wand:create-rule :match "file:"
+                                  :capture :after
+                                  :action toolbox:open-file)
+                (wand:create-rule :match "#> "
+                                  :capture :after
+                                  :action ~add-bracket-and-eval)))))
 
 ;;;_ , wcount-mode
 
