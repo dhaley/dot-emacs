@@ -745,3 +745,12 @@
 [submodule "site-lisp/indent-guide"]
 	path = site-lisp/indent-guide
 	url = https://github.com/zk-phi/indent-guide.git
+[submodule "site-lisp/emacs-yalinum"]
+	path = site-lisp/emacs-yalinum
+	url = https://github.com/tm8st/emacs-yalinum.git
+[submodule "site-lisp/sudden-death"]
+	path = site-lisp/sudden-death
+	url = https://github.com/yewton/sudden-death.el.git
+[submodule "site-lisp/pretty-mode"]
+	path = site-lisp/pretty-mode
+	url = https://github.com/akatov/pretty-mode.git
