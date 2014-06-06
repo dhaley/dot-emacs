@@ -254,6 +254,7 @@
  '(modelinepos-column-limit 80)
  '(mouse-autoselect-window -0.1)
  '(mouse-wheel-mode -1)
+ '(mouse-wheel-scroll-amount (quote (1 ((shift) . 5) ((control)))))
  '(mudel-mode-hook (quote (mudel-add-scroll-to-bottom)))
  '(mudel-output-filter-functions (quote (ansi-color-process-output)))
  '(multi-term-program "/usr/bin/screen")
