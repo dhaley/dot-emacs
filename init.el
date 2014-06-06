@@ -5175,28 +5175,6 @@ Keys are in kbd format."
         (add-to-list 'popwin:special-display-config `("*ag*" :noselect t)))))
   :config
   (progn
-    (lambda ()
-      (dolist (rule (list (wand:create-rule :match "\\$ "
-                                            :capture :after
-                                            :action ~popup-shell-command)
-                          (wand:create-rule :match "https?://"
-                                            :capture :whole
-                                            :action browse-url-at-point)
-                          (wand:create-rule :match "file:"
-                                            :capture :after
-                                            :action toolbox:open-file)
-                          (wand:create-rule :match "#> "
-                                            :capture :after
-                                            :action ~add-bracket-and-eval)
-                          (wand:create-rule :match "window:"
-                                            :capture :after
-                                            :action switch-to-buffer)
-                          (wand:create-rule :match "eshell-cd:"
-                                            :capture :after
-                                            :action ~change-dir-in-eshell)
-                          ))
-        (wand:add-rule rule)))
-
     (setq wand:*rules*
           (list (wand:create-rule :match "\\$ "
                                   :capture :after
