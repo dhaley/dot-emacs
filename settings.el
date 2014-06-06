@@ -344,6 +344,7 @@
  '(sr-use-commander-keys nil)
  '(sr-windows-default-ratio 80)
  '(ssl-certificate-verification-policy 1)
+ '(sublimity-attractive-centering-width nil)
  '(svn-status-hide-unmodified t)
  '(tags-apropos-verbose t)
  '(tags-case-fold-search nil)
