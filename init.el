@@ -1425,7 +1425,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , dired
 
 (use-package dired
-  ;; :defer t
   :bind ("C-x C-j" . dired-jump)
   :init
   (progn
@@ -1634,8 +1633,7 @@ Require unix zip commandline tool."
       (interactive)
       (require 'dired)
       (let ( (fileName (elt (dired-get-marked-files) 0))  )
-        (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))
-        ))))
+        (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))))))
 
 ;;;_ , direx
 (use-package direx
@@ -1755,6 +1753,12 @@ Require unix zip commandline tool."
     ;; (add-hook 'after-init-hook 'server-start t)
     ;; (add-hook 'after-init-hook 'edit-server-start t)
     ))
+
+;;_ ,  el-feed
+
+(use-package el-feed
+  :bind ("C-x w" . elfeed))
+
 
 ;;_ ,  emoji-cheat-sheet
 

@@ -763,3 +763,6 @@
 [submodule "site-lisp/manage-minor-mode"]
 	path = site-lisp/manage-minor-mode
 	url = https://github.com/ShingoFukuyama/manage-minor-mode.git
+[submodule "site-lisp/elfeed"]
+	path = site-lisp/elfeed
+	url = https://github.com/skeeto/elfeed.git
