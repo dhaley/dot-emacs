@@ -766,3 +766,9 @@
 [submodule "site-lisp/elfeed"]
 	path = site-lisp/elfeed
 	url = https://github.com/skeeto/elfeed.git
+[submodule "site-lisp/sublimity"]
+	path = site-lisp/sublimity
+	url = https://github.com/zk-phi/sublimity.git
+[submodule "site-lisp/minimap"]
+	path = site-lisp/minimap
+	url = https://github.com/dengste/minimap.git

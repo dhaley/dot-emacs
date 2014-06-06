@@ -1703,6 +1703,22 @@ Require unix zip commandline tool."
                 (:name imenu   :plugin imenu :default-hide nil)
                 (:name sub     :buffer "*info*" :default-hide t)))))))
 
+;;;_ , sublimity
+
+(use-package sublimity
+  :commands (sublimity-mode)
+  :init (sublimity-mode 1)
+  :config
+  (progn
+    (require 'sublimity-scroll)
+    (require 'sublimity-map)
+    (require 'sublimity-attractive)
+    (sublimity-map-set-delay nil)))
+
+;;;_ , minimap
+
+(use-package minimap
+  :disabled t)
 
 ;;;_ , easy-kill
 
@@ -1756,7 +1772,7 @@ Require unix zip commandline tool."
 
 ;;_ ,  el-feed
 
-(use-package el-feed
+(use-package elfeed
   :bind ("C-x w" . elfeed))
 
 

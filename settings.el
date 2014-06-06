@@ -109,6 +109,8 @@
  '(el-get-auto-update-cached-recipes nil)
  '(el-get-dir "~/.emacs.d/site-lisp/")
  '(el-get-generate-autoloads nil)
+ '(elfeed-db-directory "~/Messages/.elfeed")
+ '(elfeed-feeds (quote ("https://rss.myinterfase.com/rss/cuboulder_rssfeedcareerevents.xml")))
  '(emacs-lisp-mode-hook (quote (turn-on-auto-fill (lambda nil (ignore-errors (diminish (quote auto-fill-function)))) eldoc-mode (lambda nil (local-set-key [(meta 46)] (quote find-function)) (local-set-key [(control 109)] (quote newline-and-indent))) outline-minor-mode)))
  '(emms-cache-file "~/Documents/emms/cache")
  '(emms-directory "~/Documents/emms")
