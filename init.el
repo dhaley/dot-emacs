@@ -1633,7 +1633,68 @@ Require unix zip commandline tool."
       (interactive)
       (require 'dired)
       (let ( (fileName (elt (dired-get-marked-files) 0))  )
-        (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))))))
+        (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))))
+
+     ;; dired-toggle-sudo
+    (use-package dired-toggle-sudo
+      :commands dired-toggle-sudo)
+
+    (use-package dired-avfs
+      :if (executable-find "mountavfs"))
+
+    (defconst my-dired-media-files-extensions
+      '("mp3" "mp4" "MP3" "MP4" "avi" "mpg" "flv" "ogg")
+      "Media files.")
+
+    (use-package dired-rainbow
+      :init
+      (progn
+        (dired-rainbow-define html "#4e9a06" ("htm" "html" "xhtml"))
+        (dired-rainbow-define media "#ce5c00" my-dired-media-files-extensions)
+
+                                        ; boring regexp due to lack of imagination
+        (dired-rainbow-define log (:inherit default
+                                            :italic t) ".*\\.log")
+
+                                        ; highlight executable files, but not directories
+        (dired-rainbow-define-chmod executable-unix "Green" "-.*x.*")
+
+        (dired-rainbow-define xml "DarkGreen" ("xml" "xsd" "xsl" "xslt" "wsdl"))
+
+        (dired-rainbow-define document "#fce94f" ("doc" "docx" "odt" "pdb" "pdf" "ps" "rtf"))
+        (dired-rainbow-define image "#ff4b4b" ("jpg" "png" "jpeg" "gif"))
+
+        (dired-rainbow-define sourcefile "#fcaf3e" ("py" "c" "cc" "h" "java" "pl" "rb"))
+
+        (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
+        (dired-rainbow-define compressed "#ad7fa8" ("zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
+        (dired-rainbow-define packaged "#e6a8df" ("deb" "rpm"))
+        (dired-rainbow-define encrypted "LightBlue" ("gpg" "pgp"))))
+
+    (use-package dired-efap
+      :commands dired-efap
+      :init
+      (progn
+        (bind-key "H-r" 'dired-efap dired-mode-map)
+      ;;; Only if you want to control rename with the mouse...
+        (define-key dired-mode-map [down-mouse-1] 'dired-efap-click)))
+
+    (use-package dired-subtree
+      :init
+      (bind-keys :map dired-mode-map
+                 :prefix "C-,"
+                 :prefix-map dired-subtree-map
+                 :prefix-docstring "Dired subtree map."
+                 ("<C-i-key>" . dired-subtree-insert)
+                 ("C-k" . dired-subtree-remove)
+                 ("C-n" . dired-subtree-next-sibling)
+                 ("C-p" . dired-subtree-previous-sibling)
+                 ("C-u" . dired-subtree-up)
+                 ("C-d" . dired-subtree-down)
+                 ("C-a" . dired-subtree-beginning)
+                 ("C-e" . dired-subtree-end)
+                 ("C-o C-f" . dired-subtree-only-this-file)
+                 ("C-o C-d" . dired-subtree-only-this-directory)))))
 
 ;;;_ , direx
 (use-package direx

@@ -772,3 +772,15 @@
 [submodule "site-lisp/minimap"]
 	path = site-lisp/minimap
 	url = https://github.com/dengste/minimap.git
+[submodule "site-lisp/js2-refactor"]
+	path = site-lisp/js2-refactor
+	url = https://github.com/magnars/js2-refactor.el.git
+[submodule "site-lisp/js2-mode"]
+	path = site-lisp/js2-mode
+	url = https://github.com/mooz/js2-mode.git
+[submodule "site-lisp/dired-hacks"]
+	path = site-lisp/dired-hacks
+	url = https://github.com/Fuco1/dired-hacks.git
+[submodule "site-lisp/dired-efap"]
+	path = site-lisp/dired-efap
+	url = https://github.com/juan-leon/dired-efap.git
