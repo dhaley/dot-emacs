@@ -252,6 +252,7 @@
  '(memory-usage-format "%R %F %S")
  '(moccur-following-mode-toggle nil)
  '(modelinepos-column-limit 80)
+ '(mouse-autoselect-window -0.1)
  '(mouse-wheel-mode -1)
  '(mudel-mode-hook (quote (mudel-add-scroll-to-bottom)))
  '(mudel-output-filter-functions (quote (ansi-color-process-output)))

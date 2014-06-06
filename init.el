@@ -4178,6 +4178,10 @@ unless return was pressed outside the comment"
 
         (use-package my-geben)))))
 
+;;;_ , pretty-mode
+
+(use-package pretty-mode)
+
 ;;;_ , projectile
 
 (use-package projectile
