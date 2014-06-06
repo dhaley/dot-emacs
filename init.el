@@ -1685,7 +1685,7 @@ Require unix zip commandline tool."
                  :prefix "C-,"
                  :prefix-map dired-subtree-map
                  :prefix-docstring "Dired subtree map."
-                 ("<C-i-key>" . dired-subtree-insert)
+                 ("TAB" . dired-subtree-insert)
                  ("C-k" . dired-subtree-remove)
                  ("C-n" . dired-subtree-next-sibling)
                  ("C-p" . dired-subtree-previous-sibling)
