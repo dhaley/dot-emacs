@@ -2802,6 +2802,11 @@ at the beginning of line, if already there."
   :init
   (helm-dash-activate-docset "Drupal"))
 
+;;;_ , helm-itunes
+
+(use-package helm-itunes
+  :commands (helm-itunes))
+
 ;;;_ , hi-lock
 
 (use-package hi-lock
@@ -4158,9 +4163,9 @@ unless return was pressed outside the comment"
           "Run current PHP script for debugging with geben"
           (interactive)
           (call-interactively 'geben)
-          (shell-command
+          (shell-commandw
            (concat
-            "XDEBUG_CONFIG='idekey=my-php-54'  /usr/local/opt/php54/bin/php "
+            "XDEBUG_CONFIG='idekey=my-php-54'  php "
             (buffer-file-name) " status" " &")))
 
         ;; geben won't connect because its "Already in debugging"  This might help.

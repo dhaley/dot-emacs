@@ -757,3 +757,6 @@
 [submodule "site-lisp/ov"]
 	path = site-lisp/ov
 	url = https://github.com/ShingoFukuyama/ov.el.git
+[submodule "site-lisp/helm-itunes"]
+	path = site-lisp/helm-itunes
+	url = https://github.com/daschwa/helm-itunes.git
