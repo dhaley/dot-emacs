@@ -3502,6 +3502,11 @@ Attribution: URL `http://paste.lisp.org/display/135818Attribution'"
 (use-package github-browse-file
   :bind ("H-o" . github-browse-file))
 
+;;;_ , manage-minor-mode
+
+(use-package manage-minor-mode
+  :commands (manage-minor-mode))
+
 ;;;_ , markdown-mode
 
 (use-package markdown-mode

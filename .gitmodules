@@ -760,3 +760,6 @@
 [submodule "site-lisp/helm-itunes"]
 	path = site-lisp/helm-itunes
 	url = https://github.com/daschwa/helm-itunes.git
+[submodule "site-lisp/manage-minor-mode"]
+	path = site-lisp/manage-minor-mode
+	url = https://github.com/ShingoFukuyama/manage-minor-mode.git

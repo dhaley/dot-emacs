@@ -14,6 +14,7 @@
 (require 'ob-sh)
 (require 'ox-html)
 (require 'async)
+(require 'helm-org)
 
 ;; (require 'orgbox)
 
