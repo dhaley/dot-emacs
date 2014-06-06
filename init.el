@@ -5162,17 +5162,11 @@ Keys are in kbd format."
 ;;; wand:
 
 (use-package wand
-  :bind (("C-c RET" . wand:execute)
-         ("<C-mouse-1>" . wand:execute)
-         ("C-S-RET" . wand:execute-current-line)
-         ("M-S-RET" . toolbox:execute-and-replace)
-         ("<M-mouse-1>" . toolbox:execute-and-replace)
-         ;; ("<M-down-mouse>" . nil)
-         )
+  :bind (("C-. RET" . wand:execute)
+         ("C-. l" . wand:execute-current-line)
+         ("C-. SPC" . toolbox:execute-and-replace))
   :init
   (progn
-    (bind-key "<C-S-return>"      'wand:execute-current-line)
-    (bind-key "<M-S-return>"      'toolbox:execute-and-replace)
     (require 'load-functions)
     (use-package popwin
       :init
@@ -5201,13 +5195,7 @@ Keys are in kbd format."
                                             :capture :after
                                             :action ~change-dir-in-eshell)
                           ))
-        (wand:add-rule rule))
-      (wand:create-rule :match "window:"
-                        :capture :after
-                        :action switch-to-buffer)
-      (wand:create-rule :match "eshell-cd:"
-                        :capture :after
-                        :action $change-dir-in-eshell))
+        (wand:add-rule rule)))
 
     (setq wand:*rules*
           (list (wand:create-rule :match "\\$ "
