@@ -784,3 +784,6 @@
 [submodule "site-lisp/dired-efap"]
 	path = site-lisp/dired-efap
 	url = https://github.com/juan-leon/dired-efap.git
+[submodule "site-lisp/image-diredx"]
+	path = site-lisp/image-diredx
+	url = https://github.com/mhayashi1120/Emacs-image-diredx.git
