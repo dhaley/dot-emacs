@@ -4206,7 +4206,7 @@ unless return was pressed outside the comment"
                  (local-unset-key (kbd "C-c ."))))
 
     (use-package drupal-mode
-      :mode ("[^/]\\.\\(module\\|test\\|install\\|profile\\|tpl\\.php\\|theme\\|inc\\)\\'" . drupal-mode)
+      :mode ("[^/]\\.\\(module\\|test\\|install\\|profile\\|tpl\\.php\\|theme\\|inc\\|install\\)\\'" . drupal-mode)
       :init
       (add-hook 'drupal-mode-hook
                 '(lambda ()
