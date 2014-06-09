@@ -1659,6 +1659,17 @@ Require unix zip commandline tool."
                                         ; highlight executable files, but not directories
         (dired-rainbow-define-chmod executable-unix "Green" "-.*x.*")
 
+        (defconst dired-audio-files-extensions
+          '("mp3" "MP3" "ogg" "OGG" "flac" "FLAC" "wav" "WAV")
+          "Dired Audio files extensions")
+        (dired-rainbow-define audio "#329EE8" dired-audio-files-extensions)
+
+        (defconst dired-video-files-extensions
+          '("vob" "VOB" "mkv" "MKV" "mpe" "mpg" "MPG" "mp4" "MP4" "ts" "TS" "m2ts"
+            "M2TS" "avi" "AVI" "mov" "MOV" "wmv" "asf" "m2v" "m4v" "mpeg" "MPEG" "tp")
+          "Dired Video files extensions")
+        (dired-rainbow-define video "#B3CCFF" dired-video-files-extensions)
+
         (dired-rainbow-define xml "DarkGreen" ("xml" "xsd" "xsl" "xslt" "wsdl"))
 
         (dired-rainbow-define document "#fce94f" ("doc" "docx" "odt" "pdb" "pdf" "ps" "rtf"))
@@ -1694,7 +1705,11 @@ Require unix zip commandline tool."
                  ("C-a" . dired-subtree-beginning)
                  ("C-e" . dired-subtree-end)
                  ("C-o C-f" . dired-subtree-only-this-file)
-                 ("C-o C-d" . dired-subtree-only-this-directory)))))
+                 ("C-o C-d" . dired-subtree-only-this-directory)))
+
+    (use-package image-dired+
+      :init
+    (image-dired-display-image-mode))))
 
 ;;;_ , direx
 (use-package direx
