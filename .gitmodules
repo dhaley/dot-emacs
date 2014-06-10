@@ -787,3 +787,18 @@
 [submodule "site-lisp/image-diredx"]
 	path = site-lisp/image-diredx
 	url = https://github.com/mhayashi1120/Emacs-image-diredx.git
+[submodule "site-lisp/magit-find-file"]
+	path = site-lisp/magit-find-file
+	url = https://github.com/bradleywright/magit-find-file.el.git
+[submodule "site-lisp/smart-shift"]
+	path = site-lisp/smart-shift
+	url = https://github.com/hbin/smart-shift
+[submodule "site-lisp/org-trello"]
+	path = site-lisp/org-trello
+	url = https://github.com/org-trello/org-trello.git
+[submodule "site-lisp/persp-mode"]
+	path = site-lisp/persp-mode
+	url = https://github.com/Bad-ptr/persp-mode.el.git
+[submodule "site-lisp/linked-buffer"]
+	path = site-lisp/linked-buffer
+	url = https://github.com/phillord/linked-buffer.git
