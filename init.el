@@ -798,6 +798,12 @@ Including indent-buffer, which should not be called automatically on save."
       '(("original"    . "http://tromey.com/elpa/")
         ("gnu"         . "http://elpa.gnu.org/packages/")
         ("marmalade"   . "http://marmalade-repo.org/packages/")))
+;; (add-to-list 'package-archives
+;; '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
+
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
 (package-initialize)
 
 (defun rotate-windows ()
