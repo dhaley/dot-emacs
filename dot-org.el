@@ -1449,16 +1449,18 @@ so change the default 'F' binding in the agenda to allow both"
     (bh/narrow-to-org-subtree)))
 
 (defun bh/get-pom-from-agenda-restriction-or-point ()
-  (or (org-get-at-bol 'org-hd-marker)
-      (and (marker-position org-agenda-restrict-begin) org-agenda-restrict-begin)
+  (or (and (marker-position org-agenda-restrict-begin) org-agenda-restrict-begin)
+      (org-get-at-bol 'org-hd-marker)
       (and (equal major-mode 'org-mode) (point))
       org-clock-marker))
 
 (defun bh/narrow-up-one-level ()
   (interactive)
   (if (equal major-mode 'org-agenda-mode)
-      (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
-        (bh/narrow-up-one-org-level))
+      (progn
+        (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
+          (bh/narrow-up-one-org-level))
+        (org-agenda-redo))
     (bh/narrow-up-one-org-level)))
 
 (defun bh/narrow-to-org-project ()
