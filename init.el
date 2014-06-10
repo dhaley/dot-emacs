@@ -3538,6 +3538,11 @@ at the beginning of line, if already there."
     ;; (add-hook 'magit-status-mode-hook 'start-git-monitor)
 ))
 
+;;;_ , magit-annex
+
+(use-package magit-annex
+  :defer t)
+
 (use-package github-browse-file
   :bind ("H-o" . github-browse-file))
 
