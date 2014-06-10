@@ -406,7 +406,14 @@ is:
                (criteria . "")
                (server   . "nnimap:Local")))))
 
-    (define-key global-map [(hyper meta ?f)] 'gnus-query)))
+    (define-key global-map [(hyper meta ?f)] 'gnus-query)
+
+
+    ;; You can now even Japan language folder search of so far plus the
+    ;; following settings.
+
+    (defadvice nnir-run-imap (before decode-group activate)
+      (ad-set-arg 2 (mapcar 'gnus-group-decoded-name (ad-get-arg 2))))))
 
 (use-package gnus-harvest
   :init
