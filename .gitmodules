@@ -802,3 +802,9 @@
 [submodule "site-lisp/linked-buffer"]
 	path = site-lisp/linked-buffer
 	url = https://github.com/phillord/linked-buffer.git
+[submodule "site-lisp/git-link"]
+	path = site-lisp/git-link
+	url = https://github.com/sshaw/git-link.git
+[submodule "site-lisp/move-dup"]
+	path = site-lisp/move-dup
+	url = https://github.com/wyuenho/move-dup.git
