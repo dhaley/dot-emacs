@@ -3203,7 +3203,8 @@ at the beginning of line, if already there."
 
 ;;;_ , linked-buffer
 
-(use-package linked-buffer)
+(use-package linked-buffer
+  :disabled t)
 
 ;;;_ , lisp-mode
 
@@ -4825,25 +4826,17 @@ Keys are in kbd format."
          ("A-p"   . previous-error)))
 
 ;;;_ , smart-mode-line
+
 (use-package smart-mode-line
+  :disabled t
   :config
   (progn
     (add-to-list 'sml/replacer-regexp-list '("^~/data/web/custom" ":Custom:"))
     (add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d" ":Yak:"))
     (add-to-list 'sml/replacer-regexp-list '("^~/data/releases" ":Releases:"))
     (add-to-list 'sml/replacer-regexp-list '("^~/Documents/Tasks/" ":Task:"))
-    ;; (setq sml/theme 'light)
-    (setq sml/theme 'respectful)
-    (sml/setup))
+    (sml/setup)))
 
-  (use-package nyan-mode
-    :disabled t
-    :init
-    (progn
-      (nyan-mode)
-      ;; (setq nyan-wavy-trail t)
-      )
-    :config (nyan-start-animation)))
 
 ;;;_ , smartparens
 
@@ -5578,8 +5571,9 @@ Keys are in kbd format."
     (setq my-themes (append my-themes (list my-cur-theme))))
   (setq my-cur-theme (pop my-themes))
   (load-theme my-cur-theme t)
-  (setq sml/theme 'respectful)
-  (sml/setup))
+  ;; (setq sml/theme 'respectful)
+  ;; (sml/setup)
+  )
 
 ;; Bind this to C-t
 (bind-key "C-H-t" 'cycle-my-theme)
