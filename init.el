@@ -5031,6 +5031,10 @@ Keys are in kbd format."
         ("k" twittering-goto-previous-status-of-user)))
     ))
 
+;;;_ , unbound
+
+(use-package unbound)
+
 ;;;_ , undo-tree
 
 (use-package undo-tree
