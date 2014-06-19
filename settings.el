@@ -438,7 +438,7 @@
  '(holiday ((t (:inherit fringe))))
  '(wg-brace-face ((t (:inherit comint-highlight-prompt))))
  '(wg-command-face ((t (:inherit custom-state))))
- '(wg-current-workgroup-face ((t (:inherit eshell-ls-symlink))))
+ '(wg-current-workgroup-face ((t (:inherit eshell-ls-special))))
  '(wg-filename-face ((t (:inherit eshell-ls-archive))))
  '(wg-frame-face ((t (:inherit eshell-ls-backup))))
  '(wg-message-face ((t (:inherit eshell-ls-clutter))))
