@@ -3879,20 +3879,7 @@ and view local index.html url"
   (progn
 
     (setq
-     org-jira-working-dir "~/Documents/Tasks/.org-jira"
-     jira-users
-     (list
-      (cons "Unassigned" "")
-      (cons "Erin Corsin" "erin")
-      (cons "Matt Tucker" "matt")
-      (cons "Kevin Crafts" "kevin")
-      (cons "Damon Haley" "daha1836")
-      (cons "Alfredo Nevarez" "alfredo")
-      (cons "Catherine Snider" "snider")
-      (cons "Kosta Tovstiadi" "kosta")
-      (cons "Will Kubie" "kubie")
-      (cons "Joanna Bertrand" "joanna")
-      (cons "Wendy Turnbull" "wendy")))))
+     org-jira-working-dir "~/Documents/Tasks/.org-jira")))
 
 ;;;_ , org-link-minor-mode
 
@@ -4770,12 +4757,12 @@ Keys are in kbd format."
     (setq slime-lisp-implementations
           '((sbcl
              ("sbcl" "--core"
-              "/Users/daha1836/Library/Lisp/sbcl.core-with-slime-X86-64")
+              "~/Library/Lisp/sbcl.core-with-slime-X86-64")
              :init
              (lambda (port-file _)
                (format "(swank:start-server %S)\n" port-file)))
-            (ecl ("ecl" "-load" "/Users/daha1836/Library/Lisp/init.lisp"))
-            (clisp ("clisp" "-i" "/Users/daha1836/Library/Lisp/lwinit.lisp"))))
+            (ecl ("ecl" "-load" "~/Library/Lisp/init.lisp"))
+            (clisp ("clisp" "-i" "~/Library/Lisp/lwinit.lisp"))))
 
     (setq slime-default-lisp 'sbcl)
     (setq slime-complete-symbol*-fancy t)
