@@ -808,3 +808,6 @@
 [submodule "site-lisp/move-dup"]
 	path = site-lisp/move-dup
 	url = https://github.com/wyuenho/move-dup.git
+[submodule "snippets/emacs-drupal-snippets"]
+	path = snippets/emacs-drupal-snippets
+	url = git@github.com:dhaley/emacs-drupal-snippets.git
