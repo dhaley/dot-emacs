@@ -4199,7 +4199,7 @@ unless return was pressed outside the comment"
           "Run current PHP script for debugging with geben"
           (interactive)
           (call-interactively 'geben)
-          (shell-commandw
+          (shell-command
            (concat
             "XDEBUG_CONFIG='idekey=my-php-54'  php "
             (buffer-file-name) " status" " &")))
