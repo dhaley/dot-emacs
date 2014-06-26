@@ -1789,7 +1789,6 @@ Require unix zip commandline tool."
 
 (use-package sublimity
   :commands (sublimity-mode)
-  :init (sublimity-mode 1)
   :config
   (progn
     (require 'sublimity-scroll)
@@ -2685,7 +2684,7 @@ at the beginning of line, if already there."
 
 (use-package hl-sexp
   :commands hl-sexp-mode
-  :init
+  :config
   (progn
     (hook-into-modes 'hl-sexp-mode
                      '(prog-mode-hook))))
