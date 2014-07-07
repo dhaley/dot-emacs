@@ -986,7 +986,8 @@ Including indent-buffer, which should not be called automatically on save."
               "site-lisp/ac/ac-source-emmet"
               "site-lisp/ac/ac-yasnippet"
               "site-lisp/ac/fuzzy-el"
-              "site-lisp/ac/popup-el")
+              "site-lisp/ac/popup-el"
+              "site-lisp/ac/ac-source-emmet")
   :diminish auto-complete-mode
   :init
   (progn
@@ -1340,6 +1341,7 @@ The check is necessary to prevent issues with mini-buffer switching."
           cssm-indent-level '2)
     (define-keys css-mode-map
       '(("<return>" newline-and-indent)))
+    (use-package ac-emmet)
     (add-hook 'css-mode-hook
               (lambda ()
                 (rainbow-mode 1)
