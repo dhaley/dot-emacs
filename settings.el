@@ -367,7 +367,6 @@
  '(tramp-persistency-file-name "~/.emacs.d/data/tramp")
  '(trash-directory "~/.Trash")
  '(undo-limit 800000)
- '(undo-outer-limit 12000000)
  '(uniquify-buffer-name-style (quote post-forward-angle-brackets) nil (uniquify))
  '(url-cache-directory "~/.emacs.d/data/url/cache")
  '(url-configuration-directory "~/.emacs.d/data/url/")
