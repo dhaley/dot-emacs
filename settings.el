@@ -284,6 +284,7 @@
  '(php-extras-eldoc-functions-file "~/Messages/php/php-extras-eldoc-functions")
  '(php-manual-path "~/Documents/php/php-chunked-xhtml")
  '(ping-program-options (quote ("-c" "4")))
+ '(popwin:reuse-window nil)
  '(pp^L-^L-string "                                                                              ")
  '(projectile-completion-system 'grizzl)
  '(projectile-drupal-base-url-function (quote dkh-get-base-url))
