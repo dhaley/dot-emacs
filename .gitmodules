@@ -467,8 +467,8 @@
         path = site-lisp/emacs-cl
         url = git://github.com/larsbrinkhoff/emacs-cl.git
 [submodule "site-lisp/scss-mode"]
-	path = site-lisp/scss-mode
-	url = https://github.com/antonj/scss-mode.git
+        path = site-lisp/scss-mode
+        url = git@github.com:dhaley/scss-mode.git
 [submodule "site-lisp/css-scss"]
         path = site-lisp/css-scss
         url = git://github.com/ShingoFukuyama/css-scss-yasnippet.git
@@ -647,167 +647,170 @@
         path = site-lisp/popwin
         url = https://github.com/m2ym/popwin-el.git
 [submodule "lisp/initsplit"]
-	path = lisp/initsplit
-	url = https://github.com/dabrahams/initsplit
+        path = lisp/initsplit
+        url = https://github.com/dabrahams/initsplit
 [submodule "site-lisp/auctex"]
-	path = site-lisp/auctex
-	url = git@github.com:dhaley/auctex.git
+        path = site-lisp/auctex
+        url = git@github.com:dhaley/auctex.git
 [submodule "site-lisp/smart-mode-line"]
-	path = site-lisp/smart-mode-line
-	url = https://github.com/Bruce-Connor/smart-mode-line.git
+        path = site-lisp/smart-mode-line
+        url = https://github.com/Bruce-Connor/smart-mode-line.git
 [submodule "site-lisp/owdriver"]
-	path = site-lisp/owdriver
-	url = https://github.com/aki2o/owdriver.git
+        path = site-lisp/owdriver
+        url = https://github.com/aki2o/owdriver.git
 [submodule "site-lisp/on-screen"]
-	path = site-lisp/on-screen
-	url = https://github.com/michael-heerdegen/on-screen.el.git
+        path = site-lisp/on-screen
+        url = https://github.com/michael-heerdegen/on-screen.el.git
 [submodule "site-lisp/magit-annex"]
-	path = site-lisp/magit-annex
-	url = https://github.com/kyleam/magit-annex.git
+        path = site-lisp/magit-annex
+        url = https://github.com/kyleam/magit-annex.git
 [submodule "site-lisp/ace-window"]
-	path = site-lisp/ace-window
-	url = https://github.com/abo-abo/ace-window.git
+        path = site-lisp/ace-window
+        url = https://github.com/abo-abo/ace-window.git
 [submodule "site-lisp/eyebrowse"]
-	path = site-lisp/eyebrowse
-	url = https://github.com/wasamasa/eyebrowse.git
+        path = site-lisp/eyebrowse
+        url = https://github.com/wasamasa/eyebrowse.git
 [submodule "site-lisp/orgbox"]
-	path = site-lisp/orgbox
-	url = https://github.com/yasuhito/orgbox.git
+        path = site-lisp/orgbox
+        url = https://github.com/yasuhito/orgbox.git
 [submodule "site-lisp/emacs-helm-open-github"]
-	path = site-lisp/emacs-helm-open-github
-	url = https://github.com/syohex/emacs-helm-open-github.git
+        path = site-lisp/emacs-helm-open-github
+        url = https://github.com/syohex/emacs-helm-open-github.git
 [submodule "site-lisp/emacs-zoom-window"]
-	path = site-lisp/emacs-zoom-window
-	url = https://github.com/syohex/emacs-zoom-window.git
+        path = site-lisp/emacs-zoom-window
+        url = https://github.com/syohex/emacs-zoom-window.git
 [submodule "site-lisp/emacs-emamux"]
-	path = site-lisp/emacs-emamux
-	url = https://github.com/syohex/emacs-emamux.git
+        path = site-lisp/emacs-emamux
+        url = https://github.com/syohex/emacs-emamux.git
 [submodule "site-lisp/ztree"]
-	path = site-lisp/ztree
-	url = https://github.com/fourier/ztree.git
+        path = site-lisp/ztree
+        url = https://github.com/fourier/ztree.git
 [submodule "site-lisp/change-inner"]
-	path = site-lisp/change-inner
-	url = https://github.com/magnars/change-inner.el.git
+        path = site-lisp/change-inner
+        url = https://github.com/magnars/change-inner.el.git
 [submodule "site-lisp/ace-link"]
-	path = site-lisp/ace-link
-	url = https://github.com/abo-abo/ace-link.git
+        path = site-lisp/ace-link
+        url = https://github.com/abo-abo/ace-link.git
 [submodule "site-lisp/smartrep"]
-	path = site-lisp/smartrep
-	url = https://github.com/myuhe/smartrep.el.git
+        path = site-lisp/smartrep
+        url = https://github.com/myuhe/smartrep.el.git
 [submodule "site-lisp/log4e"]
-	path = site-lisp/log4e
-	url = https://github.com/aki2o/log4e.git
+        path = site-lisp/log4e
+        url = https://github.com/aki2o/log4e.git
 [submodule "site-lisp/yaxception"]
-	path = site-lisp/yaxception
-	url = https://github.com/aki2o/yaxception.git
+        path = site-lisp/yaxception
+        url = https://github.com/aki2o/yaxception.git
 [submodule "lisp/phpunit"]
-	path = lisp/phpunit
-	url = git@github.com:dhaley/phpunit-el.git
+        path = lisp/phpunit
+        url = git@github.com:dhaley/phpunit-el.git
 [submodule "site-lisp/restclient"]
-	path = site-lisp/restclient
-	url = https://github.com/pashky/restclient.el.git
+        path = site-lisp/restclient
+        url = https://github.com/pashky/restclient.el.git
 [submodule "site-lisp/wand"]
-	path = site-lisp/wand
-	url = https://github.com/cmpitg/wand.git
+        path = site-lisp/wand
+        url = https://github.com/cmpitg/wand.git
 [submodule "site-lisp/syslog-mode"]
-	path = site-lisp/syslog-mode
-	url = https://github.com/vapniks/syslog-mode.git
+        path = site-lisp/syslog-mode
+        url = https://github.com/vapniks/syslog-mode.git
 [submodule "site-lisp/emm-mark-ext"]
-	path = site-lisp/emm-mark-ext
-	url = https://github.com/vapniks/emms-mark-ext.git
+        path = site-lisp/emm-mark-ext
+        url = https://github.com/vapniks/emms-mark-ext.git
 [submodule "site-lisp/one-key"]
-	path = site-lisp/one-key
-	url = https://github.com/vapniks/one-key.git
+        path = site-lisp/one-key
+        url = https://github.com/vapniks/one-key.git
 [submodule "site-lisp/emacs-window-manager"]
-	path = site-lisp/emacs-window-manager
-	url = https://github.com/kiwanami/emacs-window-manager.git
+        path = site-lisp/emacs-window-manager
+        url = https://github.com/kiwanami/emacs-window-manager.git
 [submodule "site-lisp/e2wm-direx"]
-	path = site-lisp/e2wm-direx
-	url = https://github.com/aki2o/e2wm-direx.git
+        path = site-lisp/e2wm-direx
+        url = https://github.com/aki2o/e2wm-direx.git
 [submodule "site-lisp/direx"]
-	path = site-lisp/direx
-	url = https://github.com/m2ym/direx-el.git
+        path = site-lisp/direx
+        url = https://github.com/m2ym/direx-el.git
 [submodule "site-lisp/nyan-mode"]
-	path = site-lisp/nyan-mode
-	url = https://github.com/TeMPOraL/nyan-mode.git
+        path = site-lisp/nyan-mode
+        url = https://github.com/TeMPOraL/nyan-mode.git
 [submodule "site-lisp/guide-key"]
-	path = site-lisp/guide-key
-	url = https://github.com/kbkbkbkb1/guide-key.git
+        path = site-lisp/guide-key
+        url = https://github.com/kbkbkbkb1/guide-key.git
 [submodule "site-lisp/guide-key-tip"]
-	path = site-lisp/guide-key-tip
-	url = https://github.com/aki2o/guide-key-tip.git
+        path = site-lisp/guide-key-tip
+        url = https://github.com/aki2o/guide-key-tip.git
 [submodule "site-lisp/parenface"]
-	path = site-lisp/parenface
-	url = https://github.com/grettke/parenface.git
+        path = site-lisp/parenface
+        url = https://github.com/grettke/parenface.git
 [submodule "site-lisp/dircmp-mode"]
-	path = site-lisp/dircmp-mode
-	url = https://github.com/matthewlmcclure/dircmp-mode.git
+        path = site-lisp/dircmp-mode
+        url = https://github.com/matthewlmcclure/dircmp-mode.git
 [submodule "site-lisp/indent-guide"]
-	path = site-lisp/indent-guide
-	url = https://github.com/zk-phi/indent-guide.git
+        path = site-lisp/indent-guide
+        url = https://github.com/zk-phi/indent-guide.git
 [submodule "site-lisp/emacs-yalinum"]
-	path = site-lisp/emacs-yalinum
-	url = https://github.com/tm8st/emacs-yalinum.git
+        path = site-lisp/emacs-yalinum
+        url = https://github.com/tm8st/emacs-yalinum.git
 [submodule "site-lisp/sudden-death"]
-	path = site-lisp/sudden-death
-	url = https://github.com/yewton/sudden-death.el.git
+        path = site-lisp/sudden-death
+        url = https://github.com/yewton/sudden-death.el.git
 [submodule "site-lisp/pretty-mode"]
-	path = site-lisp/pretty-mode
-	url = https://github.com/akatov/pretty-mode.git
+        path = site-lisp/pretty-mode
+        url = https://github.com/akatov/pretty-mode.git
 [submodule "site-lisp/ov"]
-	path = site-lisp/ov
-	url = https://github.com/ShingoFukuyama/ov.el.git
+        path = site-lisp/ov
+        url = https://github.com/ShingoFukuyama/ov.el.git
 [submodule "site-lisp/helm-itunes"]
-	path = site-lisp/helm-itunes
-	url = https://github.com/daschwa/helm-itunes.git
+        path = site-lisp/helm-itunes
+        url = https://github.com/daschwa/helm-itunes.git
 [submodule "site-lisp/manage-minor-mode"]
-	path = site-lisp/manage-minor-mode
-	url = https://github.com/ShingoFukuyama/manage-minor-mode.git
+        path = site-lisp/manage-minor-mode
+        url = https://github.com/ShingoFukuyama/manage-minor-mode.git
 [submodule "site-lisp/elfeed"]
-	path = site-lisp/elfeed
-	url = https://github.com/skeeto/elfeed.git
+        path = site-lisp/elfeed
+        url = https://github.com/skeeto/elfeed.git
 [submodule "site-lisp/sublimity"]
-	path = site-lisp/sublimity
-	url = https://github.com/zk-phi/sublimity.git
+        path = site-lisp/sublimity
+        url = https://github.com/zk-phi/sublimity.git
 [submodule "site-lisp/minimap"]
-	path = site-lisp/minimap
-	url = https://github.com/dengste/minimap.git
+        path = site-lisp/minimap
+        url = https://github.com/dengste/minimap.git
 [submodule "site-lisp/js2-refactor"]
-	path = site-lisp/js2-refactor
-	url = https://github.com/magnars/js2-refactor.el.git
+        path = site-lisp/js2-refactor
+        url = https://github.com/magnars/js2-refactor.el.git
 [submodule "site-lisp/js2-mode"]
-	path = site-lisp/js2-mode
-	url = https://github.com/mooz/js2-mode.git
+        path = site-lisp/js2-mode
+        url = https://github.com/mooz/js2-mode.git
 [submodule "site-lisp/dired-hacks"]
-	path = site-lisp/dired-hacks
-	url = https://github.com/Fuco1/dired-hacks.git
+        path = site-lisp/dired-hacks
+        url = https://github.com/Fuco1/dired-hacks.git
 [submodule "site-lisp/dired-efap"]
-	path = site-lisp/dired-efap
-	url = https://github.com/juan-leon/dired-efap.git
+        path = site-lisp/dired-efap
+        url = https://github.com/juan-leon/dired-efap.git
 [submodule "site-lisp/image-diredx"]
-	path = site-lisp/image-diredx
-	url = https://github.com/mhayashi1120/Emacs-image-diredx.git
+        path = site-lisp/image-diredx
+        url = https://github.com/mhayashi1120/Emacs-image-diredx.git
 [submodule "site-lisp/magit-find-file"]
-	path = site-lisp/magit-find-file
-	url = https://github.com/bradleywright/magit-find-file.el.git
+        path = site-lisp/magit-find-file
+        url = https://github.com/bradleywright/magit-find-file.el.git
 [submodule "site-lisp/smart-shift"]
-	path = site-lisp/smart-shift
-	url = https://github.com/hbin/smart-shift
+        path = site-lisp/smart-shift
+        url = https://github.com/hbin/smart-shift
 [submodule "site-lisp/org-trello"]
-	path = site-lisp/org-trello
-	url = https://github.com/org-trello/org-trello.git
+        path = site-lisp/org-trello
+        url = https://github.com/org-trello/org-trello.git
 [submodule "site-lisp/persp-mode"]
-	path = site-lisp/persp-mode
-	url = https://github.com/Bad-ptr/persp-mode.el.git
+        path = site-lisp/persp-mode
+        url = https://github.com/Bad-ptr/persp-mode.el.git
 [submodule "site-lisp/linked-buffer"]
-	path = site-lisp/linked-buffer
-	url = https://github.com/phillord/linked-buffer.git
+        path = site-lisp/linked-buffer
+        url = https://github.com/phillord/linked-buffer.git
 [submodule "site-lisp/git-link"]
-	path = site-lisp/git-link
-	url = https://github.com/sshaw/git-link.git
+        path = site-lisp/git-link
+        url = https://github.com/sshaw/git-link.git
 [submodule "site-lisp/move-dup"]
-	path = site-lisp/move-dup
-	url = https://github.com/wyuenho/move-dup.git
+        path = site-lisp/move-dup
+        url = https://github.com/wyuenho/move-dup.git
 [submodule "snippets/emacs-drupal-snippets"]
-	path = snippets/emacs-drupal-snippets
-	url = git@github.com:dhaley/emacs-drupal-snippets.git
+        path = snippets/emacs-drupal-snippets
+        url = git@github.com:dhaley/emacs-drupal-snippets.git
+[submodule "site-lisp/sass-mode"]
+        path = site-lisp/sass-mode
+        url = https://github.com/nex3/sass-mode.git

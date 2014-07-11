@@ -4602,9 +4602,14 @@ Keys are in kbd format."
     ;; Keep places in the load path
     (setq save-place-file "~/Documents/places")))
 
+;;;_ , sass-mode
+
+(use-package sass-mode
+  :mode ("\\.scss\\|\\.sass$" . sass-mode))
+
 ;;;_ , scss-mode
+
 (use-package scss-mode
-  :disabled t
   :mode ("\\.scss\\'" . scss-mode))
 
 ;;;_ , selectkey
