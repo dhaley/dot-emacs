@@ -467,8 +467,8 @@
         path = site-lisp/emacs-cl
         url = git://github.com/larsbrinkhoff/emacs-cl.git
 [submodule "site-lisp/scss-mode"]
-        path = site-lisp/scss-mode
-        url = git://github.com/antonj/scss-mode.git
+	path = site-lisp/scss-mode
+	url = https://github.com/antonj/scss-mode.git
 [submodule "site-lisp/css-scss"]
         path = site-lisp/css-scss
         url = git://github.com/ShingoFukuyama/css-scss-yasnippet.git
