@@ -169,6 +169,8 @@
  '(fci-rule-color "#383838")
  '(fill-column 78)
  '(find-ls-subdir-switches "-alh")
+ '(flycheck-sass-compass t)
+ '(flycheck-scss-compass t)
  '(flyspell-abbrev-p nil)
  '(flyspell-incorrect-hook (quote (flyspell-maybe-correct-transposition)))
  '(flyspell-use-meta-tab nil)

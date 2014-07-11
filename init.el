@@ -4604,6 +4604,7 @@ Keys are in kbd format."
 
 ;;;_ , scss-mode
 (use-package scss-mode
+  :disabled t
   :mode ("\\.scss\\'" . scss-mode))
 
 ;;;_ , selectkey
