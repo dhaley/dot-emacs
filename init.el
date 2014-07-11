@@ -4511,8 +4511,7 @@ Keys are in kbd format."
   (progn
     (hook-into-modes #'rainbow-mode
                      '(css-mode-hook
-                       stylus-mode-hook
-                       sass-mode-hook)))
+                       stylus-mode-hook)))
   :diminish ((rainbow-mode . "rb")))
 
 ;;;_ , recentf
@@ -4594,6 +4593,7 @@ Keys are in kbd format."
     (add-hook 'ruby-mode-hook 'my-ruby-mode-hook)))
 
 ;; Saveplace
+
 ;; - places cursor in the last place you edited file
 (use-package saveplace
   :config
