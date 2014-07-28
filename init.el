@@ -1311,15 +1311,16 @@ Including indent-buffer, which should not be called automatically on save."
       "Call `flash-crosshairs' after `switch-to-buffer'"
       (flash-crosshairs))
 
-    (defadvice select-window (around select-window-flash-crosshairs activate)
-      "Call `flash-crosshairs' after `select-window', if switching to another buffer.
-The check is necessary to prevent issues with mini-buffer switching."
-      (let (cons (cur-buffer-name (buffer-name (current-buffer)))
-                 ad-arg-bindings)
-        ad-do-it
-        (unless (string= (buffer-name (window-buffer window))
-                         cur-buffer-name)
-          (flash-crosshairs))))))
+;;     (defadvice select-window (around select-window-flash-crosshairs activate)
+;;       "Call `flash-crosshairs' after `select-window', if switching to another buffer.
+;; The check is necessary to prevent issues with mini-buffer switching."
+;;       (let (cons (cur-buffer-name (buffer-name (current-buffer)))
+;;                  ad-arg-bindings)
+;;         ad-do-it
+;;         (unless (string= (buffer-name (window-buffer window))
+;;                          cur-buffer-name)
+;;           (flash-crosshairs))))
+    ))
 
 (use-package csv-mode
   :commands csv-mode
@@ -1717,7 +1718,8 @@ Require unix zip commandline tool."
 
     (use-package image-dired+
       :init
-    (image-dired-display-image-mode))))
+    ;; (image-dired-display-image-mode)
+    )))
 
 ;;;_ , direx
 (use-package direx
