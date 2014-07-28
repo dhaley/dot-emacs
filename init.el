@@ -4136,14 +4136,13 @@ unless return was pressed outside the comment"
                  (hs-minor-mode 1)
                  (turn-on-eldoc-mode)
                  (diminish 'hs-minor-mode)
-                 (emmet-mode 1)
                  (setq indicate-empty-lines t)
                  'my-php-mode-hook
                  (local-set-key "\r" 'my-php-return)
                  (local-unset-key (kbd "C-c ."))))
 
     (use-package drupal-mode
-      :mode ("[^/]\\.\\(module\\|test\\|install\\|profile\\|tpl\\.php\\|theme\\|inc\\|install\\)\\'" . drupal-mode)
+      :mode ("[^/]\\.\\(module\\|test\\|install\\|profile\\|theme\\|inc\\|install\\)\\'" . drupal-mode)
       :init
       (add-hook 'drupal-mode-hook
                 '(lambda ()
@@ -4342,7 +4341,15 @@ Keys are in kbd format."
            (file-name-directory (buffer-file-name (current-buffer))))))
 
     (global-set-key (kbd "C-c p w") 'projectile-post-project)
-    (global-set-key (kbd "C-c p +") 'projectile-add-project))
+    (global-set-key (kbd "C-c p +") 'projectile-add-project)
+
+    (use-package perspective
+      :init
+      (progn
+        (persp-mode)
+        (use-package persp-projectile
+          :bind ("C-\\" . projectile-persp-switch-project)
+          ))))
   :config
   (progn
     ;; https://bitbucket.org/Fuco/.emacs.d/commits/6cad2a240aa849eb3ba9436fe2f342e7ad7b7da7
@@ -4379,8 +4386,7 @@ Keys are in kbd format."
     ;;    (mapconcat (lambda (x)
     ;;                 (concat "-path \"*/" x "\"")) projectile-globally-ignored-directories " -not ")
     ;;    " -type f -print0"))
-
-    (use-package wg-projectile)))
+    ))
 
 ;;;_ , popup-ruler
 
@@ -5361,6 +5367,7 @@ Keys are in kbd format."
 ;;;_ , workgroups
 
 (use-package workgroups
+  :disabled t
   :diminish workgroups-mode
   :if (not noninteractive)
   :init
@@ -5558,7 +5565,7 @@ Keys are in kbd format."
 
 ;;;;; Theme ;;;;;
 ;; Cycle through this set of themes
-(setq my-themes '(solarized-dark solarized-light zenburn wombat tango))
+(setq my-themes '(solarized-light solarized-dark zenburn wombat tango))
 
 (setq my-cur-theme nil)
 (defun cycle-my-theme ()

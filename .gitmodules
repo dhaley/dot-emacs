@@ -814,3 +814,6 @@
 [submodule "site-lisp/sass-mode"]
         path = site-lisp/sass-mode
         url = https://github.com/nex3/sass-mode.git
+[submodule "site-lisp/perspective"]
+	path = site-lisp/perspective
+	url = https://github.com/nex3/perspective-el.git
