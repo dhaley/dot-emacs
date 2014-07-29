@@ -3669,7 +3669,11 @@ at the beginning of line, if already there."
     (prefer-coding-system 'utf-8)
     (set-terminal-coding-system 'utf-8)
     (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-    (set-fontset-font t 'unicode "Symbola" nil 'prepend)))
+    ;; set proper language (fixes cyrillic letters in ansi-term)
+    (setenv "LANG" "ru_RU.UTF-8")
+    (set-fontset-font t 'unicode "Symbola" nil 'prepend)
+    ;; override font for cyrillic characters
+    (set-fontset-font t 'cyrillic "Droid Sans Mono")))
 
 ;;;_ , multi-term
 
