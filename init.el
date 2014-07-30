@@ -290,8 +290,6 @@
 
 (bind-key "M-s n" 'find-name-dired)
                                         ;(bind-key "M-s o" 'occur)
-(bind-key "M-s o" 'helm-swoop)
-
 ;;;_  . M-C-?
 
 (bind-key "<C-M-backspace>" 'backward-kill-sexp)
@@ -478,31 +476,37 @@
 (bind-key "C-c k" 'keep-lines)
 
 (eval-when-compile
-  (defvar emacs-min-top)
-  (defvar emacs-min-left)
   (defvar emacs-min-height)
   (defvar emacs-min-width))
 
 (unless noninteractive
   (if running-alternate-emacs
       (progn
-        (defvar emacs-min-top (if (= 1050 (x-display-pixel-height)) 574 722))
-        (defvar emacs-min-left 5)
-        (defvar emacs-min-height 38)
-        (defvar emacs-min-width 158)
-        )
-    (defvar emacs-min-top 22)
-    (defvar emacs-min-left (- (x-display-pixel-width) 918))
-    (defvar emacs-min-height (if (= 1050 (x-display-pixel-height)) 55 64))
-    (defvar emacs-min-width 158)))
+        (defun emacs-min-top ()
+          (let ((height (display-pixel-height)))
+            (cond ((= 1050 height) 574)
+                  ((= 900 height) 425)
+                  (t 722))))
+        (defun emacs-min-left () 5)
+        (defvar emacs-min-height 25)
+        (defvar emacs-min-width 80))
+
+    (defun emacs-min-top () 22)
+    (defun emacs-min-left ()
+      (let ((width (display-pixel-width)))
+        (cond
+         ((= width 3360) 1000)
+         (t (- width 918)))))
+    (defvar emacs-min-height (if (= 1050 (display-pixel-height)) 55 65))
+    (defvar emacs-min-width 100)))
 
 (defun emacs-min ()
   (interactive)
   (set-frame-parameter (selected-frame) 'fullscreen nil)
   (set-frame-parameter (selected-frame) 'vertical-scroll-bars nil)
   (set-frame-parameter (selected-frame) 'horizontal-scroll-bars nil)
-  (set-frame-parameter (selected-frame) 'top emacs-min-top)
-  (set-frame-parameter (selected-frame) 'left emacs-min-left)
+  (set-frame-parameter (selected-frame) 'top (emacs-min-top))
+  (set-frame-parameter (selected-frame) 'left (emacs-min-left))
   (set-frame-parameter (selected-frame) 'height emacs-min-height)
   (set-frame-parameter (selected-frame) 'width emacs-min-width))
 
@@ -870,9 +874,38 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , agda
 
 (use-package agda2-mode
+  :load-path "~/.nix-profile/share/x86_64-osx-ghc-7.8.3/Agda-2.4.0.1/emacs-mode/"
   :mode ("\\.agda\\'" . agda2-mode)
   :init
-  (use-package agda-input))
+  (use-package agda-input)
+  :config
+  (progn
+    ;; (defadvice agda2-status-action (after agda-color-after-status-change activate)
+    ;;   "Color the buffer green or red depending on type checking status."
+    ;;   (set-background-color
+    ;;    (if (string= agda2-buffer-external-status "Checked")
+    ;;        "honeydew"
+    ;;      "seashell")))
+
+    (defun agda2-insert-helper-function (&optional prefix)
+      (interactive "P")
+      (let ((func-def (with-current-buffer "*Agda information*"
+                        (buffer-string))))
+        (save-excursion
+          (forward-paragraph)
+          (let ((name (car (split-string func-def " "))))
+            (insert "  where\n    " func-def "    " name " x = ?\n")))))
+
+    (bind-key "C-c C-i" 'agda2-insert-helper-function agda2-mode-map)
+
+    (defun char-mapping (key char)
+      (bind-key key `(lambda () (interactive) (insert ,char)) agda2-mode-map))
+
+    (char-mapping "A-L" "Γ")
+    (char-mapping "A-l" "λ x → ")
+    (char-mapping "A-r" " → ")
+    (char-mapping "A-=" " ≡ ")
+    ))
 
 ;;;_ , allout
 
@@ -980,14 +1013,6 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , auto-complete
 
 (use-package auto-complete-config
-  :load-path ("site-lisp/ac/auto-complete"
-              "site-lisp/ac/ac-source-elisp"
-              "site-lisp/ac/ac-source-semantic"
-              "site-lisp/ac/ac-source-emmet"
-              "site-lisp/ac/ac-yasnippet"
-              "site-lisp/ac/fuzzy-el"
-              "site-lisp/ac/popup-el"
-              "site-lisp/ac/ac-source-emmet")
   :diminish auto-complete-mode
   :init
   (progn
@@ -996,7 +1021,8 @@ Including indent-buffer, which should not be called automatically on save."
 
   :config
   (progn
-    (ac-set-trigger-key "BACKTAB")
+    ;;(ac-set-trigger-key "TAB")
+    (ac-set-trigger-key "<backtab>")
     (setq ac-use-menu-map t)
 
     (bind-key "H-M-?" 'ac-last-help)
@@ -1347,18 +1373,6 @@ Including indent-buffer, which should not be called automatically on save."
               (lambda ()
                 (rainbow-mode 1)
                 (ac-emmet-css-setup)))))
-
-;;;_ , ibuffer
-
-(use-package ibuffer
-  :defer t
-  :init
-  (add-hook 'ibuffer-mode-hook
-            #'(lambda ()
-                (ibuffer-switch-to-saved-filter-groups "default")))
-  :config
-  (progn
-    (use-package ibuffer-git)))
 
 ;;;_ , iflipb
 
@@ -2798,7 +2812,7 @@ at the beginning of line, if already there."
         (progn
           (setq-default grep-first-column 1)
           (grep-apply-setting 'grep-find-command
-                              '("ag --noheading --column " . 25)))
+                              '("ag --noheading --nocolor --smart-case --nogroup --column -- " . 61)))
       (grep-apply-setting
        'grep-find-command
        '("find . -type f -print0 | xargs -P4 -0 egrep -nH -e " . 52)))))
@@ -2832,7 +2846,6 @@ at the beginning of line, if already there."
 ;;;_ , helm
 
 (use-package helm-config
-  :if (not running-alternate-emacs)
   :init
   (progn
     (bind-key "C-c M-x" 'helm-M-x)
@@ -2851,6 +2864,7 @@ at the beginning of line, if already there."
 
     (bind-key "C-h e a" 'my-helm-apropos)
     (bind-key "C-x M-!" 'helm-command-from-zsh)
+    (bind-key "C-x C-b" 'helm-buffers-list)
     (bind-key "C-x f" 'helm-find-git-file)
 
     (use-package helm-descbinds
@@ -2858,7 +2872,18 @@ at the beginning of line, if already there."
       :init
       (fset 'describe-bindings 'helm-descbinds))
 
-    (use-package helm-swoop)
+    (bind-key "C-h b" 'helm-descbinds)
+
+    (defadvice helm-buffers-list
+      (around expand-window-helm-buffers-list activate)
+      (let ((c (current-window-configuration)))
+        (condition-case err
+            (progn
+              (delete-other-windows)
+              ad-do-it)
+          (t
+           (set-window-configuration c)))))
+
     (use-package helm-css-scss)
     (use-package helm-ag
       :commands (helm-ag projectile-helm-ag)
@@ -2932,6 +2957,14 @@ at the beginning of line, if already there."
   :config
   (progn
   (use-package hl-line+)))
+
+(use-package ibuffer
+  :disabled t
+  :bind ("C-x C-b" . ibuffer)
+  :init
+  (add-hook 'ibuffer-mode-hook
+            #'(lambda ()
+                (ibuffer-switch-to-saved-filter-groups "default"))))
 
 ;;;_ , identica
 
@@ -3670,7 +3703,7 @@ at the beginning of line, if already there."
     (set-terminal-coding-system 'utf-8)
     (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
     ;; set proper language (fixes cyrillic letters in ansi-term)
-    (setenv "LANG" "ru_RU.UTF-8")
+    ;; (setenv "LANG" "ru_RU.UTF-8")
     (set-fontset-font t 'unicode "Symbola" nil 'prepend)
     ;; override font for cyrillic characters
     (set-fontset-font t 'cyrillic "Droid Sans Mono")))
@@ -3783,9 +3816,9 @@ at the beginning of line, if already there."
       (interactive)
       (save-excursion
         (call-process-region (point-min) (point-max) "tidy" t t nil
-                             "-xml" "-i" "-wrap" "0" "-omit" "-q")))
+                             "-xml" "-i" "-wrap" "0" "-omit" "-q" "-utf8")))
 
-    (bind-key "C-H" 'tidy-xml-buffer nxml-mode-map)))
+    (bind-key "C-c M-h" 'tidy-xml-buffer nxml-mode-map)))
 
 
 ;; ;;;_ , o-blog
@@ -3837,6 +3870,7 @@ and view local index.html url"
       (run-with-idle-timer 600 t 'jump-to-org-agenda))
 
     (unless running-alternate-emacs
+      (run-with-idle-timer 300 t 'jump-to-org-agenda)
       (add-hook 'after-init-hook
                 #'(lambda ()
                     (org-agenda-list)
@@ -4880,7 +4914,6 @@ Keys are in kbd format."
 ;;;_ , sunrise-commander
 
 (use-package sunrise-commander
-  :disabled t
   :commands (sunrise sunrise-cd)
   :init
   (progn
@@ -5492,7 +5525,7 @@ Keys are in kbd format."
   (progn
     (yas-load-directory (expand-file-name "snippets/" user-emacs-directory))
 
-    (bind-key "<tab>" 'yas-next-field-or-maybe-expand yas-keymap)
+    (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap)
 
     (defun yas-new-snippet (&optional choose-instead-of-guess)
       (interactive "P")
