@@ -32,18 +32,13 @@
         user-emacs-directory
 
         "override/bbdb/lisp/"
+        "override/"
         "override/gnus/contrib/"
         "override/gnus/lisp/"
         "override/org-mode/contrib/lisp/"
         "override/org-mode/lisp/"
         "override/tramp/lisp/"
 
-        ;; Packages located elsewhere on the system...
-        "~/src/ledger/lisp/"
-        "/usr/local/share/emacs/site-lisp/"
-        "/usr/local/opt/git/share/git-core/contrib/emacs/"
-        "~/.emacs.d/site-lisp/ac/auto-complete"
-        "~/.emacs.d/site-lisp/ac/popup-el"
         )))
 
 (let ((cl-p load-path))
