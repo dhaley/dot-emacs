@@ -3867,7 +3867,7 @@ and view local index.html url"
   :init
   (progn
     (unless running-alternate-emacs
-      (run-with-idle-timer 600 t 'jump-to-org-agenda))
+      (run-with-idle-timer 3600 t 'jump-to-org-agenda))
 
     (unless running-alternate-emacs
       (run-with-idle-timer 300 t 'jump-to-org-agenda)
