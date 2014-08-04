@@ -228,7 +228,7 @@
  '(image-dired-dir "~/.emacs.d/data/image-dired/")
  '(indent-tabs-mode nil)
  '(inhibit-startup-screen t)
- '(initial-major-mode (quote fundamental-mode))
+ '(initial-major-mode (quote org-mode))
  '(initsplit-customizations-alist (quote (("\\`\\(gnus\\|nn\\|message\\|mail\\|mm-\\|smtp\\|send-mail\\|check-mail\\|spam\\|sc-\\)" "~/.emacs.d/gnus-settings.el" nil nil) ("\\`\\(org-\\)" "~/.emacs.d/org-settings.el" nil nil))))
  '(ipa-file "~/Documents/ipa")
  '(ipa-overlay-position "above")

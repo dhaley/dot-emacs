@@ -1013,6 +1013,14 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , auto-complete
 
 (use-package auto-complete-config
+  :load-path ("site-lisp/ac/auto-complete"
+              "site-lisp/ac/ac-source-elisp"
+              "site-lisp/ac/ac-source-semantic"
+              "site-lisp/ac/ac-source-emmet"
+              "site-lisp/ac/ac-yasnippet"
+              "site-lisp/ac/fuzzy-el"
+              "site-lisp/ac/popup-el"
+              "site-lisp/ac/ac-source-emmet")
   :diminish auto-complete-mode
   :init
   (progn
