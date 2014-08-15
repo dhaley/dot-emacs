@@ -556,9 +556,6 @@
 [submodule "site-lisp/github-browse-file"]
         path = site-lisp/github-browse-file
         url = git://github.com/osener/github-browse-file.git
-[submodule "site-lisp/helm-swoop"]
-        path = site-lisp/helm-swoop
-        url = git://github.com/ShingoFukuyama/helm-swoop.git
 [submodule "override/gnus"]
         path = override/gnus
         url = git@github.com:dhaley/gnus.git
