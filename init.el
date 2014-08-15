@@ -2867,7 +2867,6 @@ at the beginning of line, if already there."
     (bind-key "M-s r" 'helm-resume)
     (bind-key "M-s B" 'helm-bookmarks)
     (bind-key "M-s l" 'helm-buffers-list)
-    (bind-key "M-s P" 'helm-projectile)
 
     (require 'grizzl)
     (use-package helm-commands)
@@ -2898,6 +2897,7 @@ at the beginning of line, if already there."
 
     (use-package helm-ag
       :commands (helm-ag projectile-helm-ag)
+      :bind ("M-s <escape>"  . projectile-helm-ag)
       :config
       (progn
         (defun projectile-helm-ag ()
@@ -2906,27 +2906,6 @@ at the beginning of line, if already there."
         (bind-key "M-s <escape>" 'projectile-helm-ag)))
 
     (bind-key "C-h b" 'helm-descbinds)
-
-    (use-package helm-projectile
-      :bind ("C-c p h" . helm-projectile)
-      :config
-      (progn
-        ;; Add add-to-projectile action after helm-find-files.
-        (let ((find-files-action (assoc 'action helm-source-find-files)))
-          (setcdr find-files-action
-                  (cons
-                   (cadr find-files-action)
-                   (cons '("Add to projectile" . helm-add-to-projectile)
-                         (cddr find-files-action)))))
-
-        ;; Use helm-find-files actions in helm-projectile
-        (let ((projectile-files-action (assoc 'action helm-source-projectile-files-list)))
-          (setcdr projectile-files-action (cdr (assoc 'action helm-source-find-files))))
-
-        (defun helm-add-to-projectile (path)
-          "Add directory of file to projectile projects.
-  Used as helm action in helm-source-find-files"
-          (projectile-add-known-project (file-name-directory path)))))
 
     (use-package helm-open-github
   :bind (("C-. o f" . helm-open-github-from-file)
@@ -2939,11 +2918,7 @@ at the beginning of line, if already there."
       :init
       (helm-dash-activate-docset "Drupal"))
 
-    (use-package helm-eshell)
-
-
-
-)
+    (use-package helm-eshell))
   :config
   (helm-match-plugin-mode t))
 
@@ -4287,7 +4262,6 @@ unless return was pressed outside the comment"
     (projectile-global-mode)
 
     ;; (bind-key "C-c j" `projectile-switch-project)
-    (bind-key "C-c j" `helm-projectile-switch-project)
 
     (defun define-keys (mode-map keybindings)
       "Takes a mode map, and a list of (key function-designator)
@@ -4409,7 +4383,30 @@ Keys are in kbd format."
         (persp-mode)
         (use-package persp-projectile
           :bind ("C-\\" . projectile-persp-switch-project)
-          ))))
+          )))
+
+    (use-package helm-projectile
+      :bind (("C-c p h" . helm-projectile)
+             ("M-s P" . helm-projectile)
+             ("C-c j" . helm-projectile-switch-project))
+      :config
+      (progn
+        ;; Add add-to-projectile action after helm-find-files.
+        (let ((find-files-action (assoc 'action helm-source-find-files)))
+          (setcdr find-files-action
+                  (cons
+                   (cadr find-files-action)
+                   (cons '("Add to projectile" . helm-add-to-projectile)
+                         (cddr find-files-action)))))
+
+        ;; Use helm-find-files actions in helm-projectile
+        (let ((projectile-files-action (assoc 'action helm-source-projectile-files-list)))
+          (setcdr projectile-files-action (cdr (assoc 'action helm-source-find-files))))
+
+        (defun helm-add-to-projectile (path)
+          "Add directory of file to projectile projects.
+  Used as helm action in helm-source-find-files"
+          (projectile-add-known-project (file-name-directory path))))))
   :config
   (progn
     ;; https://bitbucket.org/Fuco/.emacs.d/commits/6cad2a240aa849eb3ba9436fe2f342e7ad7b7da7
