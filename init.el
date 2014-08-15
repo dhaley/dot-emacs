@@ -2897,7 +2897,8 @@ at the beginning of line, if already there."
 
     (use-package helm-ag
       :commands (helm-ag projectile-helm-ag)
-      :bind ("M-s <escape>"  . projectile-helm-ag)
+      :bind (("M-s <escape>"  . projectile-helm-ag)
+             ("M-s A"  . helm-ag))
       :config
       (progn
         (defun projectile-helm-ag ()
@@ -4275,7 +4276,7 @@ Keys are in kbd format."
     (use-package ag
       :init
       (progn
-
+        (bind-key "C-. a" 'ag)
         (use-package wgrep)
         (use-package wgrep-ag)))
 
