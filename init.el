@@ -2861,7 +2861,9 @@ at the beginning of line, if already there."
     (bind-key "M-s a" 'helm-do-grep)
     (bind-key "M-s b" 'helm-occur)
     (bind-key "M-s F" 'helm-for-files)
+
     ;; (bind-key "M-s f" 'helm-find-files)
+
     (bind-key "M-s r" 'helm-resume)
     (bind-key "M-s B" 'helm-bookmarks)
     (bind-key "M-s l" 'helm-buffers-list)
@@ -2893,6 +2895,7 @@ at the beginning of line, if already there."
            (set-window-configuration c)))))
 
     (use-package helm-css-scss)
+
     (use-package helm-ag
       :commands (helm-ag projectile-helm-ag)
       :config
@@ -2929,16 +2932,24 @@ at the beginning of line, if already there."
   :bind (("C-. o f" . helm-open-github-from-file)
          ("C-. o c" . helm-open-github-from-commit)
          ("C-. o i" . helm-open-github-from-issues)
-         ("C-. o p" . helm-open-github-from-pull-requests))))
+         ("C-. o p" . helm-open-github-from-pull-requests)))
+
+    (use-package helm-dash
+      :load-path "site-lisp/esqlite/Emacs-pcsv"
+      :init
+      (helm-dash-activate-docset "Drupal"))
+
+    (use-package helm-eshell)
+
+
+
+)
   :config
   (helm-match-plugin-mode t))
 
 ;;;_ , helm-dash
 
-(use-package helm-dash
-  :load-path "site-lisp/esqlite/Emacs-pcsv"
-  :init
-  (helm-dash-activate-docset "Drupal"))
+
 
 ;;;_ , helm-itunes
 
@@ -4275,7 +4286,8 @@ unless return was pressed outside the comment"
   (progn
     (projectile-global-mode)
 
-    (bind-key "C-c j" `projectile-switch-project)
+    ;; (bind-key "C-c j" `projectile-switch-project)
+    (bind-key "C-c j" `helm-projectile-switch-project)
 
     (defun define-keys (mode-map keybindings)
       "Takes a mode map, and a list of (key function-designator)
@@ -4922,6 +4934,7 @@ Keys are in kbd format."
 ;;;_ , sunrise-commander
 
 (use-package sunrise-commander
+  :disabled t
   :commands (sunrise sunrise-cd)
   :init
   (progn
