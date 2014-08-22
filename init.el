@@ -4289,8 +4289,6 @@ unless return was pressed outside the comment"
   (progn
     (projectile-global-mode)
 
-    ;; (bind-key "C-c j" `projectile-switch-project)
-
     (defun define-keys (mode-map keybindings)
       "Takes a mode map, and a list of (key function-designator)
 lists.  The functions are bound to the keys in the given mode-map.
@@ -4416,7 +4414,7 @@ Keys are in kbd format."
     (use-package helm-projectile
       :bind (("C-c p h" . helm-projectile)
              ("M-s P" . helm-projectile)
-             ("C-c j" . helm-projectile-switch-project))
+             ("C-x u" . helm-projectile-switch-project))
       :config
       (progn
         ;; Add add-to-projectile action after helm-find-files.
@@ -4959,7 +4957,6 @@ Keys are in kbd format."
 ;;;_ , sunrise-commander
 
 (use-package sunrise-commander
-  :disabled t
   :commands (sunrise sunrise-cd)
   :init
   (progn
