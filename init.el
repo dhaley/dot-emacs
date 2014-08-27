@@ -1368,9 +1368,9 @@ Including indent-buffer, which should not be called automatically on save."
     (col-highlight-set-interval 120)
     (setq col-highlight-face hl-line-face)
 
-    (defadvice switch-to-buffer (after switch-to-buffer-flash-crosshairs activate)
-      "Call `flash-crosshairs' after `switch-to-buffer'"
-      (flash-crosshairs))
+    ;; (defadvice switch-to-buffer (after switch-to-buffer-flash-crosshairs activate)
+    ;;   "Call `flash-crosshairs' after `switch-to-buffer'"
+    ;;   (flash-crosshairs))
 
 ;;     (defadvice select-window (around select-window-flash-crosshairs activate)
 ;;       "Call `flash-crosshairs' after `select-window', if switching to another buffer.
@@ -1414,8 +1414,8 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package iflipb
   :disabled t
   :commands (iflipb-next-buffer iflipb-previous-buffer)
-  :bind (("S-<tab>" . my-iflipb-next-buffer)
-         ("H-S-<tab>" . my-iflipb-previous-buffer))
+  :bind (("C-H-M-S-<tab>" . my-iflipb-next-buffer)
+         ("H-<backspace>" . my-iflipb-previous-buffer))
   :init
   (progn
     (defvar my-iflipb-auto-off-timeout-sec 2)
@@ -4146,7 +4146,17 @@ and view local index.html url"
       :config
       (progn
         (defvar emmet-mode-keymap (make-sparse-keymap))
-        (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap))))
+        (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap)))
+
+    (use-package drupal-mode
+      ;; :mode ("[^/]\\.\\(module\\|test\\|install\\|profile\\|theme\\|inc\\|install\\)\\'" . drupal-mode)
+      :commands drupal-mode-bootstrap
+      :init
+      (add-hook 'drupal-mode-hook
+                '(lambda ()
+                   (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+                   (add-to-list 'yas-extra-modes 'drupal-mode)
+                   (eyebrowse-mode t)))))
   :config
   (progn
     (defun my-php-return ()
@@ -4189,6 +4199,7 @@ unless return was pressed outside the comment"
 
     (add-hook 'php-mode-hook
               '(lambda ()
+                 (drupal-mode-bootstrap)
                  (ggtags-mode 1)
                  (diminish 'ggtags-mode)
                  (auto-complete-mode 1)
@@ -4203,14 +4214,8 @@ unless return was pressed outside the comment"
                  (local-set-key "\r" 'my-php-return)
                  (local-unset-key (kbd "C-c ."))))
 
-    (use-package drupal-mode
-      :mode ("[^/]\\.\\(module\\|test\\|install\\|profile\\|theme\\|inc\\|install\\)\\'" . drupal-mode)
-      :init
-      (add-hook 'drupal-mode-hook
-                '(lambda ()
-                   (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                   (add-to-list 'yas-extra-modes 'drupal-mode)
-                   (eyebrowse-mode t))))
+    (with-eval-after-load "drupal-mode-autoloads"
+      (add-hook 'after-init-hook #'(lambda () (drupal-mode 1))))
 
     (bind-key "C-c C-F" 'php-search-local-documentation)
     (use-package php-extras
