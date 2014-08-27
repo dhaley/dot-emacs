@@ -484,11 +484,11 @@
       (progn
         (defun emacs-min-top ()
           (let ((height (display-pixel-height)))
-            (cond ((= 1050 height) 574)
-                  ((= 900 height) 425)
-                  (t 722))))
+            (cond ((= 1050 height) 22)
+                  ((= 900 height) 22)
+                  (t 22))))
         (defun emacs-min-left () 5)
-        (defvar emacs-min-height 25)
+        (defvar emacs-min-height (if (= 1050 (display-pixel-height)) 47 64))
         (defvar emacs-min-width 80))
 
     (defun emacs-min-top () 22)
