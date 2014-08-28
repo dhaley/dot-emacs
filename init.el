@@ -1385,11 +1385,12 @@ Including indent-buffer, which should not be called automatically on save."
   :mode ("\\.[Cc][Ss][Vv]\\'" . csv-mode)
   :init
   (progn
-    (add-hook 'csv-mode-hook
-              '(lambda ()
-                 (whitespace-mode 1)
-                 (orgtbl-mode 1)
-                 (stripe-buffer-mode 1)))))
+    ;; (add-hook 'csv-mode-hook
+    ;;           '(lambda ()
+    ;;              (whitespace-mode 1)
+    ;;              (orgtbl-mode 1)
+    ;;              (stripe-buffer-mode 1)))
+    ))
 
 ;;;_ , css-mode
 (use-package css-mode
@@ -1409,7 +1410,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , iflipb
 
 (use-package iflipb
-  :disabled t
+  ;; :disabled t
   :commands (iflipb-next-buffer iflipb-previous-buffer)
   :bind (("C-H-M-S-<tab>" . my-iflipb-next-buffer)
          ("H-<backspace>" . my-iflipb-previous-buffer))
@@ -4388,6 +4389,11 @@ Keys are in kbd format."
     (global-set-key (kbd "C-c p <left>") 'projectile-switch-to-prev-buffer)
     (global-set-key (kbd "C-c p <right>") 'projectile-switch-to-next-buffer)
 
+    (defadvice magit-mode-quit-window (around magit-restore-screen activate)
+    ;; We want to jump to the previous projectile buffer if
+    ;; magit buffer is projectile controlled
+    (projectile-switch-to-prev-buffer))
+
     (defun projectile-post-project ()
       "Which project am I actually in?"
       (interactive)
@@ -5435,7 +5441,7 @@ Keys are in kbd format."
                      (yas-deactivate-extra-mode 'php-mode))
                    (if (string= web-mode-cur-language "css")
                        (setq emmet-use-css-transform t)
-                     (setq emmet-use-css-transform nil))))))
+                     (setq emmet-use-css-transform nil)))))))
 
 
 ;;;_ , winner
