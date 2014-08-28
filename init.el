@@ -1810,6 +1810,17 @@ Require unix zip commandline tool."
   :diminish doxymacs-mode
   :load-path "~/.emacs.d/site-lisp/doxymacs-1.8.0/lisp")
 
+;;;_ , drupal-mode
+
+(use-package drupal-mode
+  :commands drupal-mode-bootstrap
+  :config
+  (add-hook 'drupal-mode-hook
+            '(lambda ()
+               (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+               (yas-activate-extra-mode 'drupal-mode)
+               (eyebrowse-mode t))))
+
 ;;;_ , e2wm
 
 (use-package e2wm
@@ -4121,7 +4132,7 @@ and view local index.html url"
 
 (use-package php-mode
   :commands php-mode
-  :mode "\\.\\(php\\|module\\|test\\|install\\|theme\\|inc\\|profile\\)$"
+  :mode "\\.\\(module\\|test\\|install\\|theme\\|inc\\|profile\\)$"
   :interpreter "php"
   :init
   (progn
@@ -4143,16 +4154,7 @@ and view local index.html url"
       :config
       (progn
         (defvar emmet-mode-keymap (make-sparse-keymap))
-        (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap)))
-
-    (use-package drupal-mode
-      :commands drupal-mode-bootstrap
-      :config
-      (add-hook 'drupal-mode-hook
-                '(lambda ()
-                   (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                   (yas-activate-extra-mode 'drupal-mode)
-                   (eyebrowse-mode t)))))
+        (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap))))
   :config
   (progn
     (defun my-php-return ()
@@ -4209,9 +4211,6 @@ unless return was pressed outside the comment"
                  'my-php-mode-hook
                  (local-set-key "\r" 'my-php-return)
                  (local-unset-key (kbd "C-c ."))))
-
-    (with-eval-after-load "drupal-mode-autoloads"
-      (add-hook 'after-init-hook #'(lambda () (drupal-mode 1))))
 
     (bind-key "C-c C-F" 'php-search-local-documentation)
     (use-package php-extras
@@ -5419,7 +5418,25 @@ Keys are in kbd format."
   :mode (("\\.html$" . web-mode)("\\.tpl\\.php$" . web-mode)("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode)("\\.blade\\.php\\'" . web-mode))
   :init
   (progn
-    (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))))
+    (require 'ac-emmet)
+    (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))
+
+    (setq web-mode-ac-sources-alist
+          '(("php" . (ac-source-yasnippet ac-source-php-auto-yasnippets))
+            ("html" . (ac-source-emmet-html-aliases ac-source-emmet-html-snippets))
+            ("css" . (ac-source-css-property ac-source-emmet-css-snippets))))
+
+    (add-hook 'web-mode-before-auto-complete-hooks
+              '(lambda ()
+                 (let ((web-mode-cur-language
+                        (web-mode-language-at-pos)))
+                   (if (string= web-mode-cur-language "php")
+                       (yas-activate-extra-mode 'php-mode)
+                     (yas-deactivate-extra-mode 'php-mode))
+                   (if (string= web-mode-cur-language "css")
+                       (setq emmet-use-css-transform t)
+                     (setq emmet-use-css-transform nil))))))
+
 
 ;;;_ , winner
 
