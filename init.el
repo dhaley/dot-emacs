@@ -1043,11 +1043,6 @@ Including indent-buffer, which should not be called automatically on save."
 
 (use-package auto-complete-config
   :load-path ("site-lisp/ac/auto-complete"
-              "site-lisp/ac/ac-source-elisp"
-              "site-lisp/ac/ac-source-semantic"
-              "site-lisp/ac/ac-source-emmet"
-              "site-lisp/ac/ac-yasnippet"
-              "site-lisp/ac/fuzzy-el"
               "site-lisp/ac/popup-el"
               "site-lisp/ac/ac-source-emmet")
   :diminish auto-complete-mode
@@ -4151,13 +4146,12 @@ and view local index.html url"
         (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap)))
 
     (use-package drupal-mode
-      ;; :mode ("[^/]\\.\\(module\\|test\\|install\\|profile\\|theme\\|inc\\|install\\)\\'" . drupal-mode)
       :commands drupal-mode-bootstrap
-      :init
+      :config
       (add-hook 'drupal-mode-hook
                 '(lambda ()
                    (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                   (add-to-list 'yas-extra-modes 'drupal-mode)
+                   (yas-activate-extra-mode 'drupal-mode)
                    (eyebrowse-mode t)))))
   :config
   (progn
