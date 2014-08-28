@@ -98,7 +98,7 @@
  '(display-time-mail-function (quote (lambda nil (file-exists-p "/tmp/unread"))))
  '(display-time-use-mail-icon t)
  '(doc-view-resolution 300)
- '(drupal-convert-line-ending nil)
+ '(drupal-convert-line-ending t)
  '(drupal-drush-program "~/src/drush/drush")
  '(drupal-php-modes (quote (php-mode web-mode)))
  '(ediff-combination-pattern (quote ("<<<<<<< A: HEAD" A "||||||| Ancestor" Ancestor "=======" B ">>>>>>> B: Incoming")))
@@ -399,6 +399,7 @@
  '(w3m-session-file "~/Documents/w3m-session")
  '(w3m-use-cookies t)
  '(wdired-use-dired-vertical-movement (quote sometimes))
+ '(web-mode-enable-comment-keywords t)
  '(wg-mode-line-on t)
  '(wg-morph-on nil)
  '(wg-prefix-key "")
