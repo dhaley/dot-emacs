@@ -4132,7 +4132,7 @@ and view local index.html url"
 
 (use-package php-mode
   :commands php-mode
-  :mode "\\.\\(module\\|test\\|install\\|theme\\|inc\\|profile\\)$"
+  :mode "\\.\\(php\\|module\\|test\\|install\\|theme\\|inc\\|profile\\)$"
   :interpreter "php"
   :init
   (progn
