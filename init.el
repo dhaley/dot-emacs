@@ -19,6 +19,8 @@
   `(dolist (mode-hook ,modes)
      (add-hook mode-hook ,func)))
 
+(add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
+
 (defun system-idle-time ()
   (with-temp-buffer
     (call-process "ioreg" nil (current-buffer) nil
@@ -5367,8 +5369,6 @@ Keys are in kbd format."
              whitespace-mode)
   :init
   (progn
-    (hook-into-modes 'whitespace-mode
-                     '(prog-mode-hook))
 
     (defun normalize-file ()
       (interactive)
@@ -5422,7 +5422,7 @@ Keys are in kbd format."
 ;;;_ , web-mode
 
 (use-package web-mode
-  :mode (("\\.tpl\\.php$" . web-mode)("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode)("\\.blade\\.php\\'" . web-mode))
+  :mode (("\\.html$" . web-mode)("\\.tpl\\.php$" . web-mode)("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode)("\\.blade\\.php\\'" . web-mode))
   :init
   (progn
     (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))))
