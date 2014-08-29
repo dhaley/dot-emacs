@@ -642,7 +642,7 @@
   (interactive)
   (kill-region (point) (point-max)))
 
-(bind-key "C-c C-z" 'delete-to-end-of-buffer)
+;; (bind-key "C-c C-z" 'delete-to-end-of-buffer)
 
 ;;;_  . C-c M-?
 
@@ -4276,7 +4276,44 @@ unless return was pressed outside the comment"
             (ignore-errors
               (geben-session-release session))))
 
-        (use-package my-geben)))))
+        (use-package my-geben)))
+
+    (defun var_dump-die ()
+      (interactive)
+      (let ((expression (if (region-active-p)
+                            (buffer-substring (region-beginning) (region-end))
+                          (sexp-at-point)))
+            (line (thing-at-point 'line))
+            (pre "die(var_dump(")
+            (post "));"))
+        (if expression
+            (progn
+              (beginning-of-line)
+              (if (string-match "return" line)
+                  (progn
+                    (newline)
+                    (previous-line))
+                (next-line)
+                (newline)
+                (previous-line))
+              (insert pre)
+              (insert (format "%s" expression))
+              (insert post))
+          ()
+          (insert pre)
+          (insert post)
+          (backward-char (length post)))))
+
+    (defun var_dump ()
+      (interactive)
+      (if (region-active-p)
+          (progn
+            (goto-char (region-end))
+            (insert ");")
+            (goto-char (region-beginning))
+            (insert "var_dump("))
+        (insert "var_dump();")
+        (backward-char 3)))))
 
 ;;;_ , pretty-mode
 
@@ -4892,6 +4929,19 @@ Keys are in kbd format."
       (setq common-lisp-hyperspec-root
             (expand-file-name "~/Library/Lisp/HyperSpec/")))))
 
+;;;; show-css
+(use-package show-css
+  :commands (showcss-mode)
+  :init
+  (progn
+    (defun toggle-showcss()
+      "Toggle showcss-mode"
+      (interactive)
+      (if (derived-mode-p
+           'html-mode 'nxml-mode 'nxhtml-mode 'web-mode)
+          (showcss-mode 'toggle)
+        (message "Not in an html mode")))))
+
 ;;;_ , smart-compile
 
 (defun show-compilation ()
@@ -4906,6 +4956,48 @@ Keys are in kbd format."
       (call-interactively 'compile))))
 
 (bind-key "M-O" 'show-compilation)
+
+;;;; skewer-mode
+
+(use-package skewer-mode
+  :init
+  (progn
+    (use-package skewer-repl)
+    (use-package skewer-setup)
+    (use-package skewer-html)
+    (use-package skewer-css)
+    (add-hook 'js2-mode-hook 'skewer-mode)
+    (add-hook 'css-mode-hook 'skewer-css-mode)
+    (add-hook 'html-mode-hook 'skewer-html-mode)
+    (add-hook 'web-mode-hook
+              (lambda ()
+              (skewer-html-mode 1)
+              (skewer-css-mode 1))))
+  :config
+  (progn
+        (defun skewer-reload-page ()
+      "Reloads browser."
+      (interactive)
+       (silent-save-some-buffers)
+      (skewer-eval "window.location = window.location"))
+    (defun skewer-scroll-down ()
+      "Scroll down"
+      (interactive)
+      (skewer-eval "window.scrollBy(0,200);"))
+    (defun skewer-scroll-up ()
+      "Scroll down"
+      (interactive)
+      (skewer-eval "window.scrollBy(0,-200);"))
+    (defun skewer-scroll-left ()
+      "Scroll down"
+      (interactive)
+      (skewer-eval "window.scrollBy(-100,0);"))
+    (defun skewer-scroll-right ()
+      "Scroll down"
+      (interactive)
+      (skewer-eval "window.scrollBy(100,0);"))))
+
+;;;_ , smart-mode-line
 
 (use-package smart-compile
   :disabled t

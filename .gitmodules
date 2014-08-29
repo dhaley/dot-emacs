@@ -802,3 +802,12 @@
 [submodule "site-lisp/perspective"]
         path = site-lisp/perspective
         url = https://github.com/nex3/perspective-el.git
+[submodule "site-lisp/showcss-mode"]
+	path = site-lisp/showcss-mode
+	url = https://github.com/smmcg/showcss-mode.git
+[submodule "site-lisp/multi-web-mode"]
+	path = site-lisp/multi-web-mode
+	url = https://github.com/fgallina/multi-web-mode.git
+[submodule "site-lisp/emacs-web-server"]
+	path = site-lisp/emacs-web-server
+	url = https://github.com/skeeto/emacs-web-server.git
