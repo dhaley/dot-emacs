@@ -1819,8 +1819,7 @@ Require unix zip commandline tool."
   (add-hook 'drupal-mode-hook
             '(lambda ()
                (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-               (yas-activate-extra-mode 'drupal-mode)
-               (eyebrowse-mode t))))
+               (yas-activate-extra-mode 'drupal-mode))))
 
 ;;;_ , e2wm
 
@@ -4150,7 +4149,8 @@ and view local index.html url"
         (add-hook 'html-mode-hook
                   #'(lambda ()
                       (bind-key "<return>" 'newline-and-indent html-mode-map)))
-        (add-hook 'web-mode-hook 'emmet-mode))
+        ;; (add-hook 'web-mode-hook 'emmet-mode)
+        )
 
       :config
       (progn
@@ -4969,10 +4969,11 @@ Keys are in kbd format."
     (add-hook 'js2-mode-hook 'skewer-mode)
     (add-hook 'css-mode-hook 'skewer-css-mode)
     (add-hook 'html-mode-hook 'skewer-html-mode)
-    (add-hook 'web-mode-hook
-              (lambda ()
-              (skewer-html-mode 1)
-              (skewer-css-mode 1))))
+    ;; (add-hook 'web-mode-hook
+    ;;           (lambda ()
+    ;;           (skewer-html-mode 1)
+    ;;           (skewer-css-mode 1)))
+    )
   :config
   (progn
         (defun skewer-reload-page ()
@@ -5513,7 +5514,8 @@ Keys are in kbd format."
 ;;;_ , web-mode
 
 (use-package web-mode
-  :mode (("\\.html$" . web-mode)("\\.tpl\\.php$" . web-mode)("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode)("\\.blade\\.php\\'" . web-mode))
+  ;; :mode (("\\.html$" . web-mode)("\\.tpl\\.php$" . web-mode)("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode)("\\.blade\\.php\\'" . web-mode))
+  :mode (("\\.html$" . web-mode)("\\.tpl\\.php$" . web-mode)("\\.blade\\.php\\'" . web-mode))
   :init
   (progn
     (require 'ac-emmet)
