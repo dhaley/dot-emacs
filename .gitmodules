@@ -261,7 +261,7 @@
         url = git://github.com/purcell/less-css-mode.git
 [submodule "site-lisp/ac/auto-complete"]
         path = site-lisp/ac/auto-complete
-        url = git://github.com/auto-complete/auto-complete
+        url = git@github.com:dhaley/auto-complete
 [submodule "site-lisp/emacs-async"]
         path = site-lisp/emacs-async
         url = git://github.com/jwiegley/emacs-async.git
@@ -803,11 +803,11 @@
         path = site-lisp/perspective
         url = https://github.com/nex3/perspective-el.git
 [submodule "site-lisp/showcss-mode"]
-	path = site-lisp/showcss-mode
-	url = https://github.com/smmcg/showcss-mode.git
+        path = site-lisp/showcss-mode
+        url = https://github.com/smmcg/showcss-mode.git
 [submodule "site-lisp/multi-web-mode"]
-	path = site-lisp/multi-web-mode
-	url = https://github.com/fgallina/multi-web-mode.git
+        path = site-lisp/multi-web-mode
+        url = https://github.com/fgallina/multi-web-mode.git
 [submodule "site-lisp/emacs-web-server"]
-	path = site-lisp/emacs-web-server
-	url = https://github.com/skeeto/emacs-web-server.git
+        path = site-lisp/emacs-web-server
+        url = https://github.com/skeeto/emacs-web-server.git
