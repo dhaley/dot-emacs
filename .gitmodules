@@ -812,5 +812,5 @@
         path = site-lisp/emacs-web-server
         url = https://github.com/skeeto/emacs-web-server.git
 [submodule "site-lisp/haml-mode"]
-	path = site-lisp/haml-mode
-	url = https://github.com/nex3/haml-mode.git
+        path = site-lisp/haml-mode
+        url = https://github.com/nex3/haml-mode.git

@@ -312,6 +312,7 @@
  '(ps-header-title-font-size (quote (14 . 16)))
  '(ps-line-number-font-size 10)
  '(ps-print-color-p nil)
+ '(rainbow-html-colors-major-mode-list (quote (html-mode css-mode php-mode nxml-mode xml-mode scss-mode drupal-mode)))
  '(rdebug-many-windows nil)
  '(read-buffer-function (quote ido-read-buffer))
  '(read-mail-command (quote gnus))

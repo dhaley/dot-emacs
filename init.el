@@ -1719,7 +1719,6 @@ Including indent-buffer, which should not be called automatically on save."
     (use-package ac-emmet)
     (add-hook 'css-mode-hook
               (lambda ()
-                (rainbow-mode 1)
                 (ac-emmet-css-setup)))))
 
 ;;;_ , iflipb
@@ -4958,6 +4957,7 @@ Keys are in kbd format."
   (progn
     (hook-into-modes #'rainbow-mode
                      '(css-mode-hook
+                       scss-mode-hook
                        stylus-mode-hook)))
   :diminish ((rainbow-mode . "rb")))
 
@@ -5101,7 +5101,17 @@ and run compass from that directory"
 ;;;_ , scss-mode
 
 (use-package scss-mode
-  :mode ("\\.scss\\'" . scss-mode))
+  :mode ("\\.scss\\'" . scss-mode)
+  :init
+  (progn
+
+    ;; auto-comple
+    (add-to-list 'ac-modes 'scss-mode)))
+
+ ;;    skewer-css-mode
+ ;;   (ac-emmet-css-setup))
+ ;; rainbow-mode ac-css-mode-setup)
+
 
 ;;;_ , selectkey
 
