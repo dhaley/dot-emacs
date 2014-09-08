@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Todo documentation
+# key: doc-todo
+# --
+/**
+ * TODO: Doco.
+ */
