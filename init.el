@@ -4516,7 +4516,7 @@ unless return was pressed outside the comment"
                  (ggtags-mode 1)
                  (diminish 'ggtags-mode)
                  (auto-complete-mode 1)
-                 (setq ac-sources (list 'ac-source-gtags))
+                 (ac-cc-mode-setup)
                  (define-abbrev php-mode-abbrev-table "ex" "extends")
                  (abbrev-mode 1)
                  (hs-minor-mode 1)
@@ -5104,14 +5104,10 @@ and run compass from that directory"
   :mode ("\\.scss\\'" . scss-mode)
   :init
   (progn
-
     ;; auto-comple
-    (add-to-list 'ac-modes 'scss-mode)))
-
- ;;    skewer-css-mode
- ;;   (ac-emmet-css-setup))
- ;; rainbow-mode ac-css-mode-setup)
-
+    (add-to-list 'ac-modes 'scss-mode))
+  :config
+   (ac-emmet-css-setup))
 
 ;;;_ , selectkey
 
@@ -5334,9 +5330,13 @@ and run compass from that directory"
     (use-package skewer-repl)
     (use-package skewer-setup)
     (use-package skewer-html)
-    (use-package skewer-css)
+    (use-package skewer-css
+      :init
+    (hook-into-modes #'skewer-css-mode
+                     '(css-mode-hook
+                       scss-mode-hook)))
+
     (add-hook 'js2-mode-hook 'skewer-mode)
-    (add-hook 'css-mode-hook 'skewer-css-mode)
     (add-hook 'html-mode-hook 'skewer-html-mode)
     ;; (add-hook 'web-mode-hook
     ;;           (lambda ()
