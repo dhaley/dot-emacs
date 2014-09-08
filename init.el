@@ -1302,6 +1302,335 @@ Including indent-buffer, which should not be called automatically on save."
                       :sorter 'cfw:org-schedule-sorter)))
             (switch-to-buffer (cfw:cp-get-buffer cp))))))))
 
+
+;;;_ , cc-mode
+
+(use-package cc-mode
+  :mode (("\\.h\\(h?\\|xx\\|pp\\)\\'" . c++-mode)
+         ("\\.m\\'"                   . c-mode)
+         ("\\.mm\\'"                  . c++-mode))
+  :init
+  (progn
+    (defun my-paste-as-check ()
+      (interactive)
+      (save-excursion
+        (insert "/*\n")
+        (let ((beg (point)) end)
+          (yank)
+          (setq end (point-marker))
+          (goto-char beg)
+          (while (< (point) end)
+            (forward-char 2)
+            (insert "CHECK: ")
+            (forward-line 1)))
+        (insert "*/\n")))
+
+    (defun my-c-indent-or-complete ()
+      (interactive)
+      (let ((class (syntax-class (syntax-after (1- (point))))))
+        (if (or (bolp) (and (/= 2 class)
+                            (/= 3 class)))
+            (call-interactively 'indent-according-to-mode)
+          (call-interactively 'auto-complete))))
+
+    (defvar printf-index 0)
+
+    (defun insert-counting-printf (arg)
+      (interactive "P")
+      (if arg
+          (setq printf-index 0))
+      (if t
+          (insert (format "std::cerr << \"step %d..\" << std::endl;\n"
+                          (setq printf-index (1+ printf-index))))
+        (insert (format "printf(\"step %d..\\n\");\n"
+                        (setq printf-index (1+ printf-index)))))
+      (forward-line -1)
+      (indent-according-to-mode)
+      (forward-line))
+
+    (defun my-c-mode-common-hook ()
+      (abbrev-mode 1)
+      (ggtags-mode 1)
+      (hs-minor-mode 1)
+      (hide-ifdef-mode 1)
+      (whitespace-mode 1)
+      (which-function-mode 1)
+      (auto-complete-mode 1)
+      (yas-minor-mode 1)
+      (bug-reference-prog-mode 1)
+
+      (diminish 'ggtags-mode)
+      (diminish 'hs-minor-mode)
+      (diminish 'hide-ifdef-mode)
+
+      (bind-key "C-c p" 'insert-counting-printf c-mode-base-map)
+
+      (auto-complete-mode 1)
+      (setq ac-sources (list (if (and (fboundp 'semantic-active-p)
+                                      (funcall #'semantic-active-p))
+                                 'ac-source-semantic
+                               'ac-source-gtags)))
+      (bind-key "<A-tab>" 'ac-complete c-mode-base-map)
+
+      ;;(doxymacs-mode 1)
+      ;;(doxymacs-font-lock)
+
+      (bind-key "<return>" 'newline-and-indent c-mode-base-map)
+
+      (set (make-local-variable 'yas-fallback-behavior)
+           '(apply my-c-indent-or-complete . nil))
+      (bind-key "<tab>" 'yas-expand-from-trigger-key c-mode-base-map)
+
+      (unbind-key "M-j" c-mode-base-map)
+      (bind-key "C-c C-i" 'c-includes-current-file c-mode-base-map)
+      (bind-key "C-c C-y" 'my-paste-as-check c-mode-base-map)
+
+      (set (make-local-variable 'parens-require-spaces) nil)
+      (setq indicate-empty-lines t)
+      (setq fill-column 72)
+
+      (bind-key "M-q" 'c-fill-paragraph c-mode-base-map)
+
+      (let ((bufname (buffer-file-name)))
+        (when bufname
+          (cond
+           ((string-match "/ledger/" bufname)
+            (c-set-style "ledger"))
+           ((string-match "/ansi/" bufname)
+            (c-set-style "ti")
+            (substitute-key-definition 'fill-paragraph 'ti-refill-comment
+                                       c-mode-base-map global-map)
+            (bind-key "M-q" 'ti-refill-comment c-mode-base-map))
+           ((string-match "/edg/" bufname)
+            (c-set-style "edg"))
+           (t
+            (c-set-style "clang")))))
+
+      (font-lock-add-keywords 'c++-mode '(("\\<\\(assert\\|DEBUG\\)("
+                                           1 font-lock-warning-face t))))
+
+    (add-hook 'c-mode-common-hook 'my-c-mode-common-hook))
+
+  :config
+  (progn
+    (setq c-syntactic-indentation nil)
+
+    (bind-key "#" 'self-insert-command c-mode-base-map)
+    (bind-key "{" 'self-insert-command c-mode-base-map)
+    (bind-key "}" 'self-insert-command c-mode-base-map)
+    (bind-key "/" 'self-insert-command c-mode-base-map)
+    (bind-key "*" 'self-insert-command c-mode-base-map)
+    (bind-key ";" 'self-insert-command c-mode-base-map)
+    (bind-key "," 'self-insert-command c-mode-base-map)
+    (bind-key ":" 'self-insert-command c-mode-base-map)
+    (bind-key "(" 'self-insert-command c-mode-base-map)
+    (bind-key ")" 'self-insert-command c-mode-base-map)
+    (bind-key "<" 'self-insert-command c++-mode-map)
+    (bind-key ">" 'self-insert-command c++-mode-map)
+
+    (use-package cedet
+      :disabled t
+      :init
+      (progn
+        ;; Add further minor-modes to be enabled by semantic-mode.  See
+        ;; doc-string of `semantic-default-submodes' for other things you can
+        ;; use here.
+        (dolist (submode '(global-semantic-idle-summary-mode
+                           global-semantic-mru-bookmark-mode
+                           global-semantic-idle-local-symbol-highlight-mode
+                           global-semantic-show-unmatched-syntax-mode))
+          (add-to-list 'semantic-default-submodes submode t))
+
+        ;; Enable Semantic
+        (semantic-mode 1)
+
+        (when nil              ; jww (2012-06-20): this kills buffers
+          ;; if you want to enable support for gnu global
+          (use-package semanticdb-global)
+
+          (semanticdb-enable-gnu-global-databases 'c-mode)
+          (semanticdb-enable-gnu-global-databases 'c++-mode))))
+
+    (add-to-list 'c-style-alist
+                 '("ti"
+                   (indent-tabs-mode . nil)
+                   (c-basic-offset . 3)
+                   (c-comment-only-line-offset . (0 . 0))
+                   (c-hanging-braces-alist
+                    . ((substatement-open before after)
+                       (arglist-cont-nonempty)))
+                   (c-offsets-alist
+                    . ((statement-block-intro . +)
+                       (knr-argdecl-intro . 5)
+                       (substatement-open . 0)
+                       (substatement-label . 0)
+                       (label . 0)
+                       (case-label . +)
+                       (statement-case-open . 0)
+                       (statement-cont . +)
+                       (arglist-intro . c-lineup-arglist-intro-after-paren)
+                       (arglist-close . c-lineup-arglist)
+                       (inline-open . 0)
+                       (brace-list-open . 0)
+                       (topmost-intro-cont
+                        . (first c-lineup-topmost-intro-cont
+                                 c-lineup-gnu-DEFUN-intro-cont))))
+                   (c-special-indent-hook . c-gnu-impose-minimum)
+                   (c-block-comment-prefix . "")))
+
+    (add-to-list 'c-style-alist
+                 '("edg"
+                   (indent-tabs-mode . nil)
+                   (c-basic-offset . 2)
+                   (c-comment-only-line-offset . (0 . 0))
+                   (c-hanging-braces-alist
+                    . ((substatement-open before after)
+                       (arglist-cont-nonempty)))
+                   (c-offsets-alist
+                    . ((statement-block-intro . +)
+                       (knr-argdecl-intro . 5)
+                       (substatement-open . 0)
+                       (substatement-label . 0)
+                       (label . 0)
+                       (case-label . +)
+                       (statement-case-open . 0)
+                       (statement-cont . +)
+                       (arglist-intro . +)
+                       (arglist-close . +)
+                       (inline-open . 0)
+                       (brace-list-open . 0)
+                       (topmost-intro-cont
+                        . (first c-lineup-topmost-intro-cont
+                                 c-lineup-gnu-DEFUN-intro-cont))))
+                   (c-special-indent-hook . c-gnu-impose-minimum)
+                   (c-block-comment-prefix . "")))
+
+    (add-to-list 'c-style-alist
+                 '("ledger"
+                   (indent-tabs-mode . nil)
+                   (c-basic-offset . 2)
+                   (c-comment-only-line-offset . (0 . 0))
+                   (c-hanging-braces-alist
+                    . ((substatement-open before after)
+                       (arglist-cont-nonempty)))
+                   (c-offsets-alist
+                    . ((statement-block-intro . +)
+                       (knr-argdecl-intro . 5)
+                       (substatement-open . 0)
+                       (substatement-label . 0)
+                       (label . 0)
+                       (case-label . 0)
+                       (statement-case-open . 0)
+                       (statement-cont . +)
+                       (arglist-intro . +)
+                       (arglist-close . +)
+                       (inline-open . 0)
+                       (brace-list-open . 0)
+                       (topmost-intro-cont
+                        . (first c-lineup-topmost-intro-cont
+                                 c-lineup-gnu-DEFUN-intro-cont))))
+                   (c-special-indent-hook . c-gnu-impose-minimum)
+                   (c-block-comment-prefix . "")))
+
+    (add-to-list 'c-style-alist
+                 '("clang"
+                   (indent-tabs-mode . nil)
+                   (c-basic-offset . 2)
+                   (c-comment-only-line-offset . (0 . 0))
+                   (c-hanging-braces-alist
+                    . ((substatement-open before after)
+                       (arglist-cont-nonempty)))
+                   (c-offsets-alist
+                    . ((statement-block-intro . +)
+                       (knr-argdecl-intro . 5)
+                       (substatement-open . 0)
+                       (substatement-label . 0)
+                       (label . 0)
+                       (case-label . 0)
+                       (statement-case-open . 0)
+                       (statement-cont . +)
+                       (arglist-intro . +)
+                       (arglist-close . +)
+                       (inline-open . 0)
+                       (brace-list-open . 0)
+                       (topmost-intro-cont
+                        . (first c-lineup-topmost-intro-cont
+                                 c-lineup-gnu-DEFUN-intro-cont))))
+                   (c-special-indent-hook . c-gnu-impose-minimum)
+                   (c-block-comment-prefix . "")))
+
+    (defun opencl ()
+      (interactive)
+      (find-file "~/src/ansi/opencl.c")
+      (find-file-noselect "~/Contracts/TI/bugslayer/cl_0603/cl_0603.c")
+      (find-file-noselect "~/Contracts/TI/bugslayer")
+      (magit-status "~/src/ansi")
+      (gud-gdb "gdb --fullname ~/Contracts/TI/bin/c60/acpia6x"))
+
+    (defun ti-refill-comment ()
+      (interactive)
+      (let ((here (point)))
+        (goto-char (line-beginning-position))
+        (let ((begin (point)) end
+              (marker ?-) (marker-re "\\(-----\\|\\*\\*\\*\\*\\*\\)")
+              (leader-width 0))
+          (unless (looking-at "[ \t]*/\\*[-* ]")
+            (search-backward "/*")
+            (goto-char (line-beginning-position)))
+          (unless (looking-at "[ \t]*/\\*[-* ]")
+            (error "Not in a comment"))
+          (while (and (looking-at "\\([ \t]*\\)/\\* ")
+                      (setq leader-width (length (match-string 1)))
+                      (not (looking-at (concat "[ \t]*/\\*" marker-re))))
+            (forward-line -1)
+            (setq begin (point)))
+          (when (looking-at (concat "[^\n]+?" marker-re "\\*/[ \t]*$"))
+            (setq marker (if (string= (match-string 1) "-----") ?- ?*))
+            (forward-line))
+          (while (and (looking-at "[^\n]+?\\*/[ \t]*$")
+                      (not (looking-at (concat "[^\n]+?" marker-re
+                                               "\\*/[ \t]*$"))))
+            (forward-line))
+          (when (looking-at (concat "[^\n]+?" marker-re "\\*/[ \t]*$"))
+            (forward-line))
+          (setq end (point))
+          (let ((comment (buffer-substring-no-properties begin end)))
+            (with-temp-buffer
+              (insert comment)
+              (goto-char (point-min))
+              (flush-lines (concat "^[ \t]*/\\*" marker-re "[-*]+\\*/[ \t]*$"))
+              (goto-char (point-min))
+              (while (re-search-forward "^[ \t]*/\\* ?" nil t)
+                (goto-char (match-beginning 0))
+                (delete-region (match-beginning 0) (match-end 0)))
+              (goto-char (point-min))
+              (while (re-search-forward "[ \t]*\\*/[ \t]*$" nil t)
+                (goto-char (match-beginning 0))
+                (delete-region (match-beginning 0) (match-end 0)))
+              (goto-char (point-min)) (delete-trailing-whitespace)
+              (goto-char (point-min)) (flush-lines "^$")
+              (set-fill-column (- 80    ; width of the text
+                                  6     ; width of "/*  */"
+                                  leader-width))
+              (goto-char (point-min)) (fill-paragraph nil)
+              (goto-char (point-min))
+              (while (not (eobp))
+                (insert (make-string leader-width ? ) "/* ")
+                (goto-char (line-end-position))
+                (insert (make-string (- 80 3 (current-column)) ? ) " */")
+                (forward-line))
+              (goto-char (point-min))
+              (insert (make-string leader-width ? )
+                      "/*" (make-string (- 80 4 leader-width) marker) "*/\n")
+              (goto-char (point-max))
+              (insert (make-string leader-width ? )
+                      "/*" (make-string (- 80 4 leader-width) marker) "*/\n")
+              (setq comment (buffer-string)))
+            (goto-char begin)
+            (delete-region begin end)
+            (insert comment)))
+        (goto-char here)))))
+
 ;;;_ , cmake-mode
 
 (use-package cmake-mode
@@ -1380,25 +1709,11 @@ Including indent-buffer, which should not be called automatically on save."
 ;;           (flash-crosshairs))))
     ))
 
-(use-package csv-mode
-  :commands csv-mode
-  :mode ("\\.[Cc][Ss][Vv]\\'" . csv-mode)
-  :init
-  (progn
-    ;; (add-hook 'csv-mode-hook
-    ;;           '(lambda ()
-    ;;              (whitespace-mode 1)
-    ;;              (orgtbl-mode 1)
-    ;;              (stripe-buffer-mode 1)))
-    ))
-
 ;;;_ , css-mode
 (use-package css-mode
   :mode ("\\.css$" . css-mode)
   :config
   (progn
-    (setq css-indent-offset 2
-          cssm-indent-level '2)
     (define-keys css-mode-map
       '(("<return>" newline-and-indent)))
     (use-package ac-emmet)
@@ -4737,7 +5052,51 @@ Keys are in kbd format."
 ;;;_ , sass-mode
 
 (use-package sass-mode
-  :mode ("\\.scss\\|\\.sass$" . sass-mode))
+  :disabled t
+  :mode ("\\.scss\\|\\.sass$" . sass-mode)
+  :init
+  (
+   (use-package haml-mode)
+   (add-hook 'sass-mode-hook
+             (lambda ()
+               (defun compass-compile-hook ()
+                 (if (and (buffer-file-name)
+                          (file-name-extension (buffer-file-name)))
+                     (let* ((filename (buffer-file-name))
+                            (suffix (downcase (file-name-extension filename))))
+                       (if (and filename (string= suffix "scss"))
+                           (compass-compile-project)))))
+               (add-hook 'after-save-hook 'compass-compile-hook)))
+
+   (defun compass-compile-project ()
+     "Search the file-tree up from the current file looking for config.rb
+and run compass from that directory"
+     (interactive)
+     (let* ((sass-file (buffer-file-name (current-buffer)))
+            (local-dir (file-name-directory sass-file)))
+       (flet ((contains-config-rb (dir-name)
+                                  (find "config.rb" (directory-files dir-name)
+                                        :test 'equal))
+              (parent-dir (dir)
+                          (expand-file-name
+                           (file-name-as-directory (concat
+                                                    (file-name-as-directory dir)
+                                                    ".."))))
+              (get-root (d)
+                        (cond ((contains-config-rb d) d)
+                              ((equal (parent-dir d) d) nil)
+                              ((get-root (parent-dir d)))))
+
+              (run-compass (dir)
+                           (let ((default-directory dir))
+                             (start-file-process "compass"
+                                                 "*compass-process*"
+                                                 "compass"
+                                                 "compile"))))
+         (let (( dir (get-root local-dir)))
+           (if dir
+               (run-compass dir)
+             (princ (format "no config from %s" local-dir)))))))))
 
 ;;;_ , scss-mode
 
@@ -5042,10 +5401,7 @@ Keys are in kbd format."
 
 ;;;_ , stripe-buffer
 
-(use-package stripe-buffer
-  :init
-  (progn
-    (add-hook 'org-mode-hook 'turn-on-stripe-table-mode)))
+(use-package stripe-buffer)
 
 ;;;_ , stopwatch
 
