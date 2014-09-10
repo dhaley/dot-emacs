@@ -5207,7 +5207,29 @@ and run compass from that directory"
     (add-hook 'shell-mode-hook
               (lambda ()
                 (initialize-sh-script)
-                (ansi-color-for-comint-mode-on)))))
+                (ansi-color-for-comint-mode-on)))
+
+    (defun comint-kill-output-to-kill-ring ()
+      "Kills all output from last command and puts it in kill buffer
+Does not delete the prompt."
+      (interactive)
+      (let ((proc (get-buffer-process (current-buffer)))
+            (replacement nil)
+            (inhibit-read-only t))
+        (save-excursion
+          (let ((pmark (progn (goto-char (process-mark proc))
+                              (forward-line 0)
+                              (point-marker))))
+            ;; Add the text to the kill ring.
+            (copy-region-as-kill comint-last-input-end pmark)
+            (delete-region comint-last-input-end pmark)
+            (goto-char (process-mark proc))
+            (setq replacement (concat "*** output flushed to kill ring ***\n"
+                                      (buffer-substring pmark (point))))
+            (delete-region pmark (point))))
+        ;; Output message and put back prompt
+        (comint-output-filter proc replacement)))
+    (bind-key "C-c `" 'comint-kill-output-to-kill-ring)))
 
 ;;;_ , sh-toggle
 
