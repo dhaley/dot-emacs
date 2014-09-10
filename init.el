@@ -5227,7 +5227,8 @@ Does not delete the prompt."
                                       (buffer-substring pmark (point))))
             (delete-region pmark (point))))
         ;; Output message and put back prompt
-        (comint-output-filter proc replacement)))))
+        (comint-output-filter proc replacement)))
+    (bind-key "C-c `" 'comint-kill-output-to-kill-ring)))
 
 ;;;_ , sh-toggle
 
