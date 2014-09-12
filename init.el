@@ -2177,14 +2177,6 @@ Require unix zip commandline tool."
 (use-package minimap
   :disabled t)
 
-;;;_ , easy-kill
-
-(use-package easy-kill
-  :init
-  (progn
-    (global-set-key [remap kill-ring-save] 'easy-kill)
-    (global-set-key [remap mark-sexp] 'easy-mark-sexp)))
-
 ;;;_ , ediff
 
 (use-package ediff
@@ -6180,6 +6172,12 @@ Does not delete the prompt."
 ;; emacs as we would in other programs.
 (fset 'insert-pound "#")
 (define-key global-map "\M-3" 'insert-pound)
+
+(fset 'newline-indent-sexp-pairs
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("\200\200
+" 0 "%d")) arg)))
+
+(bind-key "C-H-M-~" 'newline-indent-sexp-pairs)
 
 ;; OS X ls doesn't support --dired
 (setq dired-use-ls-dired nil)
