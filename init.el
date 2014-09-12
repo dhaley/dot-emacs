@@ -4741,11 +4741,6 @@ Keys are in kbd format."
     (global-set-key (kbd "C-c p <left>") 'projectile-switch-to-prev-buffer)
     (global-set-key (kbd "C-c p <right>") 'projectile-switch-to-next-buffer)
 
-    (defadvice magit-mode-quit-window (around magit-restore-screen activate)
-    ;; We want to jump to the previous projectile buffer if
-    ;; magit buffer is projectile controlled
-    (projectile-switch-to-prev-buffer))
-
     (defun projectile-post-project ()
       "Which project am I actually in?"
       (interactive)
