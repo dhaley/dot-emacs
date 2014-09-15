@@ -2177,14 +2177,6 @@ Require unix zip commandline tool."
 (use-package minimap
   :disabled t)
 
-;;;_ , easy-kill
-
-;; (use-package easy-kill
-;;   :init
-;;   (progn
-;;     (global-set-key [remap kill-ring-save] 'easy-kill)
-;;     (global-set-key [remap mark-sexp] 'easy-mark-sexp)))
-
 ;;;_ , ediff
 
 (use-package ediff
@@ -4743,11 +4735,6 @@ Keys are in kbd format."
     (global-set-key (kbd "C-c p <left>") 'projectile-switch-to-prev-buffer)
     (global-set-key (kbd "C-c p <right>") 'projectile-switch-to-next-buffer)
 
-    (defadvice magit-mode-quit-window (around magit-restore-screen activate)
-    ;; We want to jump to the previous projectile buffer if
-    ;; magit buffer is projectile controlled
-    (projectile-switch-to-prev-buffer))
-
     (defun projectile-post-project ()
       "Which project am I actually in?"
       (interactive)
@@ -6187,6 +6174,12 @@ Does not delete the prompt."
 ;; emacs as we would in other programs.
 (fset 'insert-pound "#")
 (define-key global-map "\M-3" 'insert-pound)
+
+(fset 'newline-indent-sexp-pairs
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("\200\200
+" 0 "%d")) arg)))
+
+(bind-key "C-H-M-~" 'newline-indent-sexp-pairs)
 
 ;; OS X ls doesn't support --dired
 (setq dired-use-ls-dired nil)
