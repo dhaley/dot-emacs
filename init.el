@@ -2179,11 +2179,11 @@ Require unix zip commandline tool."
 
 ;;;_ , easy-kill
 
-(use-package easy-kill
-  :init
-  (progn
-    (global-set-key [remap kill-ring-save] 'easy-kill)
-    (global-set-key [remap mark-sexp] 'easy-mark-sexp)))
+;; (use-package easy-kill
+;;   :init
+;;   (progn
+;;     (global-set-key [remap kill-ring-save] 'easy-kill)
+;;     (global-set-key [remap mark-sexp] 'easy-mark-sexp)))
 
 ;;;_ , ediff
 
@@ -4526,7 +4526,8 @@ unless return was pressed outside the comment"
                  (setq indicate-empty-lines t)
                  'my-php-mode-hook
                  (local-set-key "\r" 'my-php-return)
-                 (local-unset-key (kbd "C-c ."))))
+                 (local-unset-key (kbd "C-c ."))
+                 (paren-toggle-open-paren-context 1)))
 
     (bind-key "C-c C-F" 'php-search-local-documentation)
     (use-package php-extras
@@ -4564,7 +4565,8 @@ unless return was pressed outside the comment"
         (save-excursion
           (let ((manual-program "pman"))
             (man (symbol-name function))))))
-    (define-key php-mode-map "\C-hf" 'describe-function-via-pman)
+
+    (define-key php-mode-map "\C-hS" 'describe-function-via-pman)
     (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
     (use-package php-auto-yasnippets)
 

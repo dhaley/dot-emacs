@@ -217,7 +217,6 @@
  '(ido-default-file-method (quote selected-window))
  '(ido-enable-flex-matching t)
  '(ido-enable-last-directory-history nil)
- '(ido-enable-tramp-completion nil)
  '(ido-enter-matching-directory (quote first))
  '(ido-everywhere t)
  '(ido-file-extensions-order (quote (".py" ".rb" ".java" ".coffee" ".js" ".c" ".cpp" ".el" ".html" ".htm" ".xhtml" ".styl" ".scss" ".sass" ".css" ".org" ".md" ".markdowm" ".doc" ".txt" ".rst" ".yml" ".yaml" ".xml" ".ini" ".cfg" ".cnf")))
