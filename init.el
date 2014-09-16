@@ -6357,6 +6357,8 @@ point reaches the beginning or end of the buffer, stop there."
 (dolist
     (r `((?i (file . "~/.emacs.d/init.el"))
          (?a (file . "~/.emacs.d/.abbrev_defs"))
+         (?b (file . "~/.profile"))
+         (?B (file . "~/.bashrc"))
          (?e (file . "~/.emacs.d"))
          (?t (file . "~/Documents/Tasks/todo.txt"))
          (?s (file . "~/.emacs.d/settings.el"))
