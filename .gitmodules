@@ -811,3 +811,6 @@
 [submodule "site-lisp/haml-mode"]
         path = site-lisp/haml-mode
         url = https://github.com/nex3/haml-mode.git
+[submodule "site-lisp/emamux"]
+	path = site-lisp/emamux
+	url = https://github.com/syohex/emacs-emamux.git
