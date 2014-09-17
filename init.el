@@ -620,9 +620,6 @@
 (bind-key "C-c V" 'view-clipboard)
 (bind-key "C-c z" 'clean-buffer-list)
 
-(global-set-key (kbd "C-M-y") '(lambda ()
-                                 (interactive)
-                                 (popup-menu 'yank-menu)))
 (bind-key "C-c [" 'align-regexp)
 (bind-key "C-c =" 'count-matches)
 (bind-key "C-c ;" 'comment-or-uncomment-region)
@@ -6308,33 +6305,6 @@ When called in elisp, the p1 and p2 are region begin/end positions to work on."
 ;; http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
 ;; (bind-key "C-<tab>" 'mode-line-other-buffer)
 (bind-key "C-<escape>" 'mode-line-other-buffer)
-
-(defun smarter-move-beginning-of-line (arg)
-  "Move point back to indentation of beginning of line.
-
-Move point to the first non-whitespace character on this line.
-If point is already there, move to the beginning of the line.
-Effectively toggle between the first non-whitespace character and
-the beginning of the line.
-
-If ARG is not nil or 1, move forward ARG - 1 lines first.  If
-point reaches the beginning or end of the buffer, stop there."
-  (interactive "^p")
-  (setq arg (or arg 1))
-
-  ;; Move lines first
-  (when (/= arg 1)
-    (let ((line-move-visual nil))
-      (forward-line (1- arg))))
-
-  (let ((orig-point (point)))
-    (back-to-indentation)
-    (when (= orig-point (point))
-      (move-beginning-of-line 1))))
-
-;; remap C-a to `smarter-move-beginning-of-line'
-(global-set-key [remap move-beginning-of-line]
-                'smarter-move-beginning-of-line)
 
 (defun listenv ()
   "List all environment variables in order."
