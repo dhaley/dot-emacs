@@ -4498,7 +4498,8 @@ unless return was pressed outside the comment"
     (defun my-php-mode-hook ()
       (set (make-local-variable 'yas-fallback-behavior)
            '(apply my-php-indent-or-complete . nil))
-      (bind-key "<tab>" 'yas-expand-from-trigger-key php-mode-map))
+      (bind-key "<tab>" 'yas-expand-from-trigger-key php-mode-map)
+      (unbind-key "C-." php-mode-map))
 
     (add-hook 'php-mode-hook
               '(lambda ()
