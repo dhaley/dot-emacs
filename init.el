@@ -1793,7 +1793,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , dired
 
 (use-package dired
-  :bind ("C-x C-j" . dired-jump)
+  :defer t
   :init
   (progn
     (defvar mark-files-cache (make-hash-table :test #'equal))
@@ -1803,26 +1803,22 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
         (if (string-match "^\\(.+?\\)-[0-9._-]+$" pat)
             (setq pat (match-string 1 pat)))
         (or (gethash pat mark-files-cache)
-            (ignore (puthash pat t mark-files-cache))))
+            (ignore (puthash pat t mark-files-cache)))))
 
-      (defun dired-mark-similar-version ()
-        (interactive)
-        (setq mark-files-cache (make-hash-table :test #'equal))
-        (dired-mark-sexp '(mark-similar-versions name)))))
+    (defun dired-mark-similar-version ()
+      (interactive)
+      (setq mark-files-cache (make-hash-table :test #'equal))
+      (dired-mark-sexp '(mark-similar-versions name))))
+
   :config
   (progn
-    ;; Also auto refresh dired, but be quiet about it
-    (setq global-auto-revert-non-file-buffers t)
-    (setq auto-revert-verbose nil)
-
     (defun dired-package-initialize ()
       (unless (featurep 'runner)
         (use-package dired-x)
         ;; (use-package dired-async)
         ;; (use-package dired-sort-map)
         (use-package runner)
-
-        (use-package dired-details
+        (use-package dired-details-hide
           :commands dired-details-toggle)
 
         (bind-key "l" 'dired-up-directory dired-mode-map)
@@ -1905,36 +1901,30 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                       (split-string omitted-files "\n" t)
                       "\\|")
                      "\\)")))
-              (funcall dired-omit-regexp-orig)
+              (funcall dired-omit-regexp-orig))))))
 
-              (define-key dired-mode-map [?@] 'dired-up-directory)
+;;     (eval-after-load "dired-aux"
+;;       '(defun dired-do-async-shell-command (command &optional arg file-list)
+;;          "Run a shell command COMMAND on the marked files asynchronously.
 
-              )))))
+;; Like `dired-do-shell-command' but if COMMAND doesn't end in ampersand,
+;; adds `* &' surrounded by whitespace and executes the command asynchronously.
+;; The output appears in the buffer `*Async Shell Command*'."
+;;          (interactive
+;;           (let ((files (dired-get-marked-files t current-prefix-arg)))
+;;             (list
+;;              ;; Want to give feedback whether this file or marked files are
+;;              ;; used:
+;;              (dired-read-shell-command "& on %s: " current-prefix-arg files)
+;;              current-prefix-arg
+;;              files)))
+;;          (unless (string-match "[ \t][*?][ \t]" command)
+;;            (setq command (concat command " *")))
+;;          (unless (string-match "&[ \t]*\\'" command)
+;;            (setq command (concat command " &")))
+;;          (dired-do-shell-command command arg file-list)))
 
-    ;; (eval-after-load "dired-aux"
-    ;;   '(defun dired-do-async-shell-command (command &optional arg file-list)
-    ;;      "Run a shell command COMMAND on the marked files asynchronously.
-
-    ;; Like `dired-do-shell-command' but if COMMAND doesn't end in ampersand,
-    ;; adds `* &' surrounded by whitespace and executes the command asynchronously.
-    ;; The output appears in the buffer `*Async Shell Command*'."
-    ;;            (interactive
-    ;;             (let ((files (dired-get-marked-files t current-prefix-arg)))
-    ;;               (list
-    ;;                ;; Want to give feedback whether this file or marked files are
-    ;;                ;; used:
-    ;;                (dired-read-shell-command "& on %s: " current-prefix-arg files)
-    ;;                current-prefix-arg
-    ;;                files)))
-    ;;            (unless (string-match "[ \t][*?][ \t]" command)
-    ;;              (setq command (concat command " *")))
-    ;;            (unless (string-match "&[ \t]*\\'" command)
-    ;;              (setq command (concat command " &")))
-    ;;            (dired-do-shell-command command arg file-list)))
-
-    (add-hook 'dired-mode-hook '(lambda ()
-                                  (dired-package-initialize)
-                                  (hl-line-mode 1)))
+    (add-hook 'dired-mode-hook 'dired-package-initialize)
 
     (defun dired-double-jump (first-dir second-dir)
       (interactive
@@ -1947,138 +1937,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
       (dired first-dir)
       (dired-other-window second-dir))
 
-    (bind-key "C-c J" 'dired-double-jump)
-
-    (defun scale-image (fileList scalePercentage)
-      "Create a scaled jpg version of images of marked files in dired.
-The new names have “-s” appended before the file name extension.
-Requires ImageMagick shell tool."
-      (interactive
-       (list (dired-get-marked-files) (read-from-minibuffer "scale percentage:")))
-      (require 'dired)
-
-      (mapc
-       (lambda (ξf)
-         (let ( newName cmdStr )
-           (setq newName (concat (file-name-sans-extension ξf) "-s" ".jpg") )
-           (while (file-exists-p newName)
-             (setq newName (concat (file-name-sans-extension newName) "-s" (file-name-extension newName t))) )
-
-           ;; relative paths used to get around Windows/Cygwin path remapping problem
-           (setq cmdStr (concat "convert -scale " scalePercentage "% -quality 85% " (file-relative-name ξf) " " (file-relative-name newName)) )
-           (shell-command cmdStr)
-           ))
-       fileList ))
-
-    (defun 2jpg (fileList)
-      "Create a jpg version of images of marked files in dired.
-Requires ImageMagick shell tool.
-"
-      (interactive (list (dired-get-marked-files) ))
-      (require 'dired)
-
-      (mapc
-       (lambda (ξf)
-         (let ( newName cmdStr )
-           (setq newName (concat (file-name-sans-extension ξf) ".jpg") )
-           (while (file-exists-p newName)
-             (setq newName (concat (file-name-sans-extension newName) "-2" (file-name-extension newName t))) )
-
-           ;; relative paths used to get around Windows/Cygwin path remapping problem
-           (setq cmdStr (concat "convert " (file-relative-name ξf) " " (file-relative-name newName)) )
-
-           ;; (async-shell-command cmdStr)
-           (shell-command cmdStr)
-           ))
-       fileList ))
-
-    ;;Command to zip File/Dir
-
-    (defun 2zip ()
-      "Zip the current file/dir in `dired'.
-If multiple files are marked, only zip the first one.
-Require unix zip commandline tool."
-      (interactive)
-      (require 'dired)
-      (let ( (fileName (elt (dired-get-marked-files) 0))  )
-        (shell-command (format "zip -r '%s.zip' '%s'" (file-relative-name fileName) (file-relative-name fileName)))))
-
-     ;; dired-toggle-sudo
-    (use-package dired-toggle-sudo
-      :commands dired-toggle-sudo)
-
-    (use-package dired-avfs
-      :if (executable-find "mountavfs"))
-
-    (defconst my-dired-media-files-extensions
-      '("mp3" "mp4" "MP3" "MP4" "avi" "mpg" "flv" "ogg")
-      "Media files.")
-
-    (use-package dired-rainbow
-      :init
-      (progn
-        (dired-rainbow-define html "#4e9a06" ("htm" "html" "xhtml"))
-        (dired-rainbow-define media "#ce5c00" my-dired-media-files-extensions)
-
-                                        ; boring regexp due to lack of imagination
-        (dired-rainbow-define log (:inherit default
-                                            :italic t) ".*\\.log")
-
-                                        ; highlight executable files, but not directories
-        (dired-rainbow-define-chmod executable-unix "Green" "-.*x.*")
-
-        (defconst dired-audio-files-extensions
-          '("mp3" "MP3" "ogg" "OGG" "flac" "FLAC" "wav" "WAV")
-          "Dired Audio files extensions")
-        (dired-rainbow-define audio "#329EE8" dired-audio-files-extensions)
-
-        (defconst dired-video-files-extensions
-          '("vob" "VOB" "mkv" "MKV" "mpe" "mpg" "MPG" "mp4" "MP4" "ts" "TS" "m2ts"
-            "M2TS" "avi" "AVI" "mov" "MOV" "wmv" "asf" "m2v" "m4v" "mpeg" "MPEG" "tp")
-          "Dired Video files extensions")
-        (dired-rainbow-define video "#B3CCFF" dired-video-files-extensions)
-
-        (dired-rainbow-define xml "DarkGreen" ("xml" "xsd" "xsl" "xslt" "wsdl"))
-
-        (dired-rainbow-define document "#fce94f" ("doc" "docx" "odt" "pdb" "pdf" "ps" "rtf"))
-        (dired-rainbow-define image "#ff4b4b" ("jpg" "png" "jpeg" "gif"))
-
-        (dired-rainbow-define sourcefile "#fcaf3e" ("py" "c" "cc" "h" "java" "pl" "rb"))
-
-        (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
-        (dired-rainbow-define compressed "#ad7fa8" ("zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
-        (dired-rainbow-define packaged "#e6a8df" ("deb" "rpm"))
-        (dired-rainbow-define encrypted "LightBlue" ("gpg" "pgp"))))
-
-    (use-package dired-efap
-      :commands dired-efap
-      :init
-      (progn
-        (bind-key "H-r" 'dired-efap dired-mode-map)
-      ;;; Only if you want to control rename with the mouse...
-        (define-key dired-mode-map [down-mouse-1] 'dired-efap-click)))
-
-    (use-package dired-subtree
-      :init
-      (bind-keys :map dired-mode-map
-                 :prefix "C-,"
-                 :prefix-map dired-subtree-map
-                 :prefix-docstring "Dired subtree map."
-                 ("TAB" . dired-subtree-insert)
-                 ("C-k" . dired-subtree-remove)
-                 ("C-n" . dired-subtree-next-sibling)
-                 ("C-p" . dired-subtree-previous-sibling)
-                 ("C-u" . dired-subtree-up)
-                 ("C-d" . dired-subtree-down)
-                 ("C-a" . dired-subtree-beginning)
-                 ("C-e" . dired-subtree-end)
-                 ("C-o C-f" . dired-subtree-only-this-file)
-                 ("C-o C-d" . dired-subtree-only-this-directory)))
-
-    (use-package image-dired+
-      :init
-    ;; (image-dired-display-image-mode)
-    )))
+    (bind-key "C-c J" 'dired-double-jump)))
 
 ;;;_ , direx
 (use-package direx
@@ -3221,6 +3080,8 @@ at the beginning of line, if already there."
       (fset 'describe-bindings 'helm-descbinds))
 
     (bind-key "C-h b" 'helm-descbinds)
+
+    (bind-key "M-s ." 'helm-command-from-bash)
 
     (defadvice helm-buffers-list
       (around expand-window-helm-buffers-list activate)
@@ -4759,7 +4620,8 @@ Keys are in kbd format."
     (use-package helm-projectile
       :bind (("C-c p h" . helm-projectile)
              ("M-s P" . helm-projectile)
-             ("C-x u" . helm-projectile-switch-project))
+             ("C-x u" . persp-switch))
+
       :config
       (progn
         ;; Add add-to-projectile action after helm-find-files.
@@ -6115,12 +5977,6 @@ Does not delete the prompt."
             t))
 
 
-;; fix ls probs with dired
-(when (eq system-type 'darwin)
-  (require 'ls-lisp)
-  (setq ls-lisp-use-insert-directory-program nil))
-
-
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
 
 ;; OS X Specific configuration
@@ -6179,66 +6035,11 @@ Does not delete the prompt."
 
 (bind-key "C-H-M-~" 'newline-indent-sexp-pairs)
 
-;; OS X ls doesn't support --dired
-(setq dired-use-ls-dired nil)
-
-(defalias 'list-matching-lines 'occur)
-(defalias 'delete-matching-lines 'flush-lines)
-(defalias 'delete-non-matching-lines 'keep-lines)
-
 ;; Allow "y or n" instead of "yes or no"
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Various superfluous white-space. Just say no.
 (add-hook 'before-save-hook 'cleanup-buffer-safe)
-
-(defun open-in-desktop ()
-  "Open the current file in desktop.
-Works in Microsoft Windows, Mac OS X, Linux."
-  (interactive)
-  (cond
-   ((string-equal system-type "windows-nt")
-    (w32-shell-execute "explore" (replace-regexp-in-string "/" "\\" default-directory t t)))
-   ((string-equal system-type "darwin") (shell-command "open ."))
-   ((string-equal system-type "gnu/linux") (shell-command "xdg-open ."))))
-
-(defun ergoemacs-open-in-external-app ()
-  "Open the current file or dired marked files in external app."
-  (interactive)
-  (let ( doIt
-         (myFileList
-          (cond
-           ((string-equal major-mode "dired-mode") (dired-get-marked-files))
-           (t (list (buffer-file-name))) ) ) )
-
-    (setq doIt (if (<= (length myFileList) 5)
-                   t
-                 (y-or-n-p "Open more than 5 files?") ) )
-
-    (when doIt
-      (cond
-       ((string-equal system-type "windows-nt")
-        (mapc (lambda (fPath) (w32-shell-execute "open" (replace-regexp-in-string "/" "\\" fPath t t)) ) myFileList)
-        )
-       ((string-equal system-type "darwin")
-        (mapc (lambda (fPath) (shell-command (format "open \"%s\"" fPath)) )  myFileList) )
-       ((string-equal system-type "gnu/linux")
-        (mapc (lambda (fPath) (let ((process-connection-type nil)) (start-process "" nil "xdg-open" fPath)) ) myFileList) ) ) ) ) )
-
-(bind-key "C-S-o" 'open-in-desktop)
-
-
-(defun prelude-open-with ()
-  "Simple function that allows us to open the underlying
-file of a buffer in an external program."
-  (interactive)
-  (when buffer-file-name
-    (shell-command (concat
-                    (if (eq system-type 'darwin)
-                        "open"
-                      (read-shell-command "Open current file with: "))
-                    " "
-                    buffer-file-name))))
 
 ;;;; Emoji composition tests
 ;;; Regional indicators (#x1F1E6 - #x1F1FF)
