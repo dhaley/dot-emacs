@@ -753,6 +753,8 @@ end tell" (match-string 1))))
 (bind-key "C-c x f" 'org-insert-file-link)
 (bind-key "C-c x F" 'org-set-file-link)
 
+(bind-key "C-c C-x b" `org-agenda-tree-to-indirect-buffer)
+
 ;; (autoload 'ledger-test-create "ldg-test" nil t)
 ;; (autoload 'ledger-test-run "ldg-test" nil t)
 
