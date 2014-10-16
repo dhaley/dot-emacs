@@ -4058,6 +4058,17 @@ and view local index.html url"
          ("C-c l" . org-insert-link))
   :init
   (progn
+
+    (unless (boundp 'Info-directory-list)
+      (setq Info-directory-list Info-default-directory-list))
+    (setq Info-directory-list
+          (cons (expand-file-name
+                 "doc"
+                 (expand-file-name
+                  "org-mode"
+                  (expand-file-name "override" user-emacs-directory)))
+                Info-directory-list))
+
     (unless running-alternate-emacs
       (run-with-idle-timer 3600 t 'jump-to-org-agenda))
 
