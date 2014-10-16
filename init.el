@@ -2135,6 +2135,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;; Engine Mode:
 
 (use-package engine-mode
+  :disabled t
   :load-path "lisp/engine-mode/"
   :commands (engine-mode defengine)
   :init (engine-mode t)
