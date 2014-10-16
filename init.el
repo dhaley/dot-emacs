@@ -402,9 +402,6 @@
 
 ;;;_  . C-c ?
 
-(bind-key "C-c <tab>" 'ff-find-other-file)
-(bind-key "C-c SPC" 'just-one-space)
-
 ;; inspired by Erik Naggum's `recursive-edit-with-single-window'
 (defmacro recursive-edit-preserving-window-config (body)
   "*Return a command that enters a recursive edit after executing BODY.
