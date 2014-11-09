@@ -113,7 +113,7 @@
              (start-fetchmail "*fetchmail*" nil "--idle")))))
         (cur-buf (current-buffer)))
     (delete-other-windows)
-    (flet (
+    (cl-flet (
            (switch-in-other-buffer
             (buf)
             (when buf

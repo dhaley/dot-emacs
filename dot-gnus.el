@@ -125,7 +125,7 @@
 
 (defun open-mail-logs ()
   (interactive)
-  (flet ((switch-in-other-buffer
+  (cl-flet ((switch-in-other-buffer
           (buf)
           (when buf
             (split-window-vertically)

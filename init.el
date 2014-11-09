@@ -587,7 +587,7 @@
             (car (auth-source-search :host "api.j.mp" :user api-login
                                      :type 'netrc :port 80))
             :secret))))
-    (flet ((message (&rest ignore)))
+    (cl-cl-flet ((message (&rest ignore)))
       (with-current-buffer
           (let ((query
                  (format "format=txt&longUrl=%s&login=%s&apiKey=%s"
@@ -723,7 +723,7 @@
 
     (delete-other-windows)
 
-    (flet ((switch-in-other-buffer
+    (cl-cl-flet ((switch-in-other-buffer
             (buf)
             (when buf
               (split-window-vertically)
@@ -1253,7 +1253,7 @@ Including indent-buffer, which should not be called automatically on save."
 
     (defun my-bookmark-set ()
       (interactive)
-      (flet ((bmkp-completing-read-lax
+      (cl-cl-flet ((bmkp-completing-read-lax
               (prompt &optional default alist pred hist)
               (completing-read prompt alist pred nil nil hist default)))
         (call-interactively #'bookmark-set)))
@@ -3684,7 +3684,7 @@ at the beginning of line, if already there."
     (if (featurep 'icicles)
         (defadvice lusty-file-explorer (around lusty-file-explorer-without-icy
                                                activate)
-          (flet ((message (&rest ignore)))
+          (cl-cl-flet ((message (&rest ignore)))
             (let ((icy-was-on icicle-mode))
               (if icy-was-on (icy-mode 0))
               (unwind-protect
@@ -4933,7 +4933,7 @@ and run compass from that directory"
      (interactive)
      (let* ((sass-file (buffer-file-name (current-buffer)))
             (local-dir (file-name-directory sass-file)))
-       (flet ((contains-config-rb (dir-name)
+       (cl-cl-flet ((contains-config-rb (dir-name)
                                   (find "config.rb" (directory-files dir-name)
                                         :test 'equal))
               (parent-dir (dir)
