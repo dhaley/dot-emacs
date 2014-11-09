@@ -484,9 +484,6 @@
 [submodule "site-lisp/git-modes"]
         path = site-lisp/git-modes
         url = git://github.com/magit/git-modes.git
-[submodule "site-lisp/ack-and-a-half"]
-        path = site-lisp/ack-and-a-half
-        url = git://github.com/jhelwig/ack-and-a-half.git
 [submodule "site-lisp/emoji-cheat-sheet"]
         path = site-lisp/emoji-cheat-sheet
         url = git://github.com/ShingoFukuyama/emacs-emoji-cheat-sheet.git
@@ -812,5 +809,5 @@
         path = site-lisp/haml-mode
         url = https://github.com/nex3/haml-mode.git
 [submodule "site-lisp/emamux"]
-	path = site-lisp/emamux
-	url = https://github.com/syohex/emacs-emamux.git
+        path = site-lisp/emamux
+        url = https://github.com/syohex/emacs-emamux.git
