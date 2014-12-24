@@ -1815,11 +1815,8 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
         ;; (use-package dired-async)
         ;; (use-package dired-sort-map)
         (use-package runner)
-        (use-package dired-details-hide
-          :commands dired-details-toggle)
 
         (bind-key "l" 'dired-up-directory dired-mode-map)
-        (bind-key "H" 'dired-details-toggle dired-mode-map)
 
         (defun my-dired-switch-window ()
           (interactive)
@@ -1977,7 +1974,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 (use-package doxymacs
   :commands doxymacs-mode
   :diminish doxymacs-mode
-  :load-path "~/.emacs.d/site-lisp/doxymacs-1.8.0/lisp")
+  :load-path "site-lisp/doxymacs-1.8.0/lisp")
 
 ;;;_ , drupal-mode
 
@@ -4801,7 +4798,7 @@ Keys are in kbd format."
 ;;;;_ , rainbow-delimiters
 
 (use-package rainbow-delimiters
-  :load-path "rainbow-delimiters"
+  :load-path "site-lisp/rainbow-delimiters"
   :commands (rainbow-delimiters-mode))
 
 
