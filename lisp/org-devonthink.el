@@ -13,14 +13,14 @@
 (defun org-get-dtp-link (&optional given-name)
   (interactive)
   (let ((name (or given-name
-                  (substring (do-applescript (format "
-	tell application \"DEVONthink Pro\"
-		get name of content record
-	end tell")) 1 -1)))
-	(location (substring (do-applescript (format "
-	tell application \"DEVONthink Pro\"
-		get uuid of content record
-	end tell")) 1 -1)))
+                  (substring (mac-do-applescript (format "
+        tell application \"DEVONthink Pro\"
+                get name of content record
+        end tell")) 1 -1)))
+        (location (substring (mac-do-applescript (format "
+        tell application \"DEVONthink Pro\"
+                get uuid of content record
+        end tell")) 1 -1)))
     (org-make-link-string
      (concat "x-devonthink-item://" location) name)))
 
