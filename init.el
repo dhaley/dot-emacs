@@ -2175,8 +2175,9 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
       (interactive)
 
       (set-frame-font
-       "-*-Lucida Grande-normal-normal-normal-*-*-*-*-*-p-0-iso10646-1" nil
-       nil)
+       "-*-Myriad Pro-normal-normal-normal-*-18-*-*-*-p-0-iso10646-1"
+       ;; "-*-Lucida Grande-normal-normal-normal-*-*-*-*-*-p-0-iso10646-1"
+       nil nil)
       (set-frame-parameter (selected-frame) 'width 90)
       (custom-set-faces
        '(erc-timestamp-face ((t (:foreground "dark violet")))))
