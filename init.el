@@ -5556,7 +5556,7 @@ Does not delete the prompt."
 
     (defun w3m-browse-chrome-url-new-session ()
       (interactive)
-      (let ((url (do-applescript
+      (let ((url (mac-do-applescript
                   (string-to-multibyte "tell application \"Google Chrome\"
   URL of active tab of front window
   end tell"))))
