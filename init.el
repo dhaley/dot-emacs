@@ -3055,7 +3055,7 @@ at the beginning of line, if already there."
     (bind-key "M-s ." 'helm-command-from-bash)
 
     (defadvice helm-buffers-list
-      (around expand-window-helm-buffers-list activate)
+        (around expand-window-helm-buffers-list activate)
       (let ((c (current-window-configuration)))
         (condition-case err
             (progn
@@ -3070,29 +3070,32 @@ at the beginning of line, if already there."
       :commands (helm-ag projectile-helm-ag)
       :bind (("M-s <escape>"  . projectile-helm-ag)
              ("M-s A"  . helm-ag))
-      :config
-      (progn
-        (defun projectile-helm-ag ()
-          (interactive)
-          (helm-ag (projectile-project-root)))
-        (bind-key "M-s <escape>" 'projectile-helm-ag)))
+             ("M-s A"  . helm-ag))))
+  :config
+  (progn
+    (defun projectile-helm-ag ()
+      (interactive)
+      (helm-ag (projectile-project-root)))
+    (bind-key "M-s <escape>" 'projectile-helm-ag)
 
     (bind-key "C-h b" 'helm-descbinds)
 
     (use-package helm-open-github
-  :bind (("C-. o f" . helm-open-github-from-file)
-         ("C-. o c" . helm-open-github-from-commit)
-         ("C-. o i" . helm-open-github-from-issues)
-         ("C-. o p" . helm-open-github-from-pull-requests)))
+      :bind (("C-. o f" . helm-open-github-from-file)
+             ("C-. o c" . helm-open-github-from-commit)
+             ("C-. o i" . helm-open-github-from-issues)
+             ("C-. o p" . helm-open-github-from-pull-requests)))
 
     (use-package helm-dash
       :load-path "site-lisp/esqlite/Emacs-pcsv"
       :init
       (helm-dash-activate-docset "Drupal"))
 
-    (use-package helm-eshell))
-  :config
-  (helm-match-plugin-mode t))
+    (helm-match-plugin-mode t)
+
+    (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
+    (bind-key "C-i" 'helm-execute-persistent-action helm-map)
+    (bind-key "C-z" 'helm-select-action helm-map)))
 
 ;;;_ , helm-dash
 
