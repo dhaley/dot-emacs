@@ -10,8 +10,8 @@
 (load (expand-file-name "load-path" (file-name-directory load-file-name)))
 
 (require 'use-package)
-(eval-when-compile
-  (setq use-package-verbose (null byte-compile-current-file)))
+;; (eval-when-compile
+;;   (setq use-package-verbose (null byte-compile-current-file)))
 
 ;;;_ , Utility macros and functions
 
