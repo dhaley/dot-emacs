@@ -166,7 +166,6 @@
      (output-pdf "Skim")
      (output-html "xdg-open"))))
  '(abbrev-file-name "~/.emacs.d/.abbrev_defs")
- '(abbrev-mode t t)
  '(ac-auto-show-menu 1.0)
  '(ac-auto-start 3)
  '(ac-comphist-file "~/.emacs.d/data/ac-comphist.dat")
@@ -178,14 +177,13 @@
    (quote
     (executable-make-buffer-file-executable-if-script-p)))
  '(ag-highlight-search t)
- '(alert-default-style (quote notifier))
  '(alert-notifier-command "/usr/local/bin/terminal-notifier")
+ '(alert-default-style (quote fringe))
  '(align-c++-modes (quote (csharp-mode c++-mode c-mode java-mode groovy-mode)))
  '(align-to-tab-stop nil)
  '(allout-command-prefix ".")
- '(auth-sources
-   (quote
-    ((:source "~/Documents/.authinfo.gpg" :host t :protocol t))))
+ '(ansi-color-names-vector
+   ["black" "red" "green" "brown" "blue" "magenta" "blue" "white"])
  '(auto-compression-mode t nil (jka-compr))
  '(auto-save-file-name-transforms (quote (("\\`/[^/]*:.*" "/tmp" t))))
  '(auto-save-interval 64)
@@ -196,9 +194,6 @@
      ("\\(recentf\\|archive/sent\\)" . "/tmp")
      (".*" . "~/.backups"))))
  '(backward-delete-char-untabify-method (quote untabify))
- '(battery-load-critical 7)
- '(battery-load-low 25)
- '(battery-mode-line-format "#%b %p %t")
  '(bbdb-default-country "")
  '(bbdb-file "~/Documents/.bbdb")
  '(bbdb-message-caching-enabled nil)
@@ -214,11 +209,12 @@
      ("HOME" . "Home")
      ("^$" . "Work"))))
  '(bbdb/mail-auto-create-p nil)
+ '(bc-bookmark-file "~/.emacs.d/data/breadcrumb")
  '(bind-key-segregation-regexp "\\`\\(\\(C-[chx.] \\|M-[gso] \\)\\([CM]-\\)?\\|.+-\\)")
  '(bm-highlight-style (quote bm-highlight-only-fringe))
  '(bmkp-bmenu-commands-file "~/.emacs.d/data/bmk-bmenu-commands.el")
  '(bmkp-bmenu-state-file "~/.emacs.d/data/bmk-bmenu-state.el")
- '(bmkp-last-as-first-bookmark-file nil)
+ '(bmkp-last-as-first-bookmark-file "~/Documents/bookmarks")
  '(bookmark-default-file "~/Documents/bookmarks")
  '(browse-url-browser-function (quote choose-browser))
  '(byte-compile-verbose nil)
@@ -240,7 +236,6 @@
  '(compilation-scroll-output t)
  '(compilation-skip-threshold 2)
  '(compile-command "tail /var/log/drupal.log")
- '(cpu-usage-format "%A %C0 %C1")
  '(css-indent-offset 2)
  '(current-language-environment "UTF-8")
  '(custom-buffer-done-function (quote kill-buffer))
@@ -277,7 +272,6 @@
  '(dired-recursive-copies (quote always))
  '(dired-recursive-deletes (quote always))
  '(diredful-init-file "~/.emacs.d/data/diredful-conf.el")
- '(display-battery-mode t)
  '(display-time-mail-function (quote (lambda nil (file-exists-p "/tmp/unread"))))
  '(display-time-use-mail-icon t)
  '(doc-view-resolution 300)
@@ -300,6 +294,7 @@
  '(elfeed-feeds
    (quote
     ("https://rss.myinterfase.com/rss/cuboulder_rssfeedcareerevents.xml")))
+ '(electric-indent-mode nil)
  '(emacs-lisp-mode-hook
    (quote
     (turn-on-auto-fill
@@ -314,16 +309,12 @@
         (quote find-function))
        (local-set-key
         [(control 109)]
-        (quote newline-and-indent)))
-     outline-minor-mode)))
- '(emms-cache-file "~/Documents/emms/cache")
- '(emms-directory "~/Documents/emms")
+        (quote newline-and-indent))))))
  '(emms-player-mplayer-parameters (quote ("-slave" "-quiet" "-really-quiet" "-volume" "15")))
- '(emms-score-file "~/Documents/emms/scores")
  '(emms-source-file-default-directory "~/Music/iTunes/iTunes Media")
- '(emms-stream-bookmarks-file "~/Documents/emms/streams")
  '(enable-recursive-minibuffers t)
- '(erc-autoawayo-message "I'm at the cappuccino bar(after %i seconds of idle-time)")
+ '(erc-auto-query (quote window-noselect))
+ '(erc-autoaway-message "I'm away (after %i seconds of idle-time)")
  '(erc-autojoin-channels-alist
    (quote
     (("freenode.net" "#drupal-colorado" "#emacs" "#thoughtbot")
@@ -331,8 +322,9 @@
  '(erc-autojoin-timing (quote ident))
  '(erc-fill-function (quote erc-fill-variable))
  '(erc-fill-static-center 12)
+ '(erc-format-nick-function (quote erc-format-@nick))
  '(erc-generate-log-file-name-function (quote erc-generate-log-file-name-short))
- '(erc-header-line-format "%t: %o")
+ '(erc-header-line-format nil)
  '(erc-hide-list (quote ("JOIN" "NICK" "PART" "QUIT" "MODE")))
  '(erc-keywords
    (quote
@@ -373,6 +365,7 @@
  '(erc-user-full-name (quote user-full-name))
  '(eshell-aliases-file "~/Messages/eshell/alias")
  '(eshell-directory-name "~/Messages/eshell/")
+ '(erc-yank-query-before-gisting nil)
  '(eshell-history-size 1000)
  '(eshell-ls-dired-initial-args (quote ("-h")))
  '(eshell-ls-exclude-regexp "~\\'")
@@ -405,6 +398,9 @@
  '(find-ls-subdir-switches "-alh")
  '(flycheck-sass-compass t)
  '(flycheck-scss-compass t)
+ '(flycheck-display-errors-delay 0.0)
+ '(flycheck-standard-error-navigation nil)
+ '(flymake-compilation-prevents-syntax-check nil)
  '(flyspell-abbrev-p nil)
  '(flyspell-incorrect-hook (quote (flyspell-maybe-correct-transposition)))
  '(flyspell-use-meta-tab nil)
@@ -433,20 +429,29 @@
  '(git-commit-mode-hook
    (quote
     (turn-on-auto-fill flyspell-mode git-commit-save-message)))
+ '(glasses-separator "-")
+ '(glasses-uncapitalize-p t)
  '(global-auto-complete-mode t)
- '(global-auto-revert-mode t)
  '(global-font-lock-mode t nil (font-lock))
- '(gnutls-min-prime-bits 1024)
- '(google-translate-default-target-language "en")
- '(google-translate-enable-ido-completion t)
  '(grep-find-command (quote ("ag --noheading --column --ignore branches " . 43)))
  '(helm-buffers-fuzzy-matching t)
+ '(hi2-ifte-offset 4)
+ '(hi2-layout-offset 4)
+ '(hi2-left-offset 4)
+ '(hi2-show-indentations nil)
  '(hippie-expand-try-functions-list
    (quote
-    (yas/hippie-try-expand try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
+    (yas-hippie-try-expand try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-list try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(history-delete-duplicates t)
  '(history-length 200)
  '(hl-sexp-background-color "#586e75")
+ '(hoogle-binary-path "hoogle")
+ '(hpaste-announce (quote always))
+ '(hpaste-blank-title nil)
+ '(hpaste-channel "#haskell")
+ '(hpaste-default-lang "haskell")
+ '(hpaste-default-nick "johnw")
+ '(hpaste-lang (quote always))
  '(ibuffer-default-display-maybe-show-predicates t)
  '(ibuffer-expert t)
  '(ibuffer-formats
@@ -461,123 +466,54 @@
      (mark " "
            (name 16 -1)
            " " filename))))
- '(ibuffer-maybe-show-predicate
-   (list "^\\*Completions\\*$" "^\\*nnimap" "^\\*gnus trace" "^\\*imap log" "^\\*elim" "^\\*Completions\\*$" "^\\*BBDB\\*$" "^\\.bbdb$" "^\\.newsrc-dribble$" "^\\*fsm-debug" "\\.org_archive$" "^\\*jekyll-aa\\*$" "\\.diary$" "\\*vc\\*" "^\\*w3m cache\\*$" "^\\*w3m-cookie-parse-temp\\*$" "^\\*w3m[-]work\\*$" "^\\*w3m[-]work\\*"))
  '(ibuffer-maybe-show-regexps nil)
  '(ibuffer-saved-filter-groups
    (quote
     (("default"
-      ("emacs Lisp"
+      ("Commands"
+       (or
+        (mode . shell-mode)
+        (mode . eshell-mode)
+        (mode . term-mode)
+        (mode . compilation-mode)))
+      ("Helm"
+       (mode . helm-mode))
+      ("Magit"
+       (or
+        (mode . magit-status-mode)
+        (mode . magit-log-mode)))
+      ("Haskell"
+       (or
+        (mode . haskell-mode)
+        (mode . haskell-cabal-mode)
+        (mode . literate-haskell-mode)))
+      ("Coq"
+       (mode . coq-mode))
+      ("C++"
+       (or
+        (mode . c-mode)
+        (mode . c++-mode)))
+      ("Lisp"
        (mode . emacs-lisp-mode))
-      ("python"
-       (mode . python-mode))
-      ("ruby"
-       (mode . ruby-mode))
-      ("coffee-script"
-       (mode . coffee-mode))
-      ("java-script"
-       (or
-        (mode . js-mode)
-        (mode . js2-mode)))
-      ("action-script"
-       (mode . actionscript-mode))
-      ("java"
-       (mode . java-mode))
-      ("html"
-       (or
-        (mode . html-mode)
-        (mode . web-mode)
-        (mode . haml-mode)))
-      ("xml"
-       (mode . nxml-mode))
-      ("css preprocessor"
-       (or
-        (mode . scss-mode)
-        (mode . sass-mode)
-        (mode . stylus-mode)))
-      ("css"
-       (mode . css-mode))
-      ("org agenda"
-       (mode . org-agenda-mode))
-      ("org"
-       (or
-        (mode . org-mode)
-        (name . "^\\*Calendar\\*$")
-        (name . "^diary$")))
-      ("text misc"
-       (or
-        (mode . text-mode)
-        (mode . rst-mode)
-        (mode . markdown-mode)))
-      ("w3m"
-       (mode . w3m-mode))
-      ("git"
-       (or
-        (mode . magit-log-edit-mode)
-        (mode . magit-log)))
-      ("dired"
+      ("Dired"
        (mode . dired-mode))
-      ("help"
-       (or
-        (mode . Info-mode)
-        (mode . help-mode)
-        (mode . Man-mode)
-        (mode . apropos-mode)
-        (mode . woman-mode)))
-      ("*kite*"
-       (name . "^\\*kite.*\\*"))
-      ("*helm*"
-       (name . "^\\*helm.*\\*"))
-      ("*buffer*"
-       (name . "\\*.*\\*"))
-      ("ssh"
-       (or
-        (name . "\\*tramp")
-        (name . "^\\*debug tramp")))
-      ("emacs"
-       (or
-        (mode . occur-mode)
-        (mode . bookmark-bmenu-mode)
-        (mode . help-mode)
-        (name . "^\\*scratch\\*$")
-        (name . "^\\*Messages\\*$")
-        (name . "^\\*Compile-Log\\*$")
-        (name . "^\\*Backtrace\\*$")
-        (name . "^\\*info\\*$")
-        (name . "^\\*Occur\\*$")
-        (name . "^\\*grep\\*$")
-        (name . "^\\*Process List\\*$")
-        (name . "^\\*gud\\*$")
-        (name . "^\\*compilation\\*$")
-        (name . "^\\*Kill Ring\\*$")))
-      ("latex"
-       (or
-        (mode . latex-mode)
-        (mode . LaTeX-mode)
-        (mode . bibtex-mode)
-        (mode . reftex-mode)))
-      ("irc"
-       (or
-        (mode . garak-mode)
-        (name . "^\\*Garak\\*$")
-        (mode . erc-mode)
-        (mode . twittering-mode)
-        (name . "^\\*scratch\\* (irc)$")))
-      ("gnus"
+      ("Gnus"
        (or
         (mode . message-mode)
-        (mode . bbdb-mode)
         (mode . mail-mode)
         (mode . gnus-group-mode)
         (mode . gnus-summary-mode)
         (mode . gnus-article-mode)
-        (name . "^\\.bbdb$")
-        (name . "^\\*fetchmail\\*$")
-        (name . "^\\.newsrc-dribble")
-        (name . "^\\*gnus trace\\*$")
-        (name . "^\\*scratch\\* (gnus)$")))
-      ("Magit"
-       (name . "*magit"))))))
+        (name . "^\\.newsrc-dribble")))
+      ("Org"
+       (or
+        (name . "^\\*Calendar\\*$")
+        (name . "^diary$")
+        (mode . org-mode)))
+      ("Emacs"
+       (or
+        (name . "^\\*scratch\\*$")
+        (name . "^\\*Messages\\*$")))))))
  '(ibuffer-show-empty-filter-groups nil)
  '(ibuffer-shrink-to-minimum-size t t)
  '(ibuffer-use-other-window t)
@@ -591,28 +527,20 @@
  '(ido-decorations
    (quote
     ("{" "}" "," ",..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
- '(ido-default-buffer-method (quote selected-window))
- '(ido-default-file-method (quote selected-window))
  '(ido-enable-flex-matching t)
  '(ido-enable-last-directory-history nil)
  '(ido-enable-tramp-completion nil)
  '(ido-enter-matching-directory (quote first))
- '(ido-everywhere t)
- '(ido-file-extensions-order
-   (quote
-    (".py" ".rb" ".java" ".coffee" ".js" ".c" ".cpp" ".el" ".html" ".htm" ".xhtml" ".styl" ".scss" ".sass" ".css" ".org" ".md" ".markdowm" ".doc" ".txt" ".rst" ".yml" ".yaml" ".xml" ".ini" ".cfg" ".cnf")))
- '(ido-ignore-buffers
-   (quote
-    ("\\` " "*Ido Completions*" "*Completions*" "*helm*" "type-break")))
  '(ido-ignore-files
    (quote
     ("\\`CVS/" "\\`#" "\\`.#" "\\`\\.\\./" "\\`\\./" "\\`\\.DS_Store" "\\`\\.localized" "\\.sparsebundle/" "\\.dmg\\'")))
- '(ido-max-directory-size 100000)
  '(ido-save-directory-list-file "~/.emacs.d/data/ido.last")
  '(ido-use-virtual-buffers t)
  '(ido-use-virtual-buffers-automatically t)
+ '(idris-interpreter-flags (quote ("-p" "effects")))
  '(image-dired-dir "~/.emacs.d/data/image-dired/")
  '(indent-tabs-mode nil)
+ '(inhibit-startup-echo-area-message "dkh")
  '(inhibit-startup-screen t)
  '(initial-major-mode (quote org-mode))
  '(initsplit-customizations-alist
@@ -622,46 +550,37 @@
  '(ipa-file "~/Documents/ipa")
  '(ipa-overlay-position "above")
  '(irfc-directory "~/Archives/Admin/RFC/")
- '(ispell-extra-args (quote ("--sug-mode=fast")))
  '(ispell-personal-dictionary "~/Documents/.aspell.en.pws")
  '(ispell-program-name "/usr/local/bin/aspell")
- '(jiralib-url "https://cuboulder.atlassian.net")
+ '(ispell-extra-args (quote ("--sug-mode=fast" "--keyboard=dvorak")))
  '(kill-do-not-save-duplicates t)
  '(kill-whole-line t)
  '(large-file-warning-threshold nil)
- '(ldap-host-parameters-alist
-   (quote
-    (("directory.colorado.edu" base "dc=colorado,dc=edu"))))
- '(ldap-ldapsearch-args (quote ("-LLL" "-x")))
- '(ldap-ldapsearch-prog "/usr/bin/ldapsearch")
  '(ledger-file "~/Documents/Accounts/ledger.dat")
  '(ledger-post-use-ido t)
  '(line-number-mode t)
- '(list-colors-sort (quote hsv))
- '(locate-command "mdfind")
- '(locate-make-command-line (quote mlm/locate-make-command-line))
+ '(mac-option-modifier (quote alt))
  '(mac-pass-command-to-system nil)
  '(mac-pass-control-to-system nil)
  '(mac-wheel-button-is-mouse-2 nil)
  '(magit-auto-revert-mode nil)
  '(magit-completing-read-function (quote magit-ido-completing-read))
+ '(magit-diff-options nil)
  '(magit-process-popup-time 15)
- '(magit-repo-dirs (quote ("~/.emacs.d/" "~/Documents/Tasks")))
- '(mail-sources (quote ((file :path "/var/mail/dadu"))))
+ '(magit-stage-all-confirm nil)
+ '(magit-unstage-all-confirm nil)
  '(make-backup-file-name-function (quote my-make-backup-file-name))
- '(memory-usage-format "%R %F %S")
+ '(markdown-command "pandoc -f markdown_mmd -S")
+ '(markdown-command-needs-filename t)
+ '(markdown-enable-math t)
+ '(markdown-open-command "open-markdown")
  '(moccur-following-mode-toggle nil)
  '(modelinepos-column-limit 80)
- '(mouse-wheel-mode -1)
- '(mouse-wheel-scroll-amount (quote (1 ((shift) . 5) ((control)))))
  '(mudel-mode-hook (quote (mudel-add-scroll-to-bottom)))
  '(mudel-output-filter-functions (quote (ansi-color-process-output)))
  '(multi-term-program "/usr/bin/screen")
  '(multi-term-program-switches "-DR")
  '(multi-term-scroll-show-maximum-output t)
- '(network-speed-format-string "%NI#%RB#%TB#%RX#%TX#%AX")
- '(network-speed-precision 1)
- '(network-speed-update-interval 5)
  '(next-line-add-newlines nil)
  '(ns-alternate-modifier (quote alt))
  '(ns-command-modifier (quote meta))
@@ -703,6 +622,11 @@
     ("includes/common.inc" "includes/bootstrap.inc" ".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs")))
  '(projectile-switch-project-action (quote dkh-projectile-dired))
  '(projectile-switch-project-hook (quote dkh-project-record))
+ '(proof-auto-action-when-deactivating-scripting (quote retract))
+ '(proof-electric-terminator-enable t)
+ '(proof-shell-fiddle-frames nil)
+ '(proof-splash-enable nil)
+ '(proof-sticky-errors t)
  '(ps-font-size (quote (8 . 10)))
  '(ps-footer-font-size (quote (12 . 14)))
  '(ps-header-font-size (quote (12 . 14)))
@@ -714,7 +638,6 @@
     (html-mode css-mode php-mode nxml-mode xml-mode scss-mode drupal-mode)))
  '(rdebug-many-windows nil)
  '(read-buffer-function (quote ido-read-buffer))
- '(read-mail-command (quote gnus))
  '(recentf-auto-cleanup (quote never))
  '(recentf-exclude
    (quote
@@ -723,21 +646,19 @@
  '(recentf-save-file "~/.emacs.d/data/recentf")
  '(redisplay-dont-pause t t)
  '(regex-tool-backend (quote perl))
- '(require-final-newline t)
  '(runner-init-file "~/.emacs.d/runner-conf.el")
+ '(sage-view-anti-aliasing-level 4)
+ '(sage-view-margin (quote (20 . 20)))
+ '(sage-view-scale 2.0)
  '(same-window-buffer-names
    (quote
     ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
- '(same-window-regexps
-   (quote
-    ("\\*vc\\-.+\\*" "\\*magit.+\\*" "*grep*" "\\*compilation\\*\\(\\|<[0-9]+>\\)" "\\*Help\\*\\(\\|<[0-9]+>\\)" "\\*Shell Command Output\\*\\(\\|<[0-9]+>\\)" "\\*dictem.*")))
  '(save-abbrevs (quote silently))
  '(save-interprogram-paste-before-kill t)
  '(save-kill-file-name "~/.emacs.d/data/kill-ring-saved.el")
  '(scroll-bar-mode nil)
  '(scss-compile-at-save nil)
  '(semanticdb-default-save-directory "~/.emacs.d/data/semanticdb")
- '(sentence-end-double-space nil)
  '(session-globals-exclude (quote (load-history flyspell-auto-correct-ring)))
  '(session-globals-include
    (quote
@@ -749,12 +670,14 @@
  '(session-name-disable-regexp "\\(\\`/tmp\\|COMMIT_EDITMSG\\)")
  '(session-registers (quote (t (0 . 127))))
  '(session-save-file "~/.emacs.d/data/session")
+ '(shm-auto-insert-bangs nil)
+ '(shm-indent-spaces 4)
+ '(shm-use-hdevtools t)
+ '(shm-use-presentation-mode t)
  '(show-paren-delay 0)
  '(slime-kill-without-query-p t)
  '(slime-repl-history-file "~/.emacs.d/data/slime-history.eld")
  '(slime-startup-animation nil)
- '(sml/theme (quote respectful))
- '(sp-base-key-bindings (quote sp))
  '(sp-highlight-pair-overlay nil)
  '(sql-sqlite-program "sqlite3")
  '(sr-attributes-display-mask (quote (nil nil t nil nil nil)))
@@ -768,7 +691,6 @@
  '(sr-use-commander-keys nil)
  '(sr-windows-default-ratio 80)
  '(ssl-certificate-verification-policy 1)
- '(sublimity-attractive-centering-width nil)
  '(svn-status-hide-unmodified t)
  '(tags-apropos-verbose t)
  '(tags-case-fold-search nil)
@@ -811,7 +733,7 @@
           (quote auto-fill-function)))))))
  '(tls-program
    (quote
-    ("openssl s_client -connect %h:%p -no_ssl2 -ign_eof")))
+    ("openssl s_client -connect %h:%p -no_ssl2 -ign_eof -CApath /etc/postfix/certs -cert /Users/dadu/Messages/me.pem")))
  '(tool-bar-mode nil)
  '(tramp-auto-save-directory "~/.backups")
  '(tramp-default-method-alist
@@ -856,16 +778,14 @@
  '(vc-make-backup-files t)
  '(version-control t)
  '(visible-bell t)
- '(w3m-cookie-accept-bad-cookies nil)
+ '(w3m-cookie-accept-bad-cookies (quote ask))
  '(w3m-default-display-inline-images t)
- '(w3m-default-save-directory "~/Downloads")
  '(w3m-fill-column 80)
- '(w3m-session-file "~/Documents/w3m-session")
  '(w3m-use-cookies t)
  '(warning-minimum-log-level :error)
  '(wdired-use-dired-vertical-movement (quote sometimes))
  '(web-mode-enable-comment-keywords t)
- '(wg-mode-line-on t)
+ '(wg-mode-line-on nil)
  '(wg-morph-on nil)
  '(wg-prefix-key "")
  '(wg-query-for-save-on-emacs-exit nil)
@@ -888,8 +808,6 @@
     ("~/.emacs.d/snippets" "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets" "~/.emacs.d/site-lisp/css-scss")) nil (yasnippet))
  '(yas-triggers-in-field t)
  '(yas-wrap-around-region t)
- '(yas/triggers-in-field t)
- '(yas/wrap-around-region t)
  '(zencoding-preview-default nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -899,10 +817,12 @@
  '(auto-dim-other-buffers-face ((t (:inherit fringe))))
  '(diary ((t (:inherit eshell-ls-backup))))
  '(diff-added ((((background dark)) (:foreground "#FFFF9B9BFFFF")) (t (:foreground "DarkGreen"))))
+ '(diff-added2 ((t (:foreground "SeaGreen"))))
  '(diff-changed ((((background dark)) (:foreground "Yellow")) (t (:foreground "MediumBlue"))))
  '(diff-context ((((background dark)) (:foreground "White")) (t (:foreground "Black"))))
  '(diff-file-header ((((background dark)) (:foreground "Cyan" :background "Black")) (t (:foreground "Red" :background "White"))))
  '(diff-header ((((background dark)) (:foreground "Cyan")) (t (:foreground "Red"))))
+ '(diff-hunk-header ((t (:background "grey90" :foreground "black"))))
  '(diff-index ((((background dark)) (:foreground "Magenta")) (t (:foreground "Green"))))
  '(diff-nonexistent ((((background dark)) (:foreground "#FFFFFFFF7474")) (t (:foreground "DarkBlue"))))
  '(dired-subtree-depth-1-face ((t (:inherit org-todo-kwd-face))))
@@ -911,6 +831,43 @@
  '(dired-subtree-depth-4-face ((t (:inherit org-waiting-kwd-face))))
  '(dired-subtree-depth-5-face ((t (:inherit org-someday-kwd-face))))
  '(dired-subtree-depth-6-face ((t (:inherit org-started-kwd-face))))
+ '(diff-removed ((t (:foreground "firebrick"))))
+ '(diff-removed2 ((t (:foreground "Orange"))))
  '(erc-timestamp-face ((t (:foreground "dark violet"))))
  '(holiday ((t (:inherit fringe))))
  '(which-func ((t (:inherit comint-highlight-prompt)))))
+ '(flycheck-error ((t (:underline (:color "red1" :style wave)))))
+ '(flycheck-warning ((t (:underline (:color "DeepSkyBlue" :style wave)))))
+ '(flyparse-error-face ((t (:background "LightPink"))))
+ '(flyparse-warning-face ((t (:background "DeepSkyBlue"))))
+ '(font-lock-comment-face ((((class color)) (:foreground "firebrick"))))
+ '(ghc-face-error ((t (:inherit default))))
+ '(ghc-face-warn ((t (:inherit default))))
+ '(helm-M-x-key ((t (:foreground "dark red" :underline t))))
+ '(helm-candidate-number ((t (:background "#faffb5" :foreground "black"))))
+ '(helm-selection ((t (:background "#b5ffd1" :underline t))))
+ '(helm-separator ((t (:foreground "#ffbfb5"))))
+ '(helm-source-header ((t (:background "#abd7f0" :foreground "black" :underline t))))
+ '(helm-visible-mark ((t (:background "#d1f5ae"))))
+ '(hl-line ((t (:background "cornsilk"))))
+ '(idris-loaded-region-face ((t (:background "#eaf8ff"))))
+ '(ledger-register-pending-face ((t (:weight bold))))
+ '(lusty-match-face ((t (:inherit helm-match))))
+ '(magit-item-highlight ((t (:weight normal))))
+ '(match ((t (:background "light cyan"))))
+ '(proof-script-sticky-error-face ((t (:background "yellow"))))
+ '(shm-current-face ((t (:background "#eeeeee"))))
+ '(shm-quarantine-face ((t (:background "#fefefe"))))
+ '(slime-highlight-edits-face ((((class color) (background light)) (:background "gray98"))))
+ '(trailing-whitespace ((((class color) (background light)) (:background "light salmon"))))
+ '(wg-brace-face ((((class color)) (:foreground "dark slate blue"))))
+ '(wg-command-face ((((class color)) (:foreground "dark cyan"))))
+ '(wg-current-workgroup-face ((((class color)) (:foreground "black"))))
+ '(wg-divider-face ((((class color)) (:foreground "dark slate blue"))))
+ '(wg-filename-face ((((class color)) (:foreground "dark blue"))))
+ '(wg-frame-face ((((class color)) (:foreground "black"))))
+ '(wg-message-face ((((class color)) (:foreground "dark blue"))))
+ '(wg-mode-line-face ((((class color)) (:foreground "dark blue"))))
+ '(wg-other-workgroup-face ((((class color)) (:foreground "dark slate grey"))))
+ '(wg-previous-workgroup-face ((((class color)) (:foreground "dark blue"))))
+ '(whitespace-line ((t (:background "ivory" :foreground "dark violet")))))
