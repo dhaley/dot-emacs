@@ -2961,6 +2961,7 @@ at the beginning of line, if already there."
 ;;;_ , git-gutter+
 
 (use-package git-gutter+
+  :disabled t
   :diminish git-gutter+-mode
   :config
   (progn
