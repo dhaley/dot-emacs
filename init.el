@@ -905,7 +905,6 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , agda
 
 (use-package agda2-mode
-  :load-path "~/.nix-profile/share/x86_64-osx-ghc-7.8.3/Agda-2.4.0.1/emacs-mode/"
   :mode ("\\.agda\\'" . agda2-mode)
   :init
   (use-package agda-input)
@@ -999,9 +998,9 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , auctex
 
 (use-package tex-site
-  :load-path "site-lisp/auctex/preview/"
+  ;; :load-path "site-lisp/auctex/preview/"
   :defines (latex-help-cmd-alist latex-help-file)
-  :mode ("\\.tex\\'" . latex-mode)
+  :mode ("\\.tex\\'" . TeX-latex-mode)
   :config
   (progn
     (defun latex-help-get-cmd-alist ()  ;corrected version:
