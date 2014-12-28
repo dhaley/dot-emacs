@@ -106,25 +106,6 @@
 
   (load (expand-file-name "settings" user-emacs-directory)))
 
-;; mac switch meta key
-(defun mac-switch-meta nil
-  "switch meta between Option and Command"
-  (interactive)
-  (if (eq mac-option-modifier nil)
-      (progn
-        (setq mac-option-modifier 'meta)
-        (setq mac-command-modifier 'hyper)
-        )
-    (progn
-      (setq mac-option-modifier nil)
-      (setq mac-command-modifier 'meta))))
-
-(mac-switch-meta)
-(setq mac-function-modifier 'hyper)
-
-(defvar mac-fullscreen-on  nil
-  "keep a track of mac-mouse-turn-o(n|ff)-fullscreen, assumes fullscreen is not on")
-
 (defun mac-toggle-fullscreen ()
   "toggle fullscreen mode in Emacs mac (by Yamamoto Mitsuharu)"
   (interactive)
