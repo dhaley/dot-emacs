@@ -2173,19 +2173,10 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , erc
 
 (use-package erc
-  ;; :commands erc
   :if running-alternate-emacs
   :init
   (progn
-    (use-package erc-image)
     (defun setup-irc-environment ()
-      (interactive)
-
-      (set-frame-font
-       "-*-Myriad Pro-normal-normal-normal-*-18-*-*-*-p-0-iso10646-1"
-       ;; "-*-Lucida Grande-normal-normal-normal-*-*-*-*-*-p-0-iso10646-1"
-       nil nil)
-      (set-frame-parameter (selected-frame) 'width 90)
       (custom-set-faces
        '(erc-timestamp-face ((t (:foreground "dark violet")))))
 
@@ -2261,8 +2252,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                 (message msg))
             (message (concat "No definition found for " (upcase term)))))))
 
-    (use-package erc-youtube)
-
     (defun switch-to-bitlbee ()
       (interactive)
       (switch-to-buffer "&bitlbee")
@@ -2286,29 +2275,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
               (lambda (s)
                 (when (erc-foolish-content s)
                   (setq erc-insert-this nil))))
-
-    (defun erc-cmd-SHOW (&rest form)
-      "Eval FORM and send the result and the original form as:
-FORM => (eval FORM)."
-      (let* ((form-string (mapconcat 'identity form " "))
-             (result
-              (condition-case err
-                  (eval (read-from-whole-string form-string))
-                (error
-                 (format "Error: %s" err)))))
-        (erc-send-message (format "%s => %S" form-string result))))
-
-    (defun erc-cmd-INFO (&rest ignore)
-      "Send current info node."
-      (unless (get-buffer "*info*")
-        (error "No *info* buffer"))
-      (let (output)
-        (with-current-buffer "*info*"
-          (let* ((file (file-name-nondirectory Info-current-file))
-                 (node Info-current-node))
-            (setq output (format "(info \"(%s)%s\") <-- hit C-x C-e to evaluate"
-                                 file node))))
-        (erc-send-message output)))
 
     (eval-when-compile
       (defvar erc-fools))
@@ -2337,7 +2303,7 @@ FORM => (eval FORM)."
              (user (erc-server-user-login who)))
         (erc-send-command
          (format "MODE %s +b *!%s@%s%s"
-                 chan (if whole-ip "*" user) host redirect))))
+                 chan (if whole-ip "*" user) host (or redirect "")))))
 
     (defun erc-cmd-KICKBAN (nick &rest reason)
       (setq reason (mapconcat #'identity reason " "))
@@ -2350,7 +2316,9 @@ FORM => (eval FORM)."
                                 (erc-default-target)
                                 nick
                                 (or reason
-                                    "Kicked (kickban)"))))
+                                    "Kicked (kickban)")))
+      (sleep-for 0 250)
+      (erc-cmd-DEOPME))
 
     (defun erc-cmd-KICKBANIP (nick &rest reason)
       (setq reason (mapconcat #'identity reason " "))
@@ -2363,7 +2331,9 @@ FORM => (eval FORM)."
                                 (erc-default-target)
                                 nick
                                 (or reason
-                                    "Kicked (kickbanip)"))))
+                                    "Kicked (kickbanip)")))
+      (sleep-for 0 250)
+      (erc-cmd-DEOPME))
 
     (defun erc-cmd-KICKTROLL (nick &rest reason)
       (setq reason (mapconcat #'identity reason " "))
@@ -2376,7 +2346,9 @@ FORM => (eval FORM)."
                                 (erc-default-target)
                                 nick
                                 (or reason
-                                    "Kicked (kicktroll)"))))
+                                    "Kicked (kicktroll)")))
+      (sleep-for 0 250)
+      (erc-cmd-DEOPME))
 
     ;; this is essentially a refactored `erc-cmd-KICK'
     (defun erc-cmd-REMOVE (target &optional reason-or-nick &rest reasonwords)
@@ -2440,15 +2412,7 @@ FORM => (eval FORM)."
              (erc-display-line
               (erc-make-notice (format "Now tracking %s" target))
               'active)))))
-      t)
-    ;; turn on abbrevs
-    (abbrev-mode 1)
-    ;; add abbrevs
-    (abbrev-table-put erc-mode-abbrev-table :parents (list
-                                                      text-mode-abbrev-table))
-    (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))))
-
-
+      t)))
 
 ;;;_ , eshell
 
