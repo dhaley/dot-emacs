@@ -3069,14 +3069,14 @@ at the beginning of line, if already there."
     (use-package helm-ag
       :commands (helm-ag projectile-helm-ag)
       :bind (("M-s <escape>"  . projectile-helm-ag)
+             ("M-s A"  . helm-ag)
              ("M-s A"  . helm-ag))
-             ("M-s A"  . helm-ag))))
-  :config
-  (progn
-    (defun projectile-helm-ag ()
-      (interactive)
-      (helm-ag (projectile-project-root)))
-    (bind-key "M-s <escape>" 'projectile-helm-ag)
+      :config
+      (progn
+        (defun projectile-helm-ag ()
+          (interactive)
+          (helm-ag (projectile-project-root)))
+        (bind-key "M-s <escape>" 'projectile-helm-ag)))
 
     (bind-key "C-h b" 'helm-descbinds)
 
