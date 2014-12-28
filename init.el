@@ -478,60 +478,68 @@
   (defvar emacs-min-height)
   (defvar emacs-min-width))
 
+(setq display-name
+      (let ((width (display-pixel-width)))
+        (cond
+         ((= width 2560)
+          'retina-imac)
+         ((= width 1440)
+          'retina-macbook-pro))))
+
 (unless noninteractive
   (if running-alternate-emacs
       (progn
-        (defun emacs-min-top ()
-          (let ((height (display-pixel-height)))
-            (cond ((= 1050 height) 22)
-                  ((= 900 height) 22)
-                  (t 22))))
+        (defun emacs-min-top () 22)
         (defun emacs-min-left () 5)
-        (defvar emacs-min-height (if (= 1050 (display-pixel-height)) 47 64))
-        (defvar emacs-min-width 80))
+        (defvar emacs-min-height 57)
+        (defvar emacs-min-width 90))
 
-    (defun emacs-min-top () 22)
+    (defun emacs-min-top () 23)
     (defun emacs-min-left ()
-      (let ((width (display-pixel-width)))
-        (cond
-         ((= width 3360) 1000)
-         (t (- width 918)))))
-    (defvar emacs-min-height (if (= 1050 (display-pixel-height)) 55 65))
+      (cond
+       ((eq display-name 'retina-imac) 975)
+       (t 521)))
+    (defvar emacs-min-height
+      (cond
+       ((eq display-name 'retina-imac) 55)
+       (t 44)))
     (defvar emacs-min-width 100)))
 
 (defun emacs-min ()
   (interactive)
+
   (set-frame-parameter (selected-frame) 'fullscreen nil)
   (set-frame-parameter (selected-frame) 'vertical-scroll-bars nil)
   (set-frame-parameter (selected-frame) 'horizontal-scroll-bars nil)
+
   (set-frame-parameter (selected-frame) 'top (emacs-min-top))
   (set-frame-parameter (selected-frame) 'left (emacs-min-left))
   (set-frame-parameter (selected-frame) 'height emacs-min-height)
-  (set-frame-parameter (selected-frame) 'width emacs-min-width))
+  (set-frame-parameter (selected-frame) 'width emacs-min-width)
+
+  (set-frame-font
+   (cond
+    ((eq display-name 'retina-imac)
+     (if running-alternate-emacs
+         "-*-Myriad Pro-normal-normal-normal-*-20-*-*-*-p-0-iso10646-1"
+       "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"))
+    (t
+     (if running-alternate-emacs
+         "-*-Myriad Pro-normal-normal-normal-*-17-*-*-*-p-0-iso10646-1"
+       "-*-Source Code Pro-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1"))))
+
+  (when running-alternate-emacs
+    (set-background-color "grey85")
+    (set-face-background 'fringe "gray80")))
 
 (if window-system
     (add-hook 'after-init-hook 'emacs-min))
 
 (defun emacs-max ()
   (interactive)
-  (if t
-      (progn
-        (set-frame-parameter (selected-frame) 'fullscreen 'fullboth)
-        (set-frame-parameter (selected-frame) 'vertical-scroll-bars nil)
-        (set-frame-parameter (selected-frame) 'horizontal-scroll-bars nil))
-    (set-frame-parameter (selected-frame) 'top 26)
-    (set-frame-parameter (selected-frame) 'left 2)
-    (set-frame-parameter (selected-frame) 'width
-                         (floor (/ (float (x-display-pixel-width)) 9.15)))
-    (if (= 1050 (x-display-pixel-height))
-        (set-frame-parameter (selected-frame) 'height
-                             (if (>= emacs-major-version 24)
-                                 66
-                               55))
-      (set-frame-parameter (selected-frame) 'height
-                           (if (>= emacs-major-version 24)
-                               75
-                             64)))))
+  (set-frame-parameter (selected-frame) 'fullscreen 'fullboth)
+  (set-frame-parameter (selected-frame) 'vertical-scroll-bars nil)
+  (set-frame-parameter (selected-frame) 'horizontal-scroll-bars nil))
 
 (defun emacs-toggle-size ()
   (interactive)
