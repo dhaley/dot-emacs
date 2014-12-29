@@ -4,15 +4,106 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-auto-exclude-function (quote org-my-auto-exclude-function))
- '(org-agenda-clock-consistency-checks (quote (:max-duration "4:00" :min-duration 0 :max-gap 0 :gap-ok-around ("4:00"))))
- '(org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80)))
+ '(org-agenda-clock-consistency-checks
+   (quote
+    (:max-duration "4:00" :min-duration 0 :max-gap 0 :gap-ok-around
+                   ("4:00"))))
+ '(org-agenda-clockreport-parameter-plist
+   (quote
+    (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80)))
  '(org-agenda-cmp-user-defined (quote bh/agenda-sort))
  '(org-agenda-compact-blocks t)
- '(org-agenda-custom-commands (quote (("N" "Notes" tags "NOTE" ((org-agenda-overriding-header "Notes") (org-tags-match-list-sublevels t))) ("h" "Habits" tags-todo "STYLE=\"habit\"" ((org-agenda-overriding-header "Habits") (org-agenda-sorting-strategy (quote (todo-state-down effort-up category-keep))))) (" " "Agenda" ((agenda "" nil) (tags "REFILE" ((org-agenda-overriding-header "Tasks to Refile") (org-tags-match-list-sublevels nil))) (tags-todo "-CANCELLED/!" ((org-agenda-overriding-header "Stuck Projects") (org-agenda-skip-function (quote bh/skip-non-stuck-projects)) (org-agenda-sorting-strategy (quote (category-keep))))) (tags-todo "-HOLD-CANCELLED/!" ((org-agenda-overriding-header "Projects") (org-agenda-skip-function (quote bh/skip-non-projects)) (org-tags-match-list-sublevels (quote indented)) (org-agenda-sorting-strategy (quote (category-keep))))) (tags-todo "-CANCELLED/!NEXT" ((org-agenda-overriding-header (concat "Project Next Tasks" (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)"))) (org-agenda-skip-function (quote bh/skip-projects-and-habits-and-single-tasks)) (org-tags-match-list-sublevels t) (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks) (org-agenda-sorting-strategy (quote (todo-state-down effort-up category-keep))))) (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!" ((org-agenda-overriding-header (concat "Project Subtasks" (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)"))) (org-agenda-skip-function (quote bh/skip-non-project-tasks)) (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks) (org-agenda-sorting-strategy (quote (category-keep))))) (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!" ((org-agenda-overriding-header (concat "Standalone Tasks" (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)"))) (org-agenda-skip-function (quote bh/skip-project-tasks)) (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks) (org-agenda-sorting-strategy (quote (category-keep))))) (tags-todo "-CANCELLED+WAITING|HOLD/!" ((org-agenda-overriding-header (concat "Waiting and Postponed Tasks" (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)"))) (org-agenda-skip-function (quote bh/skip-non-tasks)) (org-tags-match-list-sublevels nil) (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks) (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks))) (tags "-REFILE/" ((org-agenda-overriding-header "Tasks to Archive") (org-agenda-skip-function (quote bh/skip-non-archivable-tasks)) (org-tags-match-list-sublevels nil)))) nil))))
+ '(org-agenda-custom-commands
+   (quote
+    (("N" "Notes" tags "NOTE"
+      ((org-agenda-overriding-header "Notes")
+       (org-tags-match-list-sublevels t)))
+     ("h" "Habits" tags-todo "STYLE=\"habit\""
+      ((org-agenda-overriding-header "Habits")
+       (org-agenda-sorting-strategy
+        (quote
+         (todo-state-down effort-up category-keep)))))
+     (" " "Agenda"
+      ((agenda "" nil)
+       (tags "REFILE"
+             ((org-agenda-overriding-header "Tasks to Refile")
+              (org-tags-match-list-sublevels nil)))
+       (tags-todo "-CANCELLED/!"
+                  ((org-agenda-overriding-header "Stuck Projects")
+                   (org-agenda-skip-function
+                    (quote bh/skip-non-stuck-projects))
+                   (org-agenda-sorting-strategy
+                    (quote
+                     (category-keep)))))
+       (tags-todo "-HOLD-CANCELLED/!"
+                  ((org-agenda-overriding-header "Projects")
+                   (org-agenda-skip-function
+                    (quote bh/skip-non-projects))
+                   (org-tags-match-list-sublevels
+                    (quote indented))
+                   (org-agenda-sorting-strategy
+                    (quote
+                     (category-keep)))))
+       (tags-todo "-CANCELLED/!NEXT"
+                  ((org-agenda-overriding-header
+                    (concat "Project Next Tasks"
+                            (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
+                   (org-agenda-skip-function
+                    (quote bh/skip-projects-and-habits-and-single-tasks))
+                   (org-tags-match-list-sublevels t)
+                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-sorting-strategy
+                    (quote
+                     (todo-state-down effort-up category-keep)))))
+       (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                  ((org-agenda-overriding-header
+                    (concat "Project Subtasks"
+                            (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
+                   (org-agenda-skip-function
+                    (quote bh/skip-non-project-tasks))
+                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-sorting-strategy
+                    (quote
+                     (category-keep)))))
+       (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                  ((org-agenda-overriding-header
+                    (concat "Standalone Tasks"
+                            (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
+                   (org-agenda-skip-function
+                    (quote bh/skip-project-tasks))
+                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-sorting-strategy
+                    (quote
+                     (category-keep)))))
+       (tags-todo "-CANCELLED+WAITING|HOLD/!"
+                  ((org-agenda-overriding-header
+                    (concat "Waiting and Postponed Tasks"
+                            (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
+                   (org-agenda-skip-function
+                    (quote bh/skip-non-tasks))
+                   (org-tags-match-list-sublevels nil)
+                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)))
+       (tags "-REFILE/"
+             ((org-agenda-overriding-header "Tasks to Archive")
+              (org-agenda-skip-function
+               (quote bh/skip-non-archivable-tasks))
+              (org-tags-match-list-sublevels nil))))
+      nil))))
  '(org-agenda-diary-file "~/Documents/Tasks/diary.org")
  '(org-agenda-dim-blocked-tasks nil)
- '(org-agenda-exporter-settings (quote ((org-agenda-write-buffer-name "Damon's VC-Rsrch/Dean-Grad Agenda"))))
- '(org-agenda-files (quote ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/from-mobile.org")))
+ '(org-agenda-exporter-settings
+   (quote
+    ((org-agenda-write-buffer-name "Damon's VC-Rsrch/Dean-Grad Agenda"))))
+ '(org-agenda-files
+   (quote
+    ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/from-mobile.org")))
  '(org-agenda-include-diary nil)
  '(org-agenda-insert-diary-extract-time t)
  '(org-agenda-log-mode-items (quote (closed state)))
@@ -24,20 +115,34 @@
  '(org-agenda-skip-deadline-if-done t)
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-skip-timestamp-if-done t)
- '(org-agenda-sorting-strategy (quote ((agenda habit-down time-up user-defined-up effort-up category-keep) (todo category-up effort-up) (tags category-up effort-up) (search category-up))))
+ '(org-agenda-sorting-strategy
+   (quote
+    ((agenda habit-down time-up user-defined-up effort-up category-keep)
+     (todo category-up effort-up)
+     (tags category-up effort-up)
+     (search category-up))))
  '(org-agenda-span (quote day))
  '(org-agenda-start-on-weekday 1)
  '(org-agenda-sticky t)
  '(org-agenda-tags-column -102)
  '(org-agenda-tags-todo-honor-ignore-options t)
  '(org-agenda-text-search-extra-files (quote (agenda-archives)))
- '(org-agenda-time-grid (quote ((daily today remove-match) #("----------------" 0 16 (org-heading t)) (900 1100 1300 1500 1700))))
+ '(org-agenda-time-grid
+   (quote
+    ((daily today remove-match)
+     #("----------------" 0 16
+       (org-heading t))
+     (900 1100 1300 1500 1700))))
  '(org-agenda-todo-ignore-with-date nil)
  '(org-agenda-window-setup (quote current-window))
  '(org-archive-location "%s_archive::* Archived Tasks")
  '(org-babel-results-keyword "results")
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
- '(org-capture-templates (quote (("t" "Task" entry (file+headline "~/Documents/Tasks/todo.txt" "Inbox") "* TODO %?
+ '(org-capture-templates
+   (quote
+    (("t" "Task" entry
+      (file+headline "~/Documents/Tasks/todo.txt" "Inbox")
+      "* TODO %?
 SCHEDULED: %t
 :PROPERTIES:
 :ID:       %(shell-command-to-string \"uuidgen\"):CREATED:  %U
@@ -55,7 +160,8 @@ SCHEDULED: %t
  '(org-clock-report-include-clocking-task t)
  '(org-clock-sound "/usr/local/lib/tngchime.wav")
  '(org-clone-delete-id t)
- '(org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10Confidence(Confidence) %10CLOCKSUM")
+ '(org-columns-default-format
+   "%80ITEM(Task) %10Effort(Effort){:} %10Confidence(Confidence) %10CLOCKSUM")
  '(org-completion-use-ido t)
  '(org-confirm-babel-evaluate nil)
  '(org-crypt-disable-auto-save nil)
@@ -69,21 +175,41 @@ SCHEDULED: %t
  '(org-ditaa-jar-path "~/git/foss/org-mode/contrib/scripts/ditaa.jar")
  '(org-drawers (quote ("PROPERTIES" "LOGBOOK")))
  '(org-edit-src-content-indentation 0)
- '(org-emphasis-alist (quote (("*" bold "<b>" "</b>") ("/" italic "<i>" "</i>") ("_" underline "<span style=\"text-decoration:underline;\">" "</span>") ("=" org-code "<code>" "</code>" verbatim) ("~" org-verbatim "<code>" "</code>" verbatim))))
+ '(org-emphasis-alist
+   (quote
+    (("*" bold "<b>" "</b>")
+     ("/" italic "<i>" "</i>")
+     ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
+     ("=" org-code "<code>" "</code>" verbatim)
+     ("~" org-verbatim "<code>" "</code>" verbatim))))
  '(org-enable-priority-commands t)
  '(org-enforce-todo-dependencies t)
  '(org-export-allow-BIND t)
  '(org-export-html-inline-images t)
- '(org-export-html-style-extra "<link rel=\"stylesheet\" href=\"http://doc.norang.ca/org.css\" type=\"text/css\" />")
+ '(org-export-html-style-extra
+   "<link rel=\"stylesheet\" href=\"http://doc.norang.ca/org.css\" type=\"text/css\" />")
  '(org-export-html-style-include-default nil)
- '(org-export-html-xml-declaration (quote (("html" . "") ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>") ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))))
+ '(org-export-html-xml-declaration
+   (quote
+    (("html" . "")
+     ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
+     ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))))
  '(org-export-htmlize-output-type (quote css))
  '(org-export-latex-listings t)
  '(org-export-with-section-numbers nil)
  '(org-export-with-timestamps nil)
  '(org-fast-tag-selection-single-key (quote expert))
- '(org-file-apps (quote ((auto-mode . emacs) ("\\.mm\\'" . system) ("\\.x?html?\\'" . system) ("\\.pdf\\'" . system))))
- '(org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00") ("Confidence_ALL" . "low medium high") ("STYLE_ALL" . "habit"))))
+ '(org-file-apps
+   (quote
+    ((auto-mode . emacs)
+     ("\\.mm\\'" . system)
+     ("\\.x?html?\\'" . system)
+     ("\\.pdf\\'" . system))))
+ '(org-global-properties
+   (quote
+    (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+     ("Confidence_ALL" . "low medium high")
+     ("STYLE_ALL" . "habit"))))
  '(org-habit-graph-column 50)
  '(org-hide-leading-stars nil)
  '(org-html-checkbox-type "unicode")
@@ -91,11 +217,32 @@ SCHEDULED: %t
  '(org-id-method (quote uuidgen))
  '(org-indirect-buffer-display (quote current-window))
  '(org-insert-heading-respect-content nil)
- '(org-link-abbrev-alist (quote (("gmail" . "https://mail.google.com/mail/u/0/#all/%s") ("google" . "http://www.google.com/search?q=%s") ("map" . "http://maps.google.com/maps?q=%s"))))
- '(org-link-frame-setup (quote ((vm . vm-visit-folder) (gnus . org-gnus-no-new-news) (file . find-file))))
+ '(org-link-abbrev-alist
+   (quote
+    (("gmail" . "https://mail.google.com/mail/u/0/#all/%s")
+     ("google" . "http://www.google.com/search?q=%s")
+     ("map" . "http://maps.google.com/maps?q=%s"))))
+ '(org-link-frame-setup
+   (quote
+    ((vm . vm-visit-folder)
+     (gnus . org-gnus-no-new-news)
+     (file . find-file))))
  '(org-link-mailto-program (quote (compose-mail "%a" "%s")))
  '(org-list-allow-alphabetical t)
- '(org-list-demote-modify-bullet (quote (("+" . "-") ("*" . "-") ("1." . "-") ("1)" . "-") ("A)" . "-") ("B)" . "-") ("a)" . "-") ("b)" . "-") ("A." . "-") ("B." . "-") ("a." . "-") ("b." . "-"))))
+ '(org-list-demote-modify-bullet
+   (quote
+    (("+" . "-")
+     ("*" . "-")
+     ("1." . "-")
+     ("1)" . "-")
+     ("A)" . "-")
+     ("B)" . "-")
+     ("a)" . "-")
+     ("b)" . "-")
+     ("A." . "-")
+     ("B." . "-")
+     ("a." . "-")
+     ("b." . "-"))))
  '(org-log-done (quote time))
  '(org-log-into-drawer t)
  '(org-log-state-notes-insert-after-drawers nil)
@@ -105,13 +252,18 @@ SCHEDULED: %t
  '(org-mobile-files (quote ("~/Documents/Tasks/todo.txt")))
  '(org-mobile-files-exclude-regexp "\\(TODO\\(-.*\\)?\\)\\'")
  '(org-mobile-inbox-for-pull "~/Documents/Tasks/from-mobile.org")
- '(org-modules (quote (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-rmail org-vm org-wl org-w3m)))
+ '(org-modules
+   (quote
+    (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-rmail org-vm org-wl org-w3m)))
  '(org-odd-levels-only nil)
  '(org-outline-path-complete-in-steps nil)
  '(org-plantuml-jar-path nil)
  '(org-refile-allow-creating-parent-nodes (quote confirm))
  '(org-refile-target-verify-function (quote bh/verify-refile-target))
- '(org-refile-targets (quote ((nil :maxlevel . 9) (org-agenda-files :maxlevel . 9))))
+ '(org-refile-targets
+   (quote
+    ((nil :maxlevel . 9)
+     (org-agenda-files :maxlevel . 9))))
  '(org-refile-use-outline-path t)
  '(org-remove-highlights-with-change t)
  '(org-return-follows-link t)
@@ -122,56 +274,166 @@ SCHEDULED: %t
  '(org-show-siblings (quote ((default))))
  '(org-special-ctrl-a/e (quote reversed))
  '(org-special-ctrl-k t)
- '(org-speed-commands-user (quote (("0" . ignore) ("1" . ignore) ("2" . ignore) ("3" . ignore) ("4" . ignore) ("5" . ignore) ("6" . ignore) ("7" . ignore) ("8" . ignore) ("9" . ignore) ("a" . ignore) ("d" . ignore) ("h" . bh/hide-other) ("i" progn (forward-char 1) (call-interactively (quote org-insert-heading-respect-content))) ("k" . org-kill-note-or-show-branches) ("l" . ignore) ("m" . ignore) ("q" . bh/show-org-agenda) ("r" . ignore) ("s" . org-save-all-org-buffers) ("w" . org-refile) ("x" . ignore) ("y" . ignore) ("z" . org-add-note) ("A" . ignore) ("B" . ignore) ("E" . ignore) ("F" . bh/restrict-to-file-or-follow) ("G" . ignore) ("H" . ignore) ("J" . org-clock-goto) ("K" . ignore) ("L" . ignore) ("M" . ignore) ("N" . bh/narrow-to-org-subtree) ("P" . bh/narrow-to-org-project) ("Q" . ignore) ("R" . ignore) ("S" . ignore) ("T" . bh/org-todo) ("U" . bh/narrow-up-one-org-level) ("V" . ignore) ("W" . bh/widen) ("X" . ignore) ("Y" . ignore) ("Z" . ignore))))
+ '(org-speed-commands-user
+   (quote
+    (("0" . ignore)
+     ("1" . ignore)
+     ("2" . ignore)
+     ("3" . ignore)
+     ("4" . ignore)
+     ("5" . ignore)
+     ("6" . ignore)
+     ("7" . ignore)
+     ("8" . ignore)
+     ("9" . ignore)
+     ("a" . ignore)
+     ("d" . ignore)
+     ("h" . bh/hide-other)
+     ("i" progn
+      (forward-char 1)
+      (call-interactively
+       (quote org-insert-heading-respect-content)))
+     ("k" . org-kill-note-or-show-branches)
+     ("l" . ignore)
+     ("m" . ignore)
+     ("q" . bh/show-org-agenda)
+     ("r" . ignore)
+     ("s" . org-save-all-org-buffers)
+     ("w" . org-refile)
+     ("x" . ignore)
+     ("y" . ignore)
+     ("z" . org-add-note)
+     ("A" . ignore)
+     ("B" . ignore)
+     ("E" . ignore)
+     ("F" . bh/restrict-to-file-or-follow)
+     ("G" . ignore)
+     ("H" . ignore)
+     ("J" . org-clock-goto)
+     ("K" . ignore)
+     ("L" . ignore)
+     ("M" . ignore)
+     ("N" . bh/narrow-to-org-subtree)
+     ("P" . bh/narrow-to-org-project)
+     ("Q" . ignore)
+     ("R" . ignore)
+     ("S" . ignore)
+     ("T" . bh/org-todo)
+     ("U" . bh/narrow-up-one-org-level)
+     ("V" . ignore)
+     ("W" . bh/widen)
+     ("X" . ignore)
+     ("Y" . ignore)
+     ("Z" . ignore))))
  '(org-src-fontify-natively t)
  '(org-src-preserve-indentation nil)
  '(org-src-window-setup (quote current-window))
  '(org-startup-folded t)
  '(org-startup-indented t)
  '(org-startup-with-inline-images nil)
- '(org-structure-template-alist (quote (("s" "#+begin_src ?
+ '(org-structure-template-alist
+   (quote
+    (("s" "#+begin_src ?
 
 #+end_src" "<src lang=\"?\">
 
-</src>") ("e" "#+begin_example
+</src>")
+     ("e" "#+begin_example
 ?
 #+end_example" "<example>
 ?
-</example>") ("m" "#+begin_src message
+</example>")
+     ("m" "#+begin_src message
 
 #+end_src" "<src lang=message>
 
-</src>") ("q" "#+begin_quote
+</src>")
+     ("q" "#+begin_quote
 ?
 #+end_quote" "<quote>
 ?
-</quote>") ("v" "#+begin_verse
+</quote>")
+     ("v" "#+begin_verse
 ?
 #+end_verse" "<verse>
 ?
-</verse>") ("c" "#+begin_center
+</verse>")
+     ("c" "#+begin_center
 ?
 #+end_center" "<center>
 ?
-</center>") ("l" "#+begin_latex
+</center>")
+     ("l" "#+begin_latex
 ?
 #+end_latex" "<literal style=\"latex\">
 ?
-</literal>") ("L" "#+latex: " "<literal style=\"latex\">?</literal>") ("h" "#+begin_html
+</literal>")
+     ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+     ("h" "#+begin_html
 ?
 #+end_html" "<literal style=\"html\">
 ?
-</literal>") ("H" "#+html: " "<literal style=\"html\">?</literal>") ("a" "#+begin_ascii
+</literal>")
+     ("H" "#+html: " "<literal style=\"html\">?</literal>")
+     ("a" "#+begin_ascii
 ?
-#+end_ascii") ("A" "#+ascii: ") ("i" "#+index: ?" "#+index: ?") ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
+#+end_ascii")
+     ("A" "#+ascii: ")
+     ("i" "#+index: ?" "#+index: ?")
+     ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
  '(org-stuck-projects (quote ("" nil nil "")))
- '(org-tag-alist (quote ((:startgroup) ("@errand" . 101) ("@net" . 110) ("@home" . 72) (:endgroup) ("WAITING" . 119) ("HOLD" . 104) ("PERSONAL" . 80) ("WORK" . 87) ("ORG" . 79) ("NOTE" . 78) ("CANCELLED" . 99) ("FLAGGED" . 63))))
+ '(org-tag-alist
+   (quote
+    ((:startgroup)
+     ("@errand" . 101)
+     ("@net" . 110)
+     ("@home" . 72)
+     (:endgroup)
+     ("WAITING" . 119)
+     ("HOLD" . 104)
+     ("PERSONAL" . 80)
+     ("WORK" . 87)
+     ("ORG" . 79)
+     ("NOTE" . 78)
+     ("CANCELLED" . 99)
+     ("FLAGGED" . 63))))
  '(org-tags-exclude-from-inheritance (quote ("crypt")))
  '(org-tags-match-list-sublevels t)
- '(org-time-clocksum-format (quote (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
- '(org-todo-keyword-faces (quote (("TODO" :inherit org-todo) ("PHONE" :foreground "forest green" :weight bold))))
- '(org-todo-keywords (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)") (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
- '(org-todo-state-tags-triggers (quote (("CANCELLED" ("CANCELLED" . t)) ("WAITING" ("WAITING" . t)) ("HOLD" ("WAITING") ("HOLD" . t)) (done ("WAITING") ("HOLD")) ("TODO" ("WAITING") ("CANCELLED") ("HOLD")) ("NEXT" ("WAITING") ("CANCELLED") ("HOLD")) ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+ '(org-time-clocksum-format
+   (quote
+    (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
+ '(org-todo-keyword-faces
+   (quote
+    (("TODO" :inherit org-todo)
+     ("PHONE" :foreground "forest green" :weight bold))))
+ '(org-todo-keywords
+   (quote
+    ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+     (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+ '(org-todo-state-tags-triggers
+   (quote
+    (("CANCELLED"
+      ("CANCELLED" . t))
+     ("WAITING"
+      ("WAITING" . t))
+     ("HOLD"
+      ("WAITING")
+      ("HOLD" . t))
+     (done
+      ("WAITING")
+      ("HOLD"))
+     ("TODO"
+      ("WAITING")
+      ("CANCELLED")
+      ("HOLD"))
+     ("NEXT"
+      ("WAITING")
+      ("CANCELLED")
+      ("HOLD"))
+     ("DONE"
+      ("WAITING")
+      ("CANCELLED")
+      ("HOLD")))))
  '(org-treat-S-cursor-todo-selection-as-state-change nil)
  '(org-use-fast-todo-selection t)
  '(org-use-speed-commands t)
