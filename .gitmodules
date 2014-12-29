@@ -169,9 +169,6 @@
 [submodule "site-lisp/smart-dash"]
         path = site-lisp/smart-dash
         url = git://github.com/emacsmirror/smart-dash.git
-[submodule "site-lisp/identica-mode"]
-        path = site-lisp/identica-mode
-        url = git://github.com/emacsmirror/identica-mode.git
 [submodule "site-lisp/powerline"]
         path = site-lisp/powerline
         url = git://github.com/milkypostman/powerline.git
@@ -373,12 +370,6 @@
 [submodule "site-lisp/jira-rest"]
         path = site-lisp/jira-rest
         url = git://github.com/mattdeboard/jira-rest.git
-[submodule "site-lisp/git-gutter-fringe-plus"]
-        path = site-lisp/git-gutter-fringe-plus
-        url = git://github.com/nonsequitur/git-gutter-fringe-plus
-[submodule "site-lisp/git-gutter-plus"]
-        path = site-lisp/git-gutter-plus
-        url = git://github.com/nonsequitur/git-gutter-plus
 [submodule "site-lisp/fringe-helper"]
         path = site-lisp/fringe-helper
         url = git://github.com/nschum/fringe-helper.el
@@ -812,5 +803,5 @@
         path = site-lisp/emamux
         url = https://github.com/syohex/emacs-emamux.git
 [submodule "site-lisp/anaphora"]
-	path = site-lisp/anaphora
-	url = git@github.com:rolandwalker/anaphora.git
+        path = site-lisp/anaphora
+        url = git@github.com:rolandwalker/anaphora.git
