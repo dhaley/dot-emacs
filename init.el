@@ -106,6 +106,9 @@
 
   (load (expand-file-name "settings" user-emacs-directory)))
 
+(defvar mac-fullscreen-on  nil
+  "keep a track of mac-mouse-turn-o(n|ff)-fullscreen, assumes fullscreen is not on")
+
 (defun mac-toggle-fullscreen ()
   "toggle fullscreen mode in Emacs mac (by Yamamoto Mitsuharu)"
   (interactive)
