@@ -10,8 +10,8 @@
 (load (expand-file-name "load-path" (file-name-directory load-file-name)))
 
 (require 'use-package)
-(eval-when-compile
-  (setq use-package-verbose (null byte-compile-current-file)))
+;; (eval-when-compile
+;;   (setq use-package-verbose (null byte-compile-current-file)))
 
 ;;;_ , Utility macros and functions
 
@@ -105,22 +105,6 @@
         (eval settings)))
 
   (load (expand-file-name "settings" user-emacs-directory)))
-
-;; mac switch meta key
-(defun mac-switch-meta nil
-  "switch meta between Option and Command"
-  (interactive)
-  (if (eq mac-option-modifier nil)
-      (progn
-        (setq mac-option-modifier 'meta)
-        (setq mac-command-modifier 'hyper)
-        )
-    (progn
-      (setq mac-option-modifier nil)
-      (setq mac-command-modifier 'meta))))
-
-(mac-switch-meta)
-(setq mac-function-modifier 'hyper)
 
 (defvar mac-fullscreen-on  nil
   "keep a track of mac-mouse-turn-o(n|ff)-fullscreen, assumes fullscreen is not on")
@@ -478,60 +462,68 @@
   (defvar emacs-min-height)
   (defvar emacs-min-width))
 
+(setq display-name
+      (let ((width (display-pixel-width)))
+        (cond
+         ((= width 2560)
+          'retina-imac)
+         ((= width 1440)
+          'retina-macbook-pro))))
+
 (unless noninteractive
   (if running-alternate-emacs
       (progn
-        (defun emacs-min-top ()
-          (let ((height (display-pixel-height)))
-            (cond ((= 1050 height) 22)
-                  ((= 900 height) 22)
-                  (t 22))))
+        (defun emacs-min-top () 22)
         (defun emacs-min-left () 5)
-        (defvar emacs-min-height (if (= 1050 (display-pixel-height)) 47 64))
-        (defvar emacs-min-width 80))
+        (defvar emacs-min-height 57)
+        (defvar emacs-min-width 90))
 
-    (defun emacs-min-top () 22)
+    (defun emacs-min-top () 23)
     (defun emacs-min-left ()
-      (let ((width (display-pixel-width)))
-        (cond
-         ((= width 3360) 1000)
-         (t (- width 918)))))
-    (defvar emacs-min-height (if (= 1050 (display-pixel-height)) 55 65))
+      (cond
+       ((eq display-name 'retina-imac) 975)
+       (t 521)))
+    (defvar emacs-min-height
+      (cond
+       ((eq display-name 'retina-imac) 55)
+       (t 44)))
     (defvar emacs-min-width 100)))
 
 (defun emacs-min ()
   (interactive)
+
   (set-frame-parameter (selected-frame) 'fullscreen nil)
   (set-frame-parameter (selected-frame) 'vertical-scroll-bars nil)
   (set-frame-parameter (selected-frame) 'horizontal-scroll-bars nil)
+
   (set-frame-parameter (selected-frame) 'top (emacs-min-top))
   (set-frame-parameter (selected-frame) 'left (emacs-min-left))
   (set-frame-parameter (selected-frame) 'height emacs-min-height)
-  (set-frame-parameter (selected-frame) 'width emacs-min-width))
+  (set-frame-parameter (selected-frame) 'width emacs-min-width)
+
+  (set-frame-font
+   (cond
+    ((eq display-name 'retina-imac)
+     (if running-alternate-emacs
+         "-*-Myriad Pro-normal-normal-normal-*-20-*-*-*-p-0-iso10646-1"
+       "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"))
+    (t
+     (if running-alternate-emacs
+         "-*-Myriad Pro-normal-normal-normal-*-17-*-*-*-p-0-iso10646-1"
+       "-*-Source Code Pro-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1"))))
+
+  (when running-alternate-emacs
+    (set-background-color "grey85")
+    (set-face-background 'fringe "gray80")))
 
 (if window-system
     (add-hook 'after-init-hook 'emacs-min))
 
 (defun emacs-max ()
   (interactive)
-  (if t
-      (progn
-        (set-frame-parameter (selected-frame) 'fullscreen 'fullboth)
-        (set-frame-parameter (selected-frame) 'vertical-scroll-bars nil)
-        (set-frame-parameter (selected-frame) 'horizontal-scroll-bars nil))
-    (set-frame-parameter (selected-frame) 'top 26)
-    (set-frame-parameter (selected-frame) 'left 2)
-    (set-frame-parameter (selected-frame) 'width
-                         (floor (/ (float (x-display-pixel-width)) 9.15)))
-    (if (= 1050 (x-display-pixel-height))
-        (set-frame-parameter (selected-frame) 'height
-                             (if (>= emacs-major-version 24)
-                                 66
-                               55))
-      (set-frame-parameter (selected-frame) 'height
-                           (if (>= emacs-major-version 24)
-                               75
-                             64)))))
+  (set-frame-parameter (selected-frame) 'fullscreen 'fullboth)
+  (set-frame-parameter (selected-frame) 'vertical-scroll-bars nil)
+  (set-frame-parameter (selected-frame) 'horizontal-scroll-bars nil))
 
 (defun emacs-toggle-size ()
   (interactive)
@@ -587,7 +579,7 @@
             (car (auth-source-search :host "api.j.mp" :user api-login
                                      :type 'netrc :port 80))
             :secret))))
-    (flet ((message (&rest ignore)))
+    (cl-cl-flet ((message (&rest ignore)))
       (with-current-buffer
           (let ((query
                  (format "format=txt&longUrl=%s&login=%s&apiKey=%s"
@@ -723,7 +715,7 @@
 
     (delete-other-windows)
 
-    (flet ((switch-in-other-buffer
+    (cl-cl-flet ((switch-in-other-buffer
             (buf)
             (when buf
               (split-window-vertically)
@@ -865,6 +857,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , abbrev
 
 (use-package abbrev
+  :disabled t
   :commands abbrev-mode
   :diminish abbrev-mode
   :init
@@ -896,20 +889,22 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;;_ , agda
 
+(defun agda-site-lisp ()
+  (let ((agda (nth 1 (split-string
+                      (shell-command-to-string "load-env-agda which agda")
+                      "\n"))))
+    (and agda
+         (expand-file-name
+          "../share/x86_64-osx-ghc-7.8.3/Agda-2.4.2.2/emacs-mode"
+          (file-name-directory agda)))))
+
 (use-package agda2-mode
-  :load-path "~/.nix-profile/share/x86_64-osx-ghc-7.8.3/Agda-2.4.0.1/emacs-mode/"
   :mode ("\\.agda\\'" . agda2-mode)
+  :pre-init (add-to-list 'load-path (agda-site-lisp))
   :init
   (use-package agda-input)
   :config
   (progn
-    ;; (defadvice agda2-status-action (after agda-color-after-status-change activate)
-    ;;   "Color the buffer green or red depending on type checking status."
-    ;;   (set-background-color
-    ;;    (if (string= agda2-buffer-external-status "Checked")
-    ;;        "honeydew"
-    ;;      "seashell")))
-
     (defun agda2-insert-helper-function (&optional prefix)
       (interactive "P")
       (let ((func-def (with-current-buffer "*Agda information*"
@@ -919,20 +914,12 @@ Including indent-buffer, which should not be called automatically on save."
           (let ((name (car (split-string func-def " "))))
             (insert "  where\n    " func-def "    " name " x = ?\n")))))
 
-    (bind-key "C-c C-i" 'agda2-insert-helper-function agda2-mode-map)
-
-    (defun char-mapping (key char)
-      (bind-key key `(lambda () (interactive) (insert ,char)) agda2-mode-map))
-
-    (char-mapping "A-L" "Γ")
-    (char-mapping "A-l" "λ x → ")
-    (char-mapping "A-r" " → ")
-    (char-mapping "A-=" " ≡ ")
-    ))
+    (bind-key "C-c C-i" 'agda2-insert-helper-function agda2-mode-map)))
 
 ;;;_ , allout
 
 (use-package allout
+  :disabled t
   :diminish allout-mode
   :commands allout-mode
   :config
@@ -959,6 +946,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , archive-region
 
 (use-package archive-region
+  :disabled t
   :commands kill-region-or-archive-region
   :bind ("C-w" . kill-region-or-archive-region))
 
@@ -991,9 +979,9 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , auctex
 
 (use-package tex-site
-  :load-path "site-lisp/auctex/preview/"
+  ;; :load-path "site-lisp/auctex/preview/"
   :defines (latex-help-cmd-alist latex-help-file)
-  :mode ("\\.tex\\'" . latex-mode)
+  :mode ("\\.tex\\'" . TeX-latex-mode)
   :config
   (progn
     (defun latex-help-get-cmd-alist ()  ;corrected version:
@@ -1253,7 +1241,7 @@ Including indent-buffer, which should not be called automatically on save."
 
     (defun my-bookmark-set ()
       (interactive)
-      (flet ((bmkp-completing-read-lax
+      (cl-cl-flet ((bmkp-completing-read-lax
               (prompt &optional default alist pred hist)
               (completing-read prompt alist pred nil nil hist default)))
         (call-interactively #'bookmark-set)))
@@ -1671,6 +1659,13 @@ Including indent-buffer, which should not be called automatically on save."
     :config
     (use-package moccur-edit)))
 
+
+;;;_ , company-mode
+
+(use-package company
+  :commands company-mode)
+
+
 ;;;_ , copy-code
 
 (use-package copy-code
@@ -1815,11 +1810,8 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
         ;; (use-package dired-async)
         ;; (use-package dired-sort-map)
         (use-package runner)
-        (use-package dired-details-hide
-          :commands dired-details-toggle)
 
         (bind-key "l" 'dired-up-directory dired-mode-map)
-        (bind-key "H" 'dired-details-toggle dired-mode-map)
 
         (defun my-dired-switch-window ()
           (interactive)
@@ -1900,27 +1892,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                      "\\)")))
               (funcall dired-omit-regexp-orig))))))
 
-;;     (eval-after-load "dired-aux"
-;;       '(defun dired-do-async-shell-command (command &optional arg file-list)
-;;          "Run a shell command COMMAND on the marked files asynchronously.
-
-;; Like `dired-do-shell-command' but if COMMAND doesn't end in ampersand,
-;; adds `* &' surrounded by whitespace and executes the command asynchronously.
-;; The output appears in the buffer `*Async Shell Command*'."
-;;          (interactive
-;;           (let ((files (dired-get-marked-files t current-prefix-arg)))
-;;             (list
-;;              ;; Want to give feedback whether this file or marked files are
-;;              ;; used:
-;;              (dired-read-shell-command "& on %s: " current-prefix-arg files)
-;;              current-prefix-arg
-;;              files)))
-;;          (unless (string-match "[ \t][*?][ \t]" command)
-;;            (setq command (concat command " *")))
-;;          (unless (string-match "&[ \t]*\\'" command)
-;;            (setq command (concat command " &")))
-;;          (dired-do-shell-command command arg file-list)))
-
     (add-hook 'dired-mode-hook 'dired-package-initialize)
 
     (defun dired-double-jump (first-dir second-dir)
@@ -1965,19 +1936,19 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 ;;;_ , discover
 
-;;(use-package discover
-;;  :disable
-;;  :init
-;;  (progn
-;;  (global-discover-mode 1)
-;;  (use-package makey)))
+(use-package discover
+ :disabled t
+ :init
+ (progn
+ (global-discover-mode 1)
+ (use-package makey)))
 
 ;;;_ , doxymacs
 
 (use-package doxymacs
   :commands doxymacs-mode
   :diminish doxymacs-mode
-  :load-path "~/.emacs.d/site-lisp/doxymacs-1.8.0/lisp")
+  :load-path "site-lisp/doxymacs-1.8.0/lisp")
 
 ;;;_ , drupal-mode
 
@@ -2086,6 +2057,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , emms
 
 (use-package emms-setup
+  :disabled t
   :load-path "site-lisp/emms/lisp"
   :defines emms-info-functions
   :commands (emms-all emms-devel)
@@ -2169,18 +2141,10 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , erc
 
 (use-package erc
-  ;; :commands erc
   :if running-alternate-emacs
   :init
   (progn
-    (use-package erc-image)
     (defun setup-irc-environment ()
-      (interactive)
-
-      (set-frame-font
-       "-*-Lucida Grande-normal-normal-normal-*-*-*-*-*-p-0-iso10646-1" nil
-       nil)
-      (set-frame-parameter (selected-frame) 'width 90)
       (custom-set-faces
        '(erc-timestamp-face ((t (:foreground "dark violet")))))
 
@@ -2256,8 +2220,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                 (message msg))
             (message (concat "No definition found for " (upcase term)))))))
 
-    (use-package erc-youtube)
-
     (defun switch-to-bitlbee ()
       (interactive)
       (switch-to-buffer "&bitlbee")
@@ -2281,29 +2243,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
               (lambda (s)
                 (when (erc-foolish-content s)
                   (setq erc-insert-this nil))))
-
-    (defun erc-cmd-SHOW (&rest form)
-      "Eval FORM and send the result and the original form as:
-FORM => (eval FORM)."
-      (let* ((form-string (mapconcat 'identity form " "))
-             (result
-              (condition-case err
-                  (eval (read-from-whole-string form-string))
-                (error
-                 (format "Error: %s" err)))))
-        (erc-send-message (format "%s => %S" form-string result))))
-
-    (defun erc-cmd-INFO (&rest ignore)
-      "Send current info node."
-      (unless (get-buffer "*info*")
-        (error "No *info* buffer"))
-      (let (output)
-        (with-current-buffer "*info*"
-          (let* ((file (file-name-nondirectory Info-current-file))
-                 (node Info-current-node))
-            (setq output (format "(info \"(%s)%s\") <-- hit C-x C-e to evaluate"
-                                 file node))))
-        (erc-send-message output)))
 
     (eval-when-compile
       (defvar erc-fools))
@@ -2332,7 +2271,7 @@ FORM => (eval FORM)."
              (user (erc-server-user-login who)))
         (erc-send-command
          (format "MODE %s +b *!%s@%s%s"
-                 chan (if whole-ip "*" user) host redirect))))
+                 chan (if whole-ip "*" user) host (or redirect "")))))
 
     (defun erc-cmd-KICKBAN (nick &rest reason)
       (setq reason (mapconcat #'identity reason " "))
@@ -2345,7 +2284,9 @@ FORM => (eval FORM)."
                                 (erc-default-target)
                                 nick
                                 (or reason
-                                    "Kicked (kickban)"))))
+                                    "Kicked (kickban)")))
+      (sleep-for 0 250)
+      (erc-cmd-DEOPME))
 
     (defun erc-cmd-KICKBANIP (nick &rest reason)
       (setq reason (mapconcat #'identity reason " "))
@@ -2358,7 +2299,9 @@ FORM => (eval FORM)."
                                 (erc-default-target)
                                 nick
                                 (or reason
-                                    "Kicked (kickbanip)"))))
+                                    "Kicked (kickbanip)")))
+      (sleep-for 0 250)
+      (erc-cmd-DEOPME))
 
     (defun erc-cmd-KICKTROLL (nick &rest reason)
       (setq reason (mapconcat #'identity reason " "))
@@ -2371,7 +2314,9 @@ FORM => (eval FORM)."
                                 (erc-default-target)
                                 nick
                                 (or reason
-                                    "Kicked (kicktroll)"))))
+                                    "Kicked (kicktroll)")))
+      (sleep-for 0 250)
+      (erc-cmd-DEOPME))
 
     ;; this is essentially a refactored `erc-cmd-KICK'
     (defun erc-cmd-REMOVE (target &optional reason-or-nick &rest reasonwords)
@@ -2435,15 +2380,7 @@ FORM => (eval FORM)."
              (erc-display-line
               (erc-make-notice (format "Now tracking %s" target))
               'active)))))
-      t)
-    ;; turn on abbrevs
-    (abbrev-mode 1)
-    ;; add abbrevs
-    (abbrev-table-put erc-mode-abbrev-table :parents (list
-                                                      text-mode-abbrev-table))
-    (add-hook 'erc-mode-hook (lambda () (abbrev-mode 1)))))
-
-
+      t)))
 
 ;;;_ , eshell
 
@@ -2929,13 +2866,6 @@ at the beginning of line, if already there."
     (set-face-background 'highlight-indentation-face "#e3e3d3")
     (set-face-background 'highlight-indentation-current-column-face "#c3b3b3")))
 
-;;;_ , fold-dwim
-
-(use-package fold-dwim
-  :bind (("<f13>" . fold-dwim-toggle)
-         ("<f14>" . fold-dwim-hide-all)
-         ("<f15>" . fold-dwim-show-all)))
-
 ;;;_ , ggtags
 
 (use-package ggtags
@@ -2959,17 +2889,6 @@ at the beginning of line, if already there."
 
 (use-package gist
   :bind ("C-c G" . gist-region-or-buffer))
-
-;;;_ , git-gutter+
-
-(use-package git-gutter+
-  :diminish git-gutter+-mode
-  :config
-  (progn
-    (use-package git-gutter-fringe+
-      :config
-      (git-gutter-fr+-minimal))
-    (global-git-gutter+-mode 1)))
 
 ;;;_ , gnus
 (use-package dot-gnus
@@ -3015,11 +2934,14 @@ at the beginning of line, if already there."
     (if t
         (progn
           (setq-default grep-first-column 1)
-          (grep-apply-setting 'grep-find-command
-                              '("ag --noheading --nocolor --smart-case --nogroup --column -- " . 61)))
+          (grep-apply-setting
+           'grep-find-command
+           '("ag --noheading --nocolor --smart-case --nogroup --column -- "
+             . 61)))
       (grep-apply-setting
        'grep-find-command
-       '("find . -type f -print0 | xargs -P4 -0 egrep -nH -e " . 52)))))
+       '("find . -name '*.hs' -type f -print0 | xargs -P4 -0 egrep -nH "
+         . 62)))))
 
 ;;;_ , gud
 
@@ -3082,7 +3004,7 @@ at the beginning of line, if already there."
     (bind-key "M-s ." 'helm-command-from-bash)
 
     (defadvice helm-buffers-list
-      (around expand-window-helm-buffers-list activate)
+        (around expand-window-helm-buffers-list activate)
       (let ((c (current-window-configuration)))
         (condition-case err
             (progn
@@ -3096,6 +3018,7 @@ at the beginning of line, if already there."
     (use-package helm-ag
       :commands (helm-ag projectile-helm-ag)
       :bind (("M-s <escape>"  . projectile-helm-ag)
+             ("M-s A"  . helm-ag)
              ("M-s A"  . helm-ag))
       :config
       (progn
@@ -3107,19 +3030,21 @@ at the beginning of line, if already there."
     (bind-key "C-h b" 'helm-descbinds)
 
     (use-package helm-open-github
-  :bind (("C-. o f" . helm-open-github-from-file)
-         ("C-. o c" . helm-open-github-from-commit)
-         ("C-. o i" . helm-open-github-from-issues)
-         ("C-. o p" . helm-open-github-from-pull-requests)))
+      :bind (("C-. o f" . helm-open-github-from-file)
+             ("C-. o c" . helm-open-github-from-commit)
+             ("C-. o i" . helm-open-github-from-issues)
+             ("C-. o p" . helm-open-github-from-pull-requests)))
 
     (use-package helm-dash
       :load-path "site-lisp/esqlite/Emacs-pcsv"
       :init
       (helm-dash-activate-docset "Drupal"))
 
-    (use-package helm-eshell))
-  :config
-  (helm-match-plugin-mode t))
+    (helm-match-plugin-mode t)
+
+    (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
+    (bind-key "C-i" 'helm-execute-persistent-action helm-map)
+    (bind-key "C-z" 'helm-select-action helm-map)))
 
 ;;;_ , helm-dash
 
@@ -3437,9 +3362,9 @@ at the beginning of line, if already there."
 
 ;;;_ , lisp-mode
 
-;; Utilities every Emacs Lisp coders should master:
+;; Utilities every Emacs Lisp coder should master:
 ;;
-;;   paredit          Let's you manipulate sexps with ease
+;;   paredit          Lets you manipulate sexps with ease
 ;;   redshank         Think: Lisp refactoring
 ;;   edebug           Knowing the traditional debugger is good too
 ;;   eldoc
@@ -3447,6 +3372,7 @@ at the beginning of line, if already there."
 ;;   elint
 ;;   elp
 ;;   ert
+;;   ielm
 
 (use-package lisp-mode
   ;; :load-path "site-lisp/slime/contrib/"
@@ -3599,13 +3525,6 @@ at the beginning of line, if already there."
     (hook-into-modes #'my-lisp-mode-hook lisp-mode-hooks)))
 
 
-;;;_ , log4j-mode
-
-(use-package log4j-mode
-  :disabled t
-  :mode ("\\.log\\'" . log4j-mode))
-
-
 ;;;_ , lorem-ipsum
 (use-package lorem-ipsum
   :commands (Lorem-ipsum-insert-paragraphs
@@ -3625,7 +3544,8 @@ at the beginning of line, if already there."
                 (bind-key "C-d" 'exit-minibuffer lusty-mode-map)))
 
     (defun lusty-open-this ()
-      "Open the given file/directory/buffer, creating it if not already present."
+      "Open the given file/directory/buffer, creating it if not
+    already present."
       (interactive)
       (when lusty--active-mode
         (ecase lusty--active-mode
@@ -3784,89 +3704,9 @@ at the beginning of line, if already there."
 ;;;_ , markdown-mode
 
 (use-package markdown-mode
-  :commands markdown-mode
-  :mode (("\\.markdown\\'" . markdown-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.mdwn\\'" . markdown-mode)
-         ("\\.mkdn\\'" . markdown-mode)
-         ("\\.mdown\\'" . markdown-mode)
-         ("\\.mkd\\'" . markdown-mode)
-         ("\\.mkdown\\'" . markdown-mode)
-         ("\\.mdtext\\'" . markdown-mode))
-  :init
-  (progn
-    (setq markdown-command "pandoc -f markdown -t html")
-    (defun markdown-imenu-create-index ()
-      (let* ((root '(nil . nil))
-             cur-alist
-             (cur-level 0)
-             (pattern "^\\(\\(#+\\)[ \t]*\\(.+\\)\\|\\([^# \t\n=-].*\\)\n===+\\|\\([^# \t\n=-].*\\)\n---+\\)$")
-             (empty-heading "-")
-             (self-heading ".")
-             hashes pos level heading)
-        (save-excursion
-          (goto-char (point-min))
-          (while (re-search-forward pattern (point-max) t)
-            (cond
-             ((setq hashes (match-string-no-properties 2))
-              (setq heading (match-string-no-properties 3)
-                    pos (match-beginning 1)
-                    level (length hashes)))
-             ((setq heading (match-string-no-properties 4))
-              (setq pos (match-beginning 4)
-                    level 1))
-             ((setq heading (match-string-no-properties 5))
-              (setq pos (match-beginning 5)
-                    level 2)))
-            (let ((alist (list (cons heading pos))))
-              (cond
-               ((= cur-level level) ; new sibling
-                (setcdr cur-alist alist)
-                (setq cur-alist alist))
-               ((< cur-level level) ; first child
-                (dotimes (i (- level cur-level 1))
-                  (setq alist (list (cons empty-heading alist))))
-                (if cur-alist
-                    (let* ((parent (car cur-alist))
-                           (self-pos (cdr parent)))
-                      (setcdr parent (cons (cons self-heading self-pos) alist)))
-                  (setcdr root alist)) ; primogenitor
-                (setq cur-alist alist)
-                (setq cur-level level))
-               (t ; new sibling of an ancestor
-                (let ((sibling-alist (last (cdr root))))
-                  (dotimes (i (1- level))
-                    (setq sibling-alist (last (cdar sibling-alist))))
-                  (setcdr sibling-alist alist)
-                  (setq cur-alist alist))
-                (setq cur-level level)))))
-          (cdr root))))
-
-    (defun markdown-preview-file ()
-      "run Marked on the current file and revert the buffer"
-      (interactive)
-      (shell-command
-       (format "open -a /Applications/Marked.app %s"
-               (shell-quote-argument (buffer-file-name)))))
-
-    (bind-key "C-x M" 'markdown-preview-file)
-    (setq markdown-imenu-generic-expression
-          '(("title"  "^\\(.*\\)[\n]=+$" 1)
-            ("h2-"    "^\\(.*\\)[\n]-+$" 1)
-            ("h1"   "^# \\(.*\\)$" 1)
-            ("h2"   "^## \\(.*\\)$" 1)
-            ("h3"   "^### \\(.*\\)$" 1)
-            ("h4"   "^#### \\(.*\\)$" 1)
-            ("h5"   "^##### \\(.*\\)$" 1)
-            ("h6"   "^###### \\(.*\\)$" 1)
-            ("fn"   "^\\[\\^\\(.*\\)\\]" 1)
-            ))
-    (add-hook 'markdown-mode-hook
-              '(lambda ()
-                 (setq imenu-create-index-function 'markdown-imenu-create-index)
-                 (setq imenu-generic-expression markdown-imenu-generic-expression)
-                 (turn-on-pandoc)
-                 ))))
+  :mode (("\\`README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"          . markdown-mode)
+         ("\\.markdown\\'"    . markdown-mode)))
 
 ;;;_ , mouse+
 
@@ -3880,6 +3720,7 @@ at the beginning of line, if already there."
 
 ;;;_ , mudel
 (use-package mudel
+  :disabled t
   :commands mudel
   :bind ("C-c M" . mud)
   :init
@@ -4277,11 +4118,9 @@ and view local index.html url"
 
 ;;;_ , paren
 
-(unless
-    (use-package mic-paren
-      :init
-      (paren-activate))
-
+(unless (use-package mic-paren
+          :init
+          (paren-activate))
   (use-package paren
     :init
     (show-paren-mode 1)))
@@ -4817,7 +4656,7 @@ Keys are in kbd format."
 ;;;;_ , rainbow-delimiters
 
 (use-package rainbow-delimiters
-  :load-path "rainbow-delimiters"
+  :load-path "site-lisp/rainbow-delimiters"
   :commands (rainbow-delimiters-mode))
 
 
@@ -4949,7 +4788,7 @@ and run compass from that directory"
      (interactive)
      (let* ((sass-file (buffer-file-name (current-buffer)))
             (local-dir (file-name-directory sass-file)))
-       (flet ((contains-config-rb (dir-name)
+       (cl-cl-flet ((contains-config-rb (dir-name)
                                   (find "config.rb" (directory-files dir-name)
                                         :test 'equal))
               (parent-dir (dir)
@@ -5044,7 +4883,7 @@ and run compass from that directory"
                     (eq 'listen (process-status server-process)))
           (server-start))))
 
-    (run-with-idle-timer 300 t 'save-information)
+    ;; (run-with-idle-timer 300 t 'save-information)
 
     (if window-system
         (add-hook 'after-init-hook 'session-initialize t))))
@@ -5319,6 +5158,7 @@ Does not delete the prompt."
 ;;;_ , sunrise-commander
 
 (use-package sunrise-commander
+  :disabled t
   :commands (sunrise sunrise-cd)
   :init
   (progn
@@ -5453,6 +5293,7 @@ Does not delete the prompt."
 ;;;;_ , twittering-mode
 
 (use-package twittering-mode
+  :disabled t
   :commands twit
   :config
   (progn
@@ -5574,7 +5415,7 @@ Does not delete the prompt."
 
     (defun w3m-browse-chrome-url-new-session ()
       (interactive)
-      (let ((url (do-applescript
+      (let ((url (mac-do-applescript
                   (string-to-multibyte "tell application \"Google Chrome\"
   URL of active tab of front window
   end tell"))))

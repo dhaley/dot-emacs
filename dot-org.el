@@ -504,22 +504,22 @@ To use this function, add it to `org-agenda-finalize-hook':
   (org-set-property "Submitter" (org-get-message-sender)))
 
 (defun org-get-safari-link ()
-  (let ((subject (substring (do-applescript
+  (let ((subject (substring (mac-do-applescript
                              (string-to-multibyte "tell application \"Safari\"
         name of document of front window
 end tell")) 1 -1))
-        (url (substring (do-applescript
+        (url (substring (mac-do-applescript
                          (string-to-multibyte "tell application \"Safari\"
         URL of document of front window
 end tell")) 1 -1)))
     (org-make-link-string url subject)))
 
 (defun org-get-chrome-link ()
-  (let ((subject (do-applescript
+  (let ((subject (mac-do-applescript
                   (string-to-multibyte "tell application \"Google Chrome\"
         title of active tab of front window
 end tell")))
-        (url (do-applescript
+        (url (mac-do-applescript
               (string-to-multibyte "tell application \"Google Chrome\"
         URL of active tab of front window
 end tell"))))
@@ -539,11 +539,11 @@ end tell"))))
   (org-set-property "URL" (org-get-safari-link)))
 
 ;;(defun org-get-file-link ()
-;;  (let ((subject (do-applescript "tell application \"Finder\"
+;;  (let ((subject (mac-do-applescript "tell application \"Finder\"
 ;;      set theItems to the selection
 ;;      name of beginning of theItems
 ;;end tell"))
-;;        (path (do-applescript "tell application \"Finder\"
+;;        (path (mac-do-applescript "tell application \"Finder\"
 ;;      set theItems to the selection
 ;;      POSIX path of (beginning of theItems as text)
 ;;end tell")))
@@ -568,7 +568,7 @@ end tell"))))
 This will use the command `open' with the message URL."
   (interactive)
   (re-search-backward "\\[\\[message://\\(.+?\\)\\]\\[")
-  (do-applescript
+  (mac-do-applescript
    (format "tell application \"DEVONthink Pro\"
         set searchResults to search \"%%3C%s%%3E\" within URLs
         open window for record (get beginning of searchResults)
@@ -1672,7 +1672,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 
 
-(require 'org-checklist)
+;; (require 'org-checklist)
 
 
 

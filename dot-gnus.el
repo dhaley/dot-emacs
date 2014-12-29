@@ -47,7 +47,7 @@
       (interactive)
       (when (and (not switch-to-gnus-unplugged)
                  (quickping "mail.messagingengine.com"))
-        (do-applescript "tell application \"Notify\" to run")
+        (mac-do-applescript "tell application \"Notify\" to run")
         (switch-to-fetchmail)))
 
     (add-hook 'gnus-startup-hook 'maybe-start-fetchmail-and-news)
@@ -57,7 +57,7 @@
        (lambda ()
          (call-process (expand-file-name "~/Messages/manage-mail/stop-mail")))
        (lambda (ret)
-         (do-applescript "tell application \"Notify\" to quit"))))))
+         (mac-do-applescript "tell application \"Notify\" to quit"))))))
 
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 (add-hook 'gnus-group-mode-hook 'hl-line-mode)
@@ -125,7 +125,7 @@
 
 (defun open-mail-logs ()
   (interactive)
-  (flet ((switch-in-other-buffer
+  (cl-flet ((switch-in-other-buffer
           (buf)
           (when buf
             (split-window-vertically)
