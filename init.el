@@ -854,6 +854,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , abbrev
 
 (use-package abbrev
+  :disabled t
   :commands abbrev-mode
   :diminish abbrev-mode
   :init
@@ -885,19 +886,22 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;;_ , agda
 
+(defun agda-site-lisp ()
+  (let ((agda (nth 1 (split-string
+                      (shell-command-to-string "load-env-agda which agda")
+                      "\n"))))
+    (and agda
+         (expand-file-name
+          "../share/x86_64-osx-ghc-7.8.3/Agda-2.4.2.2/emacs-mode"
+          (file-name-directory agda)))))
+
 (use-package agda2-mode
   :mode ("\\.agda\\'" . agda2-mode)
+  :pre-init (add-to-list 'load-path (agda-site-lisp))
   :init
   (use-package agda-input)
   :config
   (progn
-    ;; (defadvice agda2-status-action (after agda-color-after-status-change activate)
-    ;;   "Color the buffer green or red depending on type checking status."
-    ;;   (set-background-color
-    ;;    (if (string= agda2-buffer-external-status "Checked")
-    ;;        "honeydew"
-    ;;      "seashell")))
-
     (defun agda2-insert-helper-function (&optional prefix)
       (interactive "P")
       (let ((func-def (with-current-buffer "*Agda information*"
@@ -907,20 +911,12 @@ Including indent-buffer, which should not be called automatically on save."
           (let ((name (car (split-string func-def " "))))
             (insert "  where\n    " func-def "    " name " x = ?\n")))))
 
-    (bind-key "C-c C-i" 'agda2-insert-helper-function agda2-mode-map)
-
-    (defun char-mapping (key char)
-      (bind-key key `(lambda () (interactive) (insert ,char)) agda2-mode-map))
-
-    (char-mapping "A-L" "Γ")
-    (char-mapping "A-l" "λ x → ")
-    (char-mapping "A-r" " → ")
-    (char-mapping "A-=" " ≡ ")
-    ))
+    (bind-key "C-c C-i" 'agda2-insert-helper-function agda2-mode-map)))
 
 ;;;_ , allout
 
 (use-package allout
+  :disabled t
   :diminish allout-mode
   :commands allout-mode
   :config
@@ -947,6 +943,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , archive-region
 
 (use-package archive-region
+  :disabled t
   :commands kill-region-or-archive-region
   :bind ("C-w" . kill-region-or-archive-region))
 
@@ -1659,6 +1656,13 @@ Including indent-buffer, which should not be called automatically on save."
     :config
     (use-package moccur-edit)))
 
+
+;;;_ , company-mode
+
+(use-package company
+  :commands company-mode)
+
+
 ;;;_ , copy-code
 
 (use-package copy-code
@@ -1885,27 +1889,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                      "\\)")))
               (funcall dired-omit-regexp-orig))))))
 
-;;     (eval-after-load "dired-aux"
-;;       '(defun dired-do-async-shell-command (command &optional arg file-list)
-;;          "Run a shell command COMMAND on the marked files asynchronously.
-
-;; Like `dired-do-shell-command' but if COMMAND doesn't end in ampersand,
-;; adds `* &' surrounded by whitespace and executes the command asynchronously.
-;; The output appears in the buffer `*Async Shell Command*'."
-;;          (interactive
-;;           (let ((files (dired-get-marked-files t current-prefix-arg)))
-;;             (list
-;;              ;; Want to give feedback whether this file or marked files are
-;;              ;; used:
-;;              (dired-read-shell-command "& on %s: " current-prefix-arg files)
-;;              current-prefix-arg
-;;              files)))
-;;          (unless (string-match "[ \t][*?][ \t]" command)
-;;            (setq command (concat command " *")))
-;;          (unless (string-match "&[ \t]*\\'" command)
-;;            (setq command (concat command " &")))
-;;          (dired-do-shell-command command arg file-list)))
-
     (add-hook 'dired-mode-hook 'dired-package-initialize)
 
     (defun dired-double-jump (first-dir second-dir)
@@ -1950,12 +1933,12 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 ;;;_ , discover
 
-;;(use-package discover
-;;  :disable
-;;  :init
-;;  (progn
-;;  (global-discover-mode 1)
-;;  (use-package makey)))
+(use-package discover
+ :disabled t
+ :init
+ (progn
+ (global-discover-mode 1)
+ (use-package makey)))
 
 ;;;_ , doxymacs
 
@@ -2071,6 +2054,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , emms
 
 (use-package emms-setup
+  :disabled t
   :load-path "site-lisp/emms/lisp"
   :defines emms-info-functions
   :commands (emms-all emms-devel)
@@ -2879,13 +2863,6 @@ at the beginning of line, if already there."
     (set-face-background 'highlight-indentation-face "#e3e3d3")
     (set-face-background 'highlight-indentation-current-column-face "#c3b3b3")))
 
-;;;_ , fold-dwim
-
-(use-package fold-dwim
-  :bind (("<f13>" . fold-dwim-toggle)
-         ("<f14>" . fold-dwim-hide-all)
-         ("<f15>" . fold-dwim-show-all)))
-
 ;;;_ , ggtags
 
 (use-package ggtags
@@ -2909,18 +2886,6 @@ at the beginning of line, if already there."
 
 (use-package gist
   :bind ("C-c G" . gist-region-or-buffer))
-
-;;;_ , git-gutter+
-
-(use-package git-gutter+
-  :disabled t
-  :diminish git-gutter+-mode
-  :config
-  (progn
-    (use-package git-gutter-fringe+
-      :config
-      (git-gutter-fr+-minimal))
-    (global-git-gutter+-mode 1)))
 
 ;;;_ , gnus
 (use-package dot-gnus
@@ -3394,9 +3359,9 @@ at the beginning of line, if already there."
 
 ;;;_ , lisp-mode
 
-;; Utilities every Emacs Lisp coders should master:
+;; Utilities every Emacs Lisp coder should master:
 ;;
-;;   paredit          Let's you manipulate sexps with ease
+;;   paredit          Lets you manipulate sexps with ease
 ;;   redshank         Think: Lisp refactoring
 ;;   edebug           Knowing the traditional debugger is good too
 ;;   eldoc
@@ -3404,6 +3369,7 @@ at the beginning of line, if already there."
 ;;   elint
 ;;   elp
 ;;   ert
+;;   ielm
 
 (use-package lisp-mode
   ;; :load-path "site-lisp/slime/contrib/"
@@ -3556,13 +3522,6 @@ at the beginning of line, if already there."
     (hook-into-modes #'my-lisp-mode-hook lisp-mode-hooks)))
 
 
-;;;_ , log4j-mode
-
-(use-package log4j-mode
-  :disabled t
-  :mode ("\\.log\\'" . log4j-mode))
-
-
 ;;;_ , lorem-ipsum
 (use-package lorem-ipsum
   :commands (Lorem-ipsum-insert-paragraphs
@@ -3582,7 +3541,8 @@ at the beginning of line, if already there."
                 (bind-key "C-d" 'exit-minibuffer lusty-mode-map)))
 
     (defun lusty-open-this ()
-      "Open the given file/directory/buffer, creating it if not already present."
+      "Open the given file/directory/buffer, creating it if not
+    already present."
       (interactive)
       (when lusty--active-mode
         (ecase lusty--active-mode
@@ -3641,7 +3601,7 @@ at the beginning of line, if already there."
     (if (featurep 'icicles)
         (defadvice lusty-file-explorer (around lusty-file-explorer-without-icy
                                                activate)
-          (cl-cl-flet ((message (&rest ignore)))
+          (flet ((message (&rest ignore)))
             (let ((icy-was-on icicle-mode))
               (if icy-was-on (icy-mode 0))
               (unwind-protect
@@ -3741,89 +3701,9 @@ at the beginning of line, if already there."
 ;;;_ , markdown-mode
 
 (use-package markdown-mode
-  :commands markdown-mode
-  :mode (("\\.markdown\\'" . markdown-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.mdwn\\'" . markdown-mode)
-         ("\\.mkdn\\'" . markdown-mode)
-         ("\\.mdown\\'" . markdown-mode)
-         ("\\.mkd\\'" . markdown-mode)
-         ("\\.mkdown\\'" . markdown-mode)
-         ("\\.mdtext\\'" . markdown-mode))
-  :init
-  (progn
-    (setq markdown-command "pandoc -f markdown -t html")
-    (defun markdown-imenu-create-index ()
-      (let* ((root '(nil . nil))
-             cur-alist
-             (cur-level 0)
-             (pattern "^\\(\\(#+\\)[ \t]*\\(.+\\)\\|\\([^# \t\n=-].*\\)\n===+\\|\\([^# \t\n=-].*\\)\n---+\\)$")
-             (empty-heading "-")
-             (self-heading ".")
-             hashes pos level heading)
-        (save-excursion
-          (goto-char (point-min))
-          (while (re-search-forward pattern (point-max) t)
-            (cond
-             ((setq hashes (match-string-no-properties 2))
-              (setq heading (match-string-no-properties 3)
-                    pos (match-beginning 1)
-                    level (length hashes)))
-             ((setq heading (match-string-no-properties 4))
-              (setq pos (match-beginning 4)
-                    level 1))
-             ((setq heading (match-string-no-properties 5))
-              (setq pos (match-beginning 5)
-                    level 2)))
-            (let ((alist (list (cons heading pos))))
-              (cond
-               ((= cur-level level) ; new sibling
-                (setcdr cur-alist alist)
-                (setq cur-alist alist))
-               ((< cur-level level) ; first child
-                (dotimes (i (- level cur-level 1))
-                  (setq alist (list (cons empty-heading alist))))
-                (if cur-alist
-                    (let* ((parent (car cur-alist))
-                           (self-pos (cdr parent)))
-                      (setcdr parent (cons (cons self-heading self-pos) alist)))
-                  (setcdr root alist)) ; primogenitor
-                (setq cur-alist alist)
-                (setq cur-level level))
-               (t ; new sibling of an ancestor
-                (let ((sibling-alist (last (cdr root))))
-                  (dotimes (i (1- level))
-                    (setq sibling-alist (last (cdar sibling-alist))))
-                  (setcdr sibling-alist alist)
-                  (setq cur-alist alist))
-                (setq cur-level level)))))
-          (cdr root))))
-
-    (defun markdown-preview-file ()
-      "run Marked on the current file and revert the buffer"
-      (interactive)
-      (shell-command
-       (format "open -a /Applications/Marked.app %s"
-               (shell-quote-argument (buffer-file-name)))))
-
-    (bind-key "C-x M" 'markdown-preview-file)
-    (setq markdown-imenu-generic-expression
-          '(("title"  "^\\(.*\\)[\n]=+$" 1)
-            ("h2-"    "^\\(.*\\)[\n]-+$" 1)
-            ("h1"   "^# \\(.*\\)$" 1)
-            ("h2"   "^## \\(.*\\)$" 1)
-            ("h3"   "^### \\(.*\\)$" 1)
-            ("h4"   "^#### \\(.*\\)$" 1)
-            ("h5"   "^##### \\(.*\\)$" 1)
-            ("h6"   "^###### \\(.*\\)$" 1)
-            ("fn"   "^\\[\\^\\(.*\\)\\]" 1)
-            ))
-    (add-hook 'markdown-mode-hook
-              '(lambda ()
-                 (setq imenu-create-index-function 'markdown-imenu-create-index)
-                 (setq imenu-generic-expression markdown-imenu-generic-expression)
-                 (turn-on-pandoc)
-                 ))))
+  :mode (("\\`README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"          . markdown-mode)
+         ("\\.markdown\\'"    . markdown-mode)))
 
 ;;;_ , mouse+
 
@@ -3837,6 +3717,7 @@ at the beginning of line, if already there."
 
 ;;;_ , mudel
 (use-package mudel
+  :disabled t
   :commands mudel
   :bind ("C-c M" . mud)
   :init
@@ -4234,11 +4115,9 @@ and view local index.html url"
 
 ;;;_ , paren
 
-(unless
-    (use-package mic-paren
-      :init
-      (paren-activate))
-
+(unless (use-package mic-paren
+          :init
+          (paren-activate))
   (use-package paren
     :init
     (show-paren-mode 1)))
@@ -4985,7 +4864,7 @@ and run compass from that directory"
                     (eq 'listen (process-status server-process)))
           (server-start))))
 
-    (run-with-idle-timer 300 t 'save-information)
+    ;; (run-with-idle-timer 300 t 'save-information)
 
     (if window-system
         (add-hook 'after-init-hook 'session-initialize t))))
@@ -5260,6 +5139,7 @@ Does not delete the prompt."
 ;;;_ , sunrise-commander
 
 (use-package sunrise-commander
+  :disabled t
   :commands (sunrise sunrise-cd)
   :init
   (progn
@@ -5394,6 +5274,7 @@ Does not delete the prompt."
 ;;;;_ , twittering-mode
 
 (use-package twittering-mode
+  :disabled t
   :commands twit
   :config
   (progn
