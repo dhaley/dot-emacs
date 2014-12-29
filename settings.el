@@ -542,7 +542,7 @@
  '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message "dkh")
  '(inhibit-startup-screen t)
- '(initial-major-mode (quote org-mode))
+ '(initial-major-mode (quote fundamental-mode))
  '(initsplit-customizations-alist
    (quote
     (("\\`\\(gnus\\|nn\\|message\\|mail\\|mm-\\|smtp\\|send-mail\\|check-mail\\|spam\\|sc-\\)" "~/.emacs.d/gnus-settings.el" nil nil)
@@ -829,12 +829,6 @@
  '(diff-nonexistent ((((background dark)) (:foreground "#FFFFFFFF7474")) (t (:foreground "DarkBlue"))))
  '(diff-removed ((t (:foreground "firebrick"))))
  '(diff-removed2 ((t (:foreground "Orange"))))
- '(dired-subtree-depth-1-face ((t (:inherit org-todo-kwd-face))))
- '(dired-subtree-depth-2-face ((t (:inherit org-done-kwd-face))))
- '(dired-subtree-depth-3-face ((t (:inherit org-project-kwd-face))))
- '(dired-subtree-depth-4-face ((t (:inherit org-waiting-kwd-face))))
- '(dired-subtree-depth-5-face ((t (:inherit org-someday-kwd-face))))
- '(dired-subtree-depth-6-face ((t (:inherit org-started-kwd-face))))
  '(erc-timestamp-face ((t (:foreground "dark violet"))))
  '(flycheck-error ((t (:underline (:color "red1" :style wave)))))
  '(flycheck-warning ((t (:underline (:color "DeepSkyBlue" :style wave)))))
