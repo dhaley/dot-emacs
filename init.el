@@ -4365,6 +4365,22 @@ unless return was pressed outside the comment"
             (call-interactively 'indent-according-to-mode)
             (call-interactively 'php-complete-function))))
 
+    (defun php-show-arglist ()
+      (interactive)
+      (let* ((tagname (php-get-pattern))
+             (buf (find-tag-noselect tagname nil nil))
+             arglist)
+        (with-current-buffer buf
+          (goto-char (point-min))
+          (when (re-search-forward
+                 (format "function\\s-+%s\\s-*(\\([^{]*\\))" tagname)
+                 nil t)
+            (setq arglist (buffer-substring-no-properties
+                           (match-beginning 1) (match-end 1)))))
+        (if arglist
+            (message "Arglist for %s: %s" tagname arglist)
+          (message "Unknown function: %s" tagname))))
+
     (defun my-php-mode-hook ()
       (set (make-local-variable 'yas-fallback-behavior)
            '(apply my-php-indent-or-complete . nil))
