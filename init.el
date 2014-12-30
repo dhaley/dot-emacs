@@ -293,7 +293,6 @@
   (call-interactively 'isearch-forward))
 
 (bind-key "C-M-s" 'isearch-forward-other-window)
-
 ;; ;; Some further isearch bindings
 ;; these keys break eshell
 ;; (bind-key "C-c" 'isearch-toggle-case-fold isearch-mode-map)
@@ -1025,6 +1024,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , auto-complete
 
 (use-package auto-complete-config
+  :disabled t
   :load-path ("site-lisp/ac/auto-complete"
               "site-lisp/ac/popup-el"
               "site-lisp/ac/ac-source-emmet")
@@ -1338,7 +1338,7 @@ Including indent-buffer, which should not be called automatically on save."
       (hide-ifdef-mode 1)
       (whitespace-mode 1)
       (which-function-mode 1)
-      (auto-complete-mode 1)
+      ;; (auto-complete-mode 1)
       (yas-minor-mode 1)
       (bug-reference-prog-mode 1)
 
@@ -1348,12 +1348,12 @@ Including indent-buffer, which should not be called automatically on save."
 
       (bind-key "C-c p" 'insert-counting-printf c-mode-base-map)
 
-      (auto-complete-mode 1)
-      (setq ac-sources (list (if (and (fboundp 'semantic-active-p)
-                                      (funcall #'semantic-active-p))
-                                 'ac-source-semantic
-                               'ac-source-gtags)))
-      (bind-key "<A-tab>" 'ac-complete c-mode-base-map)
+      ;; (auto-complete-mode 1)
+      ;; (setq ac-sources (list (if (and (fboundp 'semantic-active-p)
+      ;;                                 (funcall #'semantic-active-p))
+      ;;                            'ac-source-semantic
+      ;;                          'ac-source-gtags)))
+      ;; (bind-key "<A-tab>" 'ac-complete c-mode-base-map)
 
       ;;(doxymacs-mode 1)
       ;;(doxymacs-font-lock)
@@ -1664,8 +1664,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;_ , company-mode
 
 (use-package company
-  :commands company-mode)
-
+  :init
+  (add-hook 'after-init-hook 'global-company-mode))
 
 ;;;_ , copy-code
 
@@ -1707,10 +1707,11 @@ Including indent-buffer, which should not be called automatically on save."
   (progn
     (define-keys css-mode-map
       '(("<return>" newline-and-indent)))
-    (use-package ac-emmet)
+    ;; (use-package ac-emmet)
     (add-hook 'css-mode-hook
               (lambda ()
-                (ac-emmet-css-setup)))))
+                ;; (ac-emmet-css-setup)
+                ))))
 
 ;;;_ , iflipb
 
@@ -4233,7 +4234,7 @@ unless return was pressed outside the comment"
                  (drupal-mode-bootstrap)
                  (ggtags-mode 1)
                  (diminish 'ggtags-mode)
-                 (auto-complete-mode 1)
+                 ;; (auto-complete-mode 1)
                  (ac-cc-mode-setup)
                  (define-abbrev php-mode-abbrev-table "ex" "extends")
                  (abbrev-mode 1)
@@ -4821,9 +4822,11 @@ and run compass from that directory"
   :init
   (progn
     ;; auto-comple
-    (add-to-list 'ac-modes 'scss-mode))
+    ;; (add-to-list 'ac-modes 'scss-mode)
+    )
   :config
-   (ac-emmet-css-setup))
+   ;; (ac-emmet-css-setup)
+   )
 
 ;;;_ , selectkey
 
@@ -5624,13 +5627,13 @@ Does not delete the prompt."
   :mode (("\\.html$" . web-mode)("\\.tpl\\.php$" . web-mode)("\\.blade\\.php\\'" . web-mode))
   :init
   (progn
-    (require 'ac-emmet)
+    ;; (require 'ac-emmet)
     (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))
 
-    (setq web-mode-ac-sources-alist
-          '(("php" . (ac-source-yasnippet ac-source-php-auto-yasnippets))
-            ("html" . (ac-source-emmet-html-aliases ac-source-emmet-html-snippets))
-            ("css" . (ac-source-css-property ac-source-emmet-css-snippets))))
+    ;; (setq web-mode-ac-sources-alist
+    ;;       '(("php" . (ac-source-yasnippet ac-source-php-auto-yasnippets))
+    ;;         ("html" . (ac-source-emmet-html-aliases ac-source-emmet-html-snippets))
+    ;;         ("css" . (ac-source-css-property ac-source-emmet-css-snippets))))
 
     (add-hook 'web-mode-before-auto-complete-hooks
               '(lambda ()
