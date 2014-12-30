@@ -294,11 +294,12 @@
 
 (bind-key "C-M-s" 'isearch-forward-other-window)
 
-;; Some further isearch bindings
-(bind-key "C-c" 'isearch-toggle-case-fold isearch-mode-map)
-(bind-key "C-t" 'isearch-toggle-regexp isearch-mode-map)
-(bind-key "C-^" 'isearch-edit-string isearch-mode-map)
-(bind-key "C-i" 'isearch-complete isearch-mode-map)
+;; ;; Some further isearch bindings
+;; these keys break eshell
+;; (bind-key "C-c" 'isearch-toggle-case-fold isearch-mode-map)
+;; (bind-key "C-t" 'isearch-toggle-regexp isearch-mode-map)
+;; (bind-key "C-^" 'isearch-edit-string isearch-mode-map)
+;; (bind-key "C-i" 'isearch-complete isearch-mode-map)
 
 ;;;_  . H-?
 
