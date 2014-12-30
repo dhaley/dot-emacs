@@ -2034,6 +2034,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , edit-emacs
 
 (use-package edit-server
+  :disabled t
   :load-path "site-lisp/emacs_chrome/servers"
   :if (and window-system (not running-alternate-emacs)
            (not noninteractive))
