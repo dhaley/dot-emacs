@@ -1360,9 +1360,9 @@ Including indent-buffer, which should not be called automatically on save."
 
       (bind-key "<return>" 'newline-and-indent c-mode-base-map)
 
-      (set (make-local-variable 'yas-fallback-behavior)
-           '(apply my-c-indent-or-complete . nil))
-      (bind-key "<tab>" 'yas-expand-from-trigger-key c-mode-base-map)
+      ;; (set (make-local-variable 'yas-fallback-behavior)
+      ;;      '(apply my-c-indent-or-complete . nil))
+      ;; (bind-key "<tab>" 'yas-expand-from-trigger-key c-mode-base-map)
 
       (unbind-key "M-j" c-mode-base-map)
       (bind-key "C-c C-i" 'c-includes-current-file c-mode-base-map)
