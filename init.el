@@ -4485,65 +4485,10 @@ Keys are in kbd format."
           )))
 
     (use-package helm-projectile
-      :bind (("C-c p h" . helm-projectile)
-             ("M-s P" . helm-projectile)
-             ("C-x u" . persp-switch))
-
-      :config
+      :init
       (progn
-        ;; Add add-to-projectile action after helm-find-files.
-        (let ((find-files-action (assoc 'action helm-source-find-files)))
-          (setcdr find-files-action
-                  (cons
-                   (cadr find-files-action)
-                   (cons '("Add to projectile" . helm-add-to-projectile)
-                         (cddr find-files-action)))))
-
-        ;; Use helm-find-files actions in helm-projectile
-        (let ((projectile-files-action (assoc 'action helm-source-projectile-files-list)))
-          (setcdr projectile-files-action (cdr (assoc 'action helm-source-find-files))))
-
-        (defun helm-add-to-projectile (path)
-          "Add directory of file to projectile projects.
-  Used as helm action in helm-source-find-files"
-          (projectile-add-known-project (file-name-directory path))))))
-  :config
-  (progn
-    ;; https://bitbucket.org/Fuco/.emacs.d/commits/6cad2a240aa849eb3ba9436fe2f342e7ad7b7da7
-;;     (defun projectile-project-root ()
-;;       "Retrieves the root directory of a project if available.
-;; The current directory is assumed to be the project's root otherwise."
-;;       (let ((project-root
-;;              (or (->> projectile-project-root-files
-;;                    (--map (locate-dominating-file (file-truename default-directory) it))
-;;                    (-remove #'null)
-;;                    (--max-by (> (s-count-matches "/" it) (s-count-matches "/" other))) ;;; return the closest "parent dir" for this (possible) subproject
-;;                    (projectile-file-truename))
-;;                  (if projectile-require-project-root
-;;                      (error "You're not in a project")
-;;                    default-directory))))
-;;         project-root))
-
-    ;; (defun projectile-get-ext-command ()
-    ;;   "Determine which external command to invoke based on the project's VCS."
-    ;;   (concat
-    ;;    "find -L . -not \\( \\( "
-    ;;    (mapconcat (lambda (x)
-    ;;                 (concat "-path \"*/" x "/*\"")) projectile-globally-ignored-directories " -or ")
-    ;;    (let ((proj-ig-dirs (projectile-project-ignored-directories)))
-    ;;      (if (not proj-ig-dirs) ""
-    ;;        (concat
-    ;;         " -or "
-    ;;         (mapconcat (lambda (x)
-    ;;                      (concat "-path \"" x "\""))
-    ;;                    (let ((project-root (projectile-project-root)))
-    ;;                      (--map (concat "./" (file-relative-name it project-root)) proj-ig-dirs)) " -or "))))
-    ;;    " \\) -prune \\)"
-    ;;    " -not "
-    ;;    (mapconcat (lambda (x)
-    ;;                 (concat "-path \"*/" x "\"")) projectile-globally-ignored-directories " -not ")
-    ;;    " -type f -print0"))
-    ))
+        (helm-projectile-on)
+        (bind-key "M-s P" 'helm-projectile)))))
 
 ;;;_ , popup-ruler
 
