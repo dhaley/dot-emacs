@@ -99,7 +99,7 @@
         url = git://github.com/idomagal/ipa.el.git
 [submodule "site-lisp/ido-hacks"]
         path = site-lisp/ido-hacks
-        url = git://github.com/jwiegley/ido-hacks.git
+        url = git://github.com/dhaley/ido-hacks.git
 [submodule "site-lisp/zencoding-mode"]
         path = site-lisp/zencoding-mode
         url = git://github.com/rooney/zencoding.git
