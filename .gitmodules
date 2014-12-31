@@ -198,7 +198,7 @@
         url = git://github.com/trebb/bbdb-vcard.git
 [submodule "site-lisp/flycheck"]
         path = site-lisp/flycheck
-        url = git://github.com/lunaryorn/flycheck.git
+        url = git://github.com/dhaley/flycheck.git
 [submodule "site-lisp/ecukes"]
         path = site-lisp/ecukes
         url = git://github.com/rejeep/ecukes.git
@@ -806,5 +806,5 @@
         path = site-lisp/anaphora
         url = git@github.com:rolandwalker/anaphora.git
 [submodule "site-lisp/company-mode"]
-	path = site-lisp/company-mode
-	url = git@github.com:company-mode/company-mode.git
+        path = site-lisp/company-mode
+        url = git@github.com:company-mode/company-mode.git
