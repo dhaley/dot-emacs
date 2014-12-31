@@ -1956,6 +1956,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 (use-package drupal-mode
   :commands drupal-mode-bootstrap
+  :init (setq drupal-get-function-args t)
   :config
   (add-hook 'drupal-mode-hook
             '(lambda ()
@@ -4234,10 +4235,7 @@ unless return was pressed outside the comment"
                  (drupal-mode-bootstrap)
                  (ggtags-mode 1)
                  (diminish 'ggtags-mode)
-                 ;; (auto-complete-mode 1)
-                 (ac-cc-mode-setup)
                  (define-abbrev php-mode-abbrev-table "ex" "extends")
-                 (abbrev-mode 1)
                  (hs-minor-mode 1)
                  (turn-on-eldoc-mode)
                  (diminish 'hs-minor-mode)
