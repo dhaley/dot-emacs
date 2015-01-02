@@ -6,7 +6,7 @@
 (require 'org-agenda)
 (require 'org-smart-capture)
 
-(require 'org-crypt)
+;; (require 'org-crypt)
 (require 'org-devonthink)
 (require 'org-debbugs)
 (require 'org-magit)
@@ -16,7 +16,7 @@
 (require 'async)
 (require 'helm-org)
 
-;; (require 'orgbox)
+(require 'async)
 
 (defun org-link-to-named-task ()
   (interactive))
@@ -88,7 +88,6 @@ How much context is shown depends upon the variables
 ;;      "LEVEL=2")))
 
 (defun org-agenda-add-overlays (&optional line)
-  (interactive)
   "Add overlays found in OVERLAY properties to agenda items.
 Note that habitual items are excluded, as they already
 extensively use text properties to draw the habits graph.
@@ -277,22 +276,9 @@ To use this function, add it to `org-agenda-finalize-hook':
 ;;                      "~/Dropbox/MobileOrg/index.org")))))
 
 (defun my-org-mobile-pre-pull-function ()
-  (async-start
-   (lambda ()
-     (shell-command "open /Applications/Misc/Dropbox.app")
-     (sleep-for 30)
-     (shell-command "osascript -e 'tell application \"Dropbox\" to quit'"))
-   ;; (lambda (ret)
-   ;;   (my-org-convert-incoming-items))
-))
+  (my-org-convert-incoming-items))
 
-(defun my-org-mobile-post-push-function ()
-  (async-start
-   (lambda ()
-     (shell-command "open /Applications/Misc/Dropbox.app")
-     (sleep-for 30)
-     (shell-command "osascript -e 'tell application \"Dropbox\" to quit'"))
-   'ignore))
+(defun my-org-mobile-post-push-function ())
 
 (add-hook 'org-mobile-pre-pull-hook 'my-org-mobile-pre-pull-function)
 (add-hook 'org-mobile-post-push-hook 'my-org-mobile-post-push-function)
@@ -835,6 +821,10 @@ end tell" (match-string 1))))
   (and (memq org-agenda-window-setup '(reorganize-frame))
        (fboundp 'fit-window-to-buffer)
        (fit-window-to-buffer)))
+
+(defadvice org-agenda-redo (after fit-windows-for-agenda-redo activate)
+  "Fit the Org Agenda to its buffer."
+  (org-fit-agenda-window))
 
 (defadvice org-agenda (around fit-windows-for-agenda activate)
   "Fit the Org Agenda to its buffer."
