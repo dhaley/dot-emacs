@@ -1956,12 +1956,15 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 (use-package drupal-mode
   :commands drupal-mode-bootstrap
-  :init (setq drupal-get-function-args t)
+  ;; :init (setq drupal-get-function-args t)
   :config
+  ;; (add-hook 'find-file-hook 'auto-insert)
   (add-hook 'drupal-mode-hook
             '(lambda ()
                (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-               (yas-activate-extra-mode 'drupal-mode))))
+               (yas-activate-extra-mode 'drupal-mode)
+               (when (apply 'derived-mode-p drupal-php-modes)
+                 (flycheck-mode t)))))
 
 ;;;_ , e2wm
 
@@ -3920,7 +3923,7 @@ and view local index.html url"
       (run-with-idle-timer 3600 t 'jump-to-org-agenda))
 
     (unless running-alternate-emacs
-      (run-with-idle-timer 300 t 'jump-to-org-agenda)
+      ;; (run-with-idle-timer 300 t 'jump-to-org-agenda)
       (add-hook 'after-init-hook
                 #'(lambda ()
                     (org-agenda-list)
