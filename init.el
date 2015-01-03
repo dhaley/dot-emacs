@@ -2792,7 +2792,8 @@ at the beginning of line, if already there."
 
 ;;;_ , flycheck
 
-(use-package flycheck)
+(use-package flycheck
+  :init (global-flycheck-mode))
 
   ;; :load-path ("site-lisp/flycheck/deps/dash.el"
   ;;             "site-lisp/flycheck/deps/s.el")
