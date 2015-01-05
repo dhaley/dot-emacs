@@ -5751,20 +5751,6 @@ Does not delete the prompt."
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
 
-;; OS X Specific configuration
-
-;;; Ignore .DS_Store files with ido mode
-(add-to-list 'ido-ignore-files "\\.DS_Store")
-;; # FIXME: this is to ignore Dropbox "Icon" files that seem to be
-;; "Icon", but I can't figure out how to ignore that.
-(add-to-list 'ido-ignore-files "Icon")
-
-;; toggle-input-method
-(setq default-input-method "MacOSX")
-
-;; fix hostname.local stuff
-(setq system-name (car (split-string system-name "\\.")))
-
 ;;;;; Theme ;;;;;
 ;; Cycle through this set of themes
 (setq my-themes '(solarized-light solarized-dark zenburn wombat tango))
@@ -5795,106 +5781,9 @@ Does not delete the prompt."
             (lambda ()
               (cycle-my-theme) t)))
 
-;; Even though we may have set the Mac OS X Terminal's Alt key as the
-;; emacs Meta key, we want to be able to insert a '#' using Alt-3 in
-;; emacs as we would in other programs.
-(fset 'insert-pound "#")
-(define-key global-map "\M-3" 'insert-pound)
-
-(fset 'newline-indent-sexp-pairs
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("\200\200
-" 0 "%d")) arg)))
-
-(bind-key "C-H-M-~" 'newline-indent-sexp-pairs)
-
-;; Allow "y or n" instead of "yes or no"
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;; Various superfluous white-space. Just say no.
-(add-hook 'before-save-hook 'cleanup-buffer-safe)
-
-;;;; Emoji composition tests
-;;; Regional indicators (#x1F1E6 - #x1F1FF)
-
-(defun emoji-insert_regions ()
-  "Insert Regional indicators (#x1F1E6 - #x1F1FF)"
-  (interactive)
-  (insert (mapconcat (lambda (s) (mapcar (lambda (c) (+ c (- #x1F1FF ?Z))) s))
-                     '("CN" "DE" "ES" "FR" "GB" "IT" "JP" "KR" "RU" "US")
-                     " ")))
-
-;;;
-(defun emoji-insert_comparision ()
-  "Variation Selectors 15 (text-style) and 16 (emoji-style)"
-  (interactive)
-  (insert (mapconcat
-           (lambda (c) (format "#x%04x:\t%c\uFE0E\u20E3 %c\uFE0F\u20E3" c c c))
-           (cdr (assq 'keycap mac-emoji-variation-characters-alist)) "\n")
-          ?\n
-          (mapconcat
-           (lambda (c) (format "#x%04x:\t%c\uFE0E %c\uFE0F" c c c))
-           (mapconcat 'cdr mac-emoji-variation-characters-alist "") "\n")))
-
-
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
-
-(defun replace-latin-alphabet-to-gothic (p1 p2 reverse-direction-p)
-  "Replace English alphabets to Unicode gothic characters.
-For example, A ⇒ 𝔄, a ⇒ 𝔞.
-
-When called interactively, work on current text block or text selection. (a “text block” is text between empty lines)
-
-If any `universal-argument' is given, reverse direction.
-
-When called in elisp, the p1 and p2 are region begin/end positions to work on."
-  (interactive
-   (let ((bds (get-selection-or-unit 'block)) )
-     (list (elt bds 1) (elt bds 2) current-prefix-arg )) )
-
-  (let (
-        (latin-to-gothic [ ["A" "𝔄"] ["B" "𝔅"] ["C" "ℭ"] ["D" "𝔇"] ["E" "𝔈"] ["F" "𝔉"] ["G" "𝔊"] ["H" "ℌ"] ["I" "ℑ"] ["J" "𝔍"] ["K" "𝔎"] ["L" "𝔏"] ["M" "𝔐"] ["N" "𝔑"] ["O" "𝔒"] ["P" "𝔓"] ["Q" "𝔔"] ["R" "ℜ"] ["S" "𝔖"] ["T" "𝔗"] ["U" "𝔘"] ["V" "𝔙"] ["W" "𝔚"] ["X" "𝔛"] ["Y" "𝔜"] ["Z" "ℨ"] ["a" "𝔞"] ["b" "𝔟"] ["c" "𝔠"] ["d" "𝔡"] ["e" "𝔢"] ["f" "𝔣"] ["g" "𝔤"] ["h" "𝔥"] ["i" "𝔦"] ["j" "𝔧"] ["k" "𝔨"] ["l" "𝔩"] ["m" "𝔪"] ["n" "𝔫"] ["o" "𝔬"] ["p" "𝔭"] ["q" "𝔮"] ["r" "𝔯"] ["s" "𝔰"] ["t" "𝔱"] ["u" "𝔲"] ["v" "𝔳"] ["w" "𝔴"] ["x" "𝔵"] ["y" "𝔶"] ["z" "𝔷"] ])
-
-        (gothic-to-latin [ ["𝔄" "A"] ["𝔅" "B"] ["ℭ" "C"] ["𝔇" "D"] ["𝔈" "E"] ["𝔉" "F"] ["𝔊" "G"] ["ℌ" "H"] ["ℑ" "I"] ["𝔍" "J"] ["𝔎" "K"] ["𝔏" "L"] ["𝔐" "M"] ["𝔑" "N"] ["𝔒" "O"] ["𝔓" "P"] ["𝔔" "Q"] ["ℜ" "R"] ["𝔖" "S"] ["𝔗" "T"] ["𝔘" "U"] ["𝔙" "V"] ["𝔚" "W"] ["𝔛" "X"] ["𝔜" "Y"] ["ℨ" "Z"] ["𝔞" "a"] ["𝔟" "b"] ["𝔠" "c"] ["𝔡" "d"] ["𝔢" "e"] ["𝔣" "f"] ["𝔤" "g"] ["𝔥" "h"] ["𝔦" "i"] ["𝔧" "j"] ["𝔨" "k"] ["𝔩" "l"] ["𝔪" "m"] ["𝔫" "n"] ["𝔬" "o"] ["𝔭" "p"] ["𝔮" "q"] ["𝔯" "r"] ["𝔰" "s"] ["𝔱" "t"] ["𝔲" "u"] ["𝔳" "v"] ["𝔴" "w"] ["𝔵" "x"] ["𝔶" "y"] ["𝔷" "z"] ])
-
-        useMap
-        )
-
-    (if reverse-direction-p
-        (progn (setq useMap gothic-to-latin))
-      (progn (setq useMap latin-to-gothic))
-      )
-    (save-excursion
-      (let ((case-fold-search nil))
-        (replace-pairs-region p1 p2 useMap ) ) ) ) )
-
-;; no need to type a space after comma
-(global-set-key (kbd ",") (lambda() (interactive) (insert ", ")))
-
-(use-package my-modeline
-  :if (not running-alternate-emacs)
-  :defer t
-  )
-
 ;; http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
 ;; (bind-key "C-<tab>" 'mode-line-other-buffer)
 (bind-key "C-<escape>" 'mode-line-other-buffer)
-
-(defun listenv ()
-  "List all environment variables in order."
-  (interactive)
-  (switch-to-buffer-other-window "*env*")
-  (erase-buffer)
-  (insert (mapconcat 'identity process-environment "\n"))
-  (sort-lines nil (point-min) (point-max)))
-
-;; Delete var without $
-(global-set-key(kbd "C-c DEL")
-               (lambda ()
-                 (interactive)
-                 (search-backward "$")
-                 (forward-char)
-                 (kill-word 1)))
 
 ;; Registers
 
