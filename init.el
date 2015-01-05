@@ -762,42 +762,6 @@
 (bind-key "C-h e v" 'find-variable)
 (bind-key "C-h e V" 'apropos-value)
 
-(defun untabify-buffer ()
-  "Untabify current buffer"
-  (interactive)
-  (save-excursion (untabify (point-min) (point-max))))
-
-(defun cleanup-buffer-safe ()
-  "Perform a bunch of safe operations on the whitespace content of a buffer.
-Does not indent buffer, because it is used for a before-save-hook, and that
-might be bad."
-  (interactive)
-  (untabify-buffer)
-  (delete-trailing-whitespace)
-  (set-buffer-file-coding-system 'utf-8))
-
-(defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer.
-Including indent-buffer, which should not be called automatically on save."
-  (interactive)
-  (cleanup-buffer-safe)
-  (indent-buffer))
-
-;; Various superfluous white-space. Just say no.
-(add-hook 'before-save-hook 'cleanup-buffer-safe)
-
-(setq package-archives
-      '(("original"    . "http://tromey.com/elpa/")
-        ("gnu"         . "http://elpa.gnu.org/packages/")
-        ("marmalade"   . "http://marmalade-repo.org/packages/")))
-;; (add-to-list 'package-archives
-;; '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
-
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
-(package-initialize)
-
 (defun rotate-windows ()
   "Rotate your windows"
   (interactive)
@@ -4825,7 +4789,7 @@ and run compass from that directory"
                     (eq 'listen (process-status server-process)))
           (server-start))))
 
-    ;; (run-with-idle-timer 300 t 'save-information)
+    (run-with-idle-timer 300 t 'save-information)
 
     (if window-system
         (add-hook 'after-init-hook 'session-initialize t))))
