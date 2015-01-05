@@ -2789,19 +2789,20 @@ at the beginning of line, if already there."
 
 ;;;_ , flycheck
 
-(use-package flycheck
+(use-package flycheck)
+
   ;; :load-path ("site-lisp/flycheck/deps/dash.el"
   ;;             "site-lisp/flycheck/deps/s.el")
-  :init
-  (progn
-    (use-package f)
-    (use-package pkg-info)
+  ;; :init
+  ;; (progn
+  ;;   (use-package f)
+  ;;   (use-package pkg-info)
 
-    (hook-into-modes #'flycheck-mode '(prog-mode-hook)))
-  :config
-  (progn
-    (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
-    (defalias 's-collapse-whitespace 'identity)))
+  ;;   (hook-into-modes #'flycheck-mode '(prog-mode-hook)))
+  ;; :config
+  ;; (progn
+  ;;   (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
+  ;;   (defalias 's-collapse-whitespace 'identity)))
 
 ;;;_ , google-this
 
