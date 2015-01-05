@@ -399,7 +399,6 @@
  '(flycheck-display-errors-delay 0.0)
  '(flycheck-sass-compass t)
  '(flycheck-scss-compass t)
- '(flycheck-php-phpcs-executable "/Users/dhaley/.composer/vendor/bin/phpcs")
  '(flymake-compilation-prevents-syntax-check nil)
  '(flyspell-abbrev-p nil)
  '(flyspell-incorrect-hook (quote (flyspell-maybe-correct-transposition)))
