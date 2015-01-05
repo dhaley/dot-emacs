@@ -1332,7 +1332,7 @@ Including indent-buffer, which should not be called automatically on save."
       (forward-line))
 
     (defun my-c-mode-common-hook ()
-      (abbrev-mode 1)
+      ;; (abbrev-mode 1)
       (ggtags-mode 1)
       (hs-minor-mode 1)
       (hide-ifdef-mode 1)
