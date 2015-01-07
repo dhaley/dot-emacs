@@ -606,6 +606,7 @@
  '(php-executable "/Applications/MAMP/bin/php/php5.5.18/bin/php")
  '(php-manual-path "~/Documents/php/php-chunked-xhtml")
  '(php-mode-coding-style (quote drupal))
+ '(php-template-compatibility nil)
  '(ping-program-options (quote ("-c" "4")))
  '(popwin:reuse-window nil)
  '(pp^L-^L-string

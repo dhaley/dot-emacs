@@ -5553,7 +5553,7 @@ Does not delete the prompt."
                      (yas-deactivate-extra-mode 'php-mode))
                    (if (string= web-mode-cur-language "css")
                        (setq emmet-use-css-transform t)
-                     (setq emmet-use-css-transform nil)))))))
+                     (setq emmet-use-css-transform nil)))))
     (defun web-mode-hook ()
       "Hooks for Web mode."
       (setq web-mode-markup-indent-offset 2)
