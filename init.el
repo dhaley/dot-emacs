@@ -4107,7 +4107,9 @@ and view local index.html url"
 
 (use-package php-mode
   :commands php-mode
-  :mode "\\.\\(php\\|module\\|test\\|install\\|theme\\|inc\\|profile\\)$"
+  :mode (
+         ("\\.inc$" . php-mode)
+         ("\\.\\(module\\|test\\|install\\|theme\\|\\profile\\)$" . php-mode))
   :interpreter "php"
   :init
   (progn
@@ -5524,8 +5526,14 @@ Does not delete the prompt."
 ;;;_ , web-mode
 
 (use-package web-mode
-  ;; :mode (("\\.html$" . web-mode)("\\.tpl\\.php$" . web-mode)("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode)("\\.blade\\.php\\'" . web-mode))
-  :mode (("\\.html$" . web-mode)("\\.tpl\\.php$" . web-mode)("\\.blade\\.php\\'" . web-mode))
+  :mode (("\\.phtml\\'" . web-mode)
+         ("\\.tpl\\.php\\'" . web-mode)
+         ("\\.blade\\.php\\'" . web-mode)
+         ("\\.jsp\\'" . web-mode)
+         ("\\.as[cp]x\\'" . web-mode)
+         ("\\.erb\\'" . web-mode)
+         ("\\.html?\\'" . web-mode)
+         ("/\\(views\\|html\\|theme\\|templates\\)/.*\\.php\\'" . web-mode))
   :init
   (progn
     ;; (require 'ac-emmet)
@@ -5546,6 +5554,15 @@ Does not delete the prompt."
                    (if (string= web-mode-cur-language "css")
                        (setq emmet-use-css-transform t)
                      (setq emmet-use-css-transform nil)))))))
+    (defun web-mode-hook ()
+      "Hooks for Web mode."
+      (setq web-mode-markup-indent-offset 2)
+      (setq web-mode-css-indent-offset 2)
+      (setq web-mode-code-indent-offset 2)
+      (setq web-mode-disable-autocompletion t)
+      ;; (whitespace-mode -1)
+      (local-set-key (kbd "RET") 'indent-and-newline))
+    (add-hook 'web-mode-hook  'web-mode-hook)))
 
 
 ;;;_ , winner
