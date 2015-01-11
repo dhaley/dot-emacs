@@ -808,3 +808,6 @@
 [submodule "site-lisp/company-mode"]
         path = site-lisp/company-mode
         url = git@github.com:company-mode/company-mode.git
+[submodule "site-lisp/golden-ratio"]
+	path = site-lisp/golden-ratio
+	url = git@github.com:roman/golden-ratio.el.git
