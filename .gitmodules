@@ -685,9 +685,6 @@
 [submodule "site-lisp/emm-mark-ext"]
         path = site-lisp/emm-mark-ext
         url = https://github.com/vapniks/emms-mark-ext.git
-[submodule "site-lisp/one-key"]
-        path = site-lisp/one-key
-        url = https://github.com/vapniks/one-key.git
 [submodule "site-lisp/emacs-window-manager"]
         path = site-lisp/emacs-window-manager
         url = https://github.com/kiwanami/emacs-window-manager.git
