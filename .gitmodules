@@ -811,3 +811,6 @@
 [submodule "site-lisp/golden-ratio"]
 	path = site-lisp/golden-ratio
 	url = git@github.com:roman/golden-ratio.el.git
+[submodule "site-lisp/HTML5-YASnippet-bundle"]
+	path = site-lisp/HTML5-YASnippet-bundle
+	url = git@github.com:gausby/HTML5-YASnippet-bundle.git

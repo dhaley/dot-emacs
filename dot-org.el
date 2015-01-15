@@ -534,10 +534,6 @@ end tell"))))
 
 (defun org-insert-url-link ()
   (interactive)
-  (insert (org-get-chrome-link)))
-
-(defun org-insert-safari-link ()
-  (interactive)
   (insert (org-get-safari-link)))
 
 (defun org-set-url-link ()
