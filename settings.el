@@ -434,6 +434,8 @@
  '(global-font-lock-mode t nil (font-lock))
  '(grep-find-command (quote ("ag --noheading --column --ignore branches " . 43)))
  '(helm-buffers-fuzzy-matching t)
+ '(helm-grep-default-command "/usr/local/bin/ggrep -a -d skip %e -n%cH -e %p %f")
+ '(helm-grep-default-recurse-command "/usr/local/bin/ggrep -a -d recurse %e -n%cH -e %p %f")
  '(hi2-ifte-offset 4)
  '(hi2-layout-offset 4)
  '(hi2-left-offset 4)
