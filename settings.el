@@ -683,6 +683,7 @@
  '(slime-kill-without-query-p t)
  '(slime-repl-history-file "~/.emacs.d/data/slime-history.eld")
  '(slime-startup-animation nil)
+ '(solarized-distinct-fringe-background t)
  '(sp-highlight-pair-overlay nil)
  '(sql-sqlite-program "sqlite3")
  '(sr-attributes-display-mask (quote (nil nil t nil nil nil)))
