@@ -2937,8 +2937,9 @@ at the beginning of line, if already there."
   :init
   (progn
     (bind-key "C-c M-x" 'helm-M-x)
-    (bind-key "C-h a" 'helm-c-apropos)
+    (bind-key "C-h a" 'helm-apropos)
     (bind-key "M-s a" 'helm-do-grep)
+    (bind-key "M-s s" 'helm-do-grep)
     (bind-key "M-s b" 'helm-occur)
     (bind-key "M-s F" 'helm-for-files)
 
@@ -2978,6 +2979,7 @@ at the beginning of line, if already there."
     (use-package helm-css-scss)
 
     (use-package helm-ag
+      :disabled t
       :commands (helm-ag projectile-helm-ag)
       :bind (("M-s <escape>"  . projectile-helm-ag)
              ("M-s A"  . helm-ag)
@@ -3004,6 +3006,7 @@ at the beginning of line, if already there."
 
     (helm-match-plugin-mode t)
 
+    (helm-autoresize-mode 1)
     (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
     (bind-key "C-i" 'helm-execute-persistent-action helm-map)
     (bind-key "C-z" 'helm-select-action helm-map)))
@@ -4329,12 +4332,11 @@ Keys are in kbd format."
                 (define-key mode-map (read-kbd-macro key) function)))
             keybindings))
 
-    (use-package ag
-      :init
-      (progn
-        (bind-key "C-. a" 'ag)
-        (use-package wgrep)
-        (use-package wgrep-ag)))
+     (use-package ag
+       :init
+       (progn
+         (bind-key "C-. a" 'ag)
+         (use-package wgrep-ag)))
 
     (use-package projectile-drupal
       :init
@@ -5455,6 +5457,11 @@ Does not delete the prompt."
                        "http://www.urbandictionary.com/define.php?term="
                        ""])))))
 
+;;_ , wgrep
+
+(use-package wgrep)
+
+;;_ , which-func
 
 (use-package which-func
   :init
