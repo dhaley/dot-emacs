@@ -4206,7 +4206,8 @@ unless return was pressed outside the comment"
                  'my-php-mode-hook
                  (local-set-key "\r" 'my-php-return)
                  (local-unset-key (kbd "C-c ."))
-                 (paren-toggle-open-paren-context 1)))
+                 (paren-toggle-open-paren-context 1)
+                 (which-function-mode 1)))
 
     (bind-key "C-c C-F" 'php-search-local-documentation)
     (use-package php-extras
@@ -5460,14 +5461,6 @@ Does not delete the prompt."
 ;;_ , wgrep
 
 (use-package wgrep)
-
-;;_ , which-func
-
-(use-package which-func
-  :init
-  (progn
-    (hook-into-modes 'which-function-mode
-                     '(prog-mode-hook))))
 
 ;;;_ , whitespace
 
