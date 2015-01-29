@@ -1628,6 +1628,7 @@
 ;;;_ , company-mode
 
 (use-package company
+  :diminish company-mode
   :init
   (add-hook 'after-init-hook 'global-company-mode))
 
@@ -3981,6 +3982,7 @@ and view local index.html url"
 
 ;;;_ , owdriver
 (use-package owdriver
+  :disabled t
   :init
   (progn
     (require 'smartrep)
@@ -5257,12 +5259,6 @@ Does not delete the prompt."
 
   :config
   (setq vkill-show-all-processes t))
-
-;;;_ , volatile-highlights
-
-(use-package volatile-highlights
-  :init (volatile-highlights-mode t)
-  :diminish volatile-highlights-mode)
 
 ;;;_ , w3m
 
