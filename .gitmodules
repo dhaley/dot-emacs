@@ -301,9 +301,6 @@
 [submodule "site-lisp/org-protocol-github-lines"]
         path = site-lisp/org-protocol-github-lines
         url = git://github.com/ruediger/org-protocol-github-lines.git
-[submodule "site-lisp/emacs-color-theme-solarized"]
-        path = site-lisp/emacs-color-theme-solarized
-        url = git://github.com/sellout/emacs-color-theme-solarized.git
 [submodule "site-lisp/artbollocks-mode"]
         path = site-lisp/artbollocks-mode
         url = git://github.com/sachac/artbollocks-mode.git
@@ -811,3 +808,6 @@
 [submodule "site-lisp/HTML5-YASnippet-bundle"]
 	path = site-lisp/HTML5-YASnippet-bundle
 	url = git@github.com:gausby/HTML5-YASnippet-bundle.git
+[submodule "site-lisp/solarized"]
+	path = site-lisp/solarized
+	url = git@github.com:bbatsov/solarized-emacs.git

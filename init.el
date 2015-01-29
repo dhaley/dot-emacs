@@ -5766,7 +5766,7 @@ Does not delete the prompt."
             t))
 
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/emacs-color-theme-solarized")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized")
 
 ;;;;; Theme ;;;;;
 ;; Cycle through this set of themes
