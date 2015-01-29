@@ -1011,7 +1011,8 @@
 
 (use-package auto-dim-other-buffers
   :commands auto-dim-other-buffers-mode
-  :diminish auto-dim-other-buffers-mode)
+  :diminish auto-dim-other-buffers-mode
+  :config (diminish 'auto-dim-other-buffers-mode "Dim"))
 
 ;;;_ , autorevert
 
@@ -1630,7 +1631,8 @@
 (use-package company
   :diminish company-mode
   :init
-  (add-hook 'after-init-hook 'global-company-mode))
+  (add-hook 'after-init-hook 'global-company-mode)
+  :config (diminish 'company-mode "Cmp"))
 
 ;;;_ , copy-code
 
@@ -5692,7 +5694,7 @@ Does not delete the prompt."
 
 (use-package yasnippet
   :if (not noninteractive)
-  :diminish yas-minor-mode
+  :diminish yas/minor-mode
   :commands (yas-minor-mode yas-expand)
   :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
   :init
