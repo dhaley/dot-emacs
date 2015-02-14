@@ -19,8 +19,6 @@
   `(dolist (mode-hook ,modes)
      (add-hook mode-hook ,func)))
 
-(add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
-
 (defun system-idle-time ()
   (with-temp-buffer
     (call-process "ioreg" nil (current-buffer) nil
@@ -109,40 +107,6 @@
 
   (load (expand-file-name "settings" user-emacs-directory)))
 
-(defvar mac-fullscreen-on  nil
-  "keep a track of mac-mouse-turn-o(n|ff)-fullscreen, assumes fullscreen is not on")
-
-(defun mac-toggle-fullscreen ()
-  "toggle fullscreen mode in Emacs mac (by Yamamoto Mitsuharu)"
-  (interactive)
-  ;; check we are in the emacs mac build
-                                        ; (when (functionp 'mac-process-hi-command)
-  (if (eq mac-fullscreen-on t)
-      (progn
-        (mac-mouse-turn-off-fullscreen t)
-        (setq mac-fullscreen-on nil))
-    (progn
-      (mac-mouse-turn-on-fullscreen t)
-      (setq mac-fullscreen-on t))))
-
-(when (and (window-system) (fboundp 'mac-mouse-turn-on-fullscreen))
-  (bind-key "C-H-f" 'mac-toggle-fullscreen))
-
-(defun double-quote ()
-  (interactive)
-  (if (use-region-p)
-      (save-excursion
-        (let ((beginning (region-beginning))
-              (end (+ (region-end) 1)))
-          (goto-char beginning)
-          (insert "“")
-          (goto-char end)
-          (insert "”")))
-    (insert "“”")
-    (backward-char)))
-
-(bind-key "C-c \"" 'double-quote)
-
 ;;;_ , Enable disabled commands
 
 (put 'downcase-region  'disabled nil)   ; Let downcasing work
@@ -181,9 +145,6 @@
 
 ;;;_ , Enable C-8 prefix
 
-(defvar workgroups-preload-map)
-(define-prefix-command 'workgroups-preload-map)
-
 (bind-key "<H-down>" 'shrink-window)
 (bind-key "<H-left>" 'shrink-window-horizontally)
 (bind-key "<H-right>" 'enlarge-window-horizontally)
@@ -205,6 +166,12 @@
     (bury-buffer)))
 
 (bind-key "C-z" 'collapse-or-expand)
+
+(defun reformat-json ()
+  (interactive)
+  (save-excursion
+    (shell-command-on-region
+     (mark) (point) "python -m json.tool" (buffer-name) t)))
 
 ;;;_  . M-?
 
@@ -263,21 +230,10 @@
 (bind-key "M-g c" 'goto-char)
 (bind-key "M-g l" 'goto-line)
 
-(global-set-key (vector 'remap 'goto-line) 'goto-line-with-feedback)
-
-(defun goto-line-with-feedback ()
-  "Show line numbers temporarily, while prompting for the line number input"
-  (interactive)
-  (unwind-protect
-      (progn
-        (linum-mode 1)
-        (goto-line (read-number "Goto line: ")))
-    (linum-mode -1)))
 (defun delete-indentation-forward ()
   (interactive)
   (delete-indentation t))
 
-(bind-key "M-s n" 'find-name-dired)
                                         ;(bind-key "M-s o" 'occur)
 ;;;_  . M-C-?
 
@@ -457,8 +413,19 @@
 (bind-key "C-c e z" 'byte-recompile-directory)
 
 (bind-key "C-c f" 'flush-lines)
-(bind-key "C-c g" 'goto-line)
 
+(global-set-key [remap goto-line] 'goto-line-with-feedback)
+
+(defun goto-line-with-feedback ()
+  "Show line numbers temporarily, while prompting for the line number input"
+  (interactive)
+  (unwind-protect
+      (progn
+        (linum-mode 1)
+        (goto-line (read-number "Goto line: ")))
+    (linum-mode -1)))
+
+(bind-key "C-c g" 'goto-line)
 (bind-key "C-c k" 'keep-lines)
 
 (eval-when-compile
@@ -848,7 +815,12 @@
 ;;;_ , ace-jump-mode
 
 (use-package ace-jump-mode
-  :bind ("H-h" . ace-jump-mode))
+  :bind ("M-h" . ace-jump-mode)
+  :config
+  (setq ace-jump-mode-submode-list
+        '(ace-jump-char-mode
+          ace-jump-word-mode
+          ace-jump-line-mode)))
 
 ;;;_ , ace-window
 (use-package ace-window
@@ -1013,9 +985,7 @@
 ;;;_ , auto-dim-other-buffers
 
 (use-package auto-dim-other-buffers
-  :commands auto-dim-other-buffers-mode
-  :diminish auto-dim-other-buffers-mode
-  :config (diminish 'auto-dim-other-buffers-mode "Dim"))
+  :commands auto-dim-other-buffers-mode)
 
 ;;;_ , autorevert
 
@@ -1632,10 +1602,8 @@
 ;;;_ , company-mode
 
 (use-package company
-  :diminish company-mode
   :init
-  (add-hook 'after-init-hook 'global-company-mode)
-  :config (diminish 'company-mode "Cmp"))
+  (add-hook 'after-init-hook 'global-company-mode))
 
 ;;;_ , copy-code
 
@@ -2767,6 +2735,24 @@ at the beginning of line, if already there."
   ;; :init
   ;;   (hook-into-modes #'flycheck-mode '(prog-mode-hook)))
 
+;;;_ , golden-ratio
+
+;; (use-package golden-ratio
+;;   :config
+;;   (progn
+;;      (golden-ratio-enable)
+;;      (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
+;;      (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p)
+;;      (add-to-list 'golden-ratio-inhibit-functions 'pl/ediff-comparison-buffer-p)
+
+;;   (defun pl/ediff-comparison-buffer-p ()
+;;     ediff-this-buffer-ediff-sessions)
+
+;;   (defun pl/helm-alive-p ()
+;;     (if (boundp 'helm-alive-p)
+;;         (symbol-value 'helm-alive-p)))
+;;   ))
+
 ;;;_ , google-this
 
 (use-package google-this
@@ -2796,6 +2782,7 @@ at the beginning of line, if already there."
 ;;;_ , guide-key
 
 (use-package guide-key
+  :diminish guide-key-mode
   :init
   (progn
     (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
@@ -3890,8 +3877,9 @@ and view local index.html url"
       (add-hook 'after-init-hook
                 #'(lambda ()
                     (org-agenda-list)
-                    (org-fit-agenda-window)
-                    (org-resolve-clocks))
+                    ;; (org-fit-agenda-window)
+                    ;; (org-resolve-clocks)
+                    )
                 (when (fboundp 'auto-dim-other-buffers-mode)
                   (auto-dim-other-buffers-mode t))) t))
   :config
@@ -4136,7 +4124,7 @@ and view local index.html url"
         (add-hook 'html-mode-hook
                   #'(lambda ()
                       (bind-key "<return>" 'newline-and-indent html-mode-map)))
-        ;; (add-hook 'web-mode-hook 'emmet-mode)
+        (add-hook 'web-mode-hook 'emmet-mode)
         )
 
       :config
@@ -4203,8 +4191,8 @@ unless return was pressed outside the comment"
     (add-hook 'php-mode-hook
               '(lambda ()
                  (drupal-mode-bootstrap)
-                 (ggtags-mode 1)
-                 (diminish 'ggtags-mode)
+                 ;; (ggtags-mode 1)
+                 ;; (diminish 'ggtags-mode)
                  (define-abbrev php-mode-abbrev-table "ex" "extends")
                  (hs-minor-mode 1)
                  (turn-on-eldoc-mode)
@@ -4798,7 +4786,8 @@ and run compass from that directory"
 
         (unless (or noninteractive
                     running-alternate-emacs
-                    (eq 'listen (process-status server-process)))
+                    (and server-process
+                         (eq 'listen (process-status server-process))))
           (server-start))))
 
     (run-with-idle-timer 300 t 'save-information)
@@ -5555,12 +5544,37 @@ Does not delete the prompt."
                    (if (string= web-mode-cur-language "css")
                        (setq emmet-use-css-transform t)
                      (setq emmet-use-css-transform nil)))))
+    (defun indent-and-newline ()
+      "Indent and newline"
+      (interactive)
+      (progn (web-mode-indent-line)
+             (newline-and-indent)))
     (defun web-mode-hook ()
       "Hooks for Web mode."
+      ;; (setq web-mode-disable-autocompletion t)
+      ;;indent
+      (setq web-mode-attr-indent-offset 2)
       (setq web-mode-markup-indent-offset 2)
       (setq web-mode-css-indent-offset 2)
       (setq web-mode-code-indent-offset 2)
-      (setq web-mode-disable-autocompletion t)
+
+      ;;padding
+      ;; For <style> parts
+      ;; (setq web-mode-style-padding 1)
+      ;; For <script> parts
+      ;; (setq web-mode-script-padding 1)
+      ;; For multi-line blocks
+      ;; (setq web-mode-block-padding 0)
+
+      (setq web-mode-enable-auto-pairing t)
+      (setq web-mode-enable-css-colorization t)
+
+      (setq web-mode-enable-comment-keywords t)
+      (setq web-mode-enable-current-column-highlight t)
+      (setq web-mode-enable-current-element-highlight t)
+      (setq web-mode-enable-element-tag-fontification t)
+
+      ;; (idle-highlight-mode 0)
       ;; (whitespace-mode -1)
       (local-set-key (kbd "RET") 'indent-and-newline))
     (add-hook 'web-mode-hook  'web-mode-hook)))
@@ -5697,7 +5711,7 @@ Does not delete the prompt."
 
 (use-package yasnippet
   :if (not noninteractive)
-  :diminish yas/minor-mode
+  :diminish yas-minor-mode
   :commands (yas-minor-mode yas-expand)
   :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
   :init
