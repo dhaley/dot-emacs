@@ -243,7 +243,7 @@
  '(custom-raised-buttons nil)
  '(custom-safe-themes
    (quote
-    ("6fe6ab4abe97a4f13533e47ae59fbba7f2919583f9162b440dd06707b01f7794" "025354235e98db5e7fd9c1a74622ff53ad31b7bde537d290ff68d85665213d85" "3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "f5e56ac232ff858afb08294fc3a519652ce8a165272e3c65165c42d6fe0262a0" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+    ("1297a022df4228b81bc0436230f211bad168a117282c20ddcba2db8c6a200743" "6fe6ab4abe97a4f13533e47ae59fbba7f2919583f9162b440dd06707b01f7794" "025354235e98db5e7fd9c1a74622ff53ad31b7bde537d290ff68d85665213d85" "3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "f5e56ac232ff858afb08294fc3a519652ce8a165272e3c65165c42d6fe0262a0" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(default-frame-alist
     (quote
      ((font . "-*-Source Code Pro-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
@@ -434,9 +434,20 @@
  '(global-auto-complete-mode t)
  '(global-font-lock-mode t nil (font-lock))
  '(grep-find-command (quote ("ag --noheading --column --ignore branches " . 43)))
+ '(grep-find-ignored-files
+   (quote
+    (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.dfsl" "*.pfsl" "*.d64fsl" "*.p64fsl" "*.lx64fsl" "*.lx32fsl" "*.dx64fsl" "*.dx32fsl" "*.fx64fsl" "*.fx32fsl" "*.sx64fsl" "*.sx32fsl" "*.wx64fsl" "*.wx32fsl" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "GPATH" "GRTAGS" "GTAGS")))
+ '(helm-ff-search-library-in-sexp t)
  '(helm-buffers-fuzzy-matching t)
+ '(helm-ff-file-name-history-use-recentf t)
+ '(helm-ff-search-library-in-sexp t)
+ '(helm-ff-skip-boring-files t)
  '(helm-grep-default-command "/usr/local/bin/ggrep -a -d skip %e -n%cH -e %p %f")
- '(helm-grep-default-recurse-command "/usr/local/bin/ggrep -a -d recurse %e -n%cH -e %p %f")
+ '(helm-grep-default-recurse-command "/usr/local/bin/ggrep -a -d recurse %e
+ '(helm-ls-git-show-abs-or-relative (quote relative))
+ '(helm-scroll-amount 8)
+ '(helm-split-window-in-side-p t)
+-n%cH -e %p %f")
  '(hi2-ifte-offset 4)
  '(hi2-layout-offset 4)
  '(hi2-left-offset 4)
@@ -625,6 +636,12 @@
  '(projectile-drupal-site-name-function (quote dkh-get-site-name))
  '(projectile-enable-caching t)
  '(projectile-generic-command "find -L . -type f -print0")
+ '(projectile-globally-ignored-directories
+   (quote
+    ("/Users/dhaley/.emacs.d/geben" "/Users/dhaley/sites/dslm/cores/drupal-7.34/themes" "/Users/dhaley/sites/dslm/cores/drupal-7.34/modules" "profiles/cu_fit/themes" "profiles/testing" "profiles/standard" "profiles/minimal" "/Users/dhaley/sites/sws/themes" "scripts" "misc" "includes" "/Users/dhaley/sites/sws/modules" "libraries" "FirePHPCore" "sites/default/files" "profiles//modules/contrib" ".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "build")))
+ '(projectile-globally-ignored-modes
+   (quote
+    ("erc-mode" "help-mode" "completion-list-mode" "Buffer-menu-mode" "gnus-.*-mode" "occur-mode" "geben-mode")))
  '(projectile-project-root-files-bottom-up
    (quote
     ("includes/common.inc" "includes/bootstrap.inc" ".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs")))
@@ -654,7 +671,7 @@
  '(recentf-save-file "~/.emacs.d/data/recentf")
  '(redisplay-dont-pause t t)
  '(regex-tool-backend (quote perl))
- '(runner-init-file "~/.emacs.d/runner-conf.el")
+ '(runner-init-file "~/.emacs.d/data/runner-conf.el")
  '(sage-view-anti-aliasing-level 4)
  '(sage-view-margin (quote (20 . 20)))
  '(sage-view-scale 2.0)
@@ -752,6 +769,10 @@
  '(tramp-persistency-file-name "~/.emacs.d/data/tramp")
  '(trash-directory "~/.Trash")
  '(undo-limit 800000)
+ '(undo-tree-auto-save-history t)
+ '(undo-tree-history-directory-alist (quote ((".*" . "~/.backups"))))
+ '(undo-tree-mode-lighter "")
+ '(undo-tree-visualizer-timestamps t)
  '(uniquify-buffer-name-style (quote post-forward-angle-brackets) nil (uniquify))
  '(url-cache-directory "~/.emacs.d/data/url/cache")
  '(url-configuration-directory "~/.emacs.d/data/url/")
@@ -801,7 +822,7 @@
  '(wg-query-for-save-on-emacs-exit nil)
  '(wg-query-for-save-on-workgroups-mode-exit nil)
  '(whitespace-auto-cleanup t)
- '(whitespace-line-column 90)
+ '(whitespace-line-column 80)
  '(whitespace-rescan-timer-time nil)
  '(whitespace-silent t)
  '(whitespace-style (quote (face trailing lines space-before-tab empty)))
