@@ -2926,51 +2926,42 @@ at the beginning of line, if already there."
 
 ;;;_ , helm
 
+(defun my-helm-do-grep ()
+  (interactive)
+  (helm-do-grep-1 (list default-directory)))
+
+(defun my-helm-do-grep-r ()
+  (interactive)
+  (helm-do-grep-1 (list default-directory) t))
+
+(defun my-helm-find ()
+  (interactive)
+  (helm-find nil))
+
 (use-package helm-config
+  :diminish helm-mode
+  :commands (helm-do-grep-1 helm-find)
+  :bind (("C-c h"   . helm-command-prefix)
+         ("C-h a"   . helm-c-apropos)
+         ("C-h e a" . my-helm-apropos)
+         ("C-x C-f" . helm-find-files)
+         ("M-s F"   . helm-for-files)
+         ("M-s b"   . helm-occur)
+         ("M-s f"   . my-helm-do-grep-r)
+         ("M-s g"   . my-helm-do-grep)
+         ("M-s n"   . my-helm-find)
+         ("M-s o"   . helm-occur)
+         ("M-s s"   . helm-do-grep))
   :init
+  (use-package helm-descbinds
+    :bind ("C-h b" . helm-descbinds)
+    :init
+    (fset 'describe-bindings 'helm-descbinds))
+
+  :config
   (progn
-    (bind-key "C-c M-x" 'helm-M-x)
-    (bind-key "C-h a" 'helm-apropos)
-    (bind-key "M-s a" 'helm-do-grep)
-    (bind-key "M-s s" 'helm-do-grep)
-    (bind-key "M-s b" 'helm-occur)
-    (bind-key "M-s F" 'helm-for-files)
-
-    ;; (bind-key "M-s f" 'helm-find-files)
-
-    (bind-key "M-s r" 'helm-resume)
-    (bind-key "M-s B" 'helm-bookmarks)
-    (bind-key "M-s l" 'helm-buffers-list)
-
-    (require 'grizzl)
     (use-package helm-commands)
-
-    (bind-key "C-h e a" 'my-helm-apropos)
-    (bind-key "C-x M-!" 'helm-command-from-zsh)
-    (bind-key "C-x C-b" 'helm-buffers-list)
-    (bind-key "C-x f" 'helm-find-git-file)
-
-    (use-package helm-descbinds
-      :commands helm-descbinds
-      :init
-      (fset 'describe-bindings 'helm-descbinds))
-
-    (bind-key "C-h b" 'helm-descbinds)
-
-    (bind-key "M-s ." 'helm-command-from-bash)
-
-    (defadvice helm-buffers-list
-        (around expand-window-helm-buffers-list activate)
-      (let ((c (current-window-configuration)))
-        (condition-case err
-            (progn
-              (delete-other-windows)
-              ad-do-it)
-          (t
-           (set-window-configuration c)))))
-
     (use-package helm-css-scss)
-
     (use-package helm-ag
       :disabled t
       :commands (helm-ag projectile-helm-ag)
@@ -2983,26 +2974,36 @@ at the beginning of line, if already there."
           (interactive)
           (helm-ag (projectile-project-root)))
         (bind-key "M-s <escape>" 'projectile-helm-ag)))
-
-    (bind-key "C-h b" 'helm-descbinds)
-
     (use-package helm-open-github
       :bind (("C-. o f" . helm-open-github-from-file)
              ("C-. o c" . helm-open-github-from-commit)
              ("C-. o i" . helm-open-github-from-issues)
              ("C-. o p" . helm-open-github-from-pull-requests)))
+    (use-package helm-files)
+    (use-package helm-grep)
+    (use-package helm-ls-git)
 
     (use-package helm-dash
       :load-path "site-lisp/esqlite/Emacs-pcsv"
       :init
       (helm-dash-activate-docset "Drupal"))
 
+    ;; (helm-mode 1)
     (helm-match-plugin-mode t)
+    (helm-autoresize-mode t)
 
-    (helm-autoresize-mode 1)
     (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
     (bind-key "C-i" 'helm-execute-persistent-action helm-map)
-    (bind-key "C-z" 'helm-select-action helm-map)))
+    (bind-key "C-z" 'helm-select-action helm-map)
+
+    (when (executable-find "curl")
+      (setq helm-google-suggest-use-curl-p t))
+
+    ;; (when (executable-find "ack")
+    ;;   (setq helm-grep-default-command "ack -Hn --no-group --no-color %e %p %f"
+    ;;         helm-grep-default-recurse-command
+    ;;         "ack -H --no-group --no-color %e %p %f"))
+    ))
 
 ;;;_ , helm-dash
 
