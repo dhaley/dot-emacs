@@ -847,3 +847,24 @@
 [submodule "site-lisp/company-ghc"]
 	path = site-lisp/company-ghc
 	url = git://github.com/iquiw/company-ghc.git
+[submodule "site-lisp/git-timemachine"]
+	path = site-lisp/git-timemachine
+	url = https://github.com/pidu/git-timemachine.git
+[submodule "site-lisp/multifiles-el"]
+	path = site-lisp/multifiles-el
+	url = https://github.com/magnars/multifiles.el.git
+[submodule "elpa"]
+	path = elpa
+	url = http://git.savannah.gnu.org/cgit/emacs/elpa.git
+[submodule "site-lisp/ASynK"]
+	path = site-lisp/ASynK
+	url = https://github.com/skarra/ASynK.git
+[submodule "site-lisp/iflipb"]
+	path = site-lisp/iflipb
+	url = https://github.com/jrosdahl/iflipb.git
+[submodule "site-lisp/osx-bbdb"]
+	path = site-lisp/osx-bbdb
+	url = https://github.com/chrisbarrett/osx-bbdb.git
+[submodule "melpa"]
+	path = melpa
+	url = https://github.com/milkypostman/melpa.git
