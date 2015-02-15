@@ -1654,10 +1654,10 @@
 ;;;_ , iflipb
 
 (use-package iflipb
-  ;; :disabled t
   :commands (iflipb-next-buffer iflipb-previous-buffer)
-  :bind (("C-H-M-S-<tab>" . my-iflipb-next-buffer)
-         ("H-<backspace>" . my-iflipb-previous-buffer))
+  :bind (("M-`" . my-iflipb-next-buffer)
+         ("S-<tab>" . my-iflipb-next-buffer)
+         ("A-S-<tab>" . my-iflipb-previous-buffer))
   :init
   (progn
     (defvar my-iflipb-auto-off-timeout-sec 2)
@@ -2862,8 +2862,9 @@ at the beginning of line, if already there."
 ;;;_ , grep
 
 (use-package grep
+  :disabled t
   :bind (("M-s d" . find-grep-dired)
-         ("M-s f" . find-grep)
+         ;; ("M-s f" . find-grep)
          ("M-s g" . grep))
   :init
   (progn
@@ -3005,14 +3006,8 @@ at the beginning of line, if already there."
     ;;         "ack -H --no-group --no-color %e %p %f"))
     ))
 
-;;;_ , helm-dash
-
-
-
-;;;_ , helm-itunes
-
-(use-package helm-itunes
-  :commands (helm-itunes))
+(use-package helm-ls-git
+  :bind ("C-x f" . helm-ls-git-ls))
 
 ;;;_ , hi-lock
 
@@ -3062,7 +3057,6 @@ at the beginning of line, if already there."
             ido-show-confirm-message)
   :init
   (ido-mode 'buffer)
-  ;; (ido-mode (quote both))
 
   :config
   (progn
@@ -3357,7 +3351,7 @@ at the beginning of line, if already there."
                ("(\\(ert-deftest\\)\\>[         '(]*\\(setf[    ]+\\sw+\\|\\sw+\\)?"
                 (1 font-lock-keyword-face)
                 (2 font-lock-function-name-face
-                   nil t)))))
+                 nil t)))))
           lisp-modes)
 
     (defvar slime-mode nil)
@@ -3479,17 +3473,21 @@ at the beginning of line, if already there."
         (bind-key "M-q" 'slime-reindent-defun lisp-mode-map)
         (bind-key "M-l" 'slime-selector lisp-mode-map))
 
+      (autoload 'yas-minor-mode "yasnippet")
       (yas-minor-mode 1))
 
     (hook-into-modes #'my-lisp-mode-hook lisp-mode-hooks)))
 
+;;;_ , llvm-mode
 
-;;;_ , lorem-ipsum
-(use-package lorem-ipsum
-  :commands (Lorem-ipsum-insert-paragraphs
-             Lorem-ipsum-insert-sentences
-             Lorem-ipsum-insert-list)
-  )
+(use-package llvm-mode
+  :mode ("\\.ll\\'" . llvm-mode))
+
+;;;_ , lua-mode
+
+(use-package lua-mode
+  :mode ("\\.lua\\'" . lua-mode)
+  :interpreter ("lua" . lua-mode))
 
 ;;;_ , lusty-explorer
 
@@ -3497,10 +3495,52 @@ at the beginning of line, if already there."
   :bind ("C-x C-f" . lusty-file-explorer)
   :config
   (progn
-    (add-hook 'lusty-setup-hook
-              (lambda ()
-                (bind-key "SPC" 'lusty-select-match lusty-mode-map)
-                (bind-key "C-d" 'exit-minibuffer lusty-mode-map)))
+    (defvar my-lusty-directory nil)
+
+    (defun my-lusty-current-directory ()
+      (let ((path (minibuffer-contents-no-properties)))
+        (lusty-normalize-dir (file-name-directory path))))
+
+    (defun my-lusty-helm-do-grep ()
+      (interactive)
+      (run-at-time "0.1 seconds" nil
+                   (lambda ()
+                     (jump-to-register ?L)
+                     (helm-do-grep-1 (list default-directory))))
+      (delete-window (get-buffer-window lusty-buffer-name))
+      (window-configuration-to-register ?L)
+      (exit-minibuffer))
+
+    (defun my-lusty-helm-find ()
+      (interactive)
+      (run-at-time "0.1 seconds" nil
+                   (lambda ()
+                     (jump-to-register ?L)
+                     (call-interactively #'helm-find)))
+      (delete-window (get-buffer-window lusty-buffer-name))
+      (window-configuration-to-register ?L)
+      (exit-minibuffer))
+
+    (defun my-lusty-helm-ls-git-ls ()
+      (interactive)
+      (run-at-time "0.1 seconds" nil
+                   (lambda ()
+                     (jump-to-register ?L)
+                     (let ((default-directory my-lusty-directory))
+                       (call-interactively #'helm-ls-git-ls))))
+      (setq my-lusty-directory (my-lusty-current-directory))
+      (delete-window (get-buffer-window lusty-buffer-name))
+      (window-configuration-to-register ?L)
+      (exit-minibuffer))
+
+    (defun my-lusty-setup-hook ()
+      (bind-key "SPC" 'lusty-select-match lusty-mode-map)
+      (bind-key "C-d" 'exit-minibuffer lusty-mode-map)
+      (bind-key "C-s" 'my-lusty-helm-do-grep lusty-mode-map)
+      (bind-key "C-c /" 'my-lusty-helm-find lusty-mode-map)
+      (bind-key "C-x f" 'my-lusty-helm-ls-git-ls lusty-mode-map))
+
+    (add-hook 'lusty-setup-hook #'my-lusty-setup-hook)
 
     (defun lusty-open-this ()
       "Open the given file/directory/buffer, creating it if not
@@ -3704,6 +3744,7 @@ at the beginning of line, if already there."
 ;;;_ , multi-term
 
 (use-package multi-term
+  :disabled t
   :bind (("C-. t" . multi-term-next)
          ("C-. T" . multi-term))
   :init
@@ -3748,14 +3789,7 @@ at the beginning of line, if already there."
     (require 'term)
 
     (defadvice term-process-pager (after term-process-rebind-keys activate)
-      (define-key term-pager-break-map  "\177" 'term-pager-back-page))
-
-    (add-hook 'term-mode-hook
-              (lambda ()
-                (goto-address-mode)
-                (define-key term-raw-map (kbd "C-y") 'term-paste)))
-
-    (setenv "PATH" (shell-command-to-string "echo $PATH"))))
+      (define-key term-pager-break-map  "\177" 'term-pager-back-page))))
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
@@ -4860,6 +4894,7 @@ Does not delete the prompt."
 ;;;_ , slime
 
 (use-package slime
+  :disabled t
   :commands (sbcl slime)
   :init
   (add-hook
@@ -4905,12 +4940,12 @@ Does not delete the prompt."
     (setq slime-lisp-implementations
           '((sbcl
              ("sbcl" "--core"
-              "~/Library/Lisp/sbcl.core-with-slime-X86-64")
+              "/Users/johnw/Library/Lisp/sbcl.core-with-slime-X86-64")
              :init
              (lambda (port-file _)
                (format "(swank:start-server %S)\n" port-file)))
-            (ecl ("ecl" "-load" "~/Library/Lisp/init.lisp"))
-            (clisp ("clisp" "-i" "~/Library/Lisp/lwinit.lisp"))))
+            (ecl ("ecl" "-load" "/Users/johnw/Library/Lisp/init.lisp"))
+            (clisp ("clisp" "-i" "/Users/johnw/Library/Lisp/lwinit.lisp"))))
 
     (setq slime-default-lisp 'sbcl)
     (setq slime-complete-symbol*-fancy t)
@@ -4965,6 +5000,20 @@ Does not delete the prompt."
       (call-interactively 'compile))))
 
 (bind-key "M-O" 'show-compilation)
+
+(use-package smart-compile
+  :disabled t
+  :commands smart-compile
+  :bind (("C-c c" . smart-compile)
+         ("A-n"   . next-error)
+         ("A-p"   . previous-error)))
+
+(defun compilation-ansi-color-process-output ()
+  (ansi-color-process-output nil)
+  (set (make-local-variable 'comint-last-output-start)
+       (point-marker)))
+
+(add-hook 'compilation-filter-hook #'compilation-ansi-color-process-output)
 
 ;;;; skewer-mode
 
@@ -5231,13 +5280,8 @@ Does not delete the prompt."
 ;;;_ , undo-tree
 
 (use-package undo-tree
-  :disabled t
-  :diminish (undo-tree-mode global-undo-tree-mode)
   :init
-  (progn
-    (global-undo-tree-mode)
-    (setq undo-tree-visualizer-timestamps t)
-    (setq undo-tree-visualizer-diff t)))
+  (global-undo-tree-mode))
 
 ;;;_ , VKILL
 
