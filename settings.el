@@ -437,17 +437,13 @@
  '(grep-find-ignored-files
    (quote
     (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.dfsl" "*.pfsl" "*.d64fsl" "*.p64fsl" "*.lx64fsl" "*.lx32fsl" "*.dx64fsl" "*.dx32fsl" "*.fx64fsl" "*.fx32fsl" "*.sx64fsl" "*.sx32fsl" "*.wx64fsl" "*.wx32fsl" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "GPATH" "GRTAGS" "GTAGS")))
- '(helm-ff-search-library-in-sexp t)
  '(helm-buffers-fuzzy-matching t)
  '(helm-ff-file-name-history-use-recentf t)
  '(helm-ff-search-library-in-sexp t)
  '(helm-ff-skip-boring-files t)
- '(helm-grep-default-command "/usr/local/bin/ggrep -a -d skip %e -n%cH -e %p %f")
- '(helm-grep-default-recurse-command "/usr/local/bin/ggrep -a -d recurse %e
  '(helm-ls-git-show-abs-or-relative (quote relative))
  '(helm-scroll-amount 8)
  '(helm-split-window-in-side-p t)
--n%cH -e %p %f")
  '(hi2-ifte-offset 4)
  '(hi2-layout-offset 4)
  '(hi2-left-offset 4)
