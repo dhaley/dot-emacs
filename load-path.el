@@ -10,6 +10,9 @@
   (expand-file-name "site-lisp/" user-emacs-directory))
 (defconst user-override-directory
   (expand-file-name "override/" user-emacs-directory))
+(defconst user-elpa-directory
+  (expand-file-name "elpa/packages/" user-emacs-directory))
+
 
 (defun add-to-load-path (path &optional dir)
   (setq load-path
