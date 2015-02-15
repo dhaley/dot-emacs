@@ -154,9 +154,6 @@
 [submodule "site-lisp/elisp-slime-nav"]
         path = site-lisp/elisp-slime-nav
         url = git://github.com/purcell/elisp-slime-nav.git
-[submodule "site-lisp/ruby-mode"]
-        path = site-lisp/ruby-mode
-        url = git://github.com/jwiegley/ruby-mode.git
 [submodule "site-lisp/erc-hl-nicks"]
         path = site-lisp/erc-hl-nicks
         url = git://github.com/leathekd/erc-hl-nicks
@@ -202,9 +199,6 @@
 [submodule "site-lisp/ecukes"]
         path = site-lisp/ecukes
         url = git://github.com/rejeep/ecukes.git
-[submodule "site-lisp/carton"]
-        path = site-lisp/carton
-        url = git://github.com/rejeep/carton.git
 [submodule "site-lisp/twittering-mode"]
         path = site-lisp/twittering-mode
         url = git://github.com/hayamiz/twittering-mode.git
@@ -271,9 +265,6 @@
 [submodule "site-lisp/skewer-mode"]
         path = site-lisp/skewer-mode
         url = git://github.com/skeeto/skewer-mode.git
-[submodule "site-lisp/emacs-http-server"]
-        path = site-lisp/emacs-http-server
-        url = git://github.com/skeeto/emacs-http-server.git
 [submodule "site-lisp/dired-sequence"]
         path = site-lisp/dired-sequence
         url = git://github.com/jave/dired-sequence.git
@@ -430,9 +421,6 @@
 [submodule "site-lisp/winpoint"]
         path = site-lisp/winpoint
         url = git://github.com/jorgenschaefer/winpoint.git
-[submodule "site-lisp/epl"]
-        path = site-lisp/epl
-        url = git://github.com/cask/epl.git
 [submodule "site-lisp/dash-at-point"]
         path = site-lisp/dash-at-point
         url = git://github.com/stanaka/dash-at-point.git
