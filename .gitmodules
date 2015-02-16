@@ -856,3 +856,6 @@
 [submodule "site-lisp/emacs-cl"]
 	path = site-lisp/emacs-cl
 	url = git://github.com/larsbrinkhoff/emacs-cl.git
+[submodule "site-lisp/org-reveal"]
+	path = site-lisp/org-reveal
+	url = https://github.com/yjwen/org-reveal.git
