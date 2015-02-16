@@ -427,9 +427,6 @@
 [submodule "site-lisp/cider"]
         path = site-lisp/cider
         url = git://github.com/clojure-emacs/cider.git
-[submodule "site-lisp/emacs-cl"]
-        path = site-lisp/emacs-cl
-        url = git://github.com/larsbrinkhoff/emacs-cl.git
 [submodule "site-lisp/scss-mode"]
         path = site-lisp/scss-mode
         url = git@github.com:dhaley/scss-mode.git
