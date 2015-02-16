@@ -2950,7 +2950,8 @@ at the beginning of line, if already there."
          ("M-s g"   . my-helm-do-grep)
          ("M-s n"   . my-helm-find)
          ("M-s o"   . helm-occur)
-         ("M-s s"   . helm-do-grep))
+         ("M-s s"   . helm-do-grep)
+         ("M-s r"   . helm-resume))
   :init
   (use-package helm-descbinds
     :bind ("C-h b" . helm-descbinds)
