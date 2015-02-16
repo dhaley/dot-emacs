@@ -4352,6 +4352,7 @@ unless return was pressed outside the comment"
   :diminish projectile-mode
   :init
   (progn
+    (require 'grizzl)
     (projectile-global-mode)
 
     (defun define-keys (mode-map keybindings)
