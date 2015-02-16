@@ -970,7 +970,6 @@
   :diminish auto-complete-mode
   :init
   (progn
-    (use-package pos-tip)
     (ac-config-default))
 
   :config
@@ -2791,7 +2790,6 @@ at the beginning of line, if already there."
   (use-package guide-key-tip
     :init
     (progn
-      (use-package 'pos-tip)
       (setq guide-key-tip/enabled t))))
 
 ;;;_ , highlight-sexp
@@ -4487,6 +4485,11 @@ Keys are in kbd format."
 (use-package popup-ruler
   :bind (("C-. r" . popup-ruler)
          ("C-. R" . popup-ruler-vertical)))
+
+
+;;;_ , pos-tip
+
+(use-package pos-tip)
 
 ;;;_ , pp-c-l
 
