@@ -853,3 +853,6 @@
 [submodule "melpa"]
 	path = melpa
 	url = https://github.com/milkypostman/melpa.git
+[submodule "site-lisp/emacs-cl"]
+	path = site-lisp/emacs-cl
+	url = git://github.com/larsbrinkhoff/emacs-cl.git
