@@ -137,6 +137,7 @@
  '(org-agenda-window-setup (quote current-window))
  '(org-archive-location "%s_archive::* Archived Tasks")
  '(org-babel-results-keyword "results")
+ '(org-beamer-frame-default-options "fragile")
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
  '(org-capture-templates
    (quote
@@ -195,21 +196,52 @@ SCHEDULED: %t
      ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
      ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))))
  '(org-export-htmlize-output-type (quote css))
+ '(org-export-latex-classes
+   (quote
+    (("article" "\\documentclass[11pt]{article}"
+      ("\\section{%s}" . "\\section*{%s}")
+      ("\\subsection{%s}" . "\\subsection*{%s}")
+      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+      ("\\paragraph{%s}" . "\\paragraph*{%s}")
+      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+     ("linalg" "\\documentclass{article}
+\\usepackage{linalgjh}
+[DEFAULT-PACKAGES]
+[EXTRA]
+[PACKAGES]"
+      ("\\section{%s}" . "\\section*{%s}")
+      ("\\subsection{%s}" . "\\subsection*{%s}")
+      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+      ("\\paragraph{%s}" . "\\paragraph*{%s}")
+      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+     ("report" "\\documentclass[11pt]{report}"
+      ("\\part{%s}" . "\\part*{%s}")
+      ("\\chapter{%s}" . "\\chapter*{%s}")
+      ("\\section{%s}" . "\\section*{%s}")
+      ("\\subsection{%s}" . "\\subsection*{%s}")
+      ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+     ("book" "\\documentclass[11pt]{book}"
+      ("\\part{%s}" . "\\part*{%s}")
+      ("\\chapter{%s}" . "\\chapter*{%s}")
+      ("\\section{%s}" . "\\section*{%s}")
+      ("\\subsection{%s}" . "\\subsection*{%s}")
+      ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+     ("beamer" "\\documentclass{beamer}" org-beamer-sectioning))))
  '(org-export-latex-listings t)
  '(org-export-with-section-numbers nil)
  '(org-export-with-timestamps nil)
  '(org-fast-tag-selection-single-key (quote expert))
  '(org-file-apps
-   (quote
-    ((auto-mode . emacs)
-     ("\\.mm\\'" . system)
-     ("\\.x?html?\\'" . system)
-     ("\\.pdf\\'" . system))))
+(quote
+ ((auto-mode . emacs)
+  ("\\.mm\\'" . system)
+  ("\\.x?html?\\'" . system)
+  ("\\.pdf\\'" . system))))
  '(org-global-properties
-   (quote
-    (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
-     ("Confidence_ALL" . "low medium high")
-     ("STYLE_ALL" . "habit"))))
+(quote
+ (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+  ("Confidence_ALL" . "low medium high")
+  ("STYLE_ALL" . "habit"))))
  '(org-habit-graph-column 50)
  '(org-hide-leading-stars nil)
  '(org-html-checkbox-type "unicode")
@@ -217,32 +249,49 @@ SCHEDULED: %t
  '(org-id-method (quote uuidgen))
  '(org-indirect-buffer-display (quote current-window))
  '(org-insert-heading-respect-content nil)
+ '(org-latex-default-packages-alist
+(quote
+ (("T1" "fontenc" t)
+  ("" "fixltx2e" nil)
+  ("" "graphicx" t)
+  ("" "longtable" nil)
+  ("" "float" nil)
+  ("" "wrapfig" nil)
+  ("" "rotating" nil)
+  ("normalem" "ulem" t)
+  ("" "amsmath" t)
+  ("" "textcomp" t)
+  ("" "marvosym" t)
+  ("" "wasysym" t)
+  ("" "amssymb" t)
+  ("" "hyperref" nil)
+  "\\tolerance=1000")))
  '(org-link-abbrev-alist
-   (quote
-    (("gmail" . "https://mail.google.com/mail/u/0/#all/%s")
-     ("google" . "http://www.google.com/search?q=%s")
-     ("map" . "http://maps.google.com/maps?q=%s"))))
+(quote
+ (("gmail" . "https://mail.google.com/mail/u/0/#all/%s")
+  ("google" . "http://www.google.com/search?q=%s")
+  ("map" . "http://maps.google.com/maps?q=%s"))))
  '(org-link-frame-setup
-   (quote
-    ((vm . vm-visit-folder)
-     (gnus . org-gnus-no-new-news)
-     (file . find-file))))
+(quote
+ ((vm . vm-visit-folder)
+  (gnus . org-gnus-no-new-news)
+  (file . find-file))))
  '(org-link-mailto-program (quote (compose-mail "%a" "%s")))
  '(org-list-allow-alphabetical t)
  '(org-list-demote-modify-bullet
-   (quote
-    (("+" . "-")
-     ("*" . "-")
-     ("1." . "-")
-     ("1)" . "-")
-     ("A)" . "-")
-     ("B)" . "-")
-     ("a)" . "-")
-     ("b)" . "-")
-     ("A." . "-")
-     ("B." . "-")
-     ("a." . "-")
-     ("b." . "-"))))
+(quote
+ (("+" . "-")
+  ("*" . "-")
+  ("1." . "-")
+  ("1)" . "-")
+  ("A)" . "-")
+  ("B)" . "-")
+  ("a)" . "-")
+  ("b)" . "-")
+  ("A." . "-")
+  ("B." . "-")
+  ("a." . "-")
+  ("b." . "-"))))
  '(org-log-done (quote time))
  '(org-log-into-drawer t)
  '(org-log-state-notes-insert-after-drawers nil)
@@ -253,20 +302,21 @@ SCHEDULED: %t
  '(org-mobile-files-exclude-regexp "\\(TODO\\(-.*\\)?\\)\\'")
  '(org-mobile-inbox-for-pull "~/Documents/Tasks/from-mobile.org")
  '(org-modules
-   (quote
-    (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-rmail org-vm org-wl org-w3m)))
+(quote
+ (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-rmail org-vm org-wl org-w3m)))
  '(org-odd-levels-only nil)
  '(org-outline-path-complete-in-steps nil)
  '(org-plantuml-jar-path nil)
  '(org-refile-allow-creating-parent-nodes (quote confirm))
  '(org-refile-target-verify-function (quote bh/verify-refile-target))
  '(org-refile-targets
-   (quote
-    ((nil :maxlevel . 9)
-     (org-agenda-files :maxlevel . 9))))
+(quote
+ ((nil :maxlevel . 9)
+  (org-agenda-files :maxlevel . 9))))
  '(org-refile-use-outline-path t)
  '(org-remove-highlights-with-change t)
  '(org-return-follows-link t)
+ '(org-reveal-root "/Users/dhaley/src/reveal.js")
  '(org-reverse-note-order nil)
  '(org-show-entry-below t)
  '(org-show-following-heading t)
@@ -275,56 +325,56 @@ SCHEDULED: %t
  '(org-special-ctrl-a/e (quote reversed))
  '(org-special-ctrl-k t)
  '(org-speed-commands-user
-   (quote
-    (("0" . ignore)
-     ("1" . ignore)
-     ("2" . ignore)
-     ("3" . ignore)
-     ("4" . ignore)
-     ("5" . ignore)
-     ("6" . ignore)
-     ("7" . ignore)
-     ("8" . ignore)
-     ("9" . ignore)
-     ("a" . ignore)
-     ("d" . ignore)
-     ("h" . bh/hide-other)
-     ("i" progn
-      (forward-char 1)
-      (call-interactively
-       (quote org-insert-heading-respect-content)))
-     ("k" . org-kill-note-or-show-branches)
-     ("l" . ignore)
-     ("m" . ignore)
-     ("q" . bh/show-org-agenda)
-     ("r" . ignore)
-     ("s" . org-save-all-org-buffers)
-     ("w" . org-refile)
-     ("x" . ignore)
-     ("y" . ignore)
-     ("z" . org-add-note)
-     ("A" . ignore)
-     ("B" . ignore)
-     ("E" . ignore)
-     ("F" . bh/restrict-to-file-or-follow)
-     ("G" . ignore)
-     ("H" . ignore)
-     ("J" . org-clock-goto)
-     ("K" . ignore)
-     ("L" . ignore)
-     ("M" . ignore)
-     ("N" . bh/narrow-to-org-subtree)
-     ("P" . bh/narrow-to-org-project)
-     ("Q" . ignore)
-     ("R" . ignore)
-     ("S" . ignore)
-     ("T" . bh/org-todo)
-     ("U" . bh/narrow-up-one-org-level)
-     ("V" . ignore)
-     ("W" . bh/widen)
-     ("X" . ignore)
-     ("Y" . ignore)
-     ("Z" . ignore))))
+(quote
+ (("0" . ignore)
+  ("1" . ignore)
+  ("2" . ignore)
+  ("3" . ignore)
+  ("4" . ignore)
+  ("5" . ignore)
+  ("6" . ignore)
+  ("7" . ignore)
+  ("8" . ignore)
+  ("9" . ignore)
+  ("a" . ignore)
+  ("d" . ignore)
+  ("h" . bh/hide-other)
+  ("i" progn
+   (forward-char 1)
+   (call-interactively
+    (quote org-insert-heading-respect-content)))
+  ("k" . org-kill-note-or-show-branches)
+  ("l" . ignore)
+  ("m" . ignore)
+  ("q" . bh/show-org-agenda)
+  ("r" . ignore)
+  ("s" . org-save-all-org-buffers)
+  ("w" . org-refile)
+  ("x" . ignore)
+  ("y" . ignore)
+  ("z" . org-add-note)
+  ("A" . ignore)
+  ("B" . ignore)
+  ("E" . ignore)
+  ("F" . bh/restrict-to-file-or-follow)
+  ("G" . ignore)
+  ("H" . ignore)
+  ("J" . org-clock-goto)
+  ("K" . ignore)
+  ("L" . ignore)
+  ("M" . ignore)
+  ("N" . bh/narrow-to-org-subtree)
+  ("P" . bh/narrow-to-org-project)
+  ("Q" . ignore)
+  ("R" . ignore)
+  ("S" . ignore)
+  ("T" . bh/org-todo)
+  ("U" . bh/narrow-up-one-org-level)
+  ("V" . ignore)
+  ("W" . bh/widen)
+  ("X" . ignore)
+  ("Y" . ignore)
+  ("Z" . ignore))))
  '(org-src-fontify-natively t)
  '(org-src-preserve-indentation nil)
  '(org-src-window-setup (quote current-window))
@@ -332,108 +382,108 @@ SCHEDULED: %t
  '(org-startup-indented t)
  '(org-startup-with-inline-images nil)
  '(org-structure-template-alist
-   (quote
-    (("s" "#+begin_src ?
+(quote
+ (("s" "#+begin_src ?
 
 #+end_src" "<src lang=\"?\">
 
 </src>")
-     ("e" "#+begin_example
+  ("e" "#+begin_example
 ?
 #+end_example" "<example>
 ?
 </example>")
-     ("m" "#+begin_src message
+  ("m" "#+begin_src message
 
 #+end_src" "<src lang=message>
 
 </src>")
-     ("q" "#+begin_quote
+  ("q" "#+begin_quote
 ?
 #+end_quote" "<quote>
 ?
 </quote>")
-     ("v" "#+begin_verse
+  ("v" "#+begin_verse
 ?
 #+end_verse" "<verse>
 ?
 </verse>")
-     ("c" "#+begin_center
+  ("c" "#+begin_center
 ?
 #+end_center" "<center>
 ?
 </center>")
-     ("l" "#+begin_latex
+  ("l" "#+begin_latex
 ?
 #+end_latex" "<literal style=\"latex\">
 ?
 </literal>")
-     ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
-     ("h" "#+begin_html
+  ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+  ("h" "#+begin_html
 ?
 #+end_html" "<literal style=\"html\">
 ?
 </literal>")
-     ("H" "#+html: " "<literal style=\"html\">?</literal>")
-     ("a" "#+begin_ascii
+  ("H" "#+html: " "<literal style=\"html\">?</literal>")
+  ("a" "#+begin_ascii
 ?
 #+end_ascii")
-     ("A" "#+ascii: ")
-     ("i" "#+index: ?" "#+index: ?")
-     ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
+  ("A" "#+ascii: ")
+  ("i" "#+index: ?" "#+index: ?")
+  ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
  '(org-stuck-projects (quote ("" nil nil "")))
  '(org-tag-alist
-   (quote
-    ((:startgroup)
-     ("@errand" . 101)
-     ("@net" . 110)
-     ("@home" . 72)
-     (:endgroup)
-     ("WAITING" . 119)
-     ("HOLD" . 104)
-     ("PERSONAL" . 80)
-     ("WORK" . 87)
-     ("ORG" . 79)
-     ("NOTE" . 78)
-     ("CANCELLED" . 99)
-     ("FLAGGED" . 63))))
+(quote
+ ((:startgroup)
+  ("@errand" . 101)
+  ("@net" . 110)
+  ("@home" . 72)
+  (:endgroup)
+  ("WAITING" . 119)
+  ("HOLD" . 104)
+  ("PERSONAL" . 80)
+  ("WORK" . 87)
+  ("ORG" . 79)
+  ("NOTE" . 78)
+  ("CANCELLED" . 99)
+  ("FLAGGED" . 63))))
  '(org-tags-exclude-from-inheritance (quote ("crypt")))
  '(org-tags-match-list-sublevels t)
  '(org-time-clocksum-format
-   (quote
-    (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
+(quote
+ (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
  '(org-todo-keyword-faces
-   (quote
-    (("TODO" :inherit org-todo)
-     ("PHONE" :foreground "forest green" :weight bold))))
+(quote
+ (("TODO" :inherit org-todo)
+  ("PHONE" :foreground "forest green" :weight bold))))
  '(org-todo-keywords
-   (quote
-    ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-     (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+(quote
+ ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+  (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
  '(org-todo-state-tags-triggers
-   (quote
-    (("CANCELLED"
-      ("CANCELLED" . t))
-     ("WAITING"
-      ("WAITING" . t))
-     ("HOLD"
-      ("WAITING")
-      ("HOLD" . t))
-     (done
-      ("WAITING")
-      ("HOLD"))
-     ("TODO"
-      ("WAITING")
-      ("CANCELLED")
-      ("HOLD"))
-     ("NEXT"
-      ("WAITING")
-      ("CANCELLED")
-      ("HOLD"))
-     ("DONE"
-      ("WAITING")
-      ("CANCELLED")
-      ("HOLD")))))
+(quote
+ (("CANCELLED"
+   ("CANCELLED" . t))
+  ("WAITING"
+   ("WAITING" . t))
+  ("HOLD"
+   ("WAITING")
+   ("HOLD" . t))
+  (done
+   ("WAITING")
+   ("HOLD"))
+  ("TODO"
+   ("WAITING")
+   ("CANCELLED")
+   ("HOLD"))
+  ("NEXT"
+   ("WAITING")
+   ("CANCELLED")
+   ("HOLD"))
+  ("DONE"
+   ("WAITING")
+   ("CANCELLED")
+   ("HOLD")))))
  '(org-treat-S-cursor-todo-selection-as-state-change nil)
  '(org-use-fast-todo-selection t)
  '(org-use-speed-commands t)

@@ -614,8 +614,8 @@
  '(persistent-scratch-file-name "~/.emacs.d/data/persistent-scratch")
  '(php-boris-command "~/src/boris/bin/boris")
  '(php-completion-file "~/Messages/php/php-completion-file")
- '(php-extras-eldoc-functions-file "~/Messages/php/php-extras-eldoc-functions")
  '(php-executable "/Applications/MAMP/bin/php/php5.5.18/bin/php")
+ '(php-extras-eldoc-functions-file "~/Messages/php/php-extras-eldoc-functions")
  '(php-manual-path "~/Documents/php/php-chunked-xhtml")
  '(php-mode-coding-style (quote drupal))
  '(php-template-compatibility nil)
@@ -634,7 +634,7 @@
  '(projectile-generic-command "find -L . -type f -print0")
  '(projectile-globally-ignored-directories
    (quote
-    ("/Users/dhaley/.emacs.d/geben" "/Users/dhaley/sites/dslm/cores/drupal-7.34/themes" "/Users/dhaley/sites/dslm/cores/drupal-7.34/modules" "profiles/cu_fit/themes" "profiles/testing" "profiles/standard" "profiles/minimal" "/Users/dhaley/sites/sws/themes" "scripts" "misc" "includes" "/Users/dhaley/sites/sws/modules" "libraries" "FirePHPCore" "sites/default/files" "profiles//modules/contrib" ".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "build")))
+    ("/Users/dhaley/.emacs.d/geben" "/Users/dhaley/sites/dslm/cores/drupal-7.34/themes" "/Users/dhaley/sites/dslm/cores/drupal-7.34/modules" "profiles/cu_fit/themes" "profiles/testing" "profiles/standard" "profiles/minimal" "/Users/dhaley/sites/sws/themes" "scripts" "misc" "includes" "/Users/dhaley/sites/sws/modules" "libraries" "FirePHPCore" "sites/default/files" "profiles//modules/contrib" ".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "build" "geben")))
  '(projectile-globally-ignored-modes
    (quote
     ("erc-mode" "help-mode" "completion-list-mode" "Buffer-menu-mode" "gnus-.*-mode" "occur-mode" "geben-mode")))
