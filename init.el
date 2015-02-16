@@ -2791,7 +2791,7 @@ at the beginning of line, if already there."
   (use-package guide-key-tip
     :init
     (progn
-      (require 'pos-tip)
+      (use-package 'pos-tip)
       (setq guide-key-tip/enabled t))))
 
 ;;;_ , highlight-sexp
