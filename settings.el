@@ -214,6 +214,7 @@
  '(bm-highlight-style (quote bm-highlight-only-fringe))
  '(bmkp-bmenu-commands-file "~/.emacs.d/data/bmk-bmenu-commands.el")
  '(bmkp-bmenu-state-file "~/.emacs.d/data/bmk-bmenu-state.el")
+ '(bmkp-crosshairs-flag nil)
  '(bmkp-last-as-first-bookmark-file "~/Documents/bookmarks")
  '(bookmark-default-file "~/Documents/bookmarks")
  '(browse-url-browser-function (quote choose-browser))
@@ -233,8 +234,9 @@
  '(clean-buffer-list-kill-regexps (quote (".*")))
  '(column-number-mode t)
  '(compilation-context-lines 10)
- '(compilation-scroll-output t)
+ '(compilation-scroll-output (quote first-error))
  '(compilation-skip-threshold 2)
+ '(compilation-window-height 100)
  '(compile-command "tail /var/log/drupal.log")
  '(css-indent-offset 2)
  '(current-language-environment "UTF-8")
@@ -274,6 +276,7 @@
  '(diredful-init-file "~/.emacs.d/data/diredful-conf.el")
  '(display-time-mail-function (quote (lambda nil (file-exists-p "/tmp/unread"))))
  '(display-time-use-mail-icon t)
+ '(display-time-mode t)
  '(doc-view-resolution 300)
  '(drupal-convert-line-ending t)
  '(drupal-css-modes (quote (css-mode scss-mode)))
@@ -394,6 +397,68 @@
  '(eudc-options-file "~/.emacs.d/.eudc-options")
  '(eval-expr-print-function (quote pp))
  '(eww-download-directory "~/dl")
+  '(eww-lnum-actions-link-alist
+   (quote
+    ("----  Link   ----"
+     (102 eww-lnum-visit "Visit")
+     (101
+      (lambda
+        (info)
+        (eww-lnum-visit info nil t))
+      "Edit URL and visit")
+     (70
+      (lambda
+        (info)
+        (eww-lnum-visit info t))
+      "Visit in new buffer")
+     (69
+      (lambda
+        (info)
+        (eww-lnum-visit info t t))
+      "Edit URL and visit in new buffer")
+     (98
+      (lambda
+        (info)
+        (eww-lnum-visit info :background))
+      "Open in background")
+     (66
+      (lambda
+        (info)
+        (eww-lnum-visit info :background t))
+      "Edit URL and open in background")
+     (100
+      (lambda
+        (info)
+        (save-excursion
+          (goto-char
+           (cadr info))
+          (eww-download)))
+      "Download")
+     (119
+      (lambda
+        (info)
+        (let
+            ((url
+              (car info)))
+          (kill-new url)
+          (message url)))
+      "Copy")
+     (38
+      (lambda
+        (info)
+        (eww-browse-with-external-browser
+         (car info)))
+      "Open in external browser")
+     (68
+      (lambda
+        (info)
+        (shell-command
+         (concat "aria2c -d ~/Downloads -x5 '"
+                 (car info)
+                 "' &")
+         "*Aria*"))
+      "Download with Aria"))))
+ '(eww-search-prefix "https://startpage.com/do/m/mobilesearch?query=")
  '(fci-rule-color "#383838")
  '(fill-column 78)
  '(find-ls-subdir-switches "-alh")
@@ -441,6 +506,7 @@
  '(helm-ff-file-name-history-use-recentf t)
  '(helm-ff-search-library-in-sexp t)
  '(helm-ff-skip-boring-files t)
+ '(helm-ff-transformer-show-only-basename nil)
  '(helm-ls-git-show-abs-or-relative (quote relative))
  '(helm-scroll-amount 8)
  '(helm-split-window-in-side-p t)
