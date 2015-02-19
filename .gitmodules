@@ -868,3 +868,15 @@
 [submodule "lib/popwin-el"]
 	path = lib/popwin-el
 	url = https://github.com/m2ym/popwin-el.git
+[submodule "site-lisp/cmake-font-lock"]
+	path = site-lisp/cmake-font-lock
+	url = https://github.com/Lindydancer/cmake-font-lock.git
+[submodule "site-lisp/irony-mode"]
+	path = site-lisp/irony-mode
+	url = https://github.com/Sarcasm/irony-mode.git
+[submodule "site-lisp/tiny"]
+	path = site-lisp/tiny
+	url = https://github.com/abo-abo/tiny.git
+[submodule "site-lisp/visual-regexp"]
+	path = site-lisp/visual-regexp
+	url = https://github.com/benma/visual-regexp.el.git
