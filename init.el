@@ -141,7 +141,7 @@
 
 ;;;_ , global-map
 
-;;;_  . H-?
+;;;_  . H-
 
 ;;;_ , Enable C-8 prefix
 
@@ -151,7 +151,7 @@
 (bind-key "<H-up>" 'enlarge-window)
 (bind-key "H-`" 'new-frame)
 
-;;;_  . C-?
+;;;_  . C-
 
 (defvar ctl-period-map)
 (define-prefix-command 'ctl-period-map)
@@ -165,15 +165,9 @@
       (delete-other-windows)
     (bury-buffer)))
 
-(bind-key "C-z" 'collapse-or-expand)
+(bind-key "C-z" 'delete-other-windows)
 
-(defun reformat-json ()
-  (interactive)
-  (save-excursion
-    (shell-command-on-region
-     (mark) (point) "python -m json.tool" (buffer-name) t)))
-
-;;;_  . M-?
+;;;_  . M-
 
 (defadvice async-shell-command (before uniqify-running-shell-command activate)
   (let ((buf (get-buffer "*Async Shell Command*")))
@@ -225,8 +219,6 @@
 (bind-key "M-H" 'mark-paragraph)
 (bind-key "M-D" 'mark-defun)
 
-(bind-key "M-T" 'tags-search)
-
 (bind-key "M-g c" 'goto-char)
 (bind-key "M-g l" 'goto-line)
 
@@ -234,8 +226,7 @@
   (interactive)
   (delete-indentation t))
 
-                                        ;(bind-key "M-s o" 'occur)
-;;;_  . M-C-?
+;;;_  . M-C-
 
 (bind-key "<C-M-backspace>" 'backward-kill-sexp)
 
@@ -259,20 +250,20 @@
 ;; (bind-key "C-^" 'isearch-edit-string isearch-mode-map)
 ;; (bind-key "C-i" 'isearch-complete isearch-mode-map)
 
-;;;_  . H-?
+;;;_  . H-
 
 ;; (define-key key-translation-map (kbd "H-TAB") (kbd "C-TAB"))
 
 ;;;_ , ctl-x-map
 
-;;;_  . C-x ?
+;;;_  . C-x
 
 (bind-key "C-x B" 'ido-switch-buffer-other-window)
 (bind-key "C-x d" 'delete-whitespace-rectangle)
 (bind-key "C-x F" 'set-fill-column)
 (bind-key "C-x t" 'toggle-truncate-lines)
 
-;;;_  . C-x C-?
+;;;_  . C-x C-
 
 (defun duplicate-line ()
   "Duplicate the line containing point."
@@ -302,7 +293,7 @@
 (defun mlm/locate-make-command-line (search-string)
   (list "mdfind" "-interpret" search-string))
 
-;;;_  . C-x M-?
+;;;_  . C-x M-
 
 (bind-key "C-x M-n" 'set-goal-column)
 
@@ -376,16 +367,6 @@
 (bind-key "C-c c" 'compile)
 (bind-key "C-c d" 'delete-current-line)
 
-(defun reset-dns ()
-  (interactive)
-  (message "Resetting DNS...")
-  (shell-command "cleardns")
-  (shell-command "launchctl unload ~/Library/LaunchAgents/mac.pdnsd.plist")
-  (shell-command "launchctl load ~/Library/LaunchAgents/mac.pdnsd.plist")
-  (message "Resetting DNS...done"))
-
-(bind-key "C-c D" 'reset-dns)
-
 (bind-key "C-c e E" 'elint-current-buffer)
 
 (defun do-eval-buffer ()
@@ -404,12 +385,6 @@
 (bind-key "C-c e s" 'scratch)
 (bind-key "C-c e v" 'edit-variable)
 
-(defun find-which (name)
-  (interactive "sCommand name: ")
-  (find-file-other-window
-   (substring (shell-command-to-string (format "which %s" name)) 0 -1)))
-
-(bind-key "C-c e w" 'find-which)
 (bind-key "C-c e z" 'byte-recompile-directory)
 
 (bind-key "C-c f" 'flush-lines)
@@ -503,10 +478,6 @@
 
 (bind-key "C-c m" 'emacs-toggle-size)
 
-(defun insert-date ()
-  (interactive)
-  (insert (format-time-string "%Y-%m-%d")))
-
 (defcustom user-initials nil
   "*Initials of this user."
   :set
@@ -538,31 +509,6 @@
 (bind-key "C-c s" 'replace-string)
 (bind-key "C-c u" 'rename-uniquely)
 
-(autoload 'auth-source-search "auth-source")
-
-(defun tinify-url (url)
-  (interactive "sURL to shorten: ")
-  (let* ((api-login "jwiegley")
-         (api-key
-          (funcall
-           (plist-get
-            (car (auth-source-search :host "api.j.mp" :user api-login
-                                     :type 'netrc :port 80))
-            :secret))))
-    (cl-cl-flet ((message (&rest ignore)))
-      (with-current-buffer
-          (let ((query
-                 (format "format=txt&longUrl=%s&login=%s&apiKey=%s"
-                         (url-hexify-string url) api-login api-key)))
-            (url-retrieve-synchronously
-             (concat "http://api.j.mp/v3/shorten?" query)))
-        (goto-char (point-min))
-        (re-search-forward "^$")
-        (prog1
-            (kill-new (buffer-substring (1+ (point)) (1- (point-max))))
-          (kill-buffer (current-buffer)))))))
-
-(bind-key "C-c U" 'tinify-url)
 (bind-key "C-c v" 'ffap)
 
 (defun view-clipboard ()
@@ -572,9 +518,7 @@
   (let ((inhibit-read-only t))
     (erase-buffer)
     (clipboard-yank)
-    (goto-char (point-min))
-    (html-mode)
-    (view-mode)))
+    (goto-char (point-min))))
 
 (bind-key "C-c V" 'view-clipboard)
 (bind-key "C-c z" 'clean-buffer-list)
@@ -592,7 +536,7 @@
 
 (global-set-key "\C-c\C-h" 'wph-here)
 
-;;;_  . C-c C-?
+;;;_  . C-c C-
 
 (defun delete-to-end-of-buffer ()
   (interactive)
@@ -600,7 +544,7 @@
 
 ;; (bind-key "C-c C-z" 'delete-to-end-of-buffer)
 
-;;;_  . C-c M-?
+;;;_  . C-c M-
 
 (defun unfill-paragraph (arg)
   (interactive "*p")
@@ -992,110 +936,108 @@
   :commands auto-revert-mode
   :diminish auto-revert-mode
   :init
-  (add-hook 'find-file-hook
-            #'(lambda ()
-                (auto-revert-mode 1))))
+  (add-hook 'find-file-hook #'(lambda () (auto-revert-mode 1))))
 
 ;;;_ , backup-each-save
 
+(defun show-backups ()
+  (interactive)
+  (require 'find-dired)
+  (let* ((file (make-backup-file-name (buffer-file-name)))
+         (dir (file-name-directory file))
+         (args (concat "-iname '" (file-name-nondirectory file)
+                       ".~*~'"))
+         (dired-buffers dired-buffers)
+         (find-ls-option '("-print0 | xargs -0 ls -lta" . "-lta")))
+    ;; Check that it's really a directory.
+    (or (file-directory-p dir)
+        (error "Backup directory does not exist: %s" dir))
+    (with-current-buffer (get-buffer-create "*Backups*")
+      (let ((find (get-buffer-process (current-buffer))))
+        (when find
+          (if (or (not (eq (process-status find) 'run))
+                  (yes-or-no-p "A `find' process is running; kill it? "))
+              (condition-case nil
+                  (progn
+                    (interrupt-process find)
+                    (sit-for 1)
+                    (delete-process find))
+                (error nil))
+            (error "Cannot have two processes in `%s' at once"
+                   (buffer-name)))))
+
+      (widen)
+      (kill-all-local-variables)
+      (setq buffer-read-only nil)
+      (erase-buffer)
+      (setq default-directory dir
+            args (concat
+                  find-program " . "
+                  (if (string= args "")
+                      ""
+                    (concat
+                     (shell-quote-argument "(")
+                     " " args " "
+                     (shell-quote-argument ")")
+                     " "))
+                  (if (string-match "\\`\\(.*\\) {} \\(\\\\;\\|+\\)\\'"
+                                    (car find-ls-option))
+                      (format "%s %s %s"
+                              (match-string 1 (car find-ls-option))
+                              (shell-quote-argument "{}")
+                              find-exec-terminator)
+                    (car find-ls-option))))
+      ;; Start the find process.
+      (message "Looking for backup files...")
+      (shell-command (concat args "&") (current-buffer))
+      ;; The next statement will bomb in classic dired (no optional arg
+      ;; allowed)
+      (dired-mode dir (cdr find-ls-option))
+      (let ((map (make-sparse-keymap)))
+        (set-keymap-parent map (current-local-map))
+        (define-key map "\C-c\C-k" 'kill-find)
+        (use-local-map map))
+      (make-local-variable 'dired-sort-inhibit)
+      (setq dired-sort-inhibit t)
+      (set (make-local-variable 'revert-buffer-function)
+           `(lambda (ignore-auto noconfirm)
+              (find-dired ,dir ,find-args)))
+      ;; Set subdir-alist so that Tree Dired will work:
+      (if (fboundp 'dired-simple-subdir-alist)
+          ;; will work even with nested dired format (dired-nstd.el,v 1.15
+          ;; and later)
+          (dired-simple-subdir-alist)
+        ;; else we have an ancient tree dired (or classic dired, where
+        ;; this does no harm)
+        (set (make-local-variable 'dired-subdir-alist)
+             (list (cons default-directory (point-min-marker)))))
+      (set (make-local-variable 'dired-subdir-switches)
+           find-ls-subdir-switches)
+      (setq buffer-read-only nil)
+      ;; Subdir headlerline must come first because the first marker in
+      ;; subdir-alist points there.
+      (insert "  " dir ":\n")
+      ;; Make second line a ``find'' line in analogy to the ``total'' or
+      ;; ``wildcard'' line.
+      (insert "  " args "\n")
+      (setq buffer-read-only t)
+      (let ((proc (get-buffer-process (current-buffer))))
+        (set-process-filter proc (function find-dired-filter))
+        (set-process-sentinel proc (function find-dired-sentinel))
+        ;; Initialize the process marker; it is used by the filter.
+        (move-marker (process-mark proc) 1 (current-buffer)))
+      (setq mode-line-process '(":%s")))))
+
+(bind-key "C-x ~" 'show-backups)
+
 (use-package backup-each-save
-  :defer t
+  :commands backup-each-save
   :init
   (progn
-    (autoload 'backup-each-save "backup-each-save")
-    (add-hook 'after-save-hook 'backup-each-save)
-
     (defun my-make-backup-file-name (file)
       (make-backup-file-name-1 (file-truename file)))
 
-    (defun show-backups ()
-      (interactive)
-      (require 'find-dired)
-      (let* ((file (make-backup-file-name (buffer-file-name)))
-             (dir (file-name-directory file))
-             (args (concat "-iname '" (file-name-nondirectory file)
-                           ".~*~'"))
-             (dired-buffers dired-buffers)
-             (find-ls-option '("-print0 | xargs -0 ls -lta" . "-lta")))
-        ;; Check that it's really a directory.
-        (or (file-directory-p dir)
-            (error "Backup directory does not exist: %s" dir))
-        (with-current-buffer (get-buffer-create "*Backups*")
-          (let ((find (get-buffer-process (current-buffer))))
-            (when find
-              (if (or (not (eq (process-status find) 'run))
-                      (yes-or-no-p "A `find' process is running; kill it? "))
-                  (condition-case nil
-                      (progn
-                        (interrupt-process find)
-                        (sit-for 1)
-                        (delete-process find))
-                    (error nil))
-                (error "Cannot have two processes in `%s' at once"
-                       (buffer-name)))))
-
-          (widen)
-          (kill-all-local-variables)
-          (setq buffer-read-only nil)
-          (erase-buffer)
-          (setq default-directory dir
-                args (concat find-program " . "
-                             (if (string= args "")
-                                 ""
-                               (concat
-                                (shell-quote-argument "(")
-                                " " args " "
-                                (shell-quote-argument ")")
-                                " "))
-                             (if (string-match "\\`\\(.*\\) {} \\(\\\\;\\|+\\)\\'"
-                                               (car find-ls-option))
-                                 (format "%s %s %s"
-                                         (match-string 1 (car find-ls-option))
-                                         (shell-quote-argument "{}")
-                                         find-exec-terminator)
-                               (car find-ls-option))))
-          ;; Start the find process.
-          (message "Looking for backup files...")
-          (shell-command (concat args "&") (current-buffer))
-          ;; The next statement will bomb in classic dired (no optional arg
-          ;; allowed)
-          (dired-mode dir (cdr find-ls-option))
-          (let ((map (make-sparse-keymap)))
-            (set-keymap-parent map (current-local-map))
-            (define-key map "\C-c\C-k" 'kill-find)
-            (use-local-map map))
-          (make-local-variable 'dired-sort-inhibit)
-          (setq dired-sort-inhibit t)
-          (set (make-local-variable 'revert-buffer-function)
-               `(lambda (ignore-auto noconfirm)
-                  (find-dired ,dir ,find-args)))
-          ;; Set subdir-alist so that Tree Dired will work:
-          (if (fboundp 'dired-simple-subdir-alist)
-              ;; will work even with nested dired format (dired-nstd.el,v 1.15
-              ;; and later)
-              (dired-simple-subdir-alist)
-            ;; else we have an ancient tree dired (or classic dired, where
-            ;; this does no harm)
-            (set (make-local-variable 'dired-subdir-alist)
-                 (list (cons default-directory (point-min-marker)))))
-          (set (make-local-variable 'dired-subdir-switches)
-               find-ls-subdir-switches)
-          (setq buffer-read-only nil)
-          ;; Subdir headlerline must come first because the first marker in
-          ;; subdir-alist points there.
-          (insert "  " dir ":\n")
-          ;; Make second line a ``find'' line in analogy to the ``total'' or
-          ;; ``wildcard'' line.
-          (insert "  " args "\n")
-          (setq buffer-read-only t)
-          (let ((proc (get-buffer-process (current-buffer))))
-            (set-process-filter proc (function find-dired-filter))
-            (set-process-sentinel proc (function find-dired-sentinel))
-            ;; Initialize the process marker; it is used by the filter.
-            (move-marker (process-mark proc) 1 (current-buffer)))
-          (setq mode-line-process '(":%s")))))
-
-    (bind-key "C-x ~" 'show-backups))
+    (add-hook 'after-save-hook 'backup-each-save))
 
   :config
   (progn
@@ -1171,20 +1113,8 @@
 ;;;_ , bookmark
 
 (use-package bookmark
-  :disabled t
-  :defer t
   :config
-  (progn
-    (use-package bookmark+)
-
-    (defun my-bookmark-set ()
-      (interactive)
-      (cl-cl-flet ((bmkp-completing-read-lax
-              (prompt &optional default alist pred hist)
-              (completing-read prompt alist pred nil nil hist default)))
-        (call-interactively #'bookmark-set)))
-
-    (bind-key "C-x r m" 'my-bookmark-set)))
+  (use-package bookmark+))
 
 ;;;_ , browse-kill-ring+
 
@@ -1607,6 +1537,7 @@
 ;;;_ , copy-code
 
 (use-package copy-code
+  :disabled t
   :bind ("H-M-W" . copy-code-as-rtf))
 
 ;;;_ , crosshairs
@@ -1707,6 +1638,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , debbugs
 
 (use-package debbugs-gnu
+  :disabled t
   :commands (debbugs-gnu debbugs-gnu-search))
 
 ;;;_ , dedicated
@@ -1872,15 +1804,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
     (e2wm:plugin-register 'direx
                           "DireX"
                           'e2wm:def-plugin-direx)))
-
-;;;_ , discover
-
-(use-package discover
- :disabled t
- :init
- (progn
- (global-discover-mode 1)
- (use-package makey)))
 
 ;;;_ , doxymacs
 
@@ -2982,13 +2905,8 @@ at the beginning of line, if already there."
     (use-package helm-files)
     (use-package helm-grep)
     (use-package helm-ls-git)
+    (use-package helm-match-plugin)
 
-    (use-package helm-dash
-      :load-path "site-lisp/esqlite/Emacs-pcsv"
-      :init
-      (helm-dash-activate-docset "Drupal"))
-
-    ;; (helm-mode 1)
     (helm-match-plugin-mode t)
     (helm-autoresize-mode t)
 
@@ -2997,13 +2915,7 @@ at the beginning of line, if already there."
     (bind-key "C-z" 'helm-select-action helm-map)
 
     (when (executable-find "curl")
-      (setq helm-google-suggest-use-curl-p t))
-
-    ;; (when (executable-find "ack")
-    ;;   (setq helm-grep-default-command "ack -Hn --no-group --no-color %e %p %f"
-    ;;         helm-grep-default-recurse-command
-    ;;         "ack -H --no-group --no-color %e %p %f"))
-    ))
+      (setq helm-google-suggest-use-curl-p t))))
 
 (use-package helm-ls-git
   :bind ("C-x f" . helm-ls-git-ls))
@@ -4611,7 +4523,7 @@ Keys are in kbd format."
   ;;      (not degrade-p-terminal)
   ;;      (not degrade-p-font-lock))
   :commands rainbow-mode
-  :init
+  :config
   (progn
     (hook-into-modes #'rainbow-mode
                      '(css-mode-hook
