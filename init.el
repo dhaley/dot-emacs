@@ -52,6 +52,16 @@
                                (buffer-file-name))
                  (cleanup-term-log)))))
 
+    (defun define-keys (mode-map keybindings)
+      "Takes a mode map, and a list of (key function-designator)
+lists.  The functions are bound to the keys in the given mode-map.
+Keys are in kbd format."
+      (mapc (lambda (keybinding)
+              (destructuring-bind (key function) keybinding
+                (define-key mode-map (read-kbd-macro key) function)))
+            keybindings))
+
+
 ;;;_ , Read system environment
 
 (defun read-system-environment ()
@@ -230,26 +240,6 @@
 
 (bind-key "<C-M-backspace>" 'backward-kill-sexp)
 
-(defun isearch-backward-other-window ()
-  (interactive)
-  (split-window-vertically)
-  (call-interactively 'isearch-backward))
-
-(bind-key "C-M-r" 'isearch-backward-other-window)
-
-(defun isearch-forward-other-window ()
-  (interactive)
-  (split-window-vertically)
-  (call-interactively 'isearch-forward))
-
-(bind-key "C-M-s" 'isearch-forward-other-window)
-;; ;; Some further isearch bindings
-;; these keys break eshell
-;; (bind-key "C-c" 'isearch-toggle-case-fold isearch-mode-map)
-;; (bind-key "C-t" 'isearch-toggle-regexp isearch-mode-map)
-;; (bind-key "C-^" 'isearch-edit-string isearch-mode-map)
-;; (bind-key "C-i" 'isearch-complete isearch-mode-map)
-
 ;;;_  . H-
 
 ;; (define-key key-translation-map (kbd "H-TAB") (kbd "C-TAB"))
@@ -383,7 +373,6 @@
 (bind-key "C-c e l" 'find-library)
 (bind-key "C-c e r" 'eval-region)
 (bind-key "C-c e s" 'scratch)
-(bind-key "C-c e v" 'edit-variable)
 
 (bind-key "C-c e z" 'byte-recompile-directory)
 
@@ -425,13 +414,11 @@
 
     (defun emacs-min-top () 23)
     (defun emacs-min-left ()
-      (cond
-       ((eq display-name 'retina-imac) 975)
-       (t 521)))
+      (cond ((eq display-name 'retina-imac) 975)
+            (t 521)))
     (defvar emacs-min-height
-      (cond
-       ((eq display-name 'retina-imac) 55)
-       (t 44)))
+      (cond ((eq display-name 'retina-imac) 55)
+            (t 44)))
     (defvar emacs-min-width 100)))
 
 (defun emacs-min ()
@@ -770,6 +757,14 @@
 (use-package ace-window
   :bind ("C-x o" . ace-window))
 
+;;;_ , ag
+
+(use-package ag
+  :init
+  (progn
+    (bind-key "C-. a" 'ag)
+    (use-package wgrep-ag)))
+
 ;;;_ , agda
 
 (defun agda-site-lisp ()
@@ -862,7 +857,7 @@
 ;;;_ , auctex
 
 (use-package tex-site
-  ;; :load-path "site-lisp/auctex/preview/"
+  :load-path "site-lisp/auctex/preview/"
   :defines (latex-help-cmd-alist latex-help-file)
   :mode ("\\.tex\\'" . TeX-latex-mode)
   :config
@@ -1585,9 +1580,8 @@
 
 (use-package iflipb
   :commands (iflipb-next-buffer iflipb-previous-buffer)
-  :bind (("M-`" . my-iflipb-next-buffer)
-         ("S-<tab>" . my-iflipb-next-buffer)
-         ("A-S-<tab>" . my-iflipb-previous-buffer))
+  :bind (("M-`"   . my-iflipb-next-buffer)
+         ("M-S-`" . my-iflipb-previous-buffer))
   :init
   (progn
     (defvar my-iflipb-auto-off-timeout-sec 2)
@@ -1851,21 +1845,16 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
                 (:name imenu   :plugin imenu :default-hide nil)
                 (:name sub     :buffer "*info*" :default-hide t)))))))
 
-;;;_ , sublimity
+;;;_ , eww
 
-(use-package sublimity
-  :commands (sublimity-mode)
+(use-package eww
+  :defer t
+  :init
+  (bind-key "H-M-g" 'eww)
   :config
   (progn
-    (require 'sublimity-scroll)
-    (require 'sublimity-map)
-    (require 'sublimity-attractive)
-    (sublimity-map-set-delay nil)))
-
-;;;_ , minimap
-
-(use-package minimap
-  :disabled t)
+    (bind-key "f" 'eww-lnum-follow eww-mode-map)
+    (bind-key "F" 'eww-lnum-universal eww-mode-map)))
 
 ;;;_ , ediff
 
@@ -1920,6 +1909,11 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 (use-package emoji-cheat-sheet
   :commands (emoji-cheat-sheet))
+
+;;;_ , edit-var
+
+(use-package edit-var
+  :bind ("C-c e v" . edit-variable))
 
 ;;;_ , emms
 
@@ -2251,9 +2245,21 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 ;;;_ , eshell
 
+(defvar eshell-isearch-map
+  (let ((map (copy-keymap isearch-mode-map)))
+    (define-key map [(control ?m)] 'eshell-isearch-return)
+    (define-key map [return] 'eshell-isearch-return)
+    (define-key map [(control ?r)] 'eshell-isearch-repeat-backward)
+    (define-key map [(control ?s)] 'eshell-isearch-repeat-forward)
+    (define-key map [(control ?g)] 'eshell-isearch-abort)
+    (define-key map [backspace] 'eshell-isearch-delete-char)
+    (define-key map [delete] 'eshell-isearch-delete-char)
+    map)
+  "Keymap used in isearch in Eshell.")
+
 (use-package eshell
-  :defer t
-  :init
+  :commands (eshell eshell-command)
+  :config
   (progn
     (defun eshell-initialize ()
       (defun eshell-spawn-external-command (beg end)
@@ -2703,17 +2709,14 @@ at the beginning of line, if already there."
 
 ;;;_ , guide-key
 
+;;;_ , guide-key
+
 (use-package guide-key
-  :diminish guide-key-mode
   :init
   (progn
-    (setq guide-key/guide-key-sequence '("C-x r" "C-x 4" "C-c"))
-    (guide-key-mode 1))
-  :config
-  (use-package guide-key-tip
-    :init
-    (progn
-      (setq guide-key-tip/enabled t))))
+    (setq guide-key/guide-key-sequence
+          '("C-x r" "C-x 4" "C-x 5" "C-h e" "C-." "M-s" "M-o"))
+    (guide-key-mode 1)))
 
 ;;;_ , highlight-sexp
 
@@ -3123,8 +3126,7 @@ at the beginning of line, if already there."
 
 ;;;_ , initsplit
 
-(eval-after-load "cus-edit"
-  '(use-package initsplit))
+(use-package initsplit)
 
 ;;;_ , ipa
 
@@ -3134,6 +3136,26 @@ at the beginning of line, if already there."
   (progn
     (autoload 'ipa-load-annotations-into-buffer "ipa")
     (add-hook 'find-file-hook 'ipa-load-annotations-into-buffer)))
+
+;;;_ , isearch
+
+(defun isearch-backward-other-window ()
+  (interactive)
+  (split-window-vertically)
+  (call-interactively 'isearch-backward))
+
+(defun isearch-forward-other-window ()
+  (interactive)
+  (split-window-vertically)
+  (call-interactively 'isearch-forward))
+
+(bind-key "C-M-r" 'isearch-backward-other-window)
+(bind-key "C-M-s" 'isearch-forward-other-window)
+
+(bind-key "C-c" 'isearch-toggle-case-fold isearch-mode-map)
+(bind-key "C-t" 'isearch-toggle-regexp isearch-mode-map)
+(bind-key "C-^" 'isearch-edit-string isearch-mode-map)
+(bind-key "C-i" 'isearch-complete isearch-mode-map)
 
 ;; ;;;_ , js2-mode
 
@@ -3171,7 +3193,9 @@ at the beginning of line, if already there."
                   (set (make-local-variable 'js-indent-level) 2)))))
 
 ;;;_ , ledger
+
 (use-package "ledger-mode"
+  :load-path "~/src/ledger/lisp/"
   :commands ledger-mode
   :init
   (progn
@@ -3187,37 +3211,37 @@ at the beginning of line, if already there."
         (insert ?\n))
       (insert (format-time-string "%Y/%m/%d ")))
 
-    (bind-key "C-c L" 'my-ledger-start-entry)
+    (bind-key "C-c L" 'my-ledger-start-entry)))
 
-    (defun ledger-matchup ()
-      (interactive)
-      (while (re-search-forward "\\(\\S-+Unknown\\)\\s-+\\$\\([-,0-9.]+\\)"
-                                nil t)
-        (let ((account-beg (match-beginning 1))
-              (account-end (match-end 1))
-              (amount (match-string 2))
-              account answer)
-          (goto-char account-beg)
+(defun ledger-matchup ()
+  (interactive)
+  (while (re-search-forward "\\(\\S-+Unknown\\)\\s-+\\$\\([-,0-9.]+\\)"
+                            nil t)
+    (let ((account-beg (match-beginning 1))
+          (account-end (match-end 1))
+          (amount (match-string 2))
+          account answer)
+      (goto-char account-beg)
+      (set-window-point (get-buffer-window) (point))
+      (recenter)
+      (redraw-display)
+      (with-current-buffer (get-buffer "nrl-mastercard-old.dat")
+        (goto-char (point-min))
+        (when (re-search-forward (concat "\\(\\S-+\\)\\s-+\\$" amount)
+                                 nil t)
+          (setq account (match-string 1))
+          (goto-char (match-beginning 1))
           (set-window-point (get-buffer-window) (point))
           (recenter)
           (redraw-display)
-          (with-current-buffer (get-buffer "nrl-mastercard-old.dat")
-            (goto-char (point-min))
-            (when (re-search-forward (concat "\\(\\S-+\\)\\s-+\\$" amount)
-                                     nil t)
-              (setq account (match-string 1))
-              (goto-char (match-beginning 1))
-              (set-window-point (get-buffer-window) (point))
-              (recenter)
-              (redraw-display)
-              (setq answer
-                    (read-char (format "Is this a match for %s (y/n)? "
-                                       account)))))
-          (when (eq answer ?y)
-            (goto-char account-beg)
-            (delete-region account-beg account-end)
-            (insert account))
-          (forward-line))))))
+          (setq answer
+                (read-char (format "Is this a match for %s (y/n)? "
+                                   account)))))
+      (when (eq answer ?y)
+        (goto-char account-beg)
+        (delete-region account-beg account-end)
+        (insert account))
+      (forward-line))))
 
 ;;;_ , linked-buffer
 
@@ -4035,6 +4059,13 @@ and view local index.html url"
 
 (use-package parenface-plus)
 
+;;;_ , perspective
+
+(use-package perspective
+  :init
+  (progn
+    (persp-mode)))
+
 ;;;_ , per-window-point
 
 (use-package per-window-point
@@ -4684,6 +4715,7 @@ and run compass from that directory"
 ;;;_ , selectkey
 
 (use-package selectkey
+  :disabled t
   :init
   (progn
     (bind-key "C-. b" 'selectkey-select-prefix-map)
@@ -4693,8 +4725,6 @@ and run compass from that directory"
     (selectkey-define-select-key shell "s" "\\*shell" (shell))
     (selectkey-define-select-key multi-term "t" "\\*terminal" (multi-term-next))
     (selectkey-define-select-key eshell "z" "\\*eshell" (eshell))))
-
-
 
 ;;;_ , session
 
@@ -4706,7 +4736,8 @@ and run compass from that directory"
     (session-initialize)
 
     (defun remove-session-use-package-from-settings ()
-      (when (string= (file-name-nondirectory (buffer-file-name)) "settings.el")
+      (when (string= (file-name-nondirectory (buffer-file-name))
+                     "settings.el")
         (save-excursion
           (goto-char (point-min))
           (when (re-search-forward "^ '(session-use-package " nil t)
@@ -4725,8 +4756,9 @@ and run compass from that directory"
             (org-reveal)
           (show-subtree))))
 
-    (add-hook 'session-after-jump-to-last-change-hook
-              'le::maybe-reveal)
+    (add-hook 'session-after-jump-to-last-change-hook 'le::maybe-reveal)
+
+    (defvar server-process nil)
 
     (defun save-information ()
       (with-temp-message "Saving Emacs information..."
@@ -5164,6 +5196,12 @@ Does not delete the prompt."
 
 
 ;; https://github.com/anthracite/emacs-config/blob/master/init.el
+
+;;;_ , tiny
+
+(use-package tiny
+  :bind ("C-. N" . tiny-expand))
+
 ;;;;_ , twittering-mode
 
 (use-package twittering-mode
@@ -5196,9 +5234,7 @@ Does not delete the prompt."
 
 ;;;_ , undo-tree
 
-(use-package undo-tree
-  :init
-  (global-undo-tree-mode))
+(use-package undo-tree)
 
 ;;;_ , VKILL
 
@@ -5219,6 +5255,7 @@ Does not delete the prompt."
 ;;;_ , w3m
 
 (use-package w3m
+  :disabled t
   :commands (w3m-search w3m-find-file)
   :bind (("C-. u"   . w3m-browse-url)
          ("C-. U"   . w3m-browse-url-new-session)
@@ -5620,36 +5657,6 @@ Does not delete the prompt."
                                  c-mode c++-mode))
      ("`" "`" nil (markdown-mode ruby-mode shell-script-mode)))))
 
-;;;_ , write-room
-
-(defun write-room ()
-  "Make a frame without any bling."
-  (interactive)
-  ;; to restore:
-  ;; (setq mode-line-format (default-value 'mode-line-format))
-  (let ((frame (make-frame
-                '((minibuffer . nil)
-                  (vertical-scroll-bars . nil)
-                  (left-fringe . 0); no fringe
-                  (right-fringe . 0)
-                  (background-mode . dark)
-                  (background-color . "cornsilk")
-                  (foreground-color . "black")
-                  (cursor-color . "green")
-                  (border-width . 0)
-                  (border-color . "black"); should be unnecessary
-                  (internal-border-width . 64); whitespace!
-                  (cursor-type . box)
-                  (menu-bar-lines . 0)
-                  (tool-bar-lines . 0)
-                  (fullscreen . fullboth)  ; this should work
-                  (unsplittable . t)))))
-    (select-frame frame)
-    (find-file "~/Documents/Notes.txt")
-    (setq mode-line-format nil
-          fill-column 65)
-    (set-window-margins (selected-window) 50 50)))
-
 ;;;_ , xmsi-mode
 
 (use-package xmsi-math-symbols-input
@@ -5669,7 +5676,6 @@ Does not delete the prompt."
 
 
 ;;;_ , yasnippet
-
 
 (use-package yasnippet
   :if (not noninteractive)
@@ -5704,10 +5710,10 @@ Does not delete the prompt."
         (unless (and choose-instead-of-guess
                      (not (y-or-n-p "Insert a snippet with useful headers? ")))
           (yas-expand-snippet "\
-  # -*- mode: snippet -*-
-  # name: $1
-  # --
-  $0"))))
+# -*- mode: snippet -*-
+# name: $1
+# --
+$0"))))
 
     (bind-key "C-c y TAB" 'yas-expand)
     (bind-key "C-c y n" 'yas-new-snippet)
@@ -5800,7 +5806,6 @@ Does not delete the prompt."
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
-;;   mode: allout
 ;;   outline-regexp: "^;;;_\\([,. ]+\\)"
 ;; End:
 
