@@ -2712,6 +2712,7 @@ at the beginning of line, if already there."
 ;;;_ , guide-key
 
 (use-package guide-key
+  :diminish guide-key-mode
   :init
   (progn
     (setq guide-key/guide-key-sequence
@@ -2768,6 +2769,16 @@ at the beginning of line, if already there."
 
 (use-package gist
   :bind ("C-c G" . gist-region-or-buffer))
+
+(use-package git-blame
+  :commands git-blame-mode)
+
+;;;_ , git-wip
+
+(use-package git-wip-mode
+  :load-path "site-lisp/git-wip/emacs/"
+  :demand t
+  :diminish git-wip-mode)
 
 ;;;_ , gnus
 (use-package dot-gnus
@@ -5234,7 +5245,10 @@ Does not delete the prompt."
 
 ;;;_ , undo-tree
 
-(use-package undo-tree)
+(use-package undo-tree
+  :commands undo-tree-mode
+  :init
+  (add-hook 'find-file-hook (lambda () (undo-tree-mode 1))))
 
 ;;;_ , VKILL
 
