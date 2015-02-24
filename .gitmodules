@@ -880,3 +880,9 @@
 [submodule "site-lisp/visual-regexp"]
 	path = site-lisp/visual-regexp
 	url = https://github.com/benma/visual-regexp.el.git
+[submodule "site-lisp/emacs-calfw"]
+	path = site-lisp/emacs-calfw
+	url = git://github.com/jwiegley/emacs-calfw
+[submodule "site-lisp/git-wip"]
+	path = site-lisp/git-wip
+	url = https://github.com/bartman/git-wip.git
