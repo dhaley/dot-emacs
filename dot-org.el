@@ -8,7 +8,7 @@
 
 ;; (require 'org-crypt)
 (require 'org-devonthink)
-(require 'org-debbugs)
+(require 'org-mac-link)
 (require 'org-magit)
 (require 'ob-emacs-lisp)
 (require 'ob-sh)
@@ -19,9 +19,42 @@
 (require 'ox-md)
 (require 'ox-opml)
 
-(require 'async)
-
 (require 'ox-reveal)
+
+(use-package calfw
+  :bind ("C-c A" . my-calendar)
+  :init
+  (progn
+    (use-package calfw-cal)
+    (use-package calfw-org)
+
+    (defun my-calendar ()
+      (interactive)
+      (delete-other-windows)
+      (let ((buf (get-buffer "*cfw-calendar*")))
+        (if buf
+            (switch-to-buffer buf)
+          (cfw:open-calendar-buffer
+           :contents-sources
+           (list
+            (cfw:org-create-source "Dark Blue")
+            (cfw:cal-create-source "Dark Orange")))))))
+
+  :config
+  (progn
+    ;; Unicode characters
+    (setq cfw:fchar-junction ?╋
+          cfw:fchar-vertical-line ?┃
+          cfw:fchar-horizontal-line ?━
+          cfw:fchar-left-junction ?┣
+          cfw:fchar-right-junction ?┫
+          cfw:fchar-top-junction ?┯
+          cfw:fchar-top-left-corner ?┏
+          cfw:fchar-top-right-corner ?┓)
+
+    (bind-key "j" 'cfw:navi-goto-date-command cfw:calendar-mode-map)
+    (bind-key "g" 'cfw:refresh-calendar-buffer cfw:calendar-mode-map)))
+
 
 (defun org-link-to-named-task ()
   (interactive))

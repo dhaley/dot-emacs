@@ -247,6 +247,7 @@ SCHEDULED: %t
  '(org-html-checkbox-type "unicode")
  '(org-id-link-to-org-use-id (quote create-if-interactive-and-no-custom-id))
  '(org-id-method (quote uuidgen))
+ '(org-image-actual-width (quote (800)))
  '(org-indirect-buffer-display (quote current-window))
  '(org-insert-heading-respect-content nil)
  '(org-latex-default-packages-alist

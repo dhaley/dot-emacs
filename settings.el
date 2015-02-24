@@ -184,6 +184,7 @@
  '(allout-command-prefix ".")
  '(ansi-color-names-vector
    ["black" "red" "green" "brown" "blue" "magenta" "blue" "white"])
+ '(appt-message-warning-time 60)
  '(auto-compression-mode t nil (jka-compr))
  '(auto-save-file-name-transforms (quote (("\\`/[^/]*:.*" "/tmp" t))))
  '(auto-save-interval 64)
@@ -225,6 +226,18 @@
  '(calendar-mark-holidays-flag t)
  '(calendar-standard-time-zone-name "MST")
  '(calendar-time-zone -420)
+ '(cfw:read-date-command
+   (lambda nil
+     (interactive)
+     (let
+         ((xs
+           (decode-time
+            (org-time-string-to-time
+             (org-read-date)))))
+       (list
+        (nth 4 xs)
+        (nth 3 xs)
+        (nth 5 xs)))))
  '(clean-buffer-list-kill-never-buffer-names
    (quote
     ("*scratch*" "*Messages*" "*server*" "*Group*" "*Org Agenda*" "todo.txt" "&bitlbee")))
@@ -397,7 +410,7 @@
  '(eudc-options-file "~/.emacs.d/.eudc-options")
  '(eval-expr-print-function (quote pp))
  '(eww-download-directory "~/dl")
-  '(eww-lnum-actions-link-alist
+ '(eww-lnum-actions-link-alist
    (quote
     ("----  Link   ----"
      (102 eww-lnum-visit "Visit")
