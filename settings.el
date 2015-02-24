@@ -711,12 +711,6 @@
  '(projectile-drupal-site-name-function (quote dkh-get-site-name))
  '(projectile-enable-caching t)
  '(projectile-generic-command "find -L . -type f -print0")
- '(projectile-globally-ignored-directories
-   (quote
-    ("/Users/dhaley/.emacs.d/geben" "/Users/dhaley/sites/dslm/cores/drupal-7.34/themes" "/Users/dhaley/sites/dslm/cores/drupal-7.34/modules" "profiles/cu_fit/themes" "profiles/testing" "profiles/standard" "profiles/minimal" "/Users/dhaley/sites/sws/themes" "scripts" "misc" "includes" "/Users/dhaley/sites/sws/modules" "libraries" "FirePHPCore" "sites/default/files" "profiles//modules/contrib" ".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" ".tox" ".svn" "build" "geben")))
- '(projectile-globally-ignored-modes
-   (quote
-    ("erc-mode" "help-mode" "completion-list-mode" "Buffer-menu-mode" "gnus-.*-mode" "occur-mode" "geben-mode")))
  '(projectile-project-root-files-bottom-up
    (quote
     ("includes/common.inc" "includes/bootstrap.inc" ".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs")))
