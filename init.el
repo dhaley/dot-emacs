@@ -56,11 +56,17 @@
       "Takes a mode map, and a list of (key function-designator)
 lists.  The functions are bound to the keys in the given mode-map.
 Keys are in kbd format."
-      (mapc (lambda (keybinding)
-              (destructuring-bind (key function) keybinding
-                (define-key mode-map (read-kbd-macro key) function)))
-            keybindings))
+  (mapc (lambda (keybinding)
+          (destructuring-bind (key function) keybinding
+            (define-key mode-map (read-kbd-macro key) function)))
+        keybindings))
 
+(defun choose-browser (url &rest args)
+  (interactive "sURL: ")
+  (if current-prefix-arg
+      (eww url)
+    (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
+      (browse-url url))))
 
 ;;;_ , Read system environment
 
@@ -4302,7 +4308,6 @@ unless return was pressed outside the comment"
 ;;;_ , projectile
 
 (use-package projectile
-  :disabled t
   :diminish projectile-mode
   :init
   (progn
@@ -5317,13 +5322,6 @@ Does not delete the prompt."
   URL of active tab of front window
   end tell"))))
         (w3m-browse-url (substring url 1 (1- (length url))) t)))
-
-    (defun choose-browser (url &rest args)
-      (interactive "sURL: ")
-      (if current-prefix-arg
-          (w3m-browse-url url)
-        (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
-          (browse-url url))))
 
     (use-package popwin-w3m
       :load-path "site-lisp/popwin/misc/")
