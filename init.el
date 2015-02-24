@@ -4302,26 +4302,12 @@ unless return was pressed outside the comment"
 ;;;_ , projectile
 
 (use-package projectile
+  :disabled t
   :diminish projectile-mode
   :init
   (progn
     (require 'grizzl)
     (projectile-global-mode)
-
-    (defun define-keys (mode-map keybindings)
-      "Takes a mode map, and a list of (key function-designator)
-lists.  The functions are bound to the keys in the given mode-map.
-Keys are in kbd format."
-      (mapc (lambda (keybinding)
-              (destructuring-bind (key function) keybinding
-                (define-key mode-map (read-kbd-macro key) function)))
-            keybindings))
-
-     (use-package ag
-       :init
-       (progn
-         (bind-key "C-. a" 'ag)
-         (use-package wgrep-ag)))
 
     (use-package projectile-drupal
       :init
@@ -4421,13 +4407,10 @@ Keys are in kbd format."
     (global-set-key (kbd "C-c p w") 'projectile-post-project)
     (global-set-key (kbd "C-c p +") 'projectile-add-project)
 
-    (use-package perspective
-      :init
-      (progn
-        (persp-mode)
-        (use-package persp-projectile
-          :bind ("C-\\" . projectile-persp-switch-project)
-          )))
+
+    (use-package persp-projectile
+      :bind ("C-\\" . projectile-persp-switch-project)
+      )
 
     (use-package helm-projectile
       :init
