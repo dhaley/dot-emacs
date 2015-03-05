@@ -52,8 +52,8 @@
                                (buffer-file-name))
                  (cleanup-term-log)))))
 
-    (defun define-keys (mode-map keybindings)
-      "Takes a mode map, and a list of (key function-designator)
+(defun define-keys (mode-map keybindings)
+  "Takes a mode map, and a list of (key function-designator)
 lists.  The functions are bound to the keys in the given mode-map.
 Keys are in kbd format."
   (mapc (lambda (keybinding)
@@ -928,8 +928,7 @@ Keys are in kbd format."
 
 ;;;_ , auto-dim-other-buffers
 
-(use-package auto-dim-other-buffers
-  :commands auto-dim-other-buffers-mode)
+(use-package auto-dim-other-buffers)
 
 ;;;_ , autorevert
 
@@ -2881,6 +2880,7 @@ at the beginning of line, if already there."
   (helm-find nil))
 
 (use-package helm-config
+  :demand t
   :diminish helm-mode
   :commands (helm-do-grep-1 helm-find)
   :bind (("C-c h"   . helm-command-prefix)
@@ -2980,6 +2980,32 @@ at the beginning of line, if already there."
 
 ;;;_ , ido
 
+(defun ido-smart-select-text ()
+  "Select the current completed item.  Do NOT descend into directories."
+  (interactive)
+  (when (and (or (not ido-require-match)
+                 (if (memq ido-require-match
+                           '(confirm confirm-after-completion))
+                     (if (or (eq ido-cur-item 'dir)
+                             (eq last-command this-command))
+                         t
+                       (setq ido-show-confirm-message t)
+                       nil))
+                 (ido-existing-item-p))
+             (not ido-incomplete-regexp))
+    (when ido-current-directory
+      (setq ido-exit 'takeprompt)
+      (unless (and ido-text (= 0 (length ido-text)))
+        (let ((match (ido-name (car ido-matches))))
+          (throw 'ido
+                 (setq ido-selected
+                       (if match
+                           (replace-regexp-in-string "/\\'" "" match)
+                         ido-text)
+                       ido-text ido-selected
+                       ido-final-text ido-text)))))
+    (exit-minibuffer)))
+
 (use-package ido
   :defines (ido-cur-item
             ido-require-match
@@ -2995,55 +3021,13 @@ at the beginning of line, if already there."
       :init
       (ido-hacks-mode 1))
 
-    (use-package ido-springboard)
-
-    (defun ido-smart-select-text ()
-      "Select the current completed item.  Do NOT descend into directories."
-      (interactive)
-      (when (and (or (not ido-require-match)
-                     (if (memq ido-require-match
-                               '(confirm confirm-after-completion))
-                         (if (or (eq ido-cur-item 'dir)
-                                 (eq last-command this-command))
-                             t
-                           (setq ido-show-confirm-message t)
-                           nil))
-                     (ido-existing-item-p))
-                 (not ido-incomplete-regexp))
-        (when ido-current-directory
-          (setq ido-exit 'takeprompt)
-          (unless (and ido-text (= 0 (length ido-text)))
-            (let ((match (ido-name (car ido-matches))))
-              (throw 'ido
-                     (setq ido-selected
-                           (if match
-                               (replace-regexp-in-string "/\\'" "" match)
-                             ido-text)
-                           ido-text ido-selected
-                           ido-final-text ido-text)))))
-        (exit-minibuffer)))
 
     (add-hook 'ido-minibuffer-setup-hook
               #'(lambda ()
                   (bind-key "<return>" 'ido-smart-select-text
-                            ido-file-completion-map)))
+                            ido-file-completion-map)))))
 
-    (defun ido-switch-buffer-tiny-frame (buffer)
-      (interactive (list (ido-read-buffer "Buffer: " nil t)))
-      (with-selected-frame
-          (make-frame '((width                . 80)
-                        (height               . 22)
-                        (left-fringe          . 0)
-                        (right-fringe         . 0)
-                        (vertical-scroll-bars . nil)
-                        (unsplittable         . t)
-                        (has-modeline-p       . nil)
-                        ;;(background-color     . "grey80")
-                        (minibuffer           . nil)))
-        (switch-to-buffer buffer)
-        (set (make-local-variable 'mode-line-format) nil)))
 
-    (bind-key "C-x 5 t" 'ido-switch-buffer-tiny-frame)))
 
 ;;;_ , iedit
 
@@ -3447,50 +3431,9 @@ at the beginning of line, if already there."
   :bind ("C-x C-f" . lusty-file-explorer)
   :config
   (progn
-    (defvar my-lusty-directory nil)
-
-    (defun my-lusty-current-directory ()
-      (let ((path (minibuffer-contents-no-properties)))
-        (lusty-normalize-dir (file-name-directory path))))
-
-    (defun my-lusty-helm-do-grep ()
-      (interactive)
-      (run-at-time "0.1 seconds" nil
-                   (lambda ()
-                     (jump-to-register ?L)
-                     (helm-do-grep-1 (list default-directory))))
-      (delete-window (get-buffer-window lusty-buffer-name))
-      (window-configuration-to-register ?L)
-      (exit-minibuffer))
-
-    (defun my-lusty-helm-find ()
-      (interactive)
-      (run-at-time "0.1 seconds" nil
-                   (lambda ()
-                     (jump-to-register ?L)
-                     (call-interactively #'helm-find)))
-      (delete-window (get-buffer-window lusty-buffer-name))
-      (window-configuration-to-register ?L)
-      (exit-minibuffer))
-
-    (defun my-lusty-helm-ls-git-ls ()
-      (interactive)
-      (run-at-time "0.1 seconds" nil
-                   (lambda ()
-                     (jump-to-register ?L)
-                     (let ((default-directory my-lusty-directory))
-                       (call-interactively #'helm-ls-git-ls))))
-      (setq my-lusty-directory (my-lusty-current-directory))
-      (delete-window (get-buffer-window lusty-buffer-name))
-      (window-configuration-to-register ?L)
-      (exit-minibuffer))
-
     (defun my-lusty-setup-hook ()
       (bind-key "SPC" 'lusty-select-match lusty-mode-map)
-      (bind-key "C-d" 'exit-minibuffer lusty-mode-map)
-      (bind-key "C-s" 'my-lusty-helm-do-grep lusty-mode-map)
-      (bind-key "C-c /" 'my-lusty-helm-find lusty-mode-map)
-      (bind-key "C-x f" 'my-lusty-helm-ls-git-ls lusty-mode-map))
+      (bind-key "C-d" 'exit-minibuffer lusty-mode-map))
 
     (add-hook 'lusty-setup-hook #'my-lusty-setup-hook)
 
@@ -3536,7 +3479,8 @@ at the beginning of line, if already there."
       (let ((lusty--active-mode :file-explorer))
         (lusty--define-mode-map)
         (let* ((lusty--ignored-extensions-regex
-                (concat "\\(?:" (regexp-opt completion-ignored-extensions) "\\)$"))
+                (concat "\\(?:" (regexp-opt completion-ignored-extensions)
+                        "\\)$"))
                (minibuffer-local-filename-completion-map lusty-mode-map)
                (lusty-only-directories t))
           (lusty--run 'read-directory-name default-directory ""))))
@@ -3547,20 +3491,11 @@ at the beginning of line, if already there."
       (let ((lusty--active-mode :file-explorer))
         (lusty--define-mode-map)
         (let* ((lusty--ignored-extensions-regex
-                (concat "\\(?:" (regexp-opt completion-ignored-extensions) "\\)$"))
+                (concat "\\(?:" (regexp-opt completion-ignored-extensions)
+                        "\\)$"))
                (minibuffer-local-filename-completion-map lusty-mode-map)
                (lusty-only-directories nil))
-          (lusty--run 'read-file-name default-directory ""))))
-
-    (if (featurep 'icicles)
-        (defadvice lusty-file-explorer (around lusty-file-explorer-without-icy
-                                               activate)
-          (flet ((message (&rest ignore)))
-            (let ((icy-was-on icicle-mode))
-              (if icy-was-on (icy-mode 0))
-              (unwind-protect
-                  ad-do-it
-                (if icy-was-on (icy-mode 1)))))))))
+          (lusty--run 'read-file-name default-directory ""))))))
 
 ;;;_ , macrostep
 
