@@ -376,9 +376,6 @@
 [submodule "site-lisp/f"]
         path = site-lisp/f
         url = git://github.com/rejeep/f.el.git
-[submodule "site-lisp/pkg-info"]
-        path = site-lisp/pkg-info
-        url = git://github.com/lunaryorn/pkg-info.el.git
 [submodule "site-lisp/projectile"]
         path = site-lisp/projectile
         url = git@github.com:dhaley/projectile.git
@@ -886,3 +883,6 @@
 [submodule "site-lisp/git-wip"]
 	path = site-lisp/git-wip
 	url = https://github.com/bartman/git-wip.git
+[submodule "site-lisp/paradox"]
+	path = site-lisp/paradox
+	url = git@github.com:Bruce-Connor/paradox.git
