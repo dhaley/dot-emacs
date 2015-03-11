@@ -189,6 +189,7 @@
  '(auto-compression-mode t nil (jka-compr))
  '(auto-save-file-name-transforms (quote (("\\`/[^/]*:.*" "/tmp" t))))
  '(auto-save-interval 64)
+ '(auto-save-list-file-prefix "~/.emacs.d/data/auto-save-list/.saves-")
  '(auto-save-timeout 2)
  '(backup-directory-alist
    (quote
@@ -517,13 +518,15 @@
    (quote
     (".#*" "*.o" "*~" "*.bin" "*.lbin" "*.so" "*.a" "*.ln" "*.blg" "*.bbl" "*.elc" "*.lof" "*.glo" "*.idx" "*.lot" "*.fmt" "*.tfm" "*.class" "*.fas" "*.lib" "*.mem" "*.x86f" "*.sparcf" "*.dfsl" "*.pfsl" "*.d64fsl" "*.p64fsl" "*.lx64fsl" "*.lx32fsl" "*.dx64fsl" "*.dx32fsl" "*.fx64fsl" "*.fx32fsl" "*.sx64fsl" "*.sx32fsl" "*.wx64fsl" "*.wx32fsl" "*.fasl" "*.ufsl" "*.fsl" "*.dxl" "*.lo" "*.la" "*.gmo" "*.mo" "*.toc" "*.aux" "*.cp" "*.fn" "*.ky" "*.pg" "*.tp" "*.vr" "*.cps" "*.fns" "*.kys" "*.pgs" "*.tps" "*.vrs" "*.pyc" "*.pyo" "GPATH" "GRTAGS" "GTAGS")))
  '(helm-buffers-fuzzy-matching t)
+ '(helm-delete-minibuffer-contents-from-point t)
  '(helm-ff-file-name-history-use-recentf t)
  '(helm-ff-search-library-in-sexp t)
  '(helm-ff-skip-boring-files t)
- '(helm-ff-transformer-show-only-basename nil)
+ '(helm-for-files-preferred-list
+   (quote
+    (helm-source-files-in-current-dir helm-source-recentf helm-source-bookmarks helm-source-file-cache helm-source-buffers-list helm-source-locate helm-source-ls-git)))
  '(helm-ls-git-show-abs-or-relative (quote relative))
- '(helm-scroll-amount 8)
- '(helm-split-window-in-side-p t)
+ '(helm-recentf-fuzzy-match t)
  '(hi2-ifte-offset 4)
  '(hi2-layout-offset 4)
  '(hi2-left-offset 4)
