@@ -3431,6 +3431,7 @@ at the beginning of line, if already there."
 ;;;_ , lusty-explorer
 
 (use-package lusty-explorer
+  :disabled t
   :bind ("C-x C-f" . lusty-file-explorer)
   :config
   (progn
