@@ -892,3 +892,6 @@
 [submodule "site-lisp/liquid-types-el"]
 	path = site-lisp/liquid-types-el
 	url = https://github.com/ucsd-progsys/liquid-types.el.git
+[submodule "site-lisp/helm-open-github"]
+	path = site-lisp/helm-open-github
+	url = git@github.com:syohex/emacs-helm-open-github.git
