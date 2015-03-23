@@ -877,6 +877,29 @@ end tell" (match-string 1))))
        (fboundp 'fit-window-to-buffer)
        (fit-window-to-buffer)))
 
+(defun my-org-startup ()
+  (org-agenda-list)
+  (org-fit-agenda-window)
+  (org-agenda-to-appt)
+  (other-window 1)
+  (my-calendar)
+  (run-with-idle-timer
+   0.1 nil
+   (lambda ()
+     (let ((wind (get-buffer-window "*Org Agenda*")))
+       (when wind
+         (set-frame-selected-window nil wind)
+         (call-interactively #'org-agenda-redo)))
+     (let ((wind (get-buffer-window "*cfw-calendar*")))
+       (when wind
+         (set-frame-selected-window nil wind)
+         (call-interactively #'cfw:refresh-calendar-buffer)))
+     (let ((wind (get-buffer-window "*Org Agenda*")))
+       (when wind
+         (set-frame-selected-window nil wind)
+         (call-interactively #'org-resolve-clocks))))))
+
+
 (defadvice org-agenda-redo (after fit-windows-for-agenda-redo activate)
   "Fit the Org Agenda to its buffer."
   (org-fit-agenda-window))

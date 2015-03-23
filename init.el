@@ -1,5 +1,8 @@
 ;;;_. Initialization
 
+(eval-when-compile
+  (require 'cl))
+
 (setq message-log-max 16384)
 
 (defconst emacs-start-time (current-time))
@@ -9,9 +12,12 @@
 
 (load (expand-file-name "load-path" (file-name-directory load-file-name)))
 
+(eval-when-compile
+  ;; (defvar use-package-verbose t)
+  ;; (defvar use-package-expand-minimally t)
+  (eval-after-load 'advice
+    `(setq ad-redefinition-action 'accept)))
 (require 'use-package)
-;; (eval-when-compile
-;;   (setq use-package-verbose (null byte-compile-current-file)))
 
 ;;;_ , Utility macros and functions
 
@@ -28,45 +34,23 @@
          (/ (float (string-to-number (match-string 1)))
             1000000000.0))))
 
-(defun quickping (host)
-  (= 0 (call-process "/sbin/ping" nil nil nil "-c1" "-W50" "-q" host)))
+;; (defun cleanup-term-log ()
+;;   "Do not show ^M in files containing mixed UNIX and DOS line endings."
+;;   (interactive)
+;;   (require 'ansi-color)
+;;   (ansi-color-apply-on-region (point-min) (point-max))
+;;   (goto-char (point-min))
+;;   (while (re-search-forward "\\(.\\|$\\|P.+\\\\\n\\)" nil t)
+;;     (overlay-put (make-overlay (match-beginning 0) (match-end 0))
+;;                  'invisible t))
+;;   (set-buffer-modified-p nil))
 
-(defun slowping (host)
-  (= 0 (call-process "/sbin/ping" nil nil nil "-c1" "-W5000" "-q" host)))
-
-(defun cleanup-term-log ()
-  "Do not show ^M in files containing mixed UNIX and DOS line endings."
-  (interactive)
-  (require 'ansi-color)
-  (ansi-color-apply-on-region (point-min) (point-max))
-  (goto-char (point-min))
-  (while (re-search-forward "\\(.\\|$\\|P.+\\\\\n\\)" nil t)
-    (overlay-put (make-overlay (match-beginning 0) (match-end 0))
-                 'invisible t))
-  (set-buffer-modified-p nil))
-
-(add-hook 'find-file-hooks
-          (function
-           (lambda ()
-             (if (string-match "/\\.iTerm/.*\\.log\\'"
-                               (buffer-file-name))
-                 (cleanup-term-log)))))
-
-(defun define-keys (mode-map keybindings)
-  "Takes a mode map, and a list of (key function-designator)
-lists.  The functions are bound to the keys in the given mode-map.
-Keys are in kbd format."
-  (mapc (lambda (keybinding)
-          (destructuring-bind (key function) keybinding
-            (define-key mode-map (read-kbd-macro key) function)))
-        keybindings))
-
-(defun choose-browser (url &rest args)
-  (interactive "sURL: ")
-  (if current-prefix-arg
-      (eww url)
-    (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
-      (browse-url url))))
+;; (add-hook 'find-file-hooks
+;;           (function
+;;            (lambda ()
+;;              (if (string-match "/\\.iTerm/.*\\.log\\'"
+;;                                (buffer-file-name))
+;;                  (cleanup-term-log)))))
 
 ;;;_ , Read system environment
 
@@ -86,15 +70,16 @@ Keys are in kbd format."
       (mapc (apply-partially #'add-to-list 'exec-path)
             (nreverse (split-string (getenv "PATH") ":"))))))
 
-(read-system-environment)
-(add-hook 'after-init-hook 'read-system-environment)
+(unless (string-match "/nix/store" (getenv "PATH"))
+  (read-system-environment)
+  ;; (add-hook 'after-init-hook 'read-system-environment)
+  )
 
 ;;;_ , Load customization settings
 
 (defvar running-alternate-emacs nil)
 
-(if (string-match (concat "/Applications/\\(Misc/\\)?"
-                          "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
+(if (string-match (concat "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
                   invocation-directory)
 
     (let ((settings (with-temp-buffer
@@ -102,7 +87,7 @@ Keys are in kbd format."
                        (expand-file-name "settings.el" user-emacs-directory))
                       (goto-char (point-min))
                       (read (current-buffer))))
-          (suffix (downcase (match-string 2 invocation-directory))))
+          (suffix (downcase (match-string 1 invocation-directory))))
 
       (setq running-alternate-emacs t
             user-data-directory
@@ -157,6 +142,27 @@ Keys are in kbd format."
 
 ;;;_ , global-map
 
+(autoload 'org-cycle "org" nil t)
+(autoload 'hippie-expand "hippie-exp" nil t)
+(autoload 'indent-according-to-mode "indent" nil t)
+
+(defun smart-tab (&optional arg)
+  (interactive "P")
+  (cond
+   ((looking-back "^[-+* \t]*")
+    (if (eq major-mode 'org-mode)
+        (org-cycle arg)
+      (indent-according-to-mode)))
+   (t
+    ;; Hippie also expands yasnippets, due to `yas-hippie-try-expand' in
+    ;; `hippie-expand-try-functions-list'.
+    (hippie-expand arg))))
+
+;; (bind-key "TAB" 'smart-tab)
+;; (bind-key "<tab>" 'smart-tab)
+
+(define-key key-translation-map (kbd "H-TAB") (kbd "C-TAB"))
+
 ;;;_  . H-
 
 ;;;_ , Enable C-8 prefix
@@ -194,7 +200,6 @@ Keys are in kbd format."
                 (rename-uniquely)))))))
 
 (bind-key "M-!" 'async-shell-command)
-(bind-key "M-/" 'dabbrev-expand)
 (bind-key "M-'" 'insert-pair)
 (bind-key "M-\"" 'insert-pair)
 
@@ -1568,6 +1573,15 @@ Keys are in kbd format."
     ))
 
 ;;;_ , css-mode
+
+(defun define-keys (mode-map keybindings)
+  "Takes a mode map, and a list of (key function-designator)
+lists.  The functions are bound to the keys in the given mode-map.
+Keys are in kbd format."
+  (mapc (lambda (keybinding)
+          (destructuring-bind (key function) keybinding
+            (define-key mode-map (read-kbd-macro key) function)))
+        keybindings))
 
 (use-package css-mode
   :mode ("\\.css$" . css-mode)
@@ -3775,71 +3789,21 @@ and view local index.html url"
 ;; ;;;_ , org-mode
 
 (use-package dot-org
-  :commands org-agenda-list
+  :commands my-org-startup
   :bind (("M-C"   . jump-to-org-agenda)
          ("M-m"   . org-smart-capture)
          ("M-M"   . org-inline-note)
          ("C-c a" . org-agenda)
          ("C-c S" . org-store-link)
-         ("C-c l" . org-insert-link))
-  :init
-  (progn
-
-    (unless (boundp 'Info-directory-list)
-      (setq Info-directory-list Info-default-directory-list))
-    (setq Info-directory-list
-          (cons (expand-file-name
-                 "doc"
-                 (expand-file-name
-                  "org-mode"
-                  (expand-file-name "override" user-emacs-directory)))
-                Info-directory-list))
-
-    (unless running-alternate-emacs
-      (run-with-idle-timer 3600 t 'jump-to-org-agenda))
-
-    (unless running-alternate-emacs
-      ;; (run-with-idle-timer 300 t 'jump-to-org-agenda)
-      (add-hook 'after-init-hook
-                #'(lambda ()
-                    (org-agenda-list)
-                    ;; (org-fit-agenda-window)
-                    ;; (org-resolve-clocks)
-                    )
-                (when (fboundp 'auto-dim-other-buffers-mode)
-                  (auto-dim-other-buffers-mode t))) t))
+         ("C-c l" . org-insert-link)
+         ("C-. n" . org-velocity-read))
+  :defer 30
   :config
-  (progn
-    (defun org-cycle-current-entry ()
-      "toggle visibility of current entry from within the entry."
-      (interactive)
-      (save-excursion)
-      (outline-back-to-heading)
-      (org-cycle))
+  (when (not running-alternate-emacs)
+    (run-with-idle-timer 300 t 'jump-to-org-agenda)
+    (my-org-startup))
 
-    (define-key org-mode-map (kbd "C-c C-/") 'org-cycle-current-entry)
-
-
-    (defun org-select-heading ()
-      "Go to heading of current node, select heading."
-      (interactive)
-      (outline-previous-heading)
-      (search-forward (plist-get (cadr (org-element-at-point)) :raw-value))
-      (set-mark (point))
-      (beginning-of-line)
-      (search-forward " "))
-
-    (define-key org-mode-map (kbd "C-c C-h") 'org-select-heading)
-
-    (fset 'org-toggle-drawer
-          (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([67108896 3 16 14 tab 24 24] 0 "%d")) arg)))
-
-    (fset 'org-cut-subtree-append
-          "\227\C-ck")
-
-    (define-key org-mode-map (kbd "C-c M-d") 'org-toggle-drawer)
-
-    (define-key org-mode-map (kbd "C-c M-w") 'org-cut-subtree-append)))
+  (bind-key "<tab>" 'smart-tab org-mode-map))
 
 ;;;_ , org-jira
 
@@ -5701,6 +5665,13 @@ $0"))))
   ;; (setq sml/theme 'respectful)
   ;; (sml/setup)
   )
+
+(defun choose-browser (url &rest args)
+  (interactive "sURL: ")
+  (if current-prefix-arg
+      (eww url)
+    (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
+      (browse-url url))))
 
 ;; Bind this to C-t
 (bind-key "C-H-t" 'cycle-my-theme)
