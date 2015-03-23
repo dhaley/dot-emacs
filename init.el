@@ -118,7 +118,7 @@
 (put 'set-goal-column  'disabled nil)
 (put 'upcase-region    'disabled nil)   ; Let upcasing work
 
-;;;_.  Keybindings
+;;;_. Keybindings
 
 ;; Main keymaps for personal bindings are:
 ;;
@@ -247,22 +247,35 @@
   (interactive)
   (delete-indentation t))
 
+;;;(bind-key "M-s n" 'find-name-dired)
+;;;(bind-key "M-s o" 'occur)
+
 ;;;_  . M-C-
 
 (bind-key "<C-M-backspace>" 'backward-kill-sexp)
-
-;;;_  . H-
-
-;; (define-key key-translation-map (kbd "H-TAB") (kbd "C-TAB"))
 
 ;;;_ , ctl-x-map
 
 ;;;_  . C-x
 
-(bind-key "C-x B" 'ido-switch-buffer-other-window)
 (bind-key "C-x d" 'delete-whitespace-rectangle)
 (bind-key "C-x F" 'set-fill-column)
 (bind-key "C-x t" 'toggle-truncate-lines)
+
+(defun delete-current-buffer-file ()
+  "Delete the current buffer and the file connected with it"
+  (interactive)
+  (let ((filename (buffer-file-name))
+        (buffer (current-buffer))
+        (name (buffer-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (kill-buffer buffer)
+      (when (yes-or-no-p "Are you sure, want to remove this file? ")
+        (delete-file filename)
+        (kill-buffer buffer)
+        (message "File '%s' successfully removed" filename)))))
+
+(bind-key "C-x K" 'delete-current-buffer-file)
 
 ;;;_  . C-x C-
 
@@ -290,9 +303,6 @@
   (find-alternate-file (concat "/sudo::" (buffer-file-name))))
 
 (bind-key "C-x C-v" 'find-alternate-file-with-sudo)
-
-(defun mlm/locate-make-command-line (search-string)
-  (list "mdfind" "-interpret" search-string))
 
 ;;;_  . C-x M-
 
@@ -335,7 +345,10 @@
 
 ;;;_ , mode-specific-map
 
-;;;_  . C-c ?
+;;;_  . C-c
+
+(bind-key "C-c <tab>" 'ff-find-other-file)
+(bind-key "C-c SPC" 'just-one-space)
 
 ;; inspired by Erik Naggum's `recursive-edit-with-single-window'
 (defmacro recursive-edit-preserving-window-config (body)
@@ -351,12 +364,12 @@
        (recursive-edit))))
 
 (bind-key "C-c 0"
-          (recursive-edit-preserving-window-config (delete-window)))
+  (recursive-edit-preserving-window-config (delete-window)))
 (bind-key "C-c 1"
-          (recursive-edit-preserving-window-config
-           (if (one-window-p 'ignore-minibuffer)
-               (error "Current window is the only window in its frame")
-             (delete-other-windows))))
+  (recursive-edit-preserving-window-config
+   (if (one-window-p 'ignore-minibuffer)
+       (error "Current window is the only window in its frame")
+     (delete-other-windows))))
 
 (defun delete-current-line (&optional arg)
   (interactive "p")
@@ -365,31 +378,28 @@
     (kill-line arg)
     (goto-char here)))
 
-(bind-key "C-c c" 'compile)
 (bind-key "C-c d" 'delete-current-line)
-
-(bind-key "C-c e E" 'elint-current-buffer)
 
 (defun do-eval-buffer ()
   (interactive)
   (call-interactively 'eval-buffer)
   (message "Buffer has been evaluated"))
 
-(bind-key "C-c e b" 'do-eval-buffer)
-(bind-key "C-c e c" 'cancel-debug-on-entry)
-(bind-key "C-c e d" 'debug-on-entry)
-(bind-key "C-c e e" 'toggle-debug-on-error)
-(bind-key "C-c e f" 'emacs-lisp-byte-compile-and-load)
-(bind-key "C-c e j" 'emacs-lisp-mode)
-(bind-key "C-c e l" 'find-library)
-(bind-key "C-c e r" 'eval-region)
-(bind-key "C-c e s" 'scratch)
-
-(bind-key "C-c e z" 'byte-recompile-directory)
+(bind-keys :prefix-map my-lisp-devel-map
+           :prefix "C-c e"
+           ("E" . elint-current-buffer)
+           ("b" . do-eval-buffer)
+           ("c" . cancel-debug-on-entry)
+           ("d" . debug-on-entry)
+           ("e" . toggle-debug-on-error)
+           ("f" . emacs-lisp-byte-compile-and-load)
+           ("j" . emacs-lisp-mode)
+           ("l" . find-library)
+           ("r" . eval-region)
+           ("s" . scratch)
+           ("z" . byte-recompile-directory))
 
 (bind-key "C-c f" 'flush-lines)
-
-(global-set-key [remap goto-line] 'goto-line-with-feedback)
 
 (defun goto-line-with-feedback ()
   "Show line numbers temporarily, while prompting for the line number input"
@@ -397,40 +407,57 @@
   (unwind-protect
       (progn
         (linum-mode 1)
-        (goto-line (read-number "Goto line: ")))
+        (goto-char (point-min))
+        (forward-line (read-number "Goto line: ")))
     (linum-mode -1)))
 
 (bind-key "C-c g" 'goto-line)
+(global-set-key [remap goto-line] 'goto-line-with-feedback)
+
 (bind-key "C-c k" 'keep-lines)
 
 (eval-when-compile
   (defvar emacs-min-height)
   (defvar emacs-min-width))
 
-(setq display-name
-      (let ((width (display-pixel-width)))
-        (cond
-         ((= width 2560)
-          'retina-imac)
-         ((= width 1440)
-          'retina-macbook-pro))))
+(defvar display-name
+  (let ((width (display-pixel-width)))
+    (cond ((= width 2560) 'retina-imac)
+          ((= width 1440) 'retina-macbook-pro))))
 
-(unless noninteractive
-  (if running-alternate-emacs
-      (progn
-        (defun emacs-min-top () 22)
-        (defun emacs-min-left () 5)
-        (defvar emacs-min-height 57)
-        (defvar emacs-min-width 90))
+(defvar emacs-min-top 23)
+(defvar emacs-min-left
+  (cond ((eq display-name 'retina-imac) 975)
+        (t 521)))
+(defvar emacs-min-height
+  (cond ((eq display-name 'retina-imac) 55)
+        (t 44)))
+(defvar emacs-min-width 100)
 
-    (defun emacs-min-top () 23)
-    (defun emacs-min-left ()
-      (cond ((eq display-name 'retina-imac) 975)
-            (t 521)))
-    (defvar emacs-min-height
-      (cond ((eq display-name 'retina-imac) 55)
-            (t 44)))
-    (defvar emacs-min-width 100)))
+(if running-alternate-emacs
+    (setq emacs-min-top 22
+          emacs-min-left 5
+          emacs-min-height 57
+          emacs-min-width 90))
+
+(defvar emacs-min-font
+  (cond
+   ((eq display-name 'retina-imac)
+    (if running-alternate-emacs
+        "-*-Myriad Pro-normal-normal-normal-*-20-*-*-*-p-0-iso10646-1"
+      "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"))
+   (t
+    (if running-alternate-emacs
+        "-*-Myriad Pro-normal-normal-normal-*-17-*-*-*-p-0-iso10646-1"
+      "-*-Source Code Pro-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1"))))
+
+(let ((frame-alist
+       (list (cons 'top    emacs-min-top)
+             (cons 'left   emacs-min-left)
+             (cons 'height emacs-min-height)
+             (cons 'width  emacs-min-width)
+             (cons 'font   emacs-min-font))))
+  (setq initial-frame-alist frame-alist))
 
 (defun emacs-min ()
   (interactive)
@@ -439,21 +466,12 @@
   (set-frame-parameter (selected-frame) 'vertical-scroll-bars nil)
   (set-frame-parameter (selected-frame) 'horizontal-scroll-bars nil)
 
-  (set-frame-parameter (selected-frame) 'top (emacs-min-top))
-  (set-frame-parameter (selected-frame) 'left (emacs-min-left))
+  (set-frame-parameter (selected-frame) 'top emacs-min-top)
+  (set-frame-parameter (selected-frame) 'left emacs-min-left)
   (set-frame-parameter (selected-frame) 'height emacs-min-height)
   (set-frame-parameter (selected-frame) 'width emacs-min-width)
 
-  (set-frame-font
-   (cond
-    ((eq display-name 'retina-imac)
-     (if running-alternate-emacs
-         "-*-Myriad Pro-normal-normal-normal-*-20-*-*-*-p-0-iso10646-1"
-       "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"))
-    (t
-     (if running-alternate-emacs
-         "-*-Myriad Pro-normal-normal-normal-*-17-*-*-*-p-0-iso10646-1"
-       "-*-Source Code Pro-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1"))))
+  (set-frame-font emacs-min-font)
 
   (when running-alternate-emacs
     (set-background-color "grey85")
@@ -496,11 +514,12 @@
   "Insert a quick timestamp using the value of `user-initials'."
   (interactive)
   (insert (format "%s (%s): " user-initials
-                  (format-time-string "%Y-%m-%dT%T" (current-time)))))
+                  (format-time-string "%Y-%m-%d" (current-time)))))
 
 (bind-key "C-c n" 'insert-user-timestamp)
 (bind-key "C-c o" 'customize-option)
 (bind-key "C-c O" 'customize-group)
+(bind-key "C-c F" 'customize-face)
 
 (bind-key "C-c q" 'fill-region)
 (bind-key "C-c r" 'replace-regexp)
@@ -525,22 +544,13 @@
 (bind-key "C-c =" 'count-matches)
 (bind-key "C-c ;" 'comment-or-uncomment-region)
 
-(defun wph-here()
-  "Inserts the filename and line number at the current point"
-  (interactive)
-  (insert buffer-file-name)
-  (insert ":")
-  (insert (number-to-string (count-lines (point-min) (point)))))
-
-(global-set-key "\C-c\C-h" 'wph-here)
-
 ;;;_  . C-c C-
 
 (defun delete-to-end-of-buffer ()
   (interactive)
   (kill-region (point) (point-max)))
 
-;; (bind-key "C-c C-z" 'delete-to-end-of-buffer)
+(bind-key "C-c C-z" 'delete-to-end-of-buffer)
 
 ;;;_  . C-c M-
 
@@ -579,11 +589,9 @@
 
 ;;;_ , ctl-period-map
 
-;;;_  . C-. ?
+;;;_  . C-.
 
 (bind-key "C-. m" 'kmacro-keymap)
-
-;;;_  . C-. C-i
 
 (bind-key "C-. C-i" 'indent-rigidly)
 
@@ -594,12 +602,17 @@
 
 (bind-key "C-h e" 'lisp-find-map)
 
-;;;_  . C-h e ?
+;;;_  . C-h e
 
 (bind-key "C-h e c" 'finder-commentary)
 (bind-key "C-h e e" 'view-echo-area-messages)
 (bind-key "C-h e f" 'find-function)
 (bind-key "C-h e F" 'find-face-definition)
+
+(defun my-switch-in-other-buffer (buf)
+  (when buf
+    (split-window-vertically)
+    (switch-to-buffer-other-window buf)))
 
 (defun my-describe-symbol  (symbol &optional mode)
   (interactive
@@ -627,29 +640,24 @@
 
     (delete-other-windows)
 
-    (cl-cl-flet ((switch-in-other-buffer
-            (buf)
-            (when buf
-              (split-window-vertically)
-              (switch-to-buffer-other-window buf))))
-      (switch-to-buffer find-buf)
-      (switch-in-other-buffer desc-buf)
-      (switch-in-other-buffer info-buf)
-      ;;(switch-in-other-buffer cust-buf)
-      (balance-windows))))
+    (switch-to-buffer find-buf)
+    (my-switch-in-other-buffer desc-buf)
+    (my-switch-in-other-buffer info-buf)
+    ;;(switch-in-other-buffer cust-buf)
+    (balance-windows)))
 
 (bind-key "C-h e d" 'my-describe-symbol)
 (bind-key "C-h e i" 'info-apropos)
 (bind-key "C-h e k" 'find-function-on-key)
 (bind-key "C-h e l" 'find-library)
 
-(defvar lisp-modes  '(emacs-lisp-mode
-                      inferior-emacs-lisp-mode
-                      ielm-mode
-                      lisp-mode
-                      inferior-lisp-mode
-                      lisp-interaction-mode
-                      slime-repl-mode))
+(defvar lisp-modes '(emacs-lisp-mode
+                     inferior-emacs-lisp-mode
+                     ielm-mode
+                     lisp-mode
+                     inferior-lisp-mode
+                     lisp-interaction-mode
+                     slime-repl-mode))
 
 (defvar lisp-mode-hooks
   (mapcar (function
