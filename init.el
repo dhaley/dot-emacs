@@ -3539,12 +3539,6 @@ unless return was pressed outside the comment"
                  (which-function-mode 1)))
 
     (bind-key "C-c C-F" 'php-search-local-documentation)
-    (use-package php-extras
-      :init
-      (progn
-        (require 'php-extras-gen-eldoc)
-        (php-extras-autocomplete-setup)
-        (php-extras-eldoc-setup)))
 
     (use-package php-boris)
 
