@@ -187,6 +187,7 @@
  '(appt-message-warning-time 60)
  '(async-bytecomp-allowed-packages nil)
  '(auto-compression-mode t nil (jka-compr))
+ '(auto-dim-other-buffers-mode t)
  '(auto-save-file-name-transforms (quote (("\\`/[^/]*:.*" "/tmp" t))))
  '(auto-save-interval 64)
  '(auto-save-list-file-prefix "~/.emacs.d/data/auto-save-list/.saves-")
@@ -296,6 +297,7 @@
  '(drupal-convert-line-ending t)
  '(drupal-css-modes (quote (css-mode scss-mode)))
  '(drupal-drush-program "~/src/drush/drush")
+ '(drupal-ignore-paths-regexp "\\(vendor\\|node_modules\\|libraries\\)")
  '(drupal-php-modes (quote (php-mode web-mode)))
  '(ediff-combination-pattern
    (quote
@@ -777,7 +779,7 @@
  '(slime-repl-history-file "~/.emacs.d/data/slime-history.eld")
  '(slime-startup-animation nil)
  '(solarized-distinct-fringe-background t)
- '(solarized-high-contrast-mode-line t)
+ '(solarized-high-contrast-mode-line nil)
  '(sp-highlight-pair-overlay nil)
  '(sql-sqlite-program "sqlite3")
  '(sr-attributes-display-mask (quote (nil nil t nil nil nil)))
@@ -918,7 +920,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(auto-dim-other-buffers-face ((t (:inherit fringe))))
+ '(auto-dim-other-buffers-face ((t (:inherit fringe :foreground "Grey70"))))
  '(diff-added ((((background dark)) (:foreground "#FFFF9B9BFFFF")) (t (:foreground "DarkGreen"))))
  '(diff-changed ((((background dark)) (:foreground "Yellow")) (t (:foreground "MediumBlue"))))
  '(diff-context ((((background dark)) (:foreground "White")) (t (:foreground "Black"))))
