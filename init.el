@@ -21,10 +21,6 @@
 
 ;;;_ , Utility macros and functions
 
-(defmacro hook-into-modes (func modes)
-  `(dolist (mode-hook ,modes)
-     (add-hook mode-hook ,func)))
-
 (defun system-idle-time ()
   (with-temp-buffer
     (call-process "ioreg" nil (current-buffer) nil
@@ -74,6 +70,9 @@
   (read-system-environment)
   ;; (add-hook 'after-init-hook 'read-system-environment)
   )
+
+(defsubst hook-into-modes (func &rest modes)
+  (dolist (mode-hook modes) (add-hook mode-hook func)))
 
 ;;;_ , Load customization settings
 
