@@ -142,7 +142,11 @@
 (use-package working        :defer t)
 (use-package xml-rpc        :defer t)
 
-;;;_. Keybindings
+;;; Keybindings
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; dkh (2015-03-25): Move all of these into use-package declarations        ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Main keymaps for personal bindings are:
 ;;
@@ -164,7 +168,7 @@
 ;;   C- ,'";:?<>|!#$%^&*`~ <tab>
 ;;   M- ?#
 
-;;;_ , global-map
+;;; global-map
 
 (autoload 'org-cycle "org" nil t)
 (autoload 'hippie-expand "hippie-exp" nil t)
@@ -182,22 +186,14 @@
     ;; `hippie-expand-try-functions-list'.
     (hippie-expand arg))))
 
-;; (bind-key "TAB" 'smart-tab)
-;; (bind-key "<tab>" 'smart-tab)
-
-(define-key key-translation-map (kbd "H-TAB") (kbd "C-TAB"))
-
-;;;_  . H-
-
-;;;_ , Enable C-8 prefix
+(define-key key-translation-map (kbd "A-TAB") (kbd "C-TAB"))
 
 (bind-key "<H-down>" 'shrink-window)
 (bind-key "<H-left>" 'shrink-window-horizontally)
 (bind-key "<H-right>" 'enlarge-window-horizontally)
 (bind-key "<H-up>" 'enlarge-window)
 (bind-key "H-`" 'new-frame)
-
-;;;_  . C-
+;;; C-
 
 (defvar ctl-period-map)
 (define-prefix-command 'ctl-period-map)
@@ -213,7 +209,7 @@
 
 (bind-key "C-z" 'delete-other-windows)
 
-;;;_  . M-
+;;; M-
 
 (defadvice async-shell-command (before uniqify-running-shell-command activate)
   (let ((buf (get-buffer "*Async Shell Command*")))
@@ -261,7 +257,6 @@
 
 (bind-key "M-S" 'mark-sentence)
 (bind-key "M-X" 'mark-sexp)
-(bind-key "M-H" 'mark-paragraph)
 (bind-key "M-D" 'mark-defun)
 
 (bind-key "M-g c" 'goto-char)
@@ -271,16 +266,13 @@
   (interactive)
   (delete-indentation t))
 
-;;;(bind-key "M-s n" 'find-name-dired)
-;;;(bind-key "M-s o" 'occur)
-
-;;;_  . M-C-
+;;; M-C-
 
 (bind-key "<C-M-backspace>" 'backward-kill-sexp)
 
-;;;_ , ctl-x-map
+;;; ctl-x-map
 
-;;;_  . C-x
+;;; C-x
 
 (bind-key "C-x d" 'delete-whitespace-rectangle)
 (bind-key "C-x F" 'set-fill-column)
@@ -301,7 +293,7 @@
 
 (bind-key "C-x K" 'delete-current-buffer-file)
 
-;;;_  . C-x C-
+;;; C-x C-
 
 (defun duplicate-line ()
   "Duplicate the line containing point."
@@ -328,7 +320,7 @@
 
 (bind-key "C-x C-v" 'find-alternate-file-with-sudo)
 
-;;;_  . C-x M-
+;;; C-x M-
 
 (bind-key "C-x M-n" 'set-goal-column)
 
@@ -367,19 +359,19 @@
 
 (bind-key "C-x M-q" 'refill-paragraph)
 
-;;;_ , mode-specific-map
+;;; mode-specific-map
 
-;;;_  . C-c
+;;; C-c
 
 (bind-key "C-c <tab>" 'ff-find-other-file)
 (bind-key "C-c SPC" 'just-one-space)
 
-;; inspired by Erik Naggum's `recursive-edit-with-single-window'
 (defmacro recursive-edit-preserving-window-config (body)
   "*Return a command that enters a recursive edit after executing BODY.
- Upon exiting the recursive edit (with\\[exit-recursive-edit] (exit)
- or \\[abort-recursive-edit] (abort)), restore window configuration
- in current frame."
+Upon exiting the recursive edit (with\\[exit-recursive-edit] (exit)
+or \\[abort-recursive-edit] (abort)), restore window configuration
+in current frame.
+Inspired by Erik Naggum's `recursive-edit-with-single-window'."
   `(lambda ()
      "See the documentation for `recursive-edit-preserving-window-config'."
      (interactive)
@@ -409,6 +401,11 @@
   (call-interactively 'eval-buffer)
   (message "Buffer has been evaluated"))
 
+(defun do-eval-region ()
+  (interactive)
+  (call-interactively 'eval-region)
+  (message "Region has been evaluated"))
+
 (bind-keys :prefix-map my-lisp-devel-map
            :prefix "C-c e"
            ("E" . elint-current-buffer)
@@ -419,7 +416,7 @@
            ("f" . emacs-lisp-byte-compile-and-load)
            ("j" . emacs-lisp-mode)
            ("l" . find-library)
-           ("r" . eval-region)
+           ("r" . do-eval-region)
            ("s" . scratch)
            ("z" . byte-recompile-directory))
 
@@ -446,7 +443,7 @@
 
 (defvar display-name
   (let ((width (display-pixel-width)))
-    (cond ((= width 2560) 'retina-imac)
+    (cond ((>= width 2560) 'retina-imac)
           ((= width 1440) 'retina-macbook-pro))))
 
 (defvar emacs-min-top 23)
@@ -528,8 +525,9 @@
                (font-lock-add-keywords
                 mode (list (list (concat "\\<\\(" value " [^:\n]+\\):")
                                  1 font-lock-warning-face t))))
-           '(emacs-lisp-mode lisp-mode php-mode
-                             python-mode perl-mode)))
+           '(c-mode c++-mode emacs-lisp-mode lisp-mode
+                    python-mode perl-mode java-mode groovy-mode
+                    haskell-mode literate-haskell-mode)))
       (set symbol value))
   :type 'string
   :group 'mail)
@@ -568,7 +566,7 @@
 (bind-key "C-c =" 'count-matches)
 (bind-key "C-c ;" 'comment-or-uncomment-region)
 
-;;;_  . C-c C-
+;;; C-c C-
 
 (defun delete-to-end-of-buffer ()
   (interactive)
@@ -576,7 +574,7 @@
 
 (bind-key "C-c C-z" 'delete-to-end-of-buffer)
 
-;;;_  . C-c M-
+;;; C-c M-
 
 (defun unfill-paragraph (arg)
   (interactive "*p")
@@ -611,22 +609,22 @@
       (unfill-paragraph 1)
       (forward-paragraph))))
 
-;;;_ , ctl-period-map
+;;; ctl-period-map
 
-;;;_  . C-.
+;;; C-.
 
 (bind-key "C-. m" 'kmacro-keymap)
 
 (bind-key "C-. C-i" 'indent-rigidly)
 
-;;;_ , help-map
+;;; help-map
 
 (defvar lisp-find-map)
 (define-prefix-command 'lisp-find-map)
 
 (bind-key "C-h e" 'lisp-find-map)
 
-;;;_  . C-h e
+;;; C-h e
 
 (bind-key "C-h e c" 'finder-commentary)
 (bind-key "C-h e e" 'view-echo-area-messages)
@@ -705,6 +703,7 @@
 (bind-key "C-h e s" 'scratch)
 (bind-key "C-h e v" 'find-variable)
 (bind-key "C-h e V" 'apropos-value)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; dkh (2015-03-25): Move all of the above into use-package declarations    ;;
