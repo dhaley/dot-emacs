@@ -954,9 +954,6 @@ Keys are in kbd format."
 
   (add-hook 'allout-mode-hook 'my-allout-mode-hook))
 
-(use-package apache-mode
-  :mode ("\\(\\.htaccess$\\|\\.conf$\\)" . apache-mode))
-
 (use-package AppleScripts
   :bind (("H-s" . osx-say) ("H-f" . osx-pathfinder-or-iterm)))
 
@@ -2014,8 +2011,6 @@ Keys are in kbd format."
                                   mark-page))))
 
     (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
-
-(use-package fancy-narrow)
 
 (use-package feature-mode
   :mode ("\\.feature$" . feature-mode))
