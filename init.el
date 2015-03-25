@@ -3027,79 +3027,79 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , magit
 
 (use-package magit
+  :load-path "site-lisp/magit"
   :bind (("C-x g" . magit-status)
          ("C-x G" . magit-status-with-prefix))
+  :preface
+  (defun magit-monitor (&optional no-display)
+    "Start git-monitor in the current directory."
+    (interactive)
+    (when (string-match "\\*magit: \\(.+?\\)\\*" (buffer-name))
+      (let ((name (format "*git-monitor: %s*"
+                          (match-string 1 (buffer-name)))))
+        (or (get-buffer name)
+            (let ((buf (get-buffer-create name)))
+              (ignore-errors
+                (start-process "*git-monitor*" buf "git-monitor"
+                               "-d" (expand-file-name default-directory)))
+              buf)))))
+
+  (defun magit-status-with-prefix ()
+    (interactive)
+    (let ((current-prefix-arg '(4)))
+      (call-interactively 'magit-status)))
+
+  (defun lusty-magit-status (dir &optional switch-function)
+    (interactive (list (if current-prefix-arg
+                           (lusty-read-directory)
+                         (or (magit-get-top-dir)
+                             (lusty-read-directory)))))
+    (magit-status-internal dir switch-function))
+
+  (defun eshell/git (&rest args)
+    (cond
+     ((or (null args)
+          (and (string= (car args) "status") (null (cdr args))))
+      (magit-status-internal default-directory))
+     ((and (string= (car args) "log") (null (cdr args)))
+      (magit-log "HEAD"))
+     (t (throw 'eshell-replace-command
+               (eshell-parse-command
+                "*git"
+                (eshell-stringify-list (eshell-flatten-list args)))))))
+
   :init
-  (progn
-    (defun magit-status-with-prefix ()
-      (interactive)
-      (let ((current-prefix-arg '(4)))
-        (call-interactively 'magit-status)))
+  (add-hook 'magit-mode-hook 'hl-line-mode)
 
-    (defun eshell/git (&rest args)
-      (cond
-       ((or (null args)
-            (and (string= (car args) "status") (null (cdr args))))
-        (magit-status default-directory))
-       ((and (string= (car args) "log") (null (cdr args)))
-        (magit-log))
-       (t (throw 'eshell-replace-command
-                 (eshell-parse-command
-                  (concat "*" command)
-                  (eshell-stringify-list (eshell-flatten-list args)))))))
-
-    (add-hook 'magit-mode-hook 'hl-line-mode)
-
-    (use-package magit-blame
-      :commands magit-blame-mode)
-
-    (use-package git-messenger
-      :bind (("C-x v p" . git-messenger:popup-message))
-      :config (define-key git-messenger-map (kbd "m") 'git-messenger:copy-message)))
   :config
-  (progn
-    (setenv "GIT_PAGER" "")
+  (setenv "GIT_PAGER" "")
 
-    (use-package magit-review
-      :commands magit-review
-      :config (require 'json))
+  (use-package magit-backup
+    :diminish magit-backup-mode)
 
-    (unbind-key "M-h" magit-mode-map)
-    (unbind-key "M-s" magit-mode-map)
+  (use-package magit-review
+    :disabled t
+    :commands magit-review
+    :config
+    (use-package json))
 
-    (add-hook 'magit-log-edit-mode-hook
-              #'(lambda ()
-                  (set-fill-column 72)
-                  (flyspell-mode)))
+  (use-package magit-commit
+    :config
+    (remove-hook 'server-switch-hook 'magit-commit-diff))
 
-    (require 'magit-topgit)
-    (require 'git-rebase-mode)
-    (require 'magit-blame)
+  (unbind-key "M-h" magit-mode-map)
+  (unbind-key "M-s" magit-mode-map)
+  (unbind-key "M-m" magit-mode-map)
 
-    (global-set-key (kbd "C-x v b") 'magit-blame-mode)
-    (defun magit-blame-this-file()
-      "visit file and call magit-blame-mode"
-      (interactive)
-      (magit-visit-item)
-      (magit-blame-mode))
+  (bind-key "M-H" #'magit-show-level-2-all magit-mode-map)
+  (bind-key "M-S" #'magit-show-level-4-all magit-mode-map)
 
-    (defvar magit-git-monitor-process nil)
-    (make-variable-buffer-local 'magit-git-monitor-process)
+  (add-hook 'magit-log-edit-mode-hook
+            #'(lambda ()
+                (set-fill-column 72)
+                (flyspell-mode)))
 
-    (defun start-git-monitor ()
-      (interactive)
-      (unless magit-git-monitor-process
-        (setq magit-git-monitor-process
-              (start-process "git-monitor" (current-buffer) "git-monitor"
-                             "-d" (expand-file-name default-directory)))))
-
-    ;; (add-hook 'magit-status-mode-hook 'start-git-monitor)
-))
-
-;;;_ , magit-annex
-
-(use-package magit-annex
-  :defer t)
+  (add-hook 'magit-status-mode-hook #'(lambda () (magit-monitor t))))
 
 (use-package github-browse-file
   :bind ("H-o" . github-browse-file))
