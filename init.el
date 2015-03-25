@@ -118,6 +118,31 @@
 (put 'set-goal-column  'disabled nil)
 (put 'upcase-region    'disabled nil)   ; Let upcasing work
 
+(use-package anaphora       :defer t :load-path "lib/anaphora")
+(use-package button-lock    :defer t :load-path "lib/button-lock")
+(use-package dash           :defer t :load-path "lib/dash-el")
+(use-package ctable         :defer t :load-path "lib/emacs-ctable")
+(use-package deferred       :defer t :load-path "lib/emacs-deferred")
+(use-package epc            :defer t :load-path "lib/emacs-epc")
+(use-package web            :defer t :load-path "lib/emacs-web")
+(use-package epl            :defer t :load-path "lib/epl")
+(use-package f              :defer t :load-path "lib/f-el")
+(use-package fame           :defer t)
+(use-package fuzzy          :defer t)
+(use-package gh             :defer t :load-path "lib/gh-el")
+(use-package ht             :defer t :load-path "lib/ht-el")
+(use-package let-alist      :defer t)
+(use-package logito         :defer t :load-path "lib/logito")
+(use-package makey          :defer t :load-path "lib/makey")
+(use-package pcache         :defer t :load-path "lib/pcache")
+(use-package pkg-info       :defer t :load-path "lib/pkg-info")
+(use-package popup          :defer t :load-path "lib/popup-el")
+(use-package popwin         :defer t :load-path "lib/popwin-el")
+(use-package pos-tip        :defer t :load-path "lib/pos-tip")
+(use-package s              :defer t :load-path "lib/s-el")
+(use-package working        :defer t)
+(use-package xml-rpc        :defer t)
+
 ;;;_. Keybindings
 
 ;; Main keymaps for personal bindings are:
@@ -975,13 +1000,16 @@
   (ac-set-trigger-key "<backtab>")
   (setq ac-use-menu-map t)
 
-  (bind-key "A-M-?" 'ac-last-help)
+  (bind-key "H-M-?" 'ac-last-help)
   (unbind-key "C-s" ac-completing-map))
 
 ;;;_ , auto-dim-other-buffers
 
 (use-package auto-dim-other-buffers
-  :init (auto-dim-other-buffers-mode))
+  :defer 10
+  :commands auto-dim-other-buffers-mode
+  :config
+  (auto-dim-other-buffers-mode 1))
 
 ;;;_ , autorevert
 
@@ -1146,13 +1174,15 @@
   :commands bbdb-create
   :bind ("M-B" . bbdb))
 
-                                        ;_ , bm
+;_ , bm
+
 (use-package bm
-  :pre-init
-  (progn
-    (defvar ctl-period-breadcrumb-map)
-    (define-prefix-command 'ctl-period-breadcrumb-map)
-    (bind-key "C-. c" 'ctl-period-breadcrumb-map))
+  :disabled t
+  :load-path "site-lisp/bm"
+  :init
+  (defvar ctl-period-breadcrumb-map)
+  (define-prefix-command 'ctl-period-breadcrumb-map)
+  (bind-key "C-. c" 'ctl-period-breadcrumb-map)
 
   :bind (("C-. c b" . bm-last-in-previous-buffer)
          ("C-. c f" . bm-first-in-next-buffer)
@@ -1274,15 +1304,15 @@
 ;;;_ , crosshairs
 
 (use-package crosshairs
-  :init
-
-  (bind-key "M-o c" 'crosshairs-mode)
-
-  (progn
-    (toggle-crosshairs-when-idle 1)
-    (col-highlight-set-interval 120)
-    (setq col-highlight-face hl-line-face)))
-
+  :defer 10
+  :commands crosshairs-mode
+  :bind ("M-o c" . crosshairs-mode)
+  :config
+  (crosshairs-mode 1)
+  (toggle-crosshairs-when-idle 1)
+  (col-highlight-set-interval 120)
+  (setq col-highlight-face hl-line-face))
+  
 ;;;_ , css-mode
 
 (defun define-keys (mode-map keybindings)
@@ -1589,16 +1619,14 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , ediff
 
 (use-package ediff
-  :pre-init
-  (progn
-    (defvar ctl-period-equals-map)
-    (define-prefix-command 'ctl-period-equals-map)
-    (bind-key "C-. =" 'ctl-period-equals-map)
-
-    (bind-key "C-. = c" 'compare-windows)) ; not an ediff command, but it fits
+  :init
+  (defvar ctl-period-equals-map)
+  (define-prefix-command 'ctl-period-equals-map)
+  (bind-key "C-. =" 'ctl-period-equals-map)
 
   :bind (("C-. = b" . ediff-buffers)
          ("C-. = B" . ediff-buffers3)
+         ("C-. = c" . compare-windows)
          ("C-. = =" . ediff-files)
          ("C-. = f" . ediff-files)
          ("C-. = F" . ediff-files3)
@@ -1607,6 +1635,7 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
          ("C-. = P" . ediff-patch-buffer)
          ("C-. = l" . ediff-regions-linewise)
          ("C-. = w" . ediff-regions-wordwise))
+
   :config
   (use-package ediff-keep))
 
@@ -1724,10 +1753,11 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , cursor-chg
 
 (use-package cursor-chg
-  :init
-  (progn
-    (change-cursor-mode 1)
-    (toggle-cursor-type-when-idle 1)))
+  :defer 10
+  :commands change-cursor-mode
+  :config
+  (change-cursor-mode 1)
+  (toggle-cursor-type-when-idle 1))
 
 ;;;_ , erc
 
@@ -2389,9 +2419,10 @@ at the beginning of line, if already there."
 ;;;_ , flycheck
 
 (use-package flycheck
-  :init (global-flycheck-mode))
-  ;; :init
-  ;;   (hook-into-modes #'flycheck-mode '(prog-mode-hook)))
+  :load-path "site-lisp/flycheck"
+  :defer 5
+  :config
+  (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point))
 
 ;;;_ , golden-ratio
 
@@ -2439,15 +2470,21 @@ at the beginning of line, if already there."
 
 ;;;_ , guide-key
 
-;;;_ , guide-key
-
 (use-package guide-key
+  :load-path "site-lisp/guide-key"
   :diminish guide-key-mode
-  :init
-  (progn
-    (setq guide-key/guide-key-sequence
-          '("C-x r" "C-x 4" "C-x 5" "C-h e" "C-." "M-s" "M-o"))
-    (guide-key-mode 1)))
+  :commands guide-key-mode
+  :defer 10
+  :config
+  (setq guide-key/guide-key-sequence
+        '("C-."
+          "C-h e"
+          "C-x 4"
+          "C-x 5"
+          "C-x r"
+          "M-o"
+          "M-s"))
+  (guide-key-mode 1))
 
 ;;;_ , highlight-sexp
 
@@ -2585,69 +2622,71 @@ at the beginning of line, if already there."
   (interactive)
   (helm-find nil))
 
+(use-package helm-mode
+  :load-path "site-lisp/helm"
+  :defer 15
+  :commands (helm--completing-read-default helm-comp-read))
+
+(use-package helm-grep
+  :commands helm-do-grep-1
+  :bind (("M-s f" . my-helm-do-grep-r)
+         ("M-s g" . my-helm-do-grep))
+  :preface
+  (defun my-helm-do-grep ()
+    (interactive)
+    (helm-do-grep-1 (list default-directory)))
+
+  (defun my-helm-do-grep-r ()
+    (interactive)
+    (helm-do-grep-1 (list default-directory) t)))
+
+(use-package helm-swoop
+  :load-path "site-lisp/helm-swoop"
+  :bind (("M-s o" . helm-swoop)
+         ("M-s /" . helm-multi-swoop)))
+
+(use-package helm-descbinds
+  :load-path "site-lisp/helm-descbinds"
+  :bind ("C-h b" . helm-descbinds)
+  :init
+  (fset 'describe-bindings 'helm-descbinds)
+  :config
+  (require 'helm-config))
+
 (use-package helm-config
-  :demand t
-  :diminish helm-mode
-  :commands (helm-do-grep-1 helm-find)
+  :defer 10
   :bind (("C-c h"   . helm-command-prefix)
-         ("C-h a"   . helm-c-apropos)
+         ("C-h a"   . helm-apropos)
          ("C-h e a" . my-helm-apropos)
          ("C-x f"   . helm-multi-files)
-         ("C-x C-f" . helm-find-files)
          ("M-s F"   . helm-for-files)
          ("M-s b"   . helm-occur)
-         ("M-s f"   . my-helm-do-grep-r)
-         ("M-s g"   . my-helm-do-grep)
          ("M-s n"   . my-helm-find)
-         ("M-s o"   . helm-occur)
-         ("M-s s"   . helm-do-grep)
-         ("M-s r"   . helm-resume))
-  :init
-  (use-package helm-descbinds
-    :bind ("C-h b" . helm-descbinds)
-    :init
-    (fset 'describe-bindings 'helm-descbinds))
+         ("M-H"     . helm-resume))
+
+  :preface
+  (defun my-helm-find ()
+    (interactive)
+    (helm-find nil))
 
   :config
-  (progn
-    (use-package helm-commands)
-    (use-package helm-css-scss)
-    (use-package helm-ag
-      :disabled t
-      :commands (helm-ag projectile-helm-ag)
-      :bind (("M-s <escape>"  . projectile-helm-ag)
-             ("M-s A"  . helm-ag)
-             ("M-s A"  . helm-ag))
-      :config
-      (progn
-        (defun projectile-helm-ag ()
-          (interactive)
-          (helm-ag (projectile-project-root)))
-        (bind-key "M-s <escape>" 'projectile-helm-ag)))
-    (use-package helm-open-github
-      :bind (("C-. o f" . helm-open-github-from-file)
-             ("C-. o c" . helm-open-github-from-commit)
-             ("C-. o i" . helm-open-github-from-issues)
-             ("C-. o p" . helm-open-github-from-pull-requests)))
-    (use-package helm-files)
-    (use-package helm-buffers)
-    (use-package helm-grep)
-    (use-package helm-ls-git)
-    (use-package helm-match-plugin)
+  (use-package helm-commands)
+  (use-package helm-files)
+  (use-package helm-buffers)
+  (use-package helm-ls-git
+    :load-path "site-lisp/helm-ls-git")
+  (use-package helm-match-plugin)
 
-    (use-package wgrep-helm)
-    (helm-match-plugin-mode t)
-    (helm-autoresize-mode t)
+  (helm-match-plugin-mode t)
+  (helm-autoresize-mode t)
 
-    (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
-    (bind-key "C-i" 'helm-execute-persistent-action helm-map)
-    (bind-key "C-z" 'helm-select-action helm-map)
-    (bind-key "H-v" 'helm-previous-page helm-map)
-    (when (executable-find "curl")
-      (setq helm-google-suggest-use-curl-p t))))
+  (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
+  (bind-key "C-i" 'helm-execute-persistent-action helm-map)
+  (bind-key "C-z" 'helm-select-action helm-map)
+  (bind-key "H-v" 'helm-previous-page helm-map)
 
-;; (use-package helm-ls-git
-;;   :bind ("C-x f" . helm-ls-git-ls))
+  (when (executable-find "curl")
+    (setq helm-google-suggest-use-curl-p t)))
 
 ;;;_ , hi-lock
 
@@ -2716,27 +2755,73 @@ at the beginning of line, if already there."
     (exit-minibuffer)))
 
 (use-package ido
+  :demand t
   :defines (ido-cur-item
             ido-require-match
             ido-selected
             ido-final-text
             ido-show-confirm-message)
-  :init
-  (ido-mode 'buffer)
+  :bind (("C-x b" . ido-switch-buffer)
+         ("C-x B" . ido-switch-buffer-other-window)
+         ("M-x"   . ido-hacks-execute-extended-command))
+  :preface
+  (eval-when-compile
+    (defvar ido-require-match)
+    (defvar ido-cur-item)
+    (defvar ido-show-confirm-message)
+    (defvar ido-selected)
+    (defvar ido-final-text))
+
+  (defun ido-smart-select-text ()
+    "Select the current completed item.  Do NOT descend into directories."
+    (interactive)
+    (when (and (or (not ido-require-match)
+                   (if (memq ido-require-match
+                             '(confirm confirm-after-completion))
+                       (if (or (eq ido-cur-item 'dir)
+                               (eq last-command this-command))
+                           t
+                         (setq ido-show-confirm-message t)
+                         nil))
+                   (ido-existing-item-p))
+               (not ido-incomplete-regexp))
+      (when ido-current-directory
+        (setq ido-exit 'takeprompt)
+        (unless (and ido-text (= 0 (length ido-text)))
+          (let ((match (ido-name (car ido-matches))))
+            (throw 'ido
+                   (setq ido-selected
+                         (if match
+                             (replace-regexp-in-string "/\\'" "" match)
+                           ido-text)
+                         ido-text ido-selected
+                         ido-final-text ido-text)))))
+      (exit-minibuffer)))
 
   :config
-  (progn
-    (use-package ido-hacks
-      :init
-      (ido-hacks-mode 1))
+  (ido-mode 'buffer)
 
+  (use-package ido-hacks
+    :load-path "site-lisp/ido-hacks"
+    :config
+    (ido-hacks-mode 1))
 
-    (add-hook 'ido-minibuffer-setup-hook
-              #'(lambda ()
-                  (bind-key "<return>" 'ido-smart-select-text
-                            ido-file-completion-map)))))
+  (use-package ido-vertical-mode
+    :disabled t
+    :load-path "site-lisp/ido-vertical-mode"
+    :config
+    (ido-vertical-mode 1))
 
+  (use-package flx-ido
+    :disabled t
+    :load-path "site-lisp/flx"
+    :config
+    (flx-ido-mode 1))
 
+  (add-hook 'ido-minibuffer-setup-hook
+            #'(lambda ()
+                (bind-key "<return>" 'ido-smart-select-text
+                          ido-file-completion-map))))
 
 ;;;_ , iedit
 
@@ -3587,85 +3672,35 @@ and view local index.html url"
   :commands paredit-mode
   :diminish paredit-mode
   :config
-  (progn
-    (use-package paredit-ext)
+  (use-package paredit-ext)
 
-    (bind-key "C-M-l" 'paredit-recentre-on-sexp paredit-mode-map)
+  (bind-key "C-M-l" 'paredit-recentre-on-sexp paredit-mode-map)
 
-    (bind-key ")" 'paredit-close-round-and-newline paredit-mode-map)
-    (bind-key "M-)" 'paredit-close-round paredit-mode-map)
+  (bind-key ")" 'paredit-close-round-and-newline paredit-mode-map)
+  (bind-key "M-)" 'paredit-close-round paredit-mode-map)
 
-    (bind-key "M-k" 'paredit-raise-sexp paredit-mode-map)
-    ;;    (bind-key "M-h" 'mark-containing-sexp paredit-mode-map)
-    (bind-key "M-I" 'paredit-splice-sexp paredit-mode-map)
+  (bind-key "M-k" 'paredit-raise-sexp paredit-mode-map)
+  (bind-key "M-I" 'paredit-splice-sexp paredit-mode-map)
 
-    (unbind-key "M-r" paredit-mode-map)
-    (unbind-key "M-s" paredit-mode-map)
+  (unbind-key "M-r" paredit-mode-map)
+  (unbind-key "M-s" paredit-mode-map)
 
-    (bind-key "C-. d" 'paredit-forward-down paredit-mode-map)
-    (bind-key "C-. B" 'paredit-splice-sexp-killing-backward paredit-mode-map)
-    (bind-key "C-. C" 'paredit-convolute-sexp paredit-mode-map)
-    (bind-key "C-. F" 'paredit-splice-sexp-killing-forward paredit-mode-map)
-    (bind-key "C-. a" 'paredit-add-to-next-list paredit-mode-map)
-    (bind-key "C-. A" 'paredit-add-to-previous-list paredit-mode-map)
-    (bind-key "C-. j" 'paredit-join-with-next-list paredit-mode-map)
-    (bind-key "C-. J" 'paredit-join-with-previous-list paredit-mode-map)
-
-    (defun paredit-wrap-round-from-behind ()
-      (interactive)
-      (forward-sexp -1)
-      (paredit-wrap-round)
-      (insert " ")
-      (forward-char -1))
-
-    (define-key paredit-mode-map (kbd "M-)")
-      'paredit-wrap-round-from-behind)
-
-    (defun paredit--is-at-start-of-sexp ()
-      (and (looking-at "(\\|\\[")
-           (not (nth 3 (syntax-ppss))) ;; inside string
-           (not (nth 4 (syntax-ppss))))) ;; inside comment
-
-    (defun paredit-duplicate-closest-sexp ()
-      (interactive)
-      ;; skips to start of current sexp
-      (while (not (paredit--is-at-start-of-sexp))
-        (paredit-backward))
-      (set-mark-command nil)
-      ;; while we find sexps we move forward on the line
-      (while (and (bounds-of-thing-at-point 'sexp)
-                  (<= (point) (car (bounds-of-thing-at-point 'sexp)))
-                  (not (= (point) (line-end-position))))
-        (forward-sexp)
-        (while (looking-at " ")
-          (forward-char)))
-      (kill-ring-save (mark) (point))
-      ;; go to the next line and copy the sexprs we encountered
-      (paredit-newline)
-      (yank)
-      (exchange-point-and-mark))
-
-    ;; making paredit work with delete-selection-mode
-    (put 'paredit-forward-delete 'delete-selection 'supersede)
-    (put 'paredit-backward-delete 'delete-selection 'supersede)
-    (put 'paredit-open-round 'delete-selection t)
-    (put 'paredit-open-square 'delete-selection t)
-    (put 'paredit-doublequote 'delete-selection t)
-
-    (add-hook 'allout-mode-hook
-              #'(lambda ()
-                  (bind-key "M-k" 'paredit-raise-sexp allout-mode-map)
-                  ;;                  (bind-key "M-h" 'mark-containing-sexp allout-mode-map)
-                  ))))
-
-;;;_ , paren
-
-(unless (use-package mic-paren
-          :init
-          (paren-activate))
-  (use-package paren
-    :init
-    (show-paren-mode 1)))
+  (bind-key "C-. D" 'paredit-forward-down paredit-mode-map)
+  (bind-key "C-. B" 'paredit-splice-sexp-killing-backward paredit-mode-map)
+  (bind-key "C-. C" 'paredit-convolute-sexp paredit-mode-map)
+  (bind-key "C-. F" 'paredit-splice-sexp-killing-forward paredit-mode-map)
+  (bind-key "C-. a" 'paredit-add-to-next-list paredit-mode-map)
+  (bind-key "C-. A" 'paredit-add-to-previous-list paredit-mode-map)
+  (bind-key "C-. j" 'paredit-join-with-next-list paredit-mode-map)
+  (bind-key "C-. J" 'paredit-join-with-previous-list paredit-mode-map))
+(or (use-package mic-paren
+      :defer 5
+      :config
+      (paren-activate))
+    (use-package paren
+      :defer 5
+      :config
+      (show-paren-mode 1)))
 
 ;;;_ , parenface-plus
 
@@ -3674,14 +3709,17 @@ and view local index.html url"
 ;;;_ , perspective
 
 (use-package perspective
-  :init
-  (progn
-    (persp-mode)))
+  :disabled t
+  :config
+  (use-package persp-projectile)
+  (persp-mode))
 
 ;;;_ , per-window-point
 
 (use-package per-window-point
-  :init
+  :commands pwp-mode
+  :defer 5
+  :config
   (pwp-mode 1))
 
 ;;;_ , persistent-scratch
@@ -3901,7 +3939,11 @@ unless return was pressed outside the comment"
 ;;;_ , projectile
 
 (use-package projectile
+  :load-path "site-lisp/projectile"
   :diminish projectile-mode
+  :commands projectile-global-mode
+  :defer 5
+  :bind-keymap ("C-c p" . projectile-command-map)
   :init
   (progn
     (require 'grizzl)
@@ -4010,11 +4052,11 @@ unless return was pressed outside the comment"
       :bind ("C-\\" . projectile-persp-switch-project)
       )
 
-    (use-package helm-projectile
-      :init
-      (progn
-        (helm-projectile-on)
-        (bind-key "M-s P" 'helm-projectile)))))
+      (use-package helm-projectile
+    :config
+    (setq projectile-completion-system 'helm)
+    (helm-projectile-on)
+    (bind-key "M-s P" 'helm-projectile))))
 
 ;;;_ , popup-ruler
 
@@ -4323,53 +4365,47 @@ and run compass from that directory"
 (use-package session
   :if (not noninteractive)
   :load-path "site-lisp/session/lisp/"
-  :init
-  (progn
-    (session-initialize)
+  :preface
+  (defun remove-session-use-package-from-settings ()
+    (when (string= (file-name-nondirectory (buffer-file-name))
+                   "settings.el")
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "^ '(session-use-package " nil t)
+          (delete-region (line-beginning-position)
+                         (1+ (line-end-position)))))))
 
-    (defun remove-session-use-package-from-settings ()
-      (when (string= (file-name-nondirectory (buffer-file-name))
-                     "settings.el")
-        (save-excursion
-          (goto-char (point-min))
-          (when (re-search-forward "^ '(session-use-package " nil t)
-            (delete-region (line-beginning-position)
-                           (1+ (line-end-position)))))))
+  ;; expanded folded secitons as required
+  (defun le::maybe-reveal ()
+    (when (and (or (memq major-mode  '(org-mode outline-mode))
+                   (and (boundp 'outline-minor-mode)
+                        outline-minor-mode))
+               (outline-invisible-p))
+      (if (eq major-mode 'org-mode)
+          (org-reveal)
+        (show-subtree))))
 
-    (add-hook 'before-save-hook 'remove-session-use-package-from-settings)
+  (defvar server-process nil)
 
-    ;; expanded folded secitons as required
-    (defun le::maybe-reveal ()
-      (when (and (or (memq major-mode  '(org-mode outline-mode))
-                     (and (boundp 'outline-minor-mode)
-                          outline-minor-mode))
-                 (outline-invisible-p))
-        (if (eq major-mode 'org-mode)
-            (org-reveal)
-          (show-subtree))))
+  (defun save-information ()
+    (with-temp-message "Saving Emacs information..."
+      (recentf-cleanup)
 
-    (add-hook 'session-after-jump-to-last-change-hook 'le::maybe-reveal)
+      (loop for func in kill-emacs-hook
+            unless (memq func '(exit-gnus-on-exit server-force-stop))
+            do (funcall func))
 
-    (defvar server-process nil)
+      (unless (or noninteractive
+                  running-alternate-emacs
+                  (and server-process
+                       (eq 'listen (process-status server-process))))
+        (server-start))))
 
-    (defun save-information ()
-      (with-temp-message "Saving Emacs information..."
-        (recentf-cleanup)
-
-        (loop for func in kill-emacs-hook
-              unless (memq func '(exit-gnus-on-exit server-force-stop))
-              do (funcall func))
-
-        (unless (or noninteractive
-                    running-alternate-emacs
-                    (and server-process
-                         (eq 'listen (process-status server-process))))
-          (server-start))))
-
-    (run-with-idle-timer 300 t 'save-information)
-
-    (if window-system
-        (add-hook 'after-init-hook 'session-initialize t))))
+  :config
+  (add-hook 'before-save-hook 'remove-session-use-package-from-settings)
+  (add-hook 'session-after-jump-to-last-change-hook 'le::maybe-reveal)
+  (run-with-idle-timer 60 t 'save-information)
+  (add-hook 'after-init-hook 'session-initialize t))
 
 ;;;_ , shift-text
 (use-package shift-text
@@ -4546,8 +4582,8 @@ Does not delete the prompt."
   :disabled t
   :commands smart-compile
   :bind (("C-c c" . smart-compile)
-         ("A-n"   . next-error)
-         ("A-p"   . previous-error)))
+         ("H-n"   . next-error)
+         ("H-p"   . previous-error)))
 
 (defun compilation-ansi-color-process-output ()
   (ansi-color-process-output nil)
@@ -4603,15 +4639,6 @@ Does not delete the prompt."
 
 ;;;_ , smart-mode-line
 
-(use-package smart-compile
-  :disabled t
-  :commands smart-compile
-  :bind (("C-c c" . smart-compile)
-         ("A-n"   . next-error)
-         ("A-p"   . previous-error)))
-
-;;;_ , smart-mode-line
-
 (use-package smart-mode-line
   :disabled t
   :config
@@ -4633,15 +4660,6 @@ Does not delete the prompt."
   :commands (smerge-mode smerge-command-prefix)
   :init
   (setq smerge-command-prefix (kbd "C-. C-.")))
-
-;;;_ , isql
-
-(use-package sql
-  :init
-  (progn
-    (sql-set-product 'mysql)
-    ;; (load-library "sql-indent")
-    ))
 
 ;;;_ , stripe-buffer
 
@@ -4778,13 +4796,13 @@ Does not delete the prompt."
 ;;;_ , textexpander
 
 ;; (when (= 0 (call-process "using-textexpander"))
-;; (bind-key "A-v" 'scroll-down)
+;; (bind-key "H-v" 'scroll-down)
 (bind-key "H-v" 'yank)
 ;; (bind-key "M-v" 'scroll-down)
 ;; )
 
 ;; (bind-key "M-v" 'scroll-down)
-;; (bind-key "A-v" 'yank)
+;; (bind-key "H-v" 'yank)
 
 
 ;; https://github.com/anthracite/emacs-config/blob/master/init.el
@@ -5170,15 +5188,12 @@ Does not delete the prompt."
 ;;;_ , winner
 
 (use-package winner
-  :diminish winner-mode
   :if (not noninteractive)
-  :init
-  (progn
-    (winner-mode 1)
-
-    (bind-key "M-N" 'winner-redo)
-    (bind-key "M-P" 'winner-undo)))
-
+  :defer 5
+  :bind (("M-N" . winner-redo)
+         ("M-P" . winner-undo))
+  :config
+  (winner-mode 1))
 
 ;; When two windows view the same buffer at the same time, and one
 ;; window is switched to another buffer and back, point is now the
