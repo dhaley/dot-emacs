@@ -45,7 +45,7 @@
 (defsubst hook-into-modes (func &rest modes)
   (dolist (mode-hook modes) (add-hook mode-hook func)))
 
-;;;_ , Load customization settings
+;;; Load customization settings
 
 (defvar running-alternate-emacs nil)
 (defvar user-data-directory (expand-file-name "data" user-emacs-directory))
