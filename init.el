@@ -4752,7 +4752,6 @@ and run compass from that directory"
                           ,load-file-name elapsed)))
             t))
 
-
 (add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized")
 
 ;;;;; Theme ;;;;;
@@ -4768,8 +4767,6 @@ and run compass from that directory"
     (setq my-themes (append my-themes (list my-cur-theme))))
   (setq my-cur-theme (pop my-themes))
   (load-theme my-cur-theme t)
-  ;; (setq sml/theme 'respectful)
-  ;; (sml/setup)
   )
 
 (defun choose-browser (url &rest args)
@@ -4793,7 +4790,6 @@ and run compass from that directory"
               (cycle-my-theme) t)))
 
 ;; http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
-;; (bind-key "C-<tab>" 'mode-line-other-buffer)
 (bind-key "C-<escape>" 'mode-line-other-buffer)
 
 ;; Registers
@@ -4814,10 +4810,5 @@ and run compass from that directory"
          (?z (file . "~/.zshrc"))))
   (set-register (car r) (cadr r)))
 
-
-;; Local Variables:
-;;   mode: emacs-lisp
-;;   outline-regexp: "^;;;_\\([,. ]+\\)"
-;; End:
 
 ;;; init.el ends here
