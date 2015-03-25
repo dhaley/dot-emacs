@@ -3139,16 +3139,12 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 ;;;_ , mule
 
 (use-package mule
-  :init
-  (progn
-    (prefer-coding-system 'utf-8)
-    (set-terminal-coding-system 'utf-8)
-    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-    ;; set proper language (fixes cyrillic letters in ansi-term)
-    ;; (setenv "LANG" "ru_RU.UTF-8")
-    (set-fontset-font t 'unicode "Symbola" nil 'prepend)
-    ;; override font for cyrillic characters
-    (set-fontset-font t 'cyrillic "Droid Sans Mono")))
+  :no-require t
+  :defines x-select-request-type
+  :config
+  (prefer-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 
 ;;;_ , multi-term
 
@@ -3172,33 +3168,18 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
       (switch-to-buffer term-buffer)))
 
   :config
-  (progn
-    (if t
-        (defalias 'my-term-send-raw-at-prompt 'term-send-raw)
-      (defun my-term-send-raw-at-prompt ()
-        (interactive)
-        (if (save-excursion
-              (search-backward " $ " (line-beginning-position) t))
-            (progn
-              (if (memq 'meta (event-modifiers last-command-event))
-                  (progn
-                    (term-send-raw-string
-                     (format "\e%c"
-                             (logand last-command-event (lognot #x8000000)))))
-                (call-interactively #'term-send-raw)))
-          (call-interactively (lookup-key (current-global-map)
-                                          (vector last-command-event))))))
+  (defalias 'my-term-send-raw-at-prompt 'term-send-raw)
 
-    (defun my-term-end-of-buffer ()
-      (interactive)
-      (call-interactively #'end-of-buffer)
-      (if (and (eobp) (bolp))
-          (delete-char -1)))
+  (defun my-term-end-of-buffer ()
+    (interactive)
+    (call-interactively #'end-of-buffer)
+    (if (and (eobp) (bolp))
+        (delete-char -1)))
 
-    (require 'term)
+  (require 'term)
 
-    (defadvice term-process-pager (after term-process-rebind-keys activate)
-      (define-key term-pager-break-map  "\177" 'term-pager-back-page))))
+  (defadvice term-process-pager (after term-process-rebind-keys activate)
+    (define-key term-pager-break-map  "\177" 'term-pager-back-page)))
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
