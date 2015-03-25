@@ -1010,6 +1010,8 @@
   :init
   (auto-dim-other-buffers-mode 1))
 
+
+
 ;;;_ , autorevert
 
 (use-package autorevert
@@ -3292,47 +3294,6 @@ and view local index.html url"
 (use-package org-link-minor-mode
   :commands org-link-minor-mode)
 
-;;;_ , outline-mode
-
-;; (use-package outline
-;;   ;; :diminish outline-mode
-;;   :init (add-hook 'prog-mode-hook 'outline-minor-mode)
-;;   :config
-;;   (progn
-;;     (use-package outshine
-;;       :commands outshine-hook-function
-;;       :diminish ""
-;;       :init
-;;       (progn
-;;         (add-hook  'outline-minor-mode-hook 'outshine-hook-function)))))
-
-;; (use-package outorg
-;;   :commands outorg-edit-as-org
-;;   :config
-;;   (defun outshine-use-outorg (fun &optional whole-buffer-p &rest funargs)
-;;     "Use outorg to call FUN with FUNARGS on subtree.
-
-;; FUN should be an Org-mode function that acts on the subtree at
-;; point. Optionally, with WHOLE-BUFFER-P non-nil,
-;; `outorg-edit-as-org' can be called on the whole buffer.
-
-;; Sets the variable `outshine-use-outorg-last-headline-marker' so
-;; that it always contains a point-marker to the last headline this
-;; function was called upon.
-
-;; The old marker is removed first. Then a new point-marker is
-;; created before `outorg-edit-as-org' is called on the headline."
-;;     (save-excursion
-;;       (unless (outline-on-heading-p)
-;;         (outline-previous-heading))
-;;       (outshine--set-outorg-last-headline-marker)
-;;       (if whole-buffer-p
-;;           (outorg-edit-as-org '(4))
-;;         (outorg-edit-as-org))
-;;       (if funargs
-;;           (funcall fun funargs)
-;;         (funcall fun))
-;;       (outorg-copy-edits-and-exit))))
 
 ;;;_ , owdriver
 (use-package owdriver
@@ -4746,57 +4707,65 @@ Does not delete the prompt."
   :commands (whitespace-buffer
              whitespace-cleanup
              whitespace-mode)
+  :defines (whitespace-auto-cleanup
+            whitespace-rescan-timer-time
+            whitespace-silent)
+  :preface
+  (defun normalize-file ()
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (whitespace-cleanup)
+      (delete-trailing-whitespace)
+      (goto-char (point-max))
+      (delete-blank-lines)
+      (set-buffer-file-coding-system 'unix)
+      (goto-char (point-min))
+      (while (re-search-forward "\r$" nil t)
+        (replace-match ""))
+      (set-buffer-file-coding-system 'utf-8)
+      (let ((require-final-newline t))
+        (save-buffer))))
+
+  (defun maybe-turn-on-whitespace ()
+    "Depending on the file, maybe clean up whitespace."
+    (let ((file (expand-file-name ".clean"))
+          parent-dir)
+      (while (and (not (file-exists-p file))
+                  (progn
+                    (setq parent-dir
+                          (file-name-directory
+                           (directory-file-name
+                            (file-name-directory file))))
+                    ;; Give up if we are already at the root dir.
+                    (not (string= (file-name-directory file)
+                                  parent-dir))))
+        ;; Move up to the parent dir and try again.
+        (setq file (expand-file-name ".clean" parent-dir)))
+      ;; If we found a change log in a parent, use that.
+      (when (and (file-exists-p file)
+                 (not (file-exists-p ".noclean"))
+                 (not (and buffer-file-name
+                           (string-match "\\.texi\\'" buffer-file-name))))
+        (add-hook 'write-contents-hooks
+                  #'(lambda () (ignore (whitespace-cleanup))) nil t)
+        (whitespace-cleanup))))
+
   :init
-  (progn
-
-    (defun normalize-file ()
-      (interactive)
-      (save-excursion
-        (goto-char (point-min))
-        (whitespace-cleanup)
-        (delete-trailing-whitespace)
-        (goto-char (point-max))
-        (delete-blank-lines)
-        (set-buffer-file-coding-system 'unix)
-        (goto-char (point-min))
-        (while (re-search-forward "\r$" nil t)
-          (replace-match ""))
-        (set-buffer-file-coding-system 'utf-8)
-        (let ((require-final-newline t))
-          (save-buffer))))
-
-    (defun maybe-turn-on-whitespace ()
-      "Depending on the file, maybe clean up whitespace."
-      (let ((file (expand-file-name ".clean"))
-            parent-dir)
-        (while (and (not (file-exists-p file))
-                    (progn
-                      (setq parent-dir
-                            (file-name-directory
-                             (directory-file-name
-                              (file-name-directory file))))
-                      ;; Give up if we are already at the root dir.
-                      (not (string= (file-name-directory file)
-                                    parent-dir))))
-          ;; Move up to the parent dir and try again.
-          (setq file (expand-file-name ".clean" parent-dir)))
-        ;; If we found a change log in a parent, use that.
-        (when (and (file-exists-p file)
-                   (not (file-exists-p ".noclean"))
-                   (not (and buffer-file-name
-                             (string-match "\\.texi\\'" buffer-file-name))))
-          (add-hook 'write-contents-hooks
-                    #'(lambda ()
-                        (ignore (whitespace-cleanup))) nil t)
-          (whitespace-cleanup))))
-
-    (add-hook 'find-file-hooks 'maybe-turn-on-whitespace t))
+  (hook-into-modes 'whitespace-mode 'prog-mode-hook 'c-mode-common-hook)
+  (add-hook 'find-file-hooks 'maybe-turn-on-whitespace t)
 
   :config
-  (progn
-    (remove-hook 'find-file-hooks 'whitespace-buffer)
-    (remove-hook 'kill-buffer-hook 'whitespace-buffer)))
+  (remove-hook 'find-file-hooks 'whitespace-buffer)
+  (remove-hook 'kill-buffer-hook 'whitespace-buffer)
 
+  ;; For some reason, having these in settings.el gets ignored if whitespace
+  ;; loads lazily.
+  (setq whitespace-auto-cleanup t
+        whitespace-line-column 80
+        whitespace-rescan-timer-time nil
+        whitespace-silent t
+        whitespace-style '(face trailing lines space-before-tab empty)))
 
 ;;;_ , web-mode
 
@@ -4950,48 +4919,46 @@ Does not delete the prompt."
 ;;;_ , yasnippet
 
 (use-package yasnippet
-  :if (not noninteractive)
+  :load-path "site-lisp/yasnippet"
   :diminish yas-minor-mode
-  :commands (yas-minor-mode yas-expand)
+  :commands (yas-expand yas-minor-mode)
+  :functions (yas-guess-snippet-directories yas-table-name)
+  :defines (yas-guessed-modes)
   :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
-  :init
-  (hook-into-modes #'(lambda () (yas-minor-mode 1))
-                   '(prog-mode-hook
-                     org-mode-hook
-                     ruby-mode-hook
-                     message-mode-hook
-                     gud-mode-hook
-                     erc-mode-hook))
+  :bind (("C-c y TAB" . yas-expand)
+         ("C-c y s"   . yas-insert-snippet)
+         ("C-c y n"   . yas-new-snippet)
+         ("C-c y v"   . yas-visit-snippet-file))
+  :preface
+  (defun yas-new-snippet (&optional choose-instead-of-guess)
+    (interactive "P")
+    (let ((guessed-directories (yas-guess-snippet-directories)))
+      (switch-to-buffer "*new snippet*")
+      (erase-buffer)
+      (kill-all-local-variables)
+      (snippet-mode)
+      (set (make-local-variable 'yas-guessed-modes)
+           (mapcar #'(lambda (d)
+                       (intern (yas-table-name (car d))))
+                   guessed-directories))
+      (unless (and choose-instead-of-guess
+                   (not (y-or-n-p "Insert a snippet with useful headers? ")))
+        (yas-expand-snippet
+         (concat "\n"
+                 "# -*- mode: snippet -*-\n"
+                 "# name: $1\n"
+                 "# --\n"
+                 "$0\n")))))
+
   :config
-  (progn
-    (yas-load-directory (expand-file-name "snippets/" user-emacs-directory))
+  (yas-load-directory "~/.emacs.d/snippets/")
 
-    (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap)
+  (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap)
 
-    (defun yas-new-snippet (&optional choose-instead-of-guess)
-      (interactive "P")
-      (let ((guessed-directories (yas-guess-snippet-directories)))
-        (switch-to-buffer "*new snippet*")
-        (erase-buffer)
-        (kill-all-local-variables)
-        (snippet-mode)
-        (set (make-local-variable 'yas-guessed-modes)
-             (mapcar #'(lambda (d)
-                         (intern (yas-table-name (car d))))
-                     guessed-directories))
-        (unless (and choose-instead-of-guess
-                     (not (y-or-n-p "Insert a snippet with useful headers? ")))
-          (yas-expand-snippet "\
-# -*- mode: snippet -*-
-# name: $1
-# --
-$0"))))
-
-    (bind-key "C-c y TAB" 'yas-expand)
-    (bind-key "C-c y n" 'yas-new-snippet)
-    (bind-key "C-c y f" 'yas-find-snippets)
-    (bind-key "C-c y r" 'yas-reload-all)
-    (bind-key "C-c y v" 'yas-visit-snippet-file)))
+  (hook-into-modes #'yas-minor-mode
+                   'prog-mode-hook
+                   'org-mode-hook
+                   'message-mode-hook))
 
 ;;;_ , yaoddmuse
 
