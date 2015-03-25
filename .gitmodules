@@ -910,3 +910,21 @@
 [submodule "site-lisp/json-snatcher"]
 	path = site-lisp/json-snatcher
 	url = git@github.com:Sterlingg/json-snatcher.git
+[submodule "site-lisp/emacs-eclim"]
+	path = site-lisp/emacs-eclim
+	url = git@github.com:senny/emacs-eclim.git
+[submodule "site-lisp/dired-toggle"]
+	path = site-lisp/dired-toggle
+	url = git@github.com:fasheng/dired-toggle.git
+[submodule "site-lisp/cucumber"]
+	path = site-lisp/cucumber
+	url = git@github.com:michaelklishin/cucumber.el.git
+[submodule "site-lisp/helm-swoop"]
+	path = site-lisp/helm-swoop
+	url = git@github.com:ShingoFukuyama/helm-swoop.git
+[submodule "site-lisp/lua-mode"]
+	path = site-lisp/lua-mode
+	url = git@github.com:immerrr/lua-mode.git
+[submodule "site-lisp/switch-window"]
+	path = site-lisp/switch-window
+	url = git@github.com:dimitri/switch-window.git
