@@ -916,6 +916,7 @@ Keys are in kbd format."
   :config (ace-link-setup-default))
 
 (use-package ace-jump-mode
+  :load-path "site-lisp/ace-jump-mode"
   :bind ("M-h" . ace-jump-mode)
   :config
   (setq ace-jump-mode-submode-list
@@ -3846,6 +3847,11 @@ unless return was pressed outside the comment"
       (forward-char))
     (call-interactively 'newline-and-indent))
 
+  (defun my-ruby-mode-hook ()
+    (require 'inf-ruby)
+    (inf-ruby-keys)
+    (bind-key "<return>" 'my-ruby-smart-return ruby-mode-map)
+    (bind-key "C-h C-i" 'helm-yari ruby-mode-map))
 
 (use-package saveplace
   :config
@@ -3853,6 +3859,7 @@ unless return was pressed outside the comment"
     (setq-default save-place t)
     ;; Keep places in the load path
     (setq save-place-file "~/Documents/places")))
+  (add-hook 'ruby-mode-hook 'my-ruby-mode-hook))
 
 (use-package sass-mode
   :disabled t
@@ -4255,6 +4262,7 @@ and run compass from that directory"
             5))))))
 
 (use-package tiny
+  :load-path "site-lisp/tiny"
   :bind ("C-. N" . tiny-expand))
 
 (use-package tramp-sh
@@ -4623,6 +4631,7 @@ and run compass from that directory"
 
 (use-package workgroups
   :disabled t
+  :load-path "site-lisp/workgroups"
   :diminish workgroups-mode
   :if (not noninteractive)
   :init
