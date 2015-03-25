@@ -4,6 +4,7 @@
 
 (setq message-log-max 16384)
 
+
 (eval-and-compile
   (mapc
    #'(lambda (path)
@@ -110,7 +111,7 @@
 (use-package pos-tip        :defer t :load-path "lib/pos-tip")
 (use-package s              :defer t :load-path "lib/s-el")
 (use-package working        :defer t)
-(use-package xml-rpc        :defer t)
+;; (use-package xml-rpc        :defer t)
 
 ;;; Keybindings
 
@@ -1216,13 +1217,15 @@ Keys are in kbd format."
   :load-path "site-lisp/bookmark-plus"
   :defer 10
   :config
-  (use-package bookmark+))
+  (use-package bookmark+
+    :load-path "site-lisp/bookmark-plus"))
 
 (use-package browse-kill-ring+
   :defer 10
   :commands browse-kill-ring)
 
 (use-package buffer-move
+  :load-path "site-lisp/buffer-move"
   :bind (
          ("<C-S-up>"    . buf-move-up)
          ("<C-S-down>"  . buf-move-down)
@@ -1301,6 +1304,7 @@ Keys are in kbd format."
   (setq col-highlight-face hl-line-face)))
 
 (use-package css-mode
+  :load-path "site-lisp/css-mode"
   :mode ("\\.css$" . css-mode)
   :config
   (progn
@@ -1361,9 +1365,9 @@ Keys are in kbd format."
 
   :config
   (use-package dired-x)
-  (use-package dired+
-    :config
-    (unbind-key "M-s f" dired-mode-map))
+  ;; (use-package dired+
+  ;;   :config
+  ;;   (unbind-key "M-s f" dired-mode-map))
 
   (bind-key "l" 'dired-up-directory dired-mode-map)
 
@@ -2013,6 +2017,7 @@ Keys are in kbd format."
     (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
 
 (use-package feature-mode
+  :load-path "site-lisp/cucumber"
   :mode ("\\.feature$" . feature-mode))
 
 (use-package fetchmail-mode
@@ -2053,9 +2058,6 @@ Keys are in kbd format."
   :load-path "site-lisp/emacs-git-messenger"
   :bind ("C-x v m" . git-messenger:popup-message))
 
-(use-package git-blame
-  :commands git-blame-mode)
-
 (use-package git-wip-mode
   :load-path "site-lisp/git-wip/emacs/"
   :diminish git-wip-mode
@@ -2072,7 +2074,8 @@ Keys are in kbd format."
           gnus-home-directory "~/Messages/Gnus/"))
   :config
   (progn
-    (use-package org-mime)
+    (use-package org-mime
+      :load-path "override/org-mode/contrib/lisp")
     (setq org-mime-library 'mml)))
 
 (use-package golden-ratio
@@ -2179,19 +2182,9 @@ Keys are in kbd format."
           "M-s"))
   (guide-key-mode 1))
 
-(use-package hl-sexp
-  :commands hl-sexp-mode
-  :config
-  (progn
-    (hook-into-modes 'hl-sexp-mode
-                     '(prog-mode-hook))))
-
 (use-package highlight-symbol
   :disabled t
   :commands (highlight-symbol-prev highlight-symbol-next highlight-symbol-at-point highlight-symbol-query-replace))
-
-(use-package highlight-tail
-  :commands highlight-tail-mode)
 
 (use-package helm-mode
   :load-path "site-lisp/helm"
@@ -3008,18 +3001,18 @@ Keys are in kbd format."
   :config
   (setenv "GIT_PAGER" "")
 
-  (use-package magit-backup
-    :diminish magit-backup-mode)
+  ;; (use-package magit-backup
+  ;;   :diminish magit-backup-mode)
 
-  (use-package magit-review
-    :disabled t
-    :commands magit-review
-    :config
-    (use-package json))
+  ;; (use-package magit-review
+  ;;   :disabled t
+  ;;   :commands magit-review
+  ;;   :config
+  ;;   (use-package json))
 
-  (use-package magit-commit
-    :config
-    (remove-hook 'server-switch-hook 'magit-commit-diff))
+  ;; (use-package magit-commit
+  ;;   :config
+  ;;   (remove-hook 'server-switch-hook 'magit-commit-diff))
 
   (unbind-key "M-h" magit-mode-map)
   (unbind-key "M-s" magit-mode-map)
@@ -3767,9 +3760,6 @@ unless return was pressed outside the comment"
              insert-patterned-3
              insert-patterned-4))
 
-(use-package rotate-text
-  :commands (rotate-text rotate-text-backward))
-
 (use-package ruby-mode
   :load-path "site-lisp/ruby-mode"
   :mode ("\\.rb\\'" . ruby-mode)
@@ -3926,9 +3916,6 @@ and run compass from that directory"
          ("<M-left>" .  shift-text-left)
          ("<M-up>" .  shift-text-up)
          ("<M-down>" .  shift-text-down)))
-
-(use-package sh-mode
-  :mode ("\\.bashrc\\|\\.bash_alias\\|\\.sh\\|.bash_history\\|alias$" . sh-mode))
 
 (use-package sh-script
   :defer t
@@ -4177,6 +4164,7 @@ and run compass from that directory"
         (sr-beginning-of-buffer)))))
 
 (use-package switch-window
+  :load-path "site-lisp/switch-windo"
   :bind ("C-x o" . switch-window))
 
 (use-package tablegen-mode
@@ -4680,11 +4668,6 @@ and run compass from that directory"
                    'prog-mode-hook
                    'org-mode-hook
                    'message-mode-hook))
-
-(use-package yaoddmuse
-  :bind (("C-c w f" . yaoddmuse-browse-page-default)
-         ("C-c w e" . yaoddmuse-edit-default)
-         ("C-c w p" . yaoddmuse-post-library-default)))
 
 (use-package zoom-window
   :bind ("H-z" . zoom-window-zoom))
