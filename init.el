@@ -2005,319 +2005,48 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 ;;;_ , eshell
 
-(defvar eshell-isearch-map
-  (let ((map (copy-keymap isearch-mode-map)))
-    (define-key map [(control ?m)] 'eshell-isearch-return)
-    (define-key map [return] 'eshell-isearch-return)
-    (define-key map [(control ?r)] 'eshell-isearch-repeat-backward)
-    (define-key map [(control ?s)] 'eshell-isearch-repeat-forward)
-    (define-key map [(control ?g)] 'eshell-isearch-abort)
-    (define-key map [backspace] 'eshell-isearch-delete-char)
-    (define-key map [delete] 'eshell-isearch-delete-char)
-    map)
-  "Keymap used in isearch in Eshell.")
-
 (use-package eshell
   :commands (eshell eshell-command)
-  :config
-  (progn
-    (defun eshell-initialize ()
-      (defun eshell-spawn-external-command (beg end)
-        "Parse and expand any history references in current input."
-        (save-excursion
-          (goto-char end)
-          (when (looking-back "&!" beg)
-            (delete-region (match-beginning 0) (match-end 0))
-            (goto-char beg)
-            (insert "spawn "))))
+  :preface
+  (defvar eshell-isearch-map
+    (let ((map (copy-keymap isearch-mode-map)))
+      (define-key map [(control ?m)] 'eshell-isearch-return)
+      (define-key map [return]       'eshell-isearch-return)
+      (define-key map [(control ?r)] 'eshell-isearch-repeat-backward)
+      (define-key map [(control ?s)] 'eshell-isearch-repeat-forward)
+      (define-key map [(control ?g)] 'eshell-isearch-abort)
+      (define-key map [backspace]    'eshell-isearch-delete-char)
+      (define-key map [delete]       'eshell-isearch-delete-char)
+      map)
+    "Keymap used in isearch in Eshell.")
 
-      (add-hook 'eshell-expand-input-functions 'eshell-spawn-external-command)
+  (defun eshell-initialize ()
+    (defun eshell-spawn-external-command (beg end)
+      "Parse and expand any history references in current input."
+      (save-excursion
+        (goto-char end)
+        (when (looking-back "&!" beg)
+          (delete-region (match-beginning 0) (match-end 0))
+          (goto-char beg)
+          (insert "spawn "))))
 
-      (defun ss (server)
-        (interactive "sServer: ")
-        (call-process "spawn" nil nil nil "ss" server))
+    (add-hook 'eshell-expand-input-functions 'eshell-spawn-external-command)
 
-      (eval-after-load "em-unix"
-        '(progn
-           (unintern 'eshell/su)
-           (unintern 'eshell/sudo)))
+    (defun ss (server)
+      (interactive "sServer: ")
+      (call-process "spawn" nil nil nil "ss" server))
 
-      (setq eshell-prompt-regexp "^[^#$]*[#$] ")
+    (use-package em-unix
+      :defer t
+      :config
+      (unintern 'eshell/su nil)
+      (unintern 'eshell/sudo nil)))
 
-      (load "em-hist")           ; So the history vars are defined
-      (if (boundp 'eshell-save-history-on-exit)
-          (setq eshell-save-history-on-exit t)) ; Don't ask, just save
-                                        ;(message "eshell-ask-to-save-history is %s" eshell-ask-to-save-history)
-      (if (boundp 'eshell-ask-to-save-history)
-          (setq eshell-ask-to-save-history 'always)) ; For older(?) version
-                                        ;(message "eshell-ask-to-save-history is %s" eshell-ask-to-save-history)
+  :init
+  (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
 
-      (defun eshell/ef (fname-regexp &rest dir) (ef fname-regexp default-directory))
-
-
-;;; ---- path manipulation
-
-      (defun pwd-repl-home (pwd)
-        (interactive)
-        (let* ((home (expand-file-name (getenv "HOME")))
-               (home-len (length home)))
-          (if (and
-               (>= (length pwd) home-len)
-               (equal home (substring pwd 0 home-len)))
-              (concat "~" (substring pwd home-len))
-            pwd)))
-
-      (defun curr-dir-git-branch-string (pwd)
-        "Returns current git branch as a string, or the empty string if
-PWD is not in a git repo (or the git command is not found)."
-        (interactive)
-        (when (and (eshell-search-path "git")
-                   (locate-dominating-file pwd ".git"))
-          (let ((git-output (shell-command-to-string (concat "cd " pwd " && git branch | grep '\\*' | sed -e 's/^\\* //'"))))
-            (propertize (concat "["
-                                (if (> (length git-output) 0)
-                                    (substring git-output 0 -1)
-                                  "(no branch)")
-                                "]") 'face `(:foreground "green"))
-            )))
-
-      (setq eshell-prompt-function
-            (lambda ()
-              (concat
-               (propertize ((lambda (p-lst)
-                              (if (> (length p-lst) 3)
-                                  (concat
-                                   (mapconcat (lambda (elm) (if (zerop (length elm)) ""
-                                                              (substring elm 0 1)))
-                                              (butlast p-lst 3)
-                                              "/")
-                                   "/"
-                                   (mapconcat (lambda (elm) elm)
-                                              (last p-lst 3)
-                                              "/"))
-                                (mapconcat (lambda (elm) elm)
-                                           p-lst
-                                           "/")))
-                            (split-string (pwd-repl-home (eshell/pwd)) "/")) 'face `(:foreground "yellow"))
-               (or (curr-dir-git-branch-string (eshell/pwd)))
-               (propertize "# " 'face 'default))))
-
-      (setq eshell-highlight-prompt nil)
-      ;; https://github.com/anthracite/emacs-config/blob/master/init.el
-      (defun eshell-maybe-bol ()
-        "Moves point behind the eshell prompt, or
-at the beginning of line, if already there."
-        (interactive)
-        (let ((p (point)))
-          (eshell-bol)
-          (when (= p (point))
-            (beginning-of-line))))
-      (defun eshell-clear ()
-        "Clears the eshell buffer."
-        (interactive)
-        (let ((inhibit-read-only t))
-          (erase-buffer)))
-
-      (defun dkh-eshell-macs ()
-        (interactive)
-        "Creates a tool config shell and switches to it.  If a buffer with name already exists, we simply switch to it."
-        (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*"))))
-          (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
-                 (switch-to-buffer buffer-of-name))
-                ( t
-                  (progn
-                    (eshell t)
-                                        ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
-                    (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-tool-config*")))))))
-
-
-      (defun dkh-shell-with-name (name)
-        (interactive "sName: ")
-        "Creates a shell with name given by the first argument, and switches
-        to it.  If a buffer with name already exists, we simply switch to it."
-        (let ((buffer-of-name (get-buffer (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))
-              (localdir name))
-          (cond ((bufferp buffer-of-name) ;If the buffer exists, switch to it (assume it is a shell)
-                 (switch-to-buffer buffer-of-name))
-                ( t
-                  (progn
-                    (eshell)
-                                        ;(process-send-string (get-buffer-process new-buff-name) (concat "cd " localdir "\n"))
-                    (rename-buffer  (concat "*eshell-" (wg-name (wg-current-workgroup)) "-" name "*")))))))
-
-
-      (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
-
-      ;; Support for links to working directories in eshell
-      (require 'org-eshell)
-
-
-
-      ;; Make ls output be RET and mouse-2 clickable
-      ;; (load-library "esh-clickable-ls.el")
-
-
-      ;; http://www.emacswiki.org/emacs-ru/EshellEnhancedLS
-      ;; ;;This makes Eshell’s ‘ls’ file names RET-able. Yay!
-      (eval-after-load "em-ls"
-        '(progn
-           (defun ted-eshell-ls-find-file-at-point (point)
-             "RET on Eshell's `ls' output to open files."
-             (interactive "d")
-             (find-file (buffer-substring-no-properties
-                         (previous-single-property-change point 'help-echo)
-                         (next-single-property-change point 'help-echo))))
-
-           (defun pat-eshell-ls-find-file-at-mouse-click (event)
-             "Middle click on Eshell's `ls' output to open files.
-       From Patrick Anderson via the wiki."
-             (interactive "e")
-             (ted-eshell-ls-find-file-at-point (posn-point (event-end event))))
-
-           (let ((map (make-sparse-keymap)))
-             (define-key map (kbd "RET")      'ted-eshell-ls-find-file-at-point)
-             (define-key map (kbd "<return>") 'ted-eshell-ls-find-file-at-point)
-             (define-key map (kbd "<mouse-2>") 'pat-eshell-ls-find-file-at-mouse-click)
-             (defvar ted-eshell-ls-keymap map))
-
-           (defadvice eshell-ls-decorated-name (after ted-electrify-ls activate)
-             "Eshell's `ls' now lets you click or RET on file names to open them."
-             (add-text-properties 0 (length ad-return-value)
-                                  (list 'help-echo "RET, mouse-2: visit this file"
-                                        'mouse-face 'highlight
-                                        'keymap ted-eshell-ls-keymap)
-                                  ad-return-value)
-             ad-return-value)))
-
-
-      ;; Info Manual
-      ;; With the following, you can type info cvs at the eshell prompt and it will work.
-      (defun eshell/info (&optional subject)
-        "Invoke `info', optionally opening the Info system to SUBJECT."
-        (let ((buf (current-buffer)))
-          (Info-directory)
-          (if (not (null subject))
-              (let ((node-exists (ignore-errors (Info-menu subject))))
-                (if (not node-exists)
-                    (format "No menu item `%s' in node `(dir)Top'." subject))))))
-
-
-      (defun eshell/extract (file)
-        (let ((command (some (lambda (x)
-                               (if (string-match-p (car x) file)
-                                   (cadr x)))
-                             '((".*\.tar.bz2" "tar xjf")
-                               (".*\.tar.gz" "tar xzf")
-                               (".*\.bz2" "bunzip2")
-                               (".*\.rar" "unrar x")
-                               (".*\.gz" "gunzip")
-                               (".*\.tar" "tar xf")
-                               (".*\.tbz2" "tar xjf")
-                               (".*\.tgz" "tar xzf")
-                               (".*\.zip" "unzip")
-                               (".*\.Z" "uncompress")
-                               (".*" "echo 'Could not extract the file:'")))))
-          (eshell-command-result (concat command " " file))))
-
-      (defun esk-eshell-in-dir (&optional prompt)
-        "Change the directory of an existing eshell to the directory of the file in
-  the current buffer or launch a new eshell if one isn't running.  If the
-  current buffer does not have a file (e.g., a *scratch* buffer) launch or raise
-  eshell, as appropriate.  Given a prefix arg, prompt for the destination
-  directory."
-        (interactive "P")
-        (let* ((name (buffer-file-name))
-               (dir (cond (prompt (read-directory-name "Directory: " nil nil t))
-                          (name (file-name-directory name))
-                          (t nil)))
-               (buffers (delq nil (mapcar (lambda (buf)
-                                            (with-current-buffer buf
-                                              (when (eq 'eshell-mode major-mode)
-                                                (buffer-name))))
-                                          (buffer-list))))
-               (buffer (cond ((eq 1 (length buffers)) (first buffers))
-                             ((< 1 (length buffers)) (ido-completing-read
-                                                      "Eshell buffer: " buffers nil t
-                                                      nil nil (first buffers)))
-                             (t (eshell)))))
-          (with-current-buffer buffer
-            (when dir
-              (eshell/cd (list dir))
-              (eshell-send-input))
-            (end-of-buffer)
-            (pop-to-buffer buffer))))
-
-
-      (defun curr-dir-svn-string (pwd)
-        (interactive)
-        (when (and (eshell-search-path "svn")
-                   (locate-dominating-file pwd ".svn"))
-          (concat "[s:"
-                  (cond ((string-match-p "/trunk\\(/.*\\)?" pwd)
-                         "trunk")
-                        ((string-match "/branches/\\([^/]+\\)\\(/.*\\)?" pwd)
-                         (match-string 1 pwd))
-                        (t
-                         "(no branch)"))
-                  "] ")))
-
-      (add-hook 'eshell-first-time-mode-hook 'eshell-initialize)
-      (add-hook 'eshell-mode-hook
-                '(lambda ()
-                   (make-local-variable 'project-name)
-                   (local-set-key "\C-c\C-q" 'eshell-kill-process)
-                   (local-set-key "\C-c\C-k" 'compile))))
-
-    ;; http://www.masteringemacs.org/articles/2012/01/16/pcomplete-context-sensitive-completion-emacs/
-    ;;**** Git Completion
-
-    (defun pcmpl-git-commands ()
-      "Return the most common git commands by parsing the git output."
-      (with-temp-buffer
-        (call-process-shell-command "git" nil (current-buffer) nil "help" "--all")
-        (goto-char 0)
-        (search-forward "available git commands in")
-        (let (commands)
-          (while (re-search-forward
-                  "^[[:blank:]]+\\([[:word:]-.]+\\)[[:blank:]]*\\([[:word:]-.]+\\)?"
-                  nil t)
-            (push (match-string 1) commands)
-            (when (match-string 2)
-              (push (match-string 2) commands)))
-          (sort commands #'string<))))
-
-    (defconst pcmpl-git-commands (pcmpl-git-commands)
-      "List of `git' commands.")
-
-    (defvar pcmpl-git-ref-list-cmd "git for-each-ref refs/ --format='%(refname)'"
-      "The `git' command to run to get a list of refs.")
-
-    (defun pcmpl-git-get-refs (type)
-      "Return a list of `git' refs filtered by TYPE."
-      (with-temp-buffer
-        (insert (shell-command-to-string pcmpl-git-ref-list-cmd))
-        (goto-char (point-min))
-        (let ((ref-list))
-          (while (re-search-forward (concat "^refs/" type "/\\(.+\\)$") nil t)
-            (add-to-list 'ref-list (match-string 1)))
-          ref-list)))
-
-    (defun pcomplete/git ()
-      "Completion for `git'."
-      ;; Completion for the command argument.
-      (pcomplete-here* pcmpl-git-commands)
-      (cond
-       ((pcomplete-match (regexp-opt '("add" "rm" "mv")) 1)
-        (while (pcomplete-here (pcomplete-entries))))
-       ((pcomplete-match "help" 1)
-        (pcomplete-here* pcmpl-git-commands))
-       ;; provide branch completion for the command `checkout'.
-       ((pcomplete-match "checkout" 1)
-        (pcomplete-here* (pcmpl-git-get-refs "heads")))))))
-
-(use-package esh-toggle
-  :requires eshell
-  :bind ("C-x C-z" . eshell-toggle))
+  (use-package esh-toggle
+    :bind ("C-x C-z" . eshell-toggle)))
 
 ;;;_ , ess
 
@@ -3709,8 +3438,9 @@ and view local index.html url"
 ;;;_ , perspective
 
 (use-package perspective
-  :disabled t
-  :config
+  :commands persp-mode
+  :defer 5
+  :init
   (use-package persp-projectile)
   (persp-mode))
 
