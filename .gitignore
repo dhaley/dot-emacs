@@ -15,10 +15,12 @@ mirror
 override/cc-mode/
 site-lisp/.loaddefs.el
 site-lisp/.status.el
+srecode-map.el
 var/
 broken.el
 logs/
 /projectile.cache
 /auto-save-list/
 /image-dired/
-geben/
+/projectile-bookmarks.eld
+/geben/
