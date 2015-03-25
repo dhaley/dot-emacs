@@ -1,4 +1,13 @@
 ;;;_ , Gnus
+
+(eval-when-compile
+  (require 'cl))
+(require 'use-package)
+
+(eval-and-compile
+  (push (expand-file-name "override/bbdb/lisp" user-emacs-directory)
+        load-path))
+
 (load "gnus-settings")
 
 (require 'gnus)

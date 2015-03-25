@@ -1,5 +1,13 @@
 ;;;_ , Org-mode
 
+(require 'cl)
+(require 'use-package)
+
+(eval-and-compile
+  (push (expand-file-name "override/org-mode/contrib/lisp"
+                          user-emacs-directory)
+        load-path))
+
 (load "org-settings")
 
 (require 'org)

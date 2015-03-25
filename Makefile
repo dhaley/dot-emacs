@@ -1,45 +1,43 @@
 ## -*- mode: makefile-gmake -*-
 
 DIRS	    = override lib lisp site-lisp
-SPECIAL	    = cus-dirs.el autoloads.el
-INIT_SOURCE = $(wildcard *.el)
+SUBDIRS     = $(shell find $(DIRS) -maxdepth 2 ! -name .git -type d -print)
 LIB_SOURCE  = $(wildcard override/*.el) $(wildcard lib/*.el) \
 	      $(wildcard lisp/*.el) $(wildcard site-lisp/*.el)
-TARGET	    = autoloads.elc $(patsubst %.el,%.elc, $(LIB_SOURCE))
+TARGET	    = $(patsubst %.el,%.elc, $(LIB_SOURCE)) \
+              $(patsubst %.el,%.elc, dot-gnus.el dot-org.el init.el)
 EMACS	    = emacs
 EMACS_BATCH = $(EMACS) -Q -batch
-MY_LOADPATH = -L . $(patsubst %,-L %,$(DIRS))
+MY_LOADPATH = -L . $(patsubst %,-L %, $(SUBDIRS))
 BATCH_LOAD  = $(EMACS_BATCH) $(MY_LOADPATH)
 
-all: $(SPECIAL) $(TARGET)
-	for dir in $(DIRS); do \
-	    $(BATCH_LOAD) -f batch-byte-recompile-directory $$dir; \
+all: $(TARGET)
+
+compile:
+	for i in $(DIRS); do \
+		$(BATCH_LOAD) --eval '(batch-byte-recompile-directory 0)' $$i; \
 	done
 
-cus-dirs.el: Makefile $(LIB_SOURCE)
-	$(EMACS_BATCH) -l cus-dep -f custom-make-dependencies $(DIRS)
-	mv cus-load.el cus-dirs.el
+init.elc: init.el dot-org.elc dot-gnus.elc
+	@rm -f $@
+	@echo Compiling file init.el
+	@$(BATCH_LOAD) -f batch-byte-compile init.el
 
-autoloads.el: Makefile autoloads.in $(LIB_SOURCE)
-	cp -p autoloads.in autoloads.el
-	-rm -f autoloads.elc
-	$(EMACS_BATCH) -l $(shell pwd)/autoloads -l easy-mmode \
-	    -f generate-autoloads $(shell pwd)/autoloads.el $(DIRS) \
-	    $(shell find $(DIRS) -maxdepth 1 -type d -print)
+dot-org.elc: dot-org.el
+	@rm -f $@
+	@echo Compiling file dot-org.el
+	@$(BATCH_LOAD) -f batch-byte-compile dot-org.el
 
-autoloads.elc: autoloads.el
+dot-gnus.elc: dot-gnus.el
+	@rm -f $@
+	@echo Compiling file dot-gnus.el
+	@$(BATCH_LOAD) -f batch-byte-compile dot-gnus.el
 
 %.elc: %.el
-	$(BATCH_LOAD) -l load-path -f batch-byte-compile $<
-
-init.elc: init.el
-	@rm -f $@
-	$(BATCH_LOAD) -l init -f batch-byte-compile $<
+	@echo Compiling file $<
+	@$(BATCH_LOAD) -f batch-byte-compile $<
 
 clean:
-	rm -f autoloads.el* cus-dirs.el *.elc
-
-fullclean: clean
-	rm -f $(TARGET)
+	rm -f *.elc
 
 ### Makefile ends here
