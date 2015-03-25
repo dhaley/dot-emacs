@@ -74,7 +74,7 @@
                       (replace-regexp-in-string regexp replace value)))))
       (eval settings))))
 
-;;;_ , Enable disabled commands
+;;; Enable disabled commands
 
 (put 'downcase-region  'disabled nil)   ; Let downcasing work
 (put 'erase-buffer     'disabled nil)
@@ -83,6 +83,11 @@
 (put 'narrow-to-region 'disabled nil)   ; Let narrowing work
 (put 'set-goal-column  'disabled nil)
 (put 'upcase-region    'disabled nil)   ; Let upcasing work
+
+;;; Configure libraries
+
+(eval-and-compile
+  (push (expand-file-name "lib" user-emacs-directory) load-path))
 
 (use-package anaphora       :defer t :load-path "lib/anaphora")
 (use-package button-lock    :defer t :load-path "lib/button-lock")
@@ -1009,7 +1014,7 @@ Keys are in kbd format."
                                         ac-source-latex-commands)))
 
       (add-to-list 'ac-modes 'latex-mode)
-      (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
+      ;; (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
 
       (info-lookup-add-help :mode 'latex-mode
                             :regexp ".*"
