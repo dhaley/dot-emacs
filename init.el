@@ -2240,15 +2240,6 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 (use-package highlight-tail
   :commands highlight-tail-mode)
 
-;;;_ , highlight-indentation
-
-(use-package highlight-indentation
-  :commands highlight-indentation-mode
-  :config
-  (progn
-    (set-face-background 'highlight-indentation-face "#e3e3d3")
-    (set-face-background 'highlight-indentation-current-column-face "#c3b3b3")))
-
 ;;;_ , gist
 
 (use-package gist
@@ -2621,10 +2612,10 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 ;;;_ , indent-guide
 
-(use-package indent-guide
-  :init
-  (progn
-    (set-face-background 'indent-guide-face "#e3e3d3")))
+;; (use-package indent-guide
+;;   :init
+;;   (progn
+;;     (set-face-background 'indent-guide-face "#e3e3d3")))
 
 ;;;_ , info
 
