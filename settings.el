@@ -794,6 +794,7 @@
  '(sr-windows-default-ratio 80)
  '(ssl-certificate-verification-policy 1)
  '(svn-status-hide-unmodified t)
+ '(switch-to-buffer-preserve-window-point (quote already-displayed))
  '(tags-apropos-verbose t)
  '(tags-case-fold-search nil)
  '(tail-max-size 25)

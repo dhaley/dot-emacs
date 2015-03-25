@@ -412,9 +412,6 @@
 [submodule "site-lisp/butler"]
         path = site-lisp/butler
         url = git://github.com/AshtonKem/Butler.git
-[submodule "site-lisp/winpoint"]
-        path = site-lisp/winpoint
-        url = git://github.com/jorgenschaefer/winpoint.git
 [submodule "site-lisp/dash-at-point"]
         path = site-lisp/dash-at-point
         url = git://github.com/stanaka/dash-at-point.git
