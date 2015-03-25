@@ -901,3 +901,12 @@
 [submodule "lib/ht-el"]
 	path = lib/ht-el
 	url = git@github.com:Wilfred/ht.el.git
+[submodule "site-lisp/json-mode"]
+	path = site-lisp/json-mode
+	url = git@github.com:joshwnj/json-mode.git
+[submodule "site-lisp/json-reformat"]
+	path = site-lisp/json-reformat
+	url = git@github.com:gongo/json-reformat.git
+[submodule "site-lisp/json-snatcher"]
+	path = site-lisp/json-snatcher
+	url = git@github.com:Sterlingg/json-snatcher.git
