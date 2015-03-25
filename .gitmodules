@@ -517,9 +517,9 @@
 [submodule "override/tramp"]
         path = override/tramp
         url = git://git.savannah.gnu.org/tramp.git
-[submodule "site-lisp/use-package"]
-        path = site-lisp/use-package
-        url = git://github.com/jwiegley/use-package.git
+[submodule "lisp/use-package"]
+	path = lisp/use-package
+	url = git://github.com/jwiegley/use-package.git
 [submodule "site-lisp/emacs-google-this"]
         path = site-lisp/emacs-google-this
         url = git://github.com/Bruce-Connor/emacs-google-this
