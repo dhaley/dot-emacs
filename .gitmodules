@@ -373,9 +373,9 @@
 [submodule "site-lisp/drupal-mode"]
         path = site-lisp/drupal-mode
         url = git://github.com/dhaley/drupal-mode.git
-[submodule "site-lisp/f"]
-        path = site-lisp/f
-        url = git://github.com/rejeep/f.el.git
+[submodule "lib/f-el"]
+	path = lib/f-el
+	url = git://github.com/rejeep/f.el.git
 [submodule "site-lisp/projectile"]
         path = site-lisp/projectile
         url = git@github.com:dhaley/projectile.git
@@ -469,9 +469,9 @@
 [submodule "lib/epl"]
         path = lib/epl
         url = git://github.com/cask/epl.git
-[submodule "site-lisp/makey"]
-        path = site-lisp/makey
-        url = git://github.com/mickeynp/makey.git
+[submodule "lib/makey"]
+	path = lib/makey
+	url = git://github.com/mickeynp/makey.git
 [submodule "site-lisp/ht"]
         path = site-lisp/ht
         url = git://github.com/Wilfred/ht.el.git
@@ -772,9 +772,9 @@
 [submodule "site-lisp/emamux"]
         path = site-lisp/emamux
         url = https://github.com/syohex/emacs-emamux.git
-[submodule "site-lisp/anaphora"]
-        path = site-lisp/anaphora
-        url = git@github.com:rolandwalker/anaphora.git
+[submodule "lib/anaphora"]
+	path = lib/anaphora
+	url = git@github.com:rolandwalker/anaphora.git
 [submodule "site-lisp/company-mode"]
         path = site-lisp/company-mode
         url = git@github.com:company-mode/company-mode.git
@@ -895,3 +895,6 @@
 [submodule "site-lisp/helm-open-github"]
 	path = site-lisp/helm-open-github
 	url = git@github.com:syohex/emacs-helm-open-github.git
+[submodule "lib/s-el"]
+	path = lib/s-el
+	url = git@github.com:magnars/s.el.git
