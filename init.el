@@ -4358,7 +4358,6 @@ Does not delete the prompt."
     (add-to-list 'sml/replacer-regexp-list '("^~/Documents/Tasks/" ":Task:"))
     (sml/setup)))
 
-
 ;;;_ , smartparens
 
 (use-package smartparens
@@ -4643,9 +4642,6 @@ Does not delete the prompt."
   end tell"))))
         (w3m-browse-url (substring url 1 (1- (length url))) t)))
 
-    (use-package popwin-w3m
-      :load-path "site-lisp/popwin/misc/")
-
     (bind-key "H-M-e" 'goto-emacswiki)
     (bind-key "H-M-g" 'w3m-search)
     (bind-key "H-M-w" 'wikipedia-query))
@@ -4713,12 +4709,7 @@ Does not delete the prompt."
          ("C-. SPC" . toolbox:execute-and-replace))
   :init
   (progn
-    (require 'load-functions)
-    (use-package popwin
-      :init
-      (progn
-        (popwin-mode 1)
-        (add-to-list 'popwin:special-display-config `("*ag*" :noselect t)))))
+    (require 'load-functions))
   :config
   (progn
     (setq wand:*rules*
