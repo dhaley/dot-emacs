@@ -217,9 +217,9 @@
 [submodule "site-lisp/redshank"]
         path = site-lisp/redshank
         url = git://github.com/emacsmirror/redshank.git
-[submodule "site-lisp/dash"]
-        path = site-lisp/dash
-        url = git://github.com/magnars/dash.el.git
+[submodule "lib/dash-el"]
+	path = lib/dash-el
+	url = git://github.com/magnars/dash.el.git
 [submodule "site-lisp/nodejs-mode"]
         path = site-lisp/nodejs-mode
         url = git://github.com/emacsmirror/nodejs-mode.git
@@ -898,3 +898,9 @@
 [submodule "lib/s-el"]
 	path = lib/s-el
 	url = git@github.com:magnars/s.el.git
+[submodule "lib/pos-tip"]
+	path = lib/pos-tip
+	url = git@github.com:tjarvstrand/pos-tip.git
+[submodule "lib/ht-el"]
+	path = lib/ht-el
+	url = git@github.com:Wilfred/ht.el.git
