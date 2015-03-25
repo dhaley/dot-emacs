@@ -1,10 +1,6 @@
-(defconst emacs-start-time (current-time))
-(unless noninteractive
-  (message "Loading %s..." load-file-name))
+message "Loading %s..." load-file-name))
 
 (setq message-log-max 16384)
-
-(load (expand-file-name "load-path" (file-name-directory load-file-name)))
 
 (eval-and-compile
   (mapc
