@@ -924,6 +924,7 @@ Keys are in kbd format."
           ace-jump-line-mode)))
 
 (use-package ace-isearch
+  :load-path "site-lisp/ace-isearch"
   :disabled t
   :config
   (global-ace-isearch-mode 1))
@@ -968,6 +969,7 @@ Keys are in kbd format."
   (char-mapping "H-=" " ≡ "))
 
 (use-package alert
+  :load-path "lisp/alert"
   :commands alert)
 
 (use-package allout
@@ -1363,6 +1365,7 @@ Keys are in kbd format."
 
 (use-package debbugs-gnu
   :disabled t
+  :load-path "site-lisp/debbugs"
   :commands (debbugs-gnu debbugs-gnu-search))
 
 (use-package dedicated
@@ -2017,16 +2020,16 @@ Keys are in kbd format."
   :bind ("M-T" . tags-search))
 
 (use-package eval-expr
+  :load-path "site-lisp/eval-expr"
   :bind ("M-:" . eval-expr)
   :config
-  (progn
-    (setq eval-expr-print-function 'pp
-          eval-expr-print-level 20
-          eval-expr-print-length 100)
+  (setq eval-expr-print-function 'pp
+        eval-expr-print-level 20
+        eval-expr-print-length 100)
 
-    (defun eval-expr-minibuffer-setup ()
-      (set-syntax-table emacs-lisp-mode-syntax-table)
-      (paredit-mode))))
+  (defun eval-expr-minibuffer-setup ()
+    (set-syntax-table emacs-lisp-mode-syntax-table)
+    (paredit-mode)))
 
 (use-package eww
   :bind ("H-M-g" . eww)
@@ -2087,6 +2090,7 @@ Keys are in kbd format."
   (unbind-key "C-." flyspell-mode-map))
 
 (use-package gist
+  :load-path "site-lisp/gist"
   :bind ("C-c G" . gist-region-or-buffer))
 
 (use-package github-browse-file
@@ -2101,11 +2105,12 @@ Keys are in kbd format."
 
 (use-package git-wip-mode
   :load-path "site-lisp/git-wip/emacs/"
-  :demand t
-  :diminish git-wip-mode)
+  :diminish git-wip-mode
+  :commands git-wip-mode
+  :init (add-hook 'find-file-hook #'(lambda () (git-wip-mode 1))))
 
 (use-package dot-gnus
-  :if (not running-alternate-emacs)
+  :load-path "override/gnus"
   :bind (("M-G"   . switch-to-gnus)
          ("C-x m" . compose-mail))
   :init
@@ -2184,22 +2189,20 @@ Keys are in kbd format."
      '("find . -type f -print0 | xargs -P4 -0 egrep -nH " . 49))))
 
 (use-package gud
+  :disabled t
   :commands gud-gdb
+  :bind ("C-. g" . show-debugger)
   :init
-  (progn
-    (defun show-debugger ()
-      (interactive)
-      (let ((gud-buf
-             (catch 'found
-               (dolist (buf (buffer-list))
-                 (if (string-match "\\*gud-" (buffer-name buf))
-                     (throw 'found buf))))))
-        (if gud-buf
-            (switch-to-buffer-other-window gud-buf)
-          (call-interactively 'gud-gdb))))
-
-    (bind-key "C-. g" 'show-debugger))
-
+  (defun show-debugger ()
+    (interactive)
+    (let ((gud-buf
+           (catch 'found
+             (dolist (buf (buffer-list))
+               (if (string-match "\\*gud-" (buffer-name buf))
+                   (throw 'found buf))))))
+      (if gud-buf
+          (switch-to-buffer-other-window gud-buf)
+        (call-interactively 'gud-gdb))))
   :config
   (progn
     (bind-key "<f9>" 'gud-cont)
@@ -2529,13 +2532,11 @@ Keys are in kbd format."
 
 (use-package hl-line
   :commands hl-line-mode
-  :bind ("M-o h" . hl-line-mode)
+  :bind (("M-o h" . hl-line-mode))
   :config
-  (progn
-  (use-package hl-line+)))
+  (use-package hl-line+))
 
 (use-package ibuffer
-  :disabled t
   :bind ("C-x C-b" . ibuffer)
   :init
   (add-hook 'ibuffer-mode-hook
@@ -2675,7 +2676,7 @@ Keys are in kbd format."
 
 (use-package image-file
   :disabled t
-  :init
+  :config
   (auto-image-file-mode 1))
 
 (use-package info
@@ -2926,6 +2927,7 @@ Keys are in kbd format."
   :mode ("\\.ll\\'" . llvm-mode))
 
 (use-package lua-mode
+  :load-path "site-lisp/lua-mode"
   :mode ("\\.lua\\'" . lua-mode)
   :interpreter ("lua" . lua-mode))
 
@@ -3191,39 +3193,38 @@ Keys are in kbd format."
 (use-package nroff-mode
   :commands nroff-mode
   :config
-  (progn
-    (defun update-nroff-timestamp ()
-      (save-excursion
-        (goto-char (point-min))
-        (when (re-search-forward "^\\.Dd ")
-          (let ((stamp (format-time-string "%B %e, %Y")))
-            (unless (looking-at stamp)
-              (delete-region (point) (line-end-position))
-              (insert stamp)
-              (let (after-save-hook)
-                (save-buffer)))))))
+  (defun update-nroff-timestamp ()
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "^\\.Dd ")
+        (let ((stamp (format-time-string "%B %e, %Y")))
+          (unless (looking-at stamp)
+            (delete-region (point) (line-end-position))
+            (insert stamp)
+            (let (after-save-hook)
+              (save-buffer)))))))
 
-    (add-hook 'nroff-mode-hook
-              #'(lambda ()
-                  (add-hook 'after-save-hook 'update-nroff-timestamp nil t)))))
+  (add-hook 'nroff-mode-hook
+            #'(lambda ()
+                (add-hook 'after-save-hook 'update-nroff-timestamp nil t))))
+
 (use-package nxml-mode
   :commands nxml-mode
   :init
   (defalias 'xml-mode 'nxml-mode)
   :config
-  (progn
-    (defun my-nxml-mode-hook ()
-      (bind-key "<return>" 'newline-and-indent nxml-mode-map))
+  (defun my-nxml-mode-hook ()
+    (bind-key "<return>" 'newline-and-indent nxml-mode-map))
 
-    (add-hook 'nxml-mode-hook 'my-nxml-mode-hook)
+  (add-hook 'nxml-mode-hook 'my-nxml-mode-hook)
 
-    (defun tidy-xml-buffer ()
-      (interactive)
-      (save-excursion
-        (call-process-region (point-min) (point-max) "tidy" t t nil
-                             "-xml" "-i" "-wrap" "0" "-omit" "-q" "-utf8")))
+  (defun tidy-xml-buffer ()
+    (interactive)
+    (save-excursion
+      (call-process-region (point-min) (point-max) "tidy" t t nil
+                           "-xml" "-i" "-wrap" "0" "-omit" "-q" "-utf8")))
 
-    (bind-key "C-c M-h" 'tidy-xml-buffer nxml-mode-map)))
+  (bind-key "C-c M-h" 'tidy-xml-buffer nxml-mode-map))
 
 (use-package on-screen
   :load-path "site-lisp/on-screen"
@@ -3232,6 +3233,7 @@ Keys are in kbd format."
   (on-screen-global-mode 1))
 
 (use-package dot-org
+  :load-path "override/org-mode"
   :commands my-org-startup
   :bind (("M-C"   . jump-to-org-agenda)
          ("M-m"   . org-smart-capture)
@@ -3287,6 +3289,7 @@ Keys are in kbd format."
   (bind-key "C-. A" 'paredit-add-to-previous-list paredit-mode-map)
   (bind-key "C-. j" 'paredit-join-with-next-list paredit-mode-map)
   (bind-key "C-. J" 'paredit-join-with-previous-list paredit-mode-map))
+
 
 (or (use-package mic-paren
       :defer 5
@@ -3689,17 +3692,17 @@ unless return was pressed outside the comment"
 (use-package ps-print
   :defer t
   :config
-  (progn
-    (defun ps-spool-to-pdf (beg end &rest ignore)
-      (interactive "r")
-      (let ((temp-file (concat (make-temp-name "ps2pdf") ".pdf")))
-        (call-process-region beg end (executable-find "ps2pdf")
-                             nil nil nil "-" temp-file)
-        (call-process (executable-find "open") nil nil nil temp-file)))
+  (defun ps-spool-to-pdf (beg end &rest ignore)
+    (interactive "r")
+    (let ((temp-file (concat (make-temp-name "ps2pdf") ".pdf")))
+      (call-process-region beg end (executable-find "ps2pdf")
+                           nil nil nil "-" temp-file)
+      (call-process (executable-find "open") nil nil nil temp-file)))
 
-    (setq ps-print-region-function 'ps-spool-to-pdf)))
+  (setq ps-print-region-function 'ps-spool-to-pdf))
 
 (use-package puppet-mode
+  :disabled t
   :mode ("\\.pp\\'" . puppet-mode)
   :config
   (use-package puppet-ext))
@@ -3785,22 +3788,24 @@ unless return was pressed outside the comment"
                      'stylus-mode-hook)))
 
 (use-package recentf
-  :if (not noninteractive)
+  :defer 10
+  :commands (recentf-mode
+             recentf-add-file
+             recentf-apply-filename-handlers)
+  :preface
+  (defun recentf-add-dired-directory ()
+    (if (and dired-directory
+             (file-directory-p dired-directory)
+             (not (string= "/" dired-directory)))
+        (let ((last-idx (1- (length dired-directory))))
+          (recentf-add-file
+           (if (= ?/ (aref dired-directory last-idx))
+               (substring dired-directory 0 last-idx)
+             dired-directory)))))
   :init
-  (progn
-    (recentf-mode 1)
-
-    (defun recentf-add-dired-directory ()
-      (if (and dired-directory
-               (file-directory-p dired-directory)
-               (not (string= "/" dired-directory)))
-          (let ((last-idx (1- (length dired-directory))))
-            (recentf-add-file
-             (if (= ?/ (aref dired-directory last-idx))
-                 (substring dired-directory 0 last-idx)
-               dired-directory)))))
-
-    (add-hook 'dired-mode-hook 'recentf-add-dired-directory)))
+  (add-hook 'dired-mode-hook 'recentf-add-dired-directory)
+  :config
+  (recentf-mode 1))
 
 (use-package repeat-insert
   :disabled t
@@ -3813,44 +3818,33 @@ unless return was pressed outside the comment"
   :commands (rotate-text rotate-text-backward))
 
 (use-package ruby-mode
+  :load-path "site-lisp/ruby-mode"
   :mode ("\\.rb\\'" . ruby-mode)
   :interpreter ("ruby" . ruby-mode)
+  :functions inf-ruby-keys
   :config
-  (progn
-    (use-package yari
-      :init
-      (progn
-        (defvar yari-helm-source-ri-pages
-          '((name . "RI documentation")
-            (candidates . (lambda () (yari-ruby-obarray)))
-            (action  ("Show with Yari" . yari))
-            (candidate-number-limit . 300)
-            (requires-pattern . 2)
-            "Source for completing RI documentation."))
+  (use-package yari
+    :load-path "site-lisp/yari-with-buttons"
+    :init
+    (progn
+      (defvar yari-helm-source-ri-pages
+        '((name . "RI documentation")
+          (candidates . (lambda () (yari-ruby-obarray)))
+          (action  ("Show with Yari" . yari))
+          (candidate-number-limit . 300)
+          (requires-pattern . 2)
+          "Source for completing RI documentation."))
 
-        (defun helm-yari (&optional rehash)
-          (interactive (list current-prefix-arg))
-          (when current-prefix-arg (yari-ruby-obarray rehash))
-          (helm 'yari-helm-source-ri-pages (yari-symbol-at-point)))))
+      (defun helm-yari (&optional rehash)
+        (interactive (list current-prefix-arg))
+        (when current-prefix-arg (yari-ruby-obarray rehash))
+        (helm 'yari-helm-source-ri-pages (yari-symbol-at-point)))))
 
-    (defun my-ruby-smart-return ()
-      (interactive)
-      (when (memq (char-after) '(?\| ?\" ?\'))
-        (forward-char))
-      (call-interactively 'newline-and-indent))
-
-    (defun my-ruby-mode-hook ()
-      (require 'inf-ruby)
-      (inf-ruby-keys)
-
-      (bind-key "<return>" 'my-ruby-smart-return ruby-mode-map)
-      (bind-key "C-h C-i" 'helm-yari ruby-mode-map)
-
-      (set (make-local-variable 'yas-fallback-behavior)
-           '(apply ruby-indent-command . nil))
-      (bind-key "<tab>" 'yas-expand-from-trigger-key ruby-mode-map))
-
-    (add-hook 'ruby-mode-hook 'my-ruby-mode-hook)))
+  (defun my-ruby-smart-return ()
+    (interactive)
+    (when (memq (char-after) '(?\| ?\" ?\'))
+      (forward-char))
+    (call-interactively 'newline-and-indent))
 
 
 (use-package saveplace
@@ -3996,6 +3990,7 @@ and run compass from that directory"
 
 (use-package slime
   :disabled t
+  :load-path "site-lisp/slime"
   :commands (sbcl slime)
   :init
   (add-hook
@@ -4070,7 +4065,7 @@ and run compass from that directory"
     (add-hook 'inferior-lisp-mode-hook #'(lambda () (inferior-slime-mode t)))
 
     (use-package hyperspec
-      :init
+      :config
       (setq common-lisp-hyperspec-root
             (expand-file-name "~/Library/Lisp/HyperSpec/")))))
 
@@ -4139,8 +4134,8 @@ and run compass from that directory"
   (use-package smartparens-config))
 
 (use-package smerge-mode
-  :commands (smerge-mode smerge-command-prefix)
-  :init
+  :commands smerge-mode
+  :config
   (setq smerge-command-prefix (kbd "C-. C-.")))
 
 (use-package stripe-buffer)
@@ -4232,33 +4227,32 @@ and run compass from that directory"
   :defines texinfo-section-list
   :mode ("\\.texi\\'" . texinfo-mode)
   :config
-  (progn
-    (defun my-texinfo-mode-hook ()
-      (dolist (mapping '((?b . "emph")
-                         (?c . "code")
-                         (?s . "samp")
-                         (?d . "dfn")
-                         (?o . "option")
-                         (?x . "pxref")))
-        (local-set-key (vector (list 'alt (car mapping)))
-                       `(lambda () (interactive)
-                          (TeX-insert-macro ,(cdr mapping))))))
+  (defun my-texinfo-mode-hook ()
+    (dolist (mapping '((?b . "emph")
+                       (?c . "code")
+                       (?s . "samp")
+                       (?d . "dfn")
+                       (?o . "option")
+                       (?x . "pxref")))
+      (local-set-key (vector (list 'alt (car mapping)))
+                     `(lambda () (interactive)
+                        (TeX-insert-macro ,(cdr mapping))))))
 
-    (add-hook 'texinfo-mode-hook 'my-texinfo-mode-hook)
+  (add-hook 'texinfo-mode-hook 'my-texinfo-mode-hook)
 
-    (defun texinfo-outline-level ()
-      ;; Calculate level of current texinfo outline heading.
-      (require 'texinfo)
-      (save-excursion
-        (if (bobp)
-            0
-          (forward-char 1)
-          (let* ((word (buffer-substring-no-properties
-                        (point) (progn (forward-word 1) (point))))
-                 (entry (assoc word texinfo-section-list)))
-            (if entry
-                (nth 1 entry)
-              5)))))))
+  (defun texinfo-outline-level ()
+    ;; Calculate level of current texinfo outline heading.
+    (require 'texinfo)
+    (save-excursion
+      (if (bobp)
+          0
+        (forward-char 1)
+        (let* ((word (buffer-substring-no-properties
+                      (point) (progn (forward-word 1) (point))))
+               (entry (assoc word texinfo-section-list)))
+          (if entry
+              (nth 1 entry)
+            5))))))
 
 (use-package tiny
   :bind ("C-. N" . tiny-expand))
@@ -4734,7 +4728,7 @@ and run compass from that directory"
 (use-package zoom-window
   :bind ("H-z" . zoom-window-zoom))
 
-;;;_. Post initialization
+;;; Post initialization
 
 (when window-system
   (let ((elapsed (float-time (time-subtract (current-time)
