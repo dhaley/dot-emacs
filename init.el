@@ -1,4 +1,6 @@
-message "Loading %s..." load-file-name))
+(defconst emacs-start-time (current-time))
+(unless noninteractive
+  (message "Loading %s..." load-file-name))
 
 (setq message-log-max 16384)
 
