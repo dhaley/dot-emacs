@@ -4344,8 +4344,8 @@ Does not delete the prompt."
     (use-package skewer-css
       :init
     (hook-into-modes #'skewer-css-mode
-                     '(css-mode-hook
-                       scss-mode-hook)))
+                     'css-mode-hook
+                     'scss-mode-hook))
 
     (add-hook 'js2-mode-hook 'skewer-mode)
     (add-hook 'html-mode-hook 'skewer-html-mode)
