@@ -706,6 +706,99 @@
 (bind-key "C-h e v" 'find-variable)
 (bind-key "C-h e V" 'apropos-value)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; dkh (2015-03-25): Move all of the above into use-package declarations    ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Packages
+
+;; jww (2015-03-24): All of these are presently unconfigured
+;; :load-path "lisp/chess"
+;; :load-path "lisp/emacs-async"
+;; :load-path "lisp/emacs-edg"
+;; :load-path "lisp/emacs-pl"
+;; :load-path "lisp/git-annex-el"
+;; :load-path "lisp/muse"
+;; :load-path "lisp/regex-tool"
+;; :load-path "lisp/springboard"
+;; :load-path "site-lisp/ace-link"
+;; :load-path "site-lisp/ace-window"
+;; :load-path "site-lisp/backup-walker"
+;; :load-path "site-lisp/bbdb-vcard"
+;; :load-path "site-lisp/bdo"
+;; :load-path "site-lisp/boxquote"
+;; :load-path "site-lisp/bug-reference-github"
+;; :load-path "site-lisp/butler"
+;; :load-path "site-lisp/cmake-font-lock"
+;; :load-path "site-lisp/command-log-mode"
+;; :load-path "site-lisp/company-auctex"
+;; :load-path "site-lisp/company-cabal"
+;; :load-path "site-lisp/company-ghc"
+;; :load-path "site-lisp/company-quickhelp"
+;; :load-path "site-lisp/deft"
+;; :load-path "site-lisp/dircmp-mode"
+;; :load-path "site-lisp/dired-hacks"
+;; :load-path "site-lisp/dired-sync"
+;; :load-path "site-lisp/discover"
+;; :load-path "site-lisp/ee"
+;; :load-path "site-lisp/el-mock"
+;; :load-path "site-lisp/elisp-depend"
+;; :load-path "site-lisp/elnode"
+;; :load-path "site-lisp/elpy"
+;; :load-path "site-lisp/emacros"
+;; :load-path "site-lisp/emacs-edbi"
+;; :load-path "site-lisp/esup"
+;; :load-path "site-lisp/expand-region-el"
+;; :load-path "site-lisp/fancy-narrow"
+;; :load-path "site-lisp/fold-this-el"
+;; :load-path "site-lisp/fringe-helper-el"
+;; :load-path "site-lisp/git-gutter-fringe-plus"
+;; :load-path "site-lisp/git-gutter-plus"
+;; :load-path "site-lisp/git-modes"
+;; :load-path "site-lisp/git-timemachine"
+;; :load-path "site-lisp/git-wip"
+;; :load-path "site-lisp/github-issues-el"
+;; :load-path "site-lisp/guess-style"
+;; :load-path "site-lisp/HaRe"
+;; :load-path "site-lisp/hdevtools-emacs"
+;; :load-path "site-lisp/helm-c-yasnippet"
+;; :load-path "site-lisp/helm-cmd-t"
+;; :load-path "site-lisp/helm-emms"
+;; :load-path "site-lisp/helm-gist"
+;; :load-path "site-lisp/helm-github-issues"
+;; :load-path "site-lisp/helm-google"
+;; :load-path "site-lisp/helm-ipython"
+;; :load-path "site-lisp/helm-ls-hg"
+;; :load-path "site-lisp/helm-slime"
+;; :load-path "site-lisp/hsenv"
+;; :load-path "site-lisp/hydra"
+;; :load-path "site-lisp/interaction-log"
+;; :load-path "site-lisp/irony-mode"
+;; :load-path "site-lisp/liquid-types-el"
+;; :load-path "site-lisp/monky"
+;; :load-path "site-lisp/multifiles-el"
+;; :load-path "site-lisp/olivetti"
+;; :load-path "site-lisp/org-download"
+;; :load-path "site-lisp/org-magit"
+;; :load-path "site-lisp/org-merge-driver"
+;; :load-path "site-lisp/org-opml"
+;; :load-path "site-lisp/org-present"
+;; :load-path "site-lisp/orgaggregate"
+;; :load-path "site-lisp/osx-bbdb"
+;; :load-path "site-lisp/page-break-lines"
+;; :load-path "site-lisp/pandoc-mode"
+;; :load-path "site-lisp/persistent-soft"
+;; :load-path "site-lisp/perspective"
+;; :load-path "site-lisp/powerline"
+;; :load-path "site-lisp/prodigy"
+;; :load-path "site-lisp/smart-forward-el"
+;; :load-path "site-lisp/swank-js"
+;; :load-path "site-lisp/tbx2org"
+;; :load-path "site-lisp/tellib"
+;; :load-path "site-lisp/visual-regexp"
+;; :load-path "site-lisp/web-mode"
+;; :load-path "site-lisp/ztree"
+
 (defun rotate-windows ()
   "Rotate your windows"
   (interactive)
@@ -3722,13 +3815,14 @@ unless return was pressed outside the comment"
 ;;;_ , pp-c-l
 
 (use-package pp-c-l
+  :commands pretty-control-l-mode
   :init
-  (hook-into-modes 'pretty-control-l-mode '(prog-mode-hook)))
+  (add-hook 'prog-mode-hook 'pretty-control-l-mode))
 
 ;;;_ , fic-mode
 (use-package fic-mode
   :init
-  (hook-into-modes 'fic-mode '(prog-mode-hook)))
+  (hook-into-modes 'fic-mode 'prog-mode-hook))
 
 ;;;_ , ps-print
 
@@ -3834,17 +3928,14 @@ unless return was pressed outside the comment"
 ;;;;_ , rainbow-mode
 
 (use-package rainbow-mode
-  ;; :if (and
-  ;;      (not degrade-p-terminal)
-  ;;      (not degrade-p-font-lock))
+  :diminish ((rainbow-mode . "rb"))
   :commands rainbow-mode
-  :config
+  :init
   (progn
     (hook-into-modes #'rainbow-mode
-                     '(css-mode-hook
-                       scss-mode-hook
-                       stylus-mode-hook)))
-  :diminish ((rainbow-mode . "rb")))
+                     'css-mode-hook
+                     'scss-mode-hook
+                     'stylus-mode-hook)))
 
 ;;;_ , recentf
 
