@@ -1008,7 +1008,7 @@
 (use-package auto-dim-other-buffers
   :defer 10
   :commands auto-dim-other-buffers-mode
-  :config
+  :init
   (auto-dim-other-buffers-mode 1))
 
 ;;;_ , autorevert
@@ -1307,11 +1307,13 @@
   :defer 10
   :commands crosshairs-mode
   :bind ("M-o c" . crosshairs-mode)
-  :config
+  :init
   (crosshairs-mode 1)
+  :config
+  (progn
   (toggle-crosshairs-when-idle 1)
   (col-highlight-set-interval 120)
-  (setq col-highlight-face hl-line-face))
+  (setq col-highlight-face hl-line-face)))
   
 ;;;_ , css-mode
 
@@ -2155,21 +2157,26 @@ iflipb-next-buffer or iflipb-previous-buffer this round."
 
 ;;;_ , golden-ratio
 
-;; (use-package golden-ratio
-;;   :config
-;;   (progn
-;;      (golden-ratio-enable)
-;;      (add-to-list 'golden-ratio-exclude-modes "ediff-mode")
-;;      (add-to-list 'golden-ratio-inhibit-functions 'pl/helm-alive-p)
-;;      (add-to-list 'golden-ratio-inhibit-functions 'pl/ediff-comparison-buffer-p)
+(use-package golden-ratio
+  :diminish golden-ratio-mode
+  :commands golden-ratio-mode
+  :defer 5
+  :init
+  (progn
+    (golden-ratio-mode 1))
+  :config
+  (progn
+    (defun my/helm-alive-p ()
+      (if (boundp 'helm-alive-p)
+          (symbol-value 'helm-alive-p)))
 
-;;   (defun pl/ediff-comparison-buffer-p ()
-;;     ediff-this-buffer-ediff-sessions)
+    ;; Inhibit helm
+    (add-to-list 'golden-ratio-inhibit-functions #'my/helm-alive-p)
+    ;; Inhibit ERC and mu4e
+    (setq golden-ratio-exclude-modes
+          '(erc-mode mu4e-headers-mode mu4e-view-mode ediff-mode)))
+    (setq golden-ratio-auto-scale t))
 
-;;   (defun pl/helm-alive-p ()
-;;     (if (boundp 'helm-alive-p)
-;;         (symbol-value 'helm-alive-p)))
-;;   ))
 
 ;;;_ , google-this
 
