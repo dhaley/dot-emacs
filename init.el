@@ -29,60 +29,18 @@
   ;; (defvar use-package-verbose t)
   ;; (defvar use-package-expand-minimally t)
   (eval-after-load 'advice
-    `(setq ad-redefinition-action 'accept)))
-(require 'use-package)
+    `(setq ad-redefinition-action 'accept))
+  (require 'cl)
+  (require 'use-package))
 
-;;;_ , Utility macros and functions
+(require 'bind-key)
+(require 'diminish nil t)
 
-(defun system-idle-time ()
-  (with-temp-buffer
-    (call-process "ioreg" nil (current-buffer) nil
-                  "-c" "IOHIDSystem" "-d" "4" "-S")
-    (goto-char (point-min))
-    (and (re-search-forward "\"HIDIdleTime\" = \\([0-9]+\\)" nil t)
-         (/ (float (string-to-number (match-string 1)))
-            1000000000.0))))
+;;; Utility macros and functions
 
-;; (defun cleanup-term-log ()
-;;   "Do not show ^M in files containing mixed UNIX and DOS line endings."
-;;   (interactive)
-;;   (require 'ansi-color)
-;;   (ansi-color-apply-on-region (point-min) (point-max))
-;;   (goto-char (point-min))
-;;   (while (re-search-forward "\\(.\\|$\\|P.+\\\\\n\\)" nil t)
-;;     (overlay-put (make-overlay (match-beginning 0) (match-end 0))
-;;                  'invisible t))
-;;   (set-buffer-modified-p nil))
-
-;; (add-hook 'find-file-hooks
-;;           (function
-;;            (lambda ()
-;;              (if (string-match "/\\.iTerm/.*\\.log\\'"
-;;                                (buffer-file-name))
-;;                  (cleanup-term-log)))))
-
-;;;_ , Read system environment
-
-(defun read-system-environment ()
-  (let ((plist (expand-file-name "~/.MacOSX/environment.plist")))
-    (when (file-readable-p plist)
-      (let ((dict (cdr (assq 'dict (cdar (xml-parse-file plist))))))
-        (while dict
-          (if (and (listp (car dict))
-                   (eq 'key (caar dict)))
-              (setenv (car (cddr (car dict)))
-                      (car (cddr (car (cddr dict))))))
-          (setq dict (cdr dict))))
-
-      ;; Configure exec-path based on the new PATH
-      (setq exec-path nil)
-      (mapc (apply-partially #'add-to-list 'exec-path)
-            (nreverse (split-string (getenv "PATH") ":"))))))
-
-(unless (string-match "/nix/store" (getenv "PATH"))
-  (read-system-environment)
-  ;; (add-hook 'after-init-hook 'read-system-environment)
-  )
+;; support textexpander (dkh (2015-03-25): check if it's running)
+(bind-key "A-v" 'scroll-down)
+(bind-key "M-v" 'yank)
 
 (defsubst hook-into-modes (func &rest modes)
   (dolist (mode-hook modes) (add-hook mode-hook func)))
@@ -90,35 +48,31 @@
 ;;;_ , Load customization settings
 
 (defvar running-alternate-emacs nil)
+(defvar user-data-directory (expand-file-name "data" user-emacs-directory))
 
-(if (string-match (concat "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
-                  invocation-directory)
-
-    (let ((settings (with-temp-buffer
-                      (insert-file-contents
-                       (expand-file-name "settings.el" user-emacs-directory))
-                      (goto-char (point-min))
-                      (read (current-buffer))))
-          (suffix (downcase (match-string 1 invocation-directory))))
-
-      (setq running-alternate-emacs t
-            user-data-directory
-            (replace-regexp-in-string "/data/" (format "/data-%s/" suffix)
-                                      user-data-directory))
-
-      (let* ((regexp "/\\.emacs\\.d/data/")
-             (replace (format "/.emacs.d/data-%s/" suffix)))
-        (dolist (setting settings)
-          (let ((value (and (listp setting)
-                            (nth 1 (nth 1 setting)))))
-            (if (and (stringp value)
-                     (string-match regexp value))
-                (setcar (nthcdr 1 (nth 1 setting))
-                        (replace-regexp-in-string regexp replace value)))))
-
-        (eval settings)))
-
-  (load (expand-file-name "settings" user-emacs-directory)))
+(if (not (string-match (concat "Emacs\\([A-Za-z]+\\).app/Contents/MacOS/")
+                       invocation-directory))
+    (load (expand-file-name "settings" user-emacs-directory))
+  (let ((settings (with-temp-buffer
+                    (insert-file-contents
+                     (expand-file-name "settings.el" user-emacs-directory))
+                    (goto-char (point-min))
+                    (read (current-buffer))))
+        (suffix (downcase (match-string 1 invocation-directory))))
+    (setq running-alternate-emacs t
+          user-data-directory
+          (replace-regexp-in-string "/data/" (format "/data-%s/" suffix)
+                                    user-data-directory))
+    (let* ((regexp "/\\.emacs\\.d/data/")
+           (replace (format "/.emacs.d/data-%s/" suffix)))
+      (dolist (setting settings)
+        (let ((value (and (listp setting)
+                          (nth 1 (nth 1 setting)))))
+          (if (and (stringp value)
+                   (string-match regexp value))
+              (setcar (nthcdr 1 (nth 1 setting))
+                      (replace-regexp-in-string regexp replace value)))))
+      (eval settings))))
 
 ;;;_ , Enable disabled commands
 
