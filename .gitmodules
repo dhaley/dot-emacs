@@ -247,9 +247,6 @@
 [submodule "site-lisp/ac/auto-complete"]
         path = site-lisp/ac/auto-complete
         url = git@github.com:dhaley/auto-complete
-[submodule "site-lisp/emacs-async"]
-        path = site-lisp/emacs-async
-        url = git://github.com/jwiegley/emacs-async.git
 [submodule "site-lisp/paredit"]
         path = site-lisp/paredit
         url = git://github.com/emacsmirror/paredit.git
@@ -922,3 +919,6 @@
 [submodule "site-lisp/dom"]
 	path = site-lisp/dom
 	url = https://gitlab.com/mva.led/dom-el.git
+[submodule "lisp/emacs-async"]
+	path = lisp/emacs-async
+	url = git://github.com/jwiegley/emacs-async.git
