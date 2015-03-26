@@ -292,22 +292,22 @@
  '(dired-recursive-copies (quote always))
  '(dired-recursive-deletes (quote always))
  '(diredful-init-file "~/.emacs.d/data/diredful-conf.el")
- '(display-time-mail-function (lambda nil (= 0 (call-process "~/bin/newmail"))))
- '(display-time-mode t)
- '(display-time-string-forms
-   (quote
-    ((format-time-string "%l:%M %p" now)
-     " "
-     (let
-         ((str
-           (shell-command-to-string "jobhours")))
-       (require
-        (quote ansi-color))
-       (ansi-color-apply
-        (substring str 0
-                   (1-
-                    (length str)))))
-     " ")))
+ ;; '(display-time-mail-function (lambda nil (= 0 (call-process "~/bin/newmail"))))
+ ;; '(display-time-mode t)
+ ;; '(display-time-string-forms
+ ;;   (quote
+ ;;    ((format-time-string "%l:%M %p" now)
+ ;;     " "
+ ;;     (let
+ ;;         ((str
+ ;;           (shell-command-to-string "jobhours")))
+ ;;       (require
+ ;;        (quote ansi-color))
+ ;;       (ansi-color-apply
+ ;;        (substring str 0
+ ;;                   (1-
+ ;;                    (length str)))))
+ ;;     " ")))
  '(display-time-use-mail-icon t)
  '(doc-view-resolution 300)
  '(drupal-convert-line-ending t)
@@ -730,6 +730,7 @@
  '(projectile-drupal-site-base-url-test "http://www-test.colorado.edu")
  '(projectile-drupal-site-name-function (quote dkh-get-site-name))
  '(projectile-cache-file "~/.emacs.d/data/projectile.cache")
+ '(projectile-completion-system (quote grizzl))
  '(projectile-enable-caching t)
  '(projectile-project-root-files-bottom-up
    (quote
@@ -737,7 +738,6 @@
  '(projectile-switch-project-action (quote dkh-projectile-dired))
  '(projectile-switch-project-hook (quote dkh-project-record))
  '(projectile-known-projects-file "~/.emacs.d/data/projectile-bookmarks.eld")
- '(projectile-switch-project-action (quote helm-projectile))
  '(proof-auto-action-when-deactivating-scripting (quote retract))
  '(proof-autosend-enable nil)
  '(proof-electric-terminator-enable t)
@@ -920,7 +920,7 @@
     ("~/.emacs.d/snippets" "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets" "~/.emacs.d/site-lisp/css-scss")) nil (yasnippet))
  '(yas-triggers-in-field t)
  '(yas-wrap-around-region t)
- '(zencoding-preview-default nil))
+)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
