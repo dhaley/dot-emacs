@@ -1658,35 +1658,6 @@ so change the default 'F' binding in the agenda to allow both"
 ;; Agenda sorting functions
 ;;
 
-(defun bh/agenda-sort (a b)
-  "Sorting strategy for agenda items.
-Late deadlines first, then scheduled, then non-late deadlines"
-  (let (result num-a num-b)
-    (cond
-     ; time specific items are already sorted first by org-agenda-sorting-strategy
-
-     ; non-deadline and non-scheduled items next
-     ((bh/agenda-sort-test 'bh/is-not-scheduled-or-deadline a b))
-
-     ; deadlines for today next
-     ((bh/agenda-sort-test 'bh/is-due-deadline a b))
-
-     ; late deadlines next
-     ((bh/agenda-sort-test-num 'bh/is-late-deadline '> a b))
-
-     ; scheduled items for today next
-     ((bh/agenda-sort-test 'bh/is-scheduled-today a b))
-
-     ; late scheduled items next
-     ((bh/agenda-sort-test-num 'bh/is-scheduled-late '> a b))
-
-     ; pending deadlines last
-     ((bh/agenda-sort-test-num 'bh/is-pending-deadline '< a b))
-
-     ; finally default to unsorted
-     (t (setq result nil)))
-    result))
-
 (defmacro bh/agenda-sort-test (fn a b)
   "Test for agenda sort"
   `(cond
@@ -1717,6 +1688,35 @@ Late deadlines first, then scheduled, then non-late deadlines"
     ((apply ,fn (list ,b))
      (setq result 1))
     (t nil)))
+
+(defun bh/agenda-sort (a b)
+  "Sorting strategy for agenda items.
+Late deadlines first, then scheduled, then non-late deadlines"
+  (let (result num-a num-b)
+    (cond
+     ; time specific items are already sorted first by org-agenda-sorting-strategy
+
+     ; non-deadline and non-scheduled items next
+     ((bh/agenda-sort-test 'bh/is-not-scheduled-or-deadline a b))
+
+     ; deadlines for today next
+     ((bh/agenda-sort-test 'bh/is-due-deadline a b))
+
+     ; late deadlines next
+     ((bh/agenda-sort-test-num 'bh/is-late-deadline '> a b))
+
+     ; scheduled items for today next
+     ((bh/agenda-sort-test 'bh/is-scheduled-today a b))
+
+     ; late scheduled items next
+     ((bh/agenda-sort-test-num 'bh/is-scheduled-late '> a b))
+
+     ; pending deadlines last
+     ((bh/agenda-sort-test-num 'bh/is-pending-deadline '< a b))
+
+     ; finally default to unsorted
+     (t (setq result nil)))
+    result))
 
 (defun bh/is-not-scheduled-or-deadline (date-str)
   (and (not (bh/is-deadline date-str))
