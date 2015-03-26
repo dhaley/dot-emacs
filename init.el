@@ -4,8 +4,22 @@
 
 (setq message-log-max 16384)
 
+(defconst user-site-lisp-directory
+  (expand-file-name "site-lisp/" user-emacs-directory))
 
-(load (expand-file-name "load-path" (file-name-directory load-file-name)))
+(defun add-to-load-path (path &optional dir)
+  (setq load-path
+        (cons (expand-file-name path (or dir user-emacs-directory)) load-path)))
+
+;; Add top-level lisp directories, in case they were not setup by the
+;; environment.
+;; (dolist (dir (nreverse
+;;               (list 
+                    
+;;                     user-site-lisp-directory)))
+;;   (dolist (entry (nreverse (directory-files-and-attributes dir)))
+;;     (if (cadr entry)
+;;         (add-to-load-path (car entry) dir))))
 
 (eval-and-compile
   (mapc
@@ -13,18 +27,16 @@
        (push (expand-file-name path user-emacs-directory) load-path))
    '("site-lisp" "override" "lisp" "lisp/use-package" ""))
 
-  (defsubst nix-lisp-path (part)
-    (expand-file-name part "~/.nix-profile/share/emacs/site-lisp"))
-
-  (defun agda-site-lisp ()
-    (let ((agda
-           (nth 1 (split-string
-                   (shell-command-to-string "load-env-agda which agda")
-                   "\n"))))
-      (and agda
-           (expand-file-name
-            "../share/x86_64-osx-ghc-7.8.4/Agda-2.4.2.2/emacs-mode"
-            (file-name-directory agda))))))
+  ;; (defun agda-site-lisp ()
+  ;;   (let ((agda
+  ;;          (nth 1 (split-string
+  ;;                  (shell-command-to-string "load-env-agda which agda")
+  ;;                  "\n"))))
+  ;;     (and agda
+  ;;          (expand-file-name
+  ;;           "../share/x86_64-osx-ghc-7.8.4/Agda-2.4.2.2/emacs-mode"
+  ;;           (file-name-directory agda)))))
+  )
 
 (eval-when-compile
   ;; (defvar use-package-verbose t)
