@@ -919,6 +919,3 @@
 [submodule "site-lisp/dom"]
 	path = site-lisp/dom
 	url = https://gitlab.com/mva.led/dom-el.git
-[submodule "lisp/emacs-async"]
-	path = lisp/emacs-async
-	url = git://github.com/jwiegley/emacs-async.git
