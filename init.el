@@ -5,6 +5,8 @@
 (setq message-log-max 16384)
 
 
+(load (expand-file-name "load-path" (file-name-directory load-file-name)))
+
 (eval-and-compile
   (mapc
    #'(lambda (path)
@@ -4508,14 +4510,6 @@ and run compass from that directory"
          ("/\\(views\\|html\\|theme\\|templates\\)/.*\\.php\\'" . web-mode))
   :init
   (progn
-    ;; (require 'ac-emmet)
-    (setq web-mode-engines-alist '(("\\.html\\.twig\\'" . "twig")))
-
-    ;; (setq web-mode-ac-sources-alist
-    ;;       '(("php" . (ac-source-yasnippet ac-source-php-auto-yasnippets))
-    ;;         ("html" . (ac-source-emmet-html-aliases ac-source-emmet-html-snippets))
-    ;;         ("css" . (ac-source-css-property ac-source-emmet-css-snippets))))
-
     (add-hook 'web-mode-before-auto-complete-hooks
               '(lambda ()
                  (let ((web-mode-cur-language
@@ -4533,20 +4527,11 @@ and run compass from that directory"
              (newline-and-indent)))
     (defun web-mode-hook ()
       "Hooks for Web mode."
-      ;; (setq web-mode-disable-autocompletion t)
       ;;indent
       (setq web-mode-attr-indent-offset 2)
       (setq web-mode-markup-indent-offset 2)
       (setq web-mode-css-indent-offset 2)
       (setq web-mode-code-indent-offset 2)
-
-      ;;padding
-      ;; For <style> parts
-      ;; (setq web-mode-style-padding 1)
-      ;; For <script> parts
-      ;; (setq web-mode-script-padding 1)
-      ;; For multi-line blocks
-      ;; (setq web-mode-block-padding 0)
 
       (setq web-mode-enable-auto-pairing t)
       (setq web-mode-enable-css-colorization t)
@@ -4556,8 +4541,6 @@ and run compass from that directory"
       (setq web-mode-enable-current-element-highlight t)
       (setq web-mode-enable-element-tag-fontification t)
 
-      ;; (idle-highlight-mode 0)
-      ;; (whitespace-mode -1)
       (local-set-key (kbd "RET") 'indent-and-newline))
     (add-hook 'web-mode-hook  'web-mode-hook)))
 
