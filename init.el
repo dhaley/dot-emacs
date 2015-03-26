@@ -3535,6 +3535,7 @@ unless return was pressed outside the comment"
     (projectile-global-mode)
 
     (use-package projectile-drupal
+      :load-path "lisp/projectile-drupal"
       :init
       (progn
         (defun dkh-get-site-name ()
@@ -3560,7 +3561,7 @@ unless return was pressed outside the comment"
         (bind-key "C-H-M-p" 'revert-buffer)
         (bind-key "C-H-M-\"" 'kill-buffer)))
 
-;;    (add-hook 'projectile-mode-hook 'projectile-drupal-on)
+   (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
     (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
 
