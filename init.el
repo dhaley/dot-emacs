@@ -44,7 +44,7 @@
 ;;; Utility macros and functions
 
 ;; support textexpander (dkh (2015-03-25): check if it's running)
-(bind-key "M-v" 'scroll-up)
+;; (bind-key "M-v" 'scroll-up)
 (bind-key "H-v" 'yank)
 
 (defsubst hook-into-modes (func &rest modes)
@@ -1195,7 +1195,7 @@ Keys are in kbd format."
       (find-file-other-window "~/org/projects.org"))))
 
 (use-package bbdb-com
-  :load-path "override/bbdb"
+  :load-path "override/bbdb/lisp"
   :commands bbdb-create
   :bind ("M-B" . bbdb))
 
