@@ -22,7 +22,7 @@
          (who (erc-get-server-user nick))
          (host (erc-server-user-host who))
          (user (erc-server-user-login who)))
-    (erc-send-command
+    (erc-server-send
      (format "MODE %s +b *!%s@%s%s"
              chan (if whole-ip "*" user) host (or redirect "")))))
 
@@ -33,7 +33,7 @@
   (erc-cmd-OPME)
   (sleep-for 0 250)
   (erc-cmd-BAN nick)
-  (erc-send-command (format "KICK %s %s %s"
+  (erc-server-send (format "KICK %s %s %s"
                             (erc-default-target)
                             nick
                             (or reason
@@ -48,7 +48,7 @@
   (erc-cmd-OPME)
   (sleep-for 0 250)
   (erc-cmd-BAN nick nil t)
-  (erc-send-command (format "KICK %s %s %s"
+  (erc-server-send (format "KICK %s %s %s"
                             (erc-default-target)
                             nick
                             (or reason
@@ -63,7 +63,7 @@
   (erc-cmd-OPME)
   (sleep-for 0 250)
   (erc-cmd-BAN nick "$#haskell-ops")
-  (erc-send-command (format "KICK %s %s %s"
+  (erc-server-send (format "KICK %s %s %s"
                             (erc-default-target)
                             nick
                             (or reason
