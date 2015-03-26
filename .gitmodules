@@ -589,9 +589,6 @@
 [submodule "lisp/initsplit"]
         path = lisp/initsplit
         url = https://github.com/dabrahams/initsplit
-[submodule "site-lisp/auctex"]
-        path = site-lisp/auctex
-        url = git@github.com:dhaley/auctex.git
 [submodule "site-lisp/smart-mode-line"]
         path = site-lisp/smart-mode-line
         url = https://github.com/Bruce-Connor/smart-mode-line.git
