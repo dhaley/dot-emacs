@@ -188,6 +188,7 @@
    ["black" "red" "green" "brown" "blue" "magenta" "blue" "white"])
  '(appt-display-interval 30)
  '(appt-message-warning-time 60)
+ '(async-bytecomp-allowed-packages nil)
  '(auto-compression-mode t nil (jka-compr))
  '(auto-save-file-name-transforms (quote (("\\`/[^/]*:.*" "/tmp" t))))
  '(auto-save-interval 64)
@@ -292,22 +293,6 @@
  '(dired-recursive-copies (quote always))
  '(dired-recursive-deletes (quote always))
  '(diredful-init-file "~/.emacs.d/data/diredful-conf.el")
- ;; '(display-time-mail-function (lambda nil (= 0 (call-process "~/bin/newmail"))))
- ;; '(display-time-mode t)
- ;; '(display-time-string-forms
- ;;   (quote
- ;;    ((format-time-string "%l:%M %p" now)
- ;;     " "
- ;;     (let
- ;;         ((str
- ;;           (shell-command-to-string "jobhours")))
- ;;       (require
- ;;        (quote ansi-color))
- ;;       (ansi-color-apply
- ;;        (substring str 0
- ;;                   (1-
- ;;                    (length str)))))
- ;;     " ")))
  '(display-time-use-mail-icon t)
  '(doc-view-resolution 300)
  '(drupal-convert-line-ending t)
@@ -665,10 +650,10 @@
  '(ledger-file "~/Documents/Accounts/ledger.dat")
  '(ledger-post-use-ido t)
  '(line-number-mode t)
+ '(load-prefer-newer t)
  '(mac-command-modifier (quote hyper))
  '(mac-function-modifier (quote hyper))
  '(mac-option-modifier (quote meta))
- '(load-prefer-newer t)
  '(mac-pass-command-to-system nil)
  '(mac-pass-control-to-system nil)
  '(mac-wheel-button-is-mouse-2 nil)
@@ -702,15 +687,502 @@
  '(nxml-slash-auto-complete-flag t)
  '(offlineimap-command "offlineimap -u machineui")
  '(olivetti-hide-mode-line t)
+ '(org-agenda-auto-exclude-function (quote org-my-auto-exclude-function))
+ '(org-agenda-clock-consistency-checks
+   (quote
+    (:max-duration "4:00" :min-duration 0 :max-gap 0 :gap-ok-around
+                   ("4:00"))))
+ '(org-agenda-clockreport-parameter-plist
+   (quote
+    (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80)))
+ '(org-agenda-cmp-user-defined (quote bh/agenda-sort))
+ '(org-agenda-compact-blocks t)
+ '(org-agenda-custom-commands
+   (quote
+    (("N" "Notes" tags "NOTE"
+      ((org-agenda-overriding-header "Notes")
+       (org-tags-match-list-sublevels t)))
+     ("h" "Habits" tags-todo "STYLE=\"habit\""
+      ((org-agenda-overriding-header "Habits")
+       (org-agenda-sorting-strategy
+        (quote
+         (todo-state-down effort-up category-keep)))))
+     (" " "Agenda"
+      ((agenda "" nil)
+       (tags "REFILE"
+             ((org-agenda-overriding-header "Tasks to Refile")
+              (org-tags-match-list-sublevels nil)))
+       (tags-todo "-CANCELLED/!"
+                  ((org-agenda-overriding-header "Stuck Projects")
+                   (org-agenda-skip-function
+                    (quote bh/skip-non-stuck-projects))
+                   (org-agenda-sorting-strategy
+                    (quote
+                     (category-keep)))))
+       (tags-todo "-HOLD-CANCELLED/!"
+                  ((org-agenda-overriding-header "Projects")
+                   (org-agenda-skip-function
+                    (quote bh/skip-non-projects))
+                   (org-tags-match-list-sublevels
+                    (quote indented))
+                   (org-agenda-sorting-strategy
+                    (quote
+                     (category-keep)))))
+       (tags-todo "-CANCELLED/!NEXT"
+                  ((org-agenda-overriding-header
+                    (concat "Project Next Tasks"
+                            (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
+                   (org-agenda-skip-function
+                    (quote bh/skip-projects-and-habits-and-single-tasks))
+                   (org-tags-match-list-sublevels t)
+                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-sorting-strategy
+                    (quote
+                     (todo-state-down effort-up category-keep)))))
+       (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                  ((org-agenda-overriding-header
+                    (concat "Project Subtasks"
+                            (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
+                   (org-agenda-skip-function
+                    (quote bh/skip-non-project-tasks))
+                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-sorting-strategy
+                    (quote
+                     (category-keep)))))
+       (tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+                  ((org-agenda-overriding-header
+                    (concat "Standalone Tasks"
+                            (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
+                   (org-agenda-skip-function
+                    (quote bh/skip-project-tasks))
+                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-sorting-strategy
+                    (quote
+                     (category-keep)))))
+       (tags-todo "-CANCELLED+WAITING|HOLD/!"
+                  ((org-agenda-overriding-header
+                    (concat "Waiting and Postponed Tasks"
+                            (if bh/hide-scheduled-and-waiting-next-tasks "" " (including WAITING and SCHEDULED tasks)")))
+                   (org-agenda-skip-function
+                    (quote bh/skip-non-tasks))
+                   (org-tags-match-list-sublevels nil)
+                   (org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+                   (org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)))
+       (tags "-REFILE/"
+             ((org-agenda-overriding-header "Tasks to Archive")
+              (org-agenda-skip-function
+               (quote bh/skip-non-archivable-tasks))
+              (org-tags-match-list-sublevels nil))))
+      nil))))
+ '(org-agenda-diary-file "~/Documents/Tasks/diary.org")
+ '(org-agenda-dim-blocked-tasks nil)
+ '(org-agenda-exporter-settings
+   (quote
+    ((org-agenda-write-buffer-name "Damon's VC-Rsrch/Dean-Grad Agenda"))))
+ '(org-agenda-files
+   (quote
+    ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/from-mobile.org")))
+ '(org-agenda-include-diary nil)
+ '(org-agenda-insert-diary-extract-time t)
+ '(org-agenda-log-mode-items (quote (closed state)))
+ '(org-agenda-persistent-filter t)
+ '(org-agenda-repeating-timestamp-show-all t)
+ '(org-agenda-restriction-lock-highlight-subtree nil)
+ '(org-agenda-show-all-dates t)
+ '(org-agenda-skip-additional-timestamps-same-entry t)
+ '(org-agenda-skip-deadline-if-done t)
+ '(org-agenda-skip-scheduled-if-done t)
+ '(org-agenda-skip-timestamp-if-done t)
+ '(org-agenda-sorting-strategy
+   (quote
+    ((agenda habit-down time-up user-defined-up effort-up category-keep)
+     (todo category-up effort-up)
+     (tags category-up effort-up)
+     (search category-up))))
+ '(org-agenda-span (quote day))
+ '(org-agenda-start-on-weekday 1)
+ '(org-agenda-sticky t)
+ '(org-agenda-tags-column -102)
+ '(org-agenda-tags-todo-honor-ignore-options t)
+ '(org-agenda-text-search-extra-files (quote (agenda-archives)))
+ '(org-agenda-time-grid
+   (quote
+    ((daily today remove-match)
+     #("----------------" 0 16
+       (org-heading t))
+     (900 1100 1300 1500 1700))))
+ '(org-agenda-todo-ignore-with-date nil)
+ '(org-agenda-window-setup (quote current-window))
+ '(org-archive-location "%s_archive::* Archived Tasks")
+ '(org-babel-results-keyword "results")
+ '(org-beamer-frame-default-options "fragile")
+ '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))
+ '(org-capture-templates
+   (quote
+    (("t" "Task" entry
+      (file+headline "~/Documents/Tasks/todo.txt" "Inbox")
+      "* TODO %?
+SCHEDULED: %t
+:PROPERTIES:
+:ID:       %(shell-command-to-string \"uuidgen\"):CREATED:  %U
+:END:" :prepend t))))
+ '(org-catch-invisible-edits (quote error))
+ '(org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+ '(org-clock-history-length 23)
+ '(org-clock-in-resume t)
+ '(org-clock-in-switch-to-state (quote bh/clock-in-to-next))
+ '(org-clock-into-drawer t)
+ '(org-clock-out-remove-zero-time-clocks t)
+ '(org-clock-out-when-done t)
+ '(org-clock-persist t)
+ '(org-clock-persist-query-resume nil)
+ '(org-clock-report-include-clocking-task t)
+ '(org-clock-sound "/usr/local/lib/tngchime.wav")
+ '(org-clone-delete-id t)
+ '(org-columns-default-format
+   "%80ITEM(Task) %10Effort(Effort){:} %10Confidence(Confidence) %10CLOCKSUM")
+ '(org-completion-use-ido t)
+ '(org-confirm-babel-evaluate nil)
+ '(org-crypt-disable-auto-save nil)
+ '(org-crypt-key "F0B66B40")
+ '(org-cycle-include-plain-lists t)
+ '(org-cycle-separator-lines 0)
+ '(org-deadline-warning-days 30)
+ '(org-default-notes-file "~/Documents/Tasks/todo.txt")
+ '(org-default-priority 69)
+ '(org-directory "~/Documents/Tasks")
+ '(org-ditaa-jar-path "~/git/foss/org-mode/contrib/scripts/ditaa.jar")
+ '(org-drawers (quote ("PROPERTIES" "LOGBOOK")))
+ '(org-edit-src-content-indentation 0)
+ '(org-emphasis-alist
+   (quote
+    (("*" bold "<b>" "</b>")
+     ("/" italic "<i>" "</i>")
+     ("_" underline "<span style=\"text-decoration:underline;\">" "</span>")
+     ("=" org-code "<code>" "</code>" verbatim)
+     ("~" org-verbatim "<code>" "</code>" verbatim))))
+ '(org-enable-priority-commands t)
+ '(org-enforce-todo-dependencies t)
+ '(org-export-allow-BIND t)
+ '(org-export-html-inline-images t)
+ '(org-export-html-style-extra
+   "<link rel=\"stylesheet\" href=\"http://doc.norang.ca/org.css\" type=\"text/css\" />")
+ '(org-export-html-style-include-default nil)
+ '(org-export-html-xml-declaration
+   (quote
+    (("html" . "")
+     ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
+     ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))))
+ '(org-export-htmlize-output-type (quote css))
+ '(org-export-latex-classes
+   (quote
+    (("article" "\\documentclass[11pt]{article}"
+      ("\\section{%s}" . "\\section*{%s}")
+      ("\\subsection{%s}" . "\\subsection*{%s}")
+      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+      ("\\paragraph{%s}" . "\\paragraph*{%s}")
+      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+     ("linalg" "\\documentclass{article}
+\\usepackage{linalgjh}
+[DEFAULT-PACKAGES]
+[EXTRA]
+[PACKAGES]"
+      ("\\section{%s}" . "\\section*{%s}")
+      ("\\subsection{%s}" . "\\subsection*{%s}")
+      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+      ("\\paragraph{%s}" . "\\paragraph*{%s}")
+      ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+     ("report" "\\documentclass[11pt]{report}"
+      ("\\part{%s}" . "\\part*{%s}")
+      ("\\chapter{%s}" . "\\chapter*{%s}")
+      ("\\section{%s}" . "\\section*{%s}")
+      ("\\subsection{%s}" . "\\subsection*{%s}")
+      ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+     ("book" "\\documentclass[11pt]{book}"
+      ("\\part{%s}" . "\\part*{%s}")
+      ("\\chapter{%s}" . "\\chapter*{%s}")
+      ("\\section{%s}" . "\\section*{%s}")
+      ("\\subsection{%s}" . "\\subsection*{%s}")
+      ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+     ("beamer" "\\documentclass{beamer}" org-beamer-sectioning))))
+ '(org-export-latex-listings t)
+ '(org-export-with-section-numbers nil)
+ '(org-export-with-timestamps nil)
+ '(org-fast-tag-selection-single-key (quote expert))
+ '(org-file-apps
+(quote
+ ((auto-mode . emacs)
+  ("\\.mm\\'" . system)
+  ("\\.x?html?\\'" . system)
+  ("\\.pdf\\'" . system))))
+ '(org-global-properties
+(quote
+ (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+  ("Confidence_ALL" . "low medium high")
+  ("STYLE_ALL" . "habit"))))
+ '(org-habit-graph-column 50)
+ '(org-hide-leading-stars nil)
+ '(org-html-checkbox-type "unicode")
+ '(org-id-link-to-org-use-id (quote create-if-interactive-and-no-custom-id))
+ '(org-id-method (quote uuidgen))
+ '(org-image-actual-width (quote (800)))
+ '(org-indirect-buffer-display (quote current-window))
+ '(org-insert-heading-respect-content nil)
+ '(org-latex-default-packages-alist
+(quote
+ (("T1" "fontenc" t)
+  ("" "fixltx2e" nil)
+  ("" "graphicx" t)
+  ("" "longtable" nil)
+  ("" "float" nil)
+  ("" "wrapfig" nil)
+  ("" "rotating" nil)
+  ("normalem" "ulem" t)
+  ("" "amsmath" t)
+  ("" "textcomp" t)
+  ("" "marvosym" t)
+  ("" "wasysym" t)
+  ("" "amssymb" t)
+  ("" "hyperref" nil)
+  "\\tolerance=1000")))
+ '(org-link-abbrev-alist
+(quote
+ (("gmail" . "https://mail.google.com/mail/u/0/#all/%s")
+  ("google" . "http://www.google.com/search?q=%s")
+  ("map" . "http://maps.google.com/maps?q=%s"))))
+ '(org-link-frame-setup
+(quote
+ ((vm . vm-visit-folder)
+  (gnus . org-gnus-no-new-news)
+  (file . find-file))))
+ '(org-link-mailto-program (quote (compose-mail "%a" "%s")))
+ '(org-list-allow-alphabetical t)
+ '(org-list-demote-modify-bullet
+(quote
+ (("+" . "-")
+  ("*" . "-")
+  ("1." . "-")
+  ("1)" . "-")
+  ("A)" . "-")
+  ("B)" . "-")
+  ("a)" . "-")
+  ("b)" . "-")
+  ("A." . "-")
+  ("B." . "-")
+  ("a." . "-")
+  ("b." . "-"))))
+ '(org-log-done (quote time))
+ '(org-log-into-drawer t)
+ '(org-log-state-notes-insert-after-drawers nil)
+ '(org-lowest-priority 69)
+ '(org-mobile-agendas (quote ("Z")))
+ '(org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+ '(org-mobile-files (quote ("~/Documents/Tasks/todo.txt")))
+ '(org-mobile-files-exclude-regexp "\\(TODO\\(-.*\\)?\\)\\'")
+ '(org-mobile-inbox-for-pull "~/Documents/Tasks/from-mobile.org")
+ '(org-modules
+(quote
+ (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-rmail org-vm org-wl org-w3m)))
+ '(org-odd-levels-only nil)
+ '(org-outline-path-complete-in-steps nil)
+ '(org-plantuml-jar-path nil)
+ '(org-refile-allow-creating-parent-nodes (quote confirm))
+ '(org-refile-target-verify-function (quote bh/verify-refile-target))
+ '(org-refile-targets
+(quote
+ ((nil :maxlevel . 9)
+  (org-agenda-files :maxlevel . 9))))
+ '(org-refile-use-outline-path t)
+ '(org-remove-highlights-with-change t)
+ '(org-return-follows-link t)
+ '(org-reveal-root "/Users/dhaley/src/reveal.js")
+ '(org-reverse-note-order nil)
+ '(org-show-entry-below t)
+ '(org-show-following-heading t)
+ '(org-show-hierarchy-above t)
+ '(org-show-siblings (quote ((default))))
+ '(org-special-ctrl-a/e (quote reversed))
+ '(org-special-ctrl-k t)
+ '(org-speed-commands-user
+(quote
+ (("0" . ignore)
+  ("1" . ignore)
+  ("2" . ignore)
+  ("3" . ignore)
+  ("4" . ignore)
+  ("5" . ignore)
+  ("6" . ignore)
+  ("7" . ignore)
+  ("8" . ignore)
+  ("9" . ignore)
+  ("a" . ignore)
+  ("d" . ignore)
+  ("h" . bh/hide-other)
+  ("i" progn
+   (forward-char 1)
+   (call-interactively
+    (quote org-insert-heading-respect-content)))
+  ("k" . org-kill-note-or-show-branches)
+  ("l" . ignore)
+  ("m" . ignore)
+  ("q" . bh/show-org-agenda)
+  ("r" . ignore)
+  ("s" . org-save-all-org-buffers)
+  ("w" . org-refile)
+  ("x" . ignore)
+  ("y" . ignore)
+  ("z" . org-add-note)
+  ("A" . ignore)
+  ("B" . ignore)
+  ("E" . ignore)
+  ("F" . bh/restrict-to-file-or-follow)
+  ("G" . ignore)
+  ("H" . ignore)
+  ("J" . org-clock-goto)
+  ("K" . ignore)
+  ("L" . ignore)
+  ("M" . ignore)
+  ("N" . bh/narrow-to-org-subtree)
+  ("P" . bh/narrow-to-org-project)
+  ("Q" . ignore)
+  ("R" . ignore)
+  ("S" . ignore)
+  ("T" . bh/org-todo)
+  ("U" . bh/narrow-up-one-org-level)
+  ("V" . ignore)
+  ("W" . bh/widen)
+  ("X" . ignore)
+  ("Y" . ignore)
+  ("Z" . ignore))))
+ '(org-src-fontify-natively t)
+ '(org-src-preserve-indentation nil)
+ '(org-src-window-setup (quote current-window))
+ '(org-startup-folded t)
+ '(org-startup-indented t)
+ '(org-startup-with-inline-images nil)
+ '(org-structure-template-alist
+(quote
+ (("s" "#+begin_src ?
+
+#+end_src" "<src lang=\"?\">
+
+</src>")
+  ("e" "#+begin_example
+?
+#+end_example" "<example>
+?
+</example>")
+  ("m" "#+begin_src message
+
+#+end_src" "<src lang=message>
+
+</src>")
+  ("q" "#+begin_quote
+?
+#+end_quote" "<quote>
+?
+</quote>")
+  ("v" "#+begin_verse
+?
+#+end_verse" "<verse>
+?
+</verse>")
+  ("c" "#+begin_center
+?
+#+end_center" "<center>
+?
+</center>")
+  ("l" "#+begin_latex
+?
+#+end_latex" "<literal style=\"latex\">
+?
+</literal>")
+  ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+  ("h" "#+begin_html
+?
+#+end_html" "<literal style=\"html\">
+?
+</literal>")
+  ("H" "#+html: " "<literal style=\"html\">?</literal>")
+  ("a" "#+begin_ascii
+?
+#+end_ascii")
+  ("A" "#+ascii: ")
+  ("i" "#+index: ?" "#+index: ?")
+  ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
+ '(org-stuck-projects (quote ("" nil nil "")))
+ '(org-tag-alist
+(quote
+ ((:startgroup)
+  ("@errand" . 101)
+  ("@net" . 110)
+  ("@home" . 72)
+  (:endgroup)
+  ("WAITING" . 119)
+  ("HOLD" . 104)
+  ("PERSONAL" . 80)
+  ("WORK" . 87)
+  ("ORG" . 79)
+  ("NOTE" . 78)
+  ("CANCELLED" . 99)
+  ("FLAGGED" . 63))))
+ '(org-tags-exclude-from-inheritance (quote ("crypt")))
+ '(org-tags-match-list-sublevels t)
+ '(org-time-clocksum-format
+(quote
+ (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
+ '(org-todo-keyword-faces
+(quote
+ (("TODO" :inherit org-todo)
+  ("PHONE" :foreground "forest green" :weight bold))))
+ '(org-todo-keywords
+(quote
+ ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+  (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+ '(org-todo-state-tags-triggers
+(quote
+ (("CANCELLED"
+   ("CANCELLED" . t))
+  ("WAITING"
+   ("WAITING" . t))
+  ("HOLD"
+   ("WAITING")
+   ("HOLD" . t))
+  (done
+   ("WAITING")
+   ("HOLD"))
+  ("TODO"
+   ("WAITING")
+   ("CANCELLED")
+   ("HOLD"))
+  ("NEXT"
+   ("WAITING")
+   ("CANCELLED")
+   ("HOLD"))
+  ("DONE"
+   ("WAITING")
+   ("CANCELLED")
+   ("HOLD")))))
+ '(org-treat-S-cursor-todo-selection-as-state-change nil)
+ '(org-use-fast-todo-selection t)
+ '(org-use-speed-commands t)
+ '(org-use-sub-superscripts nil)
+ '(org-yank-adjusted-subtrees t)
  '(pabbrev-idle-timer-verbose nil)
  '(package-archives
-   (quote
-    (("gnu" . "http://elpa.gnu.org/packages/")
-     ("ELPA" . "http://tromey.com/elpa/")
-     ("Marmalade" . "http://marmalade-repo.org/packages/"))))
+(quote
+ (("gnu" . "http://elpa.gnu.org/packages/")
+  ("ELPA" . "http://tromey.com/elpa/")
+  ("Marmalade" . "http://marmalade-repo.org/packages/"))))
  '(page-break-lines-modes
-   (quote
-    (emacs-lisp-mode compilation-mode outline-mode prog-mode)))
+(quote
+ (emacs-lisp-mode compilation-mode outline-mode prog-mode)))
  '(parens-require-spaces t)
  '(pcomplete-compare-entries-function (quote file-newer-than-file-p))
  '(persistent-scratch-file-name "~/.emacs.d/data/persistent-scratch")
@@ -722,22 +1194,22 @@
  '(php-mode-coding-style (quote drupal))
  '(php-template-compatibility nil)
  '(pp^L-^L-string
-   "                                                                              ")
+"                                                                              ")
+ '(projectile-cache-file "~/.emacs.d/data/projectile.cache")
+ '(projectile-completion-system (quote grizzl))
  '(projectile-drupal-base-url-function (quote dkh-get-base-url))
  '(projectile-drupal-site-base-url-dev "http://www-dev.colorado.edu")
  '(projectile-drupal-site-base-url-prod "http://www.colorado.edu")
  '(projectile-drupal-site-base-url-stage "http://www-stage.colorado.edu")
  '(projectile-drupal-site-base-url-test "http://www-test.colorado.edu")
  '(projectile-drupal-site-name-function (quote dkh-get-site-name))
- '(projectile-cache-file "~/.emacs.d/data/projectile.cache")
- '(projectile-completion-system (quote grizzl))
  '(projectile-enable-caching t)
+ '(projectile-known-projects-file "~/.emacs.d/data/projectile-bookmarks.eld")
  '(projectile-project-root-files-bottom-up
-   (quote
-    ("includes/common.inc" "includes/bootstrap.inc" ".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs")))
+(quote
+ ("includes/common.inc" "includes/bootstrap.inc" ".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs")))
  '(projectile-switch-project-action (quote dkh-projectile-dired))
  '(projectile-switch-project-hook (quote dkh-project-record))
- '(projectile-known-projects-file "~/.emacs.d/data/projectile-bookmarks.eld")
  '(proof-auto-action-when-deactivating-scripting (quote retract))
  '(proof-autosend-enable nil)
  '(proof-electric-terminator-enable t)
@@ -754,33 +1226,33 @@
  '(read-buffer-function (quote ido-read-buffer))
  '(recentf-auto-cleanup (quote never))
  '(recentf-exclude
-   (quote
-    ("~\\'" "\\`out\\'" "\\.log\\'" "^/[^/]*:" "\\.el\\.gz\\'")))
+(quote
+ ("~\\'" "\\`out\\'" "\\.log\\'" "^/[^/]*:" "\\.el\\.gz\\'")))
  '(recentf-max-saved-items 2000)
  '(recentf-save-file "~/.emacs.d/data/recentf")
  '(redisplay-dont-pause t t)
  '(regex-tool-backend (quote perl))
  '(runner-init-file "~/.emacs.d/data/runner-conf.el")
  '(safe-local-variable-values
-   (quote
-    ((nix-package-name . "pkgs.haskellPackages_ghc782.newartisans")
-     (eval require
-           (quote edg))
-     (eval ignore-errors
-           (require
-            (quote edg)))
-     (after-save-hook git-commit-changes)
-     (shm-lambda-indent-style . leftmost-parent)
-     (haskell-indent-spaces . 4)
-     (haskell-indent-spaces . 2)
-     (coq-prog-args "-emacs" "-no-native-compiler" "-R" "." "Hask")
-     (coq-prog-args "-emacs" "-R" "." "Hask"))))
+(quote
+ ((nix-package-name . "pkgs.haskellPackages_ghc782.newartisans")
+  (eval require
+        (quote edg))
+  (eval ignore-errors
+        (require
+         (quote edg)))
+  (after-save-hook git-commit-changes)
+  (shm-lambda-indent-style . leftmost-parent)
+  (haskell-indent-spaces . 4)
+  (haskell-indent-spaces . 2)
+  (coq-prog-args "-emacs" "-no-native-compiler" "-R" "." "Hask")
+  (coq-prog-args "-emacs" "-R" "." "Hask"))))
  '(sage-view-anti-aliasing-level 4)
  '(sage-view-margin (quote (20 . 20)))
  '(sage-view-scale 2.0)
  '(same-window-buffer-names
-   (quote
-    ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
+(quote
+ ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
  '(save-abbrevs (quote silently))
  '(save-interprogram-paste-before-kill t)
  '(save-kill-file-name "~/.emacs.d/data/kill-ring-saved.el")
@@ -788,11 +1260,11 @@
  '(semanticdb-default-save-directory "~/.emacs.d/data/semanticdb")
  '(session-globals-exclude (quote (load-history flyspell-auto-correct-ring)))
  '(session-globals-include
-   (quote
-    ((kill-ring 10 nil)
-     (session-file-alist 200 t)
-     (file-name-history 200 nil)
-     search-ring regexp-search-ring sr-history-registry)))
+(quote
+ ((kill-ring 10 nil)
+  (session-file-alist 200 t)
+  (file-name-history 200 nil)
+  search-ring regexp-search-ring sr-history-registry)))
  '(session-initialize (quote (session places keys)))
  '(session-name-disable-regexp "\\(\\`/tmp\\|COMMIT_EDITMSG\\)")
  '(session-registers (quote (t (0 . 127))))
@@ -828,47 +1300,47 @@
  '(tail-volatile nil)
  '(temp-buffer-resize-mode t nil (help))
  '(term-bind-key-alist
-   (quote
-    (("C-c C-c" . term-interrupt-subjob)
-     ("C-b" . my-term-send-raw-at-prompt)
-     ("C-f" . my-term-send-raw-at-prompt)
-     ("C-a" . my-term-send-raw-at-prompt)
-     ("C-e" . my-term-send-raw-at-prompt)
-     ("C-p" . previous-line)
-     ("C-n" . next-line)
-     ("C-s" . isearch-forward)
-     ("C-r" . isearch-backward)
-     ("C-m" . term-send-raw)
-     ("M-f" . term-send-forward-word)
-     ("M-b" . term-send-backward-word)
-     ("M->" . my-term-end-of-buffer)
-     ("M-o" . term-send-backspace)
-     ("M-p" . term-send-up)
-     ("M-n" . term-send-down)
-     ("M-d" . term-send-forward-kill-word)
-     ("M-DEL" . term-send-backward-kill-word)
-     ("M-r" . term-send-reverse-search-history)
-     ("M-," . term-send-input)
-     ("M-." . comint-dynamic-complete)
-     ("C-y" . term-paste))))
+(quote
+ (("C-c C-c" . term-interrupt-subjob)
+  ("C-b" . my-term-send-raw-at-prompt)
+  ("C-f" . my-term-send-raw-at-prompt)
+  ("C-a" . my-term-send-raw-at-prompt)
+  ("C-e" . my-term-send-raw-at-prompt)
+  ("C-p" . previous-line)
+  ("C-n" . next-line)
+  ("C-s" . isearch-forward)
+  ("C-r" . isearch-backward)
+  ("C-m" . term-send-raw)
+  ("M-f" . term-send-forward-word)
+  ("M-b" . term-send-backward-word)
+  ("M->" . my-term-end-of-buffer)
+  ("M-o" . term-send-backspace)
+  ("M-p" . term-send-up)
+  ("M-n" . term-send-down)
+  ("M-d" . term-send-forward-kill-word)
+  ("M-DEL" . term-send-backward-kill-word)
+  ("M-r" . term-send-reverse-search-history)
+  ("M-," . term-send-input)
+  ("M-." . comint-dynamic-complete)
+  ("C-y" . term-paste))))
  '(term-buffer-maximum-size 0)
  '(term-scroll-show-maximum-output t)
  '(text-mode-hook
-   (quote
-    (turn-on-auto-fill
-     (lambda nil
-       (ignore-errors
-         (diminish
-          (quote auto-fill-function)))))))
+(quote
+ (turn-on-auto-fill
+  (lambda nil
+    (ignore-errors
+      (diminish
+       (quote auto-fill-function)))))))
  '(tls-program
-   (quote
-    ("openssl s_client -connect %h:%p -no_ssl2 -ign_eof -CApath /etc/postfix/certs -cert ~/Messages/me.pem")))
+(quote
+ ("openssl s_client -connect %h:%p -no_ssl2 -ign_eof -CApath /etc/postfix/certs -cert ~/Messages/me.pem")))
  '(tool-bar-mode nil)
  '(tramp-auto-save-directory "~/.backups")
  '(tramp-default-method "ssh")
  '(tramp-default-method-alist
-   (quote
-    (("\\`\\(127\\.0\\.0\\.1\\|::1\\|localhost6?\\)\\'" "\\`root\\'" "sudo"))))
+(quote
+ (("\\`\\(127\\.0\\.0\\.1\\|::1\\|localhost6?\\)\\'" "\\`root\\'" "sudo"))))
  '(tramp-persistency-file-name "~/.emacs.d/data/tramp")
  '(trash-directory "~/.Trash")
  '(undo-limit 800000)
@@ -913,14 +1385,13 @@
  '(yaoddmuse-browse-function (quote w3m-browse-url))
  '(yaoddmuse-directory "~/.emacs.d/doc")
  '(yas-prompt-functions
-   (quote
-    (yas-ido-prompt yas-completing-prompt yas-no-prompt)))
+(quote
+ (yas-ido-prompt yas-completing-prompt yas-no-prompt)))
  '(yas-snippet-dirs
-   (quote
-    ("~/.emacs.d/snippets" "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets" "~/.emacs.d/site-lisp/css-scss")) nil (yasnippet))
+(quote
+ ("~/.emacs.d/snippets" "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets" "~/.emacs.d/site-lisp/css-scss")) nil (yasnippet))
  '(yas-triggers-in-field t)
- '(yas-wrap-around-region t)
-)
+ '(yas-wrap-around-region t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -938,4 +1409,5 @@
  '(flyparse-warning-face ((t (:background "DeepSkyBlue"))))
  '(ghc-face-error ((t (:inherit default))))
  '(ghc-face-warn ((t (:inherit default))))
- '(idris-loaded-region-face ((t (:background "#eaf8ff")))))
+ '(idris-loaded-region-face ((t (:background "#eaf8ff"))))
+ '(org-mode-line-clock ((t (:foreground "red" :box (:line-width -1 :style released-button)))) t))
