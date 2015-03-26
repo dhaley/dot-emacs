@@ -1202,7 +1202,7 @@ Keys are in kbd format."
       (find-file-other-window "~/org/projects.org"))))
 
 (use-package bbdb-com
-  :load-path "override/bbdb/lisp"
+  :load-path "override/bbdb"
   :commands bbdb-create
   :bind ("M-B" . bbdb))
 
@@ -1695,6 +1695,10 @@ Keys are in kbd format."
 (use-package conf-mode
   :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
 
+(use-package gist
+  :load-path "site-lisp/gist"
+  :bind ("C-c G" . gist-region-or-buffer))
+
 (use-package erc
   :if running-alternate-emacs
   :init
@@ -2055,10 +2059,6 @@ Keys are in kbd format."
   :config
   (unbind-key "C-." flyspell-mode-map))
 
-(use-package gist
-  :load-path "site-lisp/gist"
-  :bind ("C-c G" . gist-region-or-buffer))
-
 (use-package github-browse-file
   :bind ("H-o" . github-browse-file))
 
@@ -2245,12 +2245,15 @@ Keys are in kbd format."
   (use-package helm-commands)
   (use-package helm-files)
   (use-package helm-buffers)
+
   (use-package helm-ls-git
     :load-path "site-lisp/helm-ls-git")
-  (use-package helm-match-plugin)
 
-  (helm-match-plugin-mode t)
-  (helm-autoresize-mode t)
+  (use-package helm-match-plugin
+    :config
+    (helm-match-plugin-mode 1))
+
+  (helm-autoresize-mode 1)
 
   (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
   (bind-key "C-i" 'helm-execute-persistent-action helm-map)
@@ -3202,7 +3205,7 @@ Keys are in kbd format."
     (run-with-idle-timer 300 t 'jump-to-org-agenda)
     (my-org-startup))
 
-  (bind-key "<tab>" 'smart-tab org-mode-map))
+  (add-hook 'org-mode-hook  #'yas-minor-mode))
 
 (use-package org-jira
   :disabled t
@@ -3470,53 +3473,6 @@ unless return was pressed outside the comment"
 (use-package popup-ruler
   :bind (("C-. r" . popup-ruler)
          ("C-. R" . popup-ruler-vertical)))
-
-(use-package powerline
-  :disabled t
-  :init
-  (defface my-powerline-time-face
-    '((t (:background "#ffff99" :inherit mode-line)))
-    "Powerline face for displaying clocked time."
-    :group 'powerline)
-
-  :config
-  (setq-default
-   mode-line-format
-   '("%e"
-     (:eval
-      (let*
-          ((active (powerline-selected-window-active))
-           (mode-line (if active 'mode-line 'mode-line-inactive))
-           (face1 (if active 'powerline-active1 'powerline-inactive1))
-           (face2 (if active 'powerline-active2 'powerline-inactive2))
-           (separator-left
-            (intern (format "powerline-%s-%s"
-                            powerline-default-separator
-                            (car powerline-default-separator-dir))))
-           (separator-right
-            (intern (format "powerline-%s-%s"
-                            powerline-default-separator
-                            (cdr powerline-default-separator-dir))))
-           (lhs
-            (list
-             (powerline-raw " ")
-             (powerline-buffer-id nil 'l)
-             (powerline-raw " ")
-             (funcall separator-left mode-line face2)))
-           (rhs
-            (append
-             (list)
-             (if (and active (org-clocking-p))
-                 (list
-                  (powerline-raw
-                   (format "  %s  "
-                           (org-minutes-to-clocksum-string
-                            (org-clock-get-clocked-time)))
-                   'my-powerline-time-face))
-               (list)))))
-        (concat (powerline-render lhs)
-                (powerline-fill face2 (powerline-width rhs))
-                (powerline-render rhs)))))))
 
 (use-package pp-c-l
   :commands pretty-control-l-mode
