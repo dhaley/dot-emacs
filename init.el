@@ -11,32 +11,24 @@
   (setq load-path
         (cons (expand-file-name path (or dir user-emacs-directory)) load-path)))
 
+
 ;; Add top-level lisp directories, in case they were not setup by the
 ;; environment.
-;; (dolist (dir (nreverse
-;;               (list 
+
+(dolist (dir (nreverse
+              (list 
                     
-;;                     user-site-lisp-directory)))
-;;   (dolist (entry (nreverse (directory-files-and-attributes dir)))
-;;     (if (cadr entry)
-;;         (add-to-load-path (car entry) dir))))
+                    user-site-lisp-directory)))
+  (dolist (entry (nreverse (directory-files-and-attributes dir)))
+    (if (cadr entry)
+        (add-to-load-path (car entry) dir))))
 
 (eval-and-compile
   (mapc
    #'(lambda (path)
        (push (expand-file-name path user-emacs-directory) load-path))
-   '("site-lisp" "override" "lisp" "lisp/use-package" ""))
+   '("site-lisp" "override" "lisp" "lisp/use-package" "")))
 
-  ;; (defun agda-site-lisp ()
-  ;;   (let ((agda
-  ;;          (nth 1 (split-string
-  ;;                  (shell-command-to-string "load-env-agda which agda")
-  ;;                  "\n"))))
-  ;;     (and agda
-  ;;          (expand-file-name
-  ;;           "../share/x86_64-osx-ghc-7.8.4/Agda-2.4.2.2/emacs-mode"
-  ;;           (file-name-directory agda)))))
-  )
 
 (eval-when-compile
   ;; (defvar use-package-verbose t)
@@ -52,8 +44,8 @@
 ;;; Utility macros and functions
 
 ;; support textexpander (dkh (2015-03-25): check if it's running)
-(bind-key "A-v" 'scroll-down)
-(bind-key "M-v" 'yank)
+(bind-key "M-v" 'scroll-up)
+(bind-key "H-v" 'yank)
 
 (defsubst hook-into-modes (func &rest modes)
   (dolist (mode-hook modes) (add-hook mode-hook func)))
@@ -846,6 +838,10 @@ Keys are in kbd format."
 
 (define-key ctl-x-4-map "t" 'toggle-window-split)
 
+(use-package etags
+  :load-path "/usr/local/share/emacs/24.4/lisp/progmodes"
+  :bind ("M-T" . tags-search))
+
 (use-package gtags
   :disabled t
   :commands gtags-mode
@@ -915,7 +911,7 @@ Keys are in kbd format."
 
 (use-package agda2-mode
   :mode "\\.agda\\'"
-  :load-path (lambda () (list (agda-site-lisp)))
+  :load-path "site-lisp/agda-mode"
   :defines agda2-mode-map
   :preface
   (defun agda2-insert-helper-function (&optional prefix)
@@ -1989,9 +1985,6 @@ Keys are in kbd format."
   :load-path "site-lisp/ess/lisp/"
   :commands R)
 
-(use-package etags
-  :bind ("M-T" . tags-search))
-
 (use-package eval-expr
   :load-path "site-lisp/eval-expr"
   :bind ("M-:" . eval-expr)
@@ -2005,6 +1998,7 @@ Keys are in kbd format."
     (paredit-mode)))
 
 (use-package eww
+  :load-path "/usr/local/share/emacs/24.4/lisp/net"
   :bind ("H-M-g" . eww)
   :config
   (use-package eww-lnum
@@ -3042,26 +3036,26 @@ Keys are in kbd format."
 
   (add-hook 'magit-status-mode-hook #'(lambda () (magit-monitor t))))
 
-(use-package makefile-mode
-  :mode ((".make\\'" . makefile-gmake-mode))
-  :config
-  (progn
-    (require 'make-mode)
+;; (use-package makefile-mode
+;;   :mode ((".make\\'" . makefile-gmake-mode))
+;;   :config
+;;   (progn
+;;     (require 'make-mode)
 
-    (defconst makefile-nmake-statements
-      `("!IF" "!ELSEIF" "!ELSE" "!ENDIF" "!MESSAGE" "!ERROR" "!INCLUDE" ,@makefile-statements)
-      "List of keywords understood by nmake.")
+;;     (defconst makefile-nmake-statements
+;;       `("!IF" "!ELSEIF" "!ELSE" "!ENDIF" "!MESSAGE" "!ERROR" "!INCLUDE" ,@makefile-statements)
+;;       "List of keywords understood by nmake.")
 
-    (defconst makefile-nmake-font-lock-keywords
-      (makefile-make-font-lock-keywords
-       makefile-var-use-regex
-       makefile-nmake-statements
-       t))
+;;     (defconst makefile-nmake-font-lock-keywords
+;;       (makefile-make-font-lock-keywords
+;;        makefile-var-use-regex
+;;        makefile-nmake-statements
+;;        t))
 
-    (define-derived-mode makefile-nmake-mode makefile-mode "nMakefile"
-      "An adapted `makefile-mode' that knows about nmake."
-      (setq font-lock-defaults
-            `(makefile-nmake-font-lock-keywords ,@(cdr font-lock-defaults))))))
+;;     (define-derived-mode makefile-nmake-mode makefile-mode "nMakefile"
+;;       "An adapted `makefile-mode' that knows about nmake."
+;;       (setq font-lock-defaults
+;;             `(makefile-nmake-font-lock-keywords ,@(cdr font-lock-defaults))))))
 
 (use-package manage-minor-mode
   :commands (manage-minor-mode))
@@ -3566,7 +3560,7 @@ unless return was pressed outside the comment"
         (bind-key "C-H-M-p" 'revert-buffer)
         (bind-key "C-H-M-\"" 'kill-buffer)))
 
-    (add-hook 'projectile-mode-hook 'projectile-drupal-on)
+;;    (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
     (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
 
@@ -3714,7 +3708,7 @@ unless return was pressed outside the comment"
     (defun quickrun/phpunit-outputter ()
       (save-excursion
         (goto-char (point-min))
-        (while (replace-regexp "^M" "")
+        (while (re-search-forward "^M" "")
           nil))
       (highlight-phrase "^OK.*$" 'phpunit-pass)
       (highlight-phrase "^FAILURES.*$" 'phpunit-fail))
@@ -4421,26 +4415,6 @@ and run compass from that directory"
 (use-package wcount
   :disabled t
   :commands wcount-mode)
-
-(use-package webjump
-  :commands webjump
-  :config
-  (progn
-    (setq webjump-sites (append '(                    ("Java API" .
-                                                       [simple-query "www.google.com" "http://www.google.com/search?hl=en&as_sitesearch=http://java.sun.com/javase/6/docs/api/&q=" ""])
-                                                      ("Stack Overflow" . "www.stackoverlow.com")
-                                                      ("Pop's Site"   . "www.joebob-and-son.com/")
-
-                                                      )
-                                webjump-sample-sites))
-    ;; Add Urban Dictionary to webjump
-    (eval-after-load "webjump"
-      '(add-to-list 'webjump-sites
-                    '("Urban Dictionary" .
-                      [simple-query
-                       "www.urbandictionary.com"
-                       "http://www.urbandictionary.com/define.php?term="
-                       ""])))))
 
 (use-package wgrep)
 
