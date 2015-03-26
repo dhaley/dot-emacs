@@ -1824,7 +1824,7 @@ Keys are in kbd format."
              (who (erc-get-server-user nick))
              (host (erc-server-user-host who))
              (user (erc-server-user-login who)))
-        (erc-send-command
+        (erc-server-send
          (format "MODE %s +b *!%s@%s%s"
                  chan (if whole-ip "*" user) host (or redirect "")))))
 
@@ -1835,7 +1835,7 @@ Keys are in kbd format."
       (erc-cmd-OPME)
       (sleep-for 0 250)
       (erc-cmd-BAN nick)
-      (erc-send-command (format "KICK %s %s %s"
+      (erc-server-send (format "KICK %s %s %s"
                                 (erc-default-target)
                                 nick
                                 (or reason
@@ -1850,7 +1850,7 @@ Keys are in kbd format."
       (erc-cmd-OPME)
       (sleep-for 0 250)
       (erc-cmd-BAN nick nil t)
-      (erc-send-command (format "KICK %s %s %s"
+      (erc-server-send (format "KICK %s %s %s"
                                 (erc-default-target)
                                 nick
                                 (or reason
@@ -1865,7 +1865,7 @@ Keys are in kbd format."
       (erc-cmd-OPME)
       (sleep-for 0 250)
       (erc-cmd-BAN nick "$#haskell-ops")
-      (erc-send-command (format "KICK %s %s %s"
+      (erc-server-send (format "KICK %s %s %s"
                                 (erc-default-target)
                                 nick
                                 (or reason
@@ -2107,7 +2107,7 @@ Keys are in kbd format."
     (setq golden-ratio-auto-scale t))
 
 (use-package google-this
-  :commands (google-region google-translate-query-or-region google-error google-forecast google-lucky-search google-lucky-and-insert-url google-line google-maps google-cpp-reference google-symbol google-this google-word google-search)
+  :commands (google-this-region google-this-translate-query-or-region google-this-error google-this-forecast google-this-lucky-search google-this-lucky-and-insert-url google-this-line google-maps google-this-cpp-reference google-this-symbol google-this google-this-word google-this-search)
   :diminish google-this-mode
   :config
   (google-this-mode))
@@ -2287,7 +2287,7 @@ Keys are in kbd format."
           (last-command last-command)
           (buffer-modified (buffer-modified-p))
           (hippie-expand-function (or hippie-expand-function 'hippie-expand)))
-      (flet ((ding))        ; avoid the (ding) when hippie-expand exhausts its
+      (cl-flet ((ding))        ; avoid the (ding) when hippie-expand exhausts its
                                         ; options.
         (while (progn
                  (funcall hippie-expand-function nil)
@@ -3444,10 +3444,10 @@ unless return was pressed outside the comment"
               (if (string-match "return" line)
                   (progn
                     (newline)
-                    (previous-line))
+                    (forward-line -1))
                 (next-line)
                 (newline)
-                (previous-line))
+                (forward-line -1))
               (insert pre)
               (insert (format "%s" expression))
               (insert post))
@@ -3565,6 +3565,10 @@ unless return was pressed outside the comment"
 
     (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
 
+    (defun projectile-switch-to-last-project ()
+      (interactive)
+      (funcall projectile-switch-project-action projectile-last-project-root))
+
     (defun projectile-switch-to-last-project-root-buffer ()
       (interactive)
       (if (boundp 'projectile-last-project-root-buffer)
@@ -3586,10 +3590,6 @@ unless return was pressed outside the comment"
     (defun dkh-project-record ()
       (setq projectile-last-project-root (projectile-project-root))
       (setq projectile-last-project-root-buffer (current-buffer)))
-
-    (defun projectile-switch-to-last-project ()
-      (interactive)
-      (funcall projectile-switch-project-action projectile-last-project-root))
 
     (global-set-key (kbd "C-c p S") 'projectile-switch-to-last-project)
 
@@ -3835,7 +3835,7 @@ and run compass from that directory"
      (interactive)
      (let* ((sass-file (buffer-file-name (current-buffer)))
             (local-dir (file-name-directory sass-file)))
-       (cl-cl-flet ((contains-config-rb (dir-name)
+       (cl-flet ((contains-config-rb (dir-name)
                                   (find "config.rb" (directory-files dir-name)
                                         :test 'equal))
               (parent-dir (dir)
