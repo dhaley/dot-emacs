@@ -1368,9 +1368,9 @@ Keys are in kbd format."
 
   :config
   (use-package dired-x)
-  ;; (use-package dired+
-  ;;   :config
-  ;;   (unbind-key "M-s f" dired-mode-map))
+  (use-package dired+
+    :config
+    (unbind-key "M-s f" dired-mode-map))
 
   (bind-key "l" 'dired-up-directory dired-mode-map)
 
