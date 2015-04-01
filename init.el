@@ -176,8 +176,6 @@
 (define-prefix-command 'ctl-period-map)
 (bind-key "C-." 'ctl-period-map)
 
-(bind-key* "<C-return>" 'other-window)
-
 (defun collapse-or-expand ()
   (interactive)
   (if (> (length (window-list)) 1)
@@ -892,7 +890,7 @@ Keys are in kbd format."
   (global-ace-isearch-mode 1))
 
 (use-package ace-window
-  :bind ("C-x o" . ace-window))
+  :bind (("C-x o" . ace-window)("<C-return>" . ace-window)))
 
 (use-package ag
   :load-path "site-lisp/ag-el"
@@ -4120,10 +4118,6 @@ and run compass from that directory"
          (sr-within dir (sr-alternate-buffer (dired dir))))
         (sr-history-push default-directory)
         (sr-beginning-of-buffer)))))
-
-(use-package switch-window
-  :load-path "site-lisp/switch-windo"
-  :bind ("C-x o" . switch-window))
 
 (use-package tablegen-mode
   :mode ("\\.td\\'" . tablegen-mode))

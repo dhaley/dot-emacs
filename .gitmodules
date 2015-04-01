@@ -913,9 +913,6 @@
 [submodule "site-lisp/lua-mode"]
 	path = site-lisp/lua-mode
 	url = git@github.com:immerrr/lua-mode.git
-[submodule "site-lisp/switch-window"]
-	path = site-lisp/switch-window
-	url = git@github.com:dimitri/switch-window.git
 [submodule "site-lisp/dom"]
 	path = site-lisp/dom
 	url = https://gitlab.com/mva.led/dom-el.git
