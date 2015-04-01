@@ -665,6 +665,8 @@
  '(magit-highlight-trailing-whitespace nil)
  '(magit-highlight-whitespace nil)
  '(magit-process-popup-time 15)
+ '(magit-revert-backup t)
+ '(magit-show-diffstat nil)
  '(magit-stage-all-confirm nil)
  '(magit-unstage-all-confirm nil)
  '(magit-use-overlays nil)
@@ -1177,13 +1179,13 @@ SCHEDULED: %t
  '(org-yank-adjusted-subtrees t)
  '(pabbrev-idle-timer-verbose nil)
  '(package-archives
-(quote
- (("gnu" . "http://elpa.gnu.org/packages/")
-  ("ELPA" . "http://tromey.com/elpa/")
-  ("Marmalade" . "http://marmalade-repo.org/packages/"))))
+   (quote
+    (("gnu" . "http://elpa.gnu.org/packages/")
+     ("ELPA" . "http://tromey.com/elpa/")
+     ("Marmalade" . "http://marmalade-repo.org/packages/"))))
  '(page-break-lines-modes
-(quote
- (emacs-lisp-mode compilation-mode outline-mode prog-mode)))
+   (quote
+    (emacs-lisp-mode compilation-mode outline-mode prog-mode)))
  '(parens-require-spaces t)
  '(pcomplete-compare-entries-function (quote file-newer-than-file-p))
  '(persistent-scratch-file-name "~/.emacs.d/data/persistent-scratch")
@@ -1195,7 +1197,7 @@ SCHEDULED: %t
  '(php-mode-coding-style (quote drupal))
  '(php-template-compatibility nil)
  '(pp^L-^L-string
-"                                                                              ")
+   "                                                                              ")
  '(projectile-cache-file "~/.emacs.d/data/projectile.cache")
  '(projectile-completion-system (quote grizzl))
  '(projectile-drupal-base-url-function (quote dkh-get-base-url))
@@ -1207,8 +1209,8 @@ SCHEDULED: %t
  '(projectile-enable-caching t)
  '(projectile-known-projects-file "~/.emacs.d/data/projectile-bookmarks.eld")
  '(projectile-project-root-files-bottom-up
-(quote
- ("includes/common.inc" "includes/bootstrap.inc" ".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs")))
+   (quote
+    ("includes/common.inc" "includes/bootstrap.inc" ".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs")))
  '(projectile-switch-project-action (quote dkh-projectile-dired))
  '(projectile-switch-project-hook (quote dkh-project-record))
  '(proof-auto-action-when-deactivating-scripting (quote retract))
@@ -1227,33 +1229,33 @@ SCHEDULED: %t
  '(read-buffer-function (quote ido-read-buffer))
  '(recentf-auto-cleanup (quote never))
  '(recentf-exclude
-(quote
- ("~\\'" "\\`out\\'" "\\.log\\'" "^/[^/]*:" "\\.el\\.gz\\'")))
+   (quote
+    ("~\\'" "\\`out\\'" "\\.log\\'" "^/[^/]*:" "\\.el\\.gz\\'")))
  '(recentf-max-saved-items 2000)
  '(recentf-save-file "~/.emacs.d/data/recentf")
  '(redisplay-dont-pause t t)
  '(regex-tool-backend (quote perl))
  '(runner-init-file "~/.emacs.d/data/runner-conf.el")
  '(safe-local-variable-values
-(quote
- ((nix-package-name . "pkgs.haskellPackages_ghc782.newartisans")
-  (eval require
-        (quote edg))
-  (eval ignore-errors
-        (require
-         (quote edg)))
-  (after-save-hook git-commit-changes)
-  (shm-lambda-indent-style . leftmost-parent)
-  (haskell-indent-spaces . 4)
-  (haskell-indent-spaces . 2)
-  (coq-prog-args "-emacs" "-no-native-compiler" "-R" "." "Hask")
-  (coq-prog-args "-emacs" "-R" "." "Hask"))))
+   (quote
+    ((nix-package-name . "pkgs.haskellPackages_ghc782.newartisans")
+     (eval require
+           (quote edg))
+     (eval ignore-errors
+           (require
+            (quote edg)))
+     (after-save-hook git-commit-changes)
+     (shm-lambda-indent-style . leftmost-parent)
+     (haskell-indent-spaces . 4)
+     (haskell-indent-spaces . 2)
+     (coq-prog-args "-emacs" "-no-native-compiler" "-R" "." "Hask")
+     (coq-prog-args "-emacs" "-R" "." "Hask"))))
  '(sage-view-anti-aliasing-level 4)
  '(sage-view-margin (quote (20 . 20)))
  '(sage-view-scale 2.0)
  '(same-window-buffer-names
-(quote
- ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
+   (quote
+    ("*eshell*" "*shell*" "*mail*" "*inferior-lisp*" "*ielm*" "*scheme*")))
  '(save-abbrevs (quote silently))
  '(save-interprogram-paste-before-kill t)
  '(save-kill-file-name "~/.emacs.d/data/kill-ring-saved.el")
@@ -1261,11 +1263,11 @@ SCHEDULED: %t
  '(semanticdb-default-save-directory "~/.emacs.d/data/semanticdb")
  '(session-globals-exclude (quote (load-history flyspell-auto-correct-ring)))
  '(session-globals-include
-(quote
- ((kill-ring 10 nil)
-  (session-file-alist 200 t)
-  (file-name-history 200 nil)
-  search-ring regexp-search-ring sr-history-registry)))
+   (quote
+    ((kill-ring 10 nil)
+     (session-file-alist 200 t)
+     (file-name-history 200 nil)
+     search-ring regexp-search-ring sr-history-registry)))
  '(session-initialize (quote (session places keys)))
  '(session-name-disable-regexp "\\(\\`/tmp\\|COMMIT_EDITMSG\\)")
  '(session-registers (quote (t (0 . 127))))
@@ -1301,47 +1303,47 @@ SCHEDULED: %t
  '(tail-volatile nil)
  '(temp-buffer-resize-mode t nil (help))
  '(term-bind-key-alist
-(quote
- (("C-c C-c" . term-interrupt-subjob)
-  ("C-b" . my-term-send-raw-at-prompt)
-  ("C-f" . my-term-send-raw-at-prompt)
-  ("C-a" . my-term-send-raw-at-prompt)
-  ("C-e" . my-term-send-raw-at-prompt)
-  ("C-p" . previous-line)
-  ("C-n" . next-line)
-  ("C-s" . isearch-forward)
-  ("C-r" . isearch-backward)
-  ("C-m" . term-send-raw)
-  ("M-f" . term-send-forward-word)
-  ("M-b" . term-send-backward-word)
-  ("M->" . my-term-end-of-buffer)
-  ("M-o" . term-send-backspace)
-  ("M-p" . term-send-up)
-  ("M-n" . term-send-down)
-  ("M-d" . term-send-forward-kill-word)
-  ("M-DEL" . term-send-backward-kill-word)
-  ("M-r" . term-send-reverse-search-history)
-  ("M-," . term-send-input)
-  ("M-." . comint-dynamic-complete)
-  ("C-y" . term-paste))))
+   (quote
+    (("C-c C-c" . term-interrupt-subjob)
+     ("C-b" . my-term-send-raw-at-prompt)
+     ("C-f" . my-term-send-raw-at-prompt)
+     ("C-a" . my-term-send-raw-at-prompt)
+     ("C-e" . my-term-send-raw-at-prompt)
+     ("C-p" . previous-line)
+     ("C-n" . next-line)
+     ("C-s" . isearch-forward)
+     ("C-r" . isearch-backward)
+     ("C-m" . term-send-raw)
+     ("M-f" . term-send-forward-word)
+     ("M-b" . term-send-backward-word)
+     ("M->" . my-term-end-of-buffer)
+     ("M-o" . term-send-backspace)
+     ("M-p" . term-send-up)
+     ("M-n" . term-send-down)
+     ("M-d" . term-send-forward-kill-word)
+     ("M-DEL" . term-send-backward-kill-word)
+     ("M-r" . term-send-reverse-search-history)
+     ("M-," . term-send-input)
+     ("M-." . comint-dynamic-complete)
+     ("C-y" . term-paste))))
  '(term-buffer-maximum-size 0)
  '(term-scroll-show-maximum-output t)
  '(text-mode-hook
-(quote
- (turn-on-auto-fill
-  (lambda nil
-    (ignore-errors
-      (diminish
-       (quote auto-fill-function)))))))
+   (quote
+    (turn-on-auto-fill
+     (lambda nil
+       (ignore-errors
+         (diminish
+          (quote auto-fill-function)))))))
  '(tls-program
-(quote
- ("openssl s_client -connect %h:%p -no_ssl2 -ign_eof -CApath /etc/postfix/certs -cert ~/Messages/me.pem")))
+   (quote
+    ("openssl s_client -connect %h:%p -no_ssl2 -ign_eof -CApath /etc/postfix/certs -cert ~/Messages/me.pem")))
  '(tool-bar-mode nil)
  '(tramp-auto-save-directory "~/.backups")
  '(tramp-default-method "ssh")
  '(tramp-default-method-alist
-(quote
- (("\\`\\(127\\.0\\.0\\.1\\|::1\\|localhost6?\\)\\'" "\\`root\\'" "sudo"))))
+   (quote
+    (("\\`\\(127\\.0\\.0\\.1\\|::1\\|localhost6?\\)\\'" "\\`root\\'" "sudo"))))
  '(tramp-persistency-file-name "~/.emacs.d/data/tramp")
  '(trash-directory "~/.Trash")
  '(undo-limit 800000)
@@ -1386,11 +1388,11 @@ SCHEDULED: %t
  '(yaoddmuse-browse-function (quote w3m-browse-url))
  '(yaoddmuse-directory "~/.emacs.d/doc")
  '(yas-prompt-functions
-(quote
- (yas-ido-prompt yas-completing-prompt yas-no-prompt)))
+   (quote
+    (yas-ido-prompt yas-completing-prompt yas-no-prompt)))
  '(yas-snippet-dirs
-(quote
- ("~/.emacs.d/snippets" "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets" "~/.emacs.d/site-lisp/css-scss")) nil (yasnippet))
+   (quote
+    ("~/.emacs.d/snippets" "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets" "~/.emacs.d/site-lisp/css-scss")) nil (yasnippet))
  '(yas-triggers-in-field t)
  '(yas-wrap-around-region t))
 (custom-set-faces
@@ -1410,5 +1412,4 @@ SCHEDULED: %t
  '(flyparse-warning-face ((t (:background "DeepSkyBlue"))))
  '(ghc-face-error ((t (:inherit default))))
  '(ghc-face-warn ((t (:inherit default))))
- '(idris-loaded-region-face ((t (:background "#eaf8ff"))))
- '(org-mode-line-clock ((t (:foreground "red" :box (:line-width -1 :style released-button)))) t))
+ '(idris-loaded-region-face ((t (:background "#eaf8ff")))))

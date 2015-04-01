@@ -116,7 +116,7 @@
 (use-package pos-tip        :defer t :load-path "lib/pos-tip")
 (use-package s              :defer t :load-path "lib/s-el")
 (use-package working        :defer t)
-;; (use-package xml-rpc        :defer t)
+(use-package xml-rpc        :defer t)
 
 ;;; Keybindings
 
@@ -466,11 +466,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
   (set-frame-parameter (selected-frame) 'height emacs-min-height)
   (set-frame-parameter (selected-frame) 'width emacs-min-width)
 
-  (set-frame-font emacs-min-font)
-
-  (when running-alternate-emacs
-    (set-background-color "grey85")
-    (set-face-background 'fringe "gray80")))
+  (set-frame-font emacs-min-font))
 
 (if window-system
     (add-hook 'after-init-hook 'emacs-min))
@@ -682,8 +678,6 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
 ;; dkh (2015-03-25): Move all of the above into use-package declarations    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Packages
-
 (defun define-keys (mode-map keybindings)
   "Takes a mode map, and a list of (key function-designator)
 lists.  The functions are bound to the keys in the given mode-map.
@@ -747,6 +741,8 @@ Keys are in kbd format."
 
 (define-key ctl-x-4-map "t" 'toggle-window-split)
 
+;;; Packages
+
 (use-package etags
   :load-path "/usr/local/share/emacs/24.4/lisp/progmodes"
   :bind ("M-T" . tags-search))
@@ -755,6 +751,296 @@ Keys are in kbd format."
   :load-path "site-lisp/ggtags"
   :commands ggtags-mode
   :diminish ggtags-mode)
+
+(use-package cc-mode
+  :load-path "override/cc-mode"
+  :mode (("\\.h\\(h?\\|xx\\|pp\\)\\'" . c++-mode)
+         ("\\.m\\'"                   . c-mode)
+         ("\\.mm\\'"                  . c++-mode))
+  :preface
+  (defun my-paste-as-check ()
+    (interactive)
+    (save-excursion
+      (insert "/*\n")
+      (let ((beg (point)) end)
+        (yank)
+        (setq end (point-marker))
+        (goto-char beg)
+        (while (< (point) end)
+          (forward-char 2)
+          (insert "CHECK: ")
+          (forward-line 1)))
+      (insert "*/\n")))
+
+  ;; (defun my-c-indent-or-complete ()
+  ;;   (interactive)
+  ;;   (let ((class (syntax-class (syntax-after (1- (point))))))
+  ;;     (if (or (bolp) (and (/= 2 class)
+  ;;                         (/= 3 class)))
+  ;;         (call-interactively 'indent-according-to-mode)
+  ;;       (call-interactively 'auto-complete))))
+
+  (defvar printf-index 0)
+
+  (defun insert-counting-printf (arg)
+    (interactive "P")
+    (if arg
+        (setq printf-index 0))
+    (if t
+        (insert (format "std::cerr << \"step %d..\" << std::endl;\n"
+                        (setq printf-index (1+ printf-index))))
+      (insert (format "printf(\"step %d..\\n\");\n"
+                      (setq printf-index (1+ printf-index)))))
+    (forward-line -1)
+    (indent-according-to-mode)
+    (forward-line))
+
+  (defun my-c-mode-common-hook ()
+    (abbrev-mode 1)
+    (ggtags-mode 1)
+    (eldoc-mode 1)
+    (hs-minor-mode 1)
+    (hide-ifdef-mode 1)
+    (whitespace-mode 1)
+    (which-function-mode 1)
+    (company-mode 1)
+    (bug-reference-prog-mode 1)
+
+    (diminish 'hs-minor-mode)
+    (diminish 'hide-ifdef-mode)
+
+    ;; (bind-key "C-c p" 'insert-counting-printf c-mode-base-map)
+
+    ;;(doxymacs-mode 1)
+    ;;(doxymacs-font-lock)
+
+    (bind-key "<return>" 'newline-and-indent c-mode-base-map)
+
+    (unbind-key "M-j" c-mode-base-map)
+    (bind-key "C-c C-i" 'c-includes-current-file c-mode-base-map)
+    (bind-key "C-c C-y" 'my-paste-as-check c-mode-base-map)
+
+    (set (make-local-variable 'parens-require-spaces) nil)
+    (setq indicate-empty-lines t)
+    (setq fill-column 72)
+
+    (bind-key "M-q" 'c-fill-paragraph c-mode-base-map)
+
+    (let ((bufname (buffer-file-name)))
+      (when bufname
+        (cond
+         ((string-match "/ledger/" bufname)
+          (c-set-style "ledger"))
+         ((string-match "/ansi/" bufname)
+          (c-set-style "ti")
+          (substitute-key-definition 'fill-paragraph 'ti-refill-comment
+                                     c-mode-base-map global-map)
+          (bind-key "M-q" 'ti-refill-comment c-mode-base-map))
+         ((string-match "/edg/" bufname)
+          (c-set-style "edg"))
+         (t
+          (c-set-style "clang")))))
+
+    (font-lock-add-keywords 'c++-mode '(("\\<\\(assert\\|DEBUG\\)("
+                                         1 font-lock-warning-face t))))
+
+  :config
+  (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
+
+  (setq c-syntactic-indentation nil)
+
+  (bind-key "#" 'self-insert-command c-mode-base-map)
+  (bind-key "{" 'self-insert-command c-mode-base-map)
+  (bind-key "}" 'self-insert-command c-mode-base-map)
+  (bind-key "/" 'self-insert-command c-mode-base-map)
+  (bind-key "*" 'self-insert-command c-mode-base-map)
+  (bind-key ";" 'self-insert-command c-mode-base-map)
+  (bind-key "," 'self-insert-command c-mode-base-map)
+  (bind-key ":" 'self-insert-command c-mode-base-map)
+  (bind-key "(" 'self-insert-command c-mode-base-map)
+  (bind-key ")" 'self-insert-command c-mode-base-map)
+  (bind-key "<" 'self-insert-command c++-mode-map)
+  (bind-key ">" 'self-insert-command c++-mode-map)
+
+  (add-to-list 'c-style-alist
+               '("ti"
+                 (indent-tabs-mode . nil)
+                 (c-basic-offset . 3)
+                 (c-comment-only-line-offset . (0 . 0))
+                 (c-hanging-braces-alist
+                  . ((substatement-open before after)
+                     (arglist-cont-nonempty)))
+                 (c-offsets-alist
+                  . ((statement-block-intro . +)
+                     (knr-argdecl-intro . 5)
+                     (substatement-open . 0)
+                     (substatement-label . 0)
+                     (label . 0)
+                     (case-label . +)
+                     (statement-case-open . 0)
+                     (statement-cont . +)
+                     (arglist-intro . c-lineup-arglist-intro-after-paren)
+                     (arglist-close . c-lineup-arglist)
+                     (inline-open . 0)
+                     (brace-list-open . 0)
+                     (topmost-intro-cont
+                      . (first c-lineup-topmost-intro-cont
+                               c-lineup-gnu-DEFUN-intro-cont))))
+                 (c-special-indent-hook . c-gnu-impose-minimum)
+                 (c-block-comment-prefix . "")))
+
+  (add-to-list 'c-style-alist
+               '("edg"
+                 (indent-tabs-mode . nil)
+                 (c-basic-offset . 2)
+                 (c-comment-only-line-offset . (0 . 0))
+                 (c-hanging-braces-alist
+                  . ((substatement-open before after)
+                     (arglist-cont-nonempty)))
+                 (c-offsets-alist
+                  . ((statement-block-intro . +)
+                     (knr-argdecl-intro . 5)
+                     (substatement-open . 0)
+                     (substatement-label . 0)
+                     (label . 0)
+                     (case-label . +)
+                     (statement-case-open . 0)
+                     (statement-cont . +)
+                     (arglist-intro . +)
+                     (arglist-close . +)
+                     (inline-open . 0)
+                     (brace-list-open . 0)
+                     (topmost-intro-cont
+                      . (first c-lineup-topmost-intro-cont
+                               c-lineup-gnu-DEFUN-intro-cont))))
+                 (c-special-indent-hook . c-gnu-impose-minimum)
+                 (c-block-comment-prefix . "")))
+
+  (add-to-list 'c-style-alist
+               '("ledger"
+                 (indent-tabs-mode . nil)
+                 (c-basic-offset . 2)
+                 (c-comment-only-line-offset . (0 . 0))
+                 (c-hanging-braces-alist
+                  . ((substatement-open before after)
+                     (arglist-cont-nonempty)))
+                 (c-offsets-alist
+                  . ((statement-block-intro . +)
+                     (knr-argdecl-intro . 5)
+                     (substatement-open . 0)
+                     (substatement-label . 0)
+                     (label . 0)
+                     (case-label . 0)
+                     (statement-case-open . 0)
+                     (statement-cont . +)
+                     (arglist-intro . +)
+                     (arglist-close . +)
+                     (inline-open . 0)
+                     (brace-list-open . 0)
+                     (topmost-intro-cont
+                      . (first c-lineup-topmost-intro-cont
+                               c-lineup-gnu-DEFUN-intro-cont))))
+                 (c-special-indent-hook . c-gnu-impose-minimum)
+                 (c-block-comment-prefix . "")))
+
+  (add-to-list 'c-style-alist
+               '("clang"
+                 (indent-tabs-mode . nil)
+                 (c-basic-offset . 2)
+                 (c-comment-only-line-offset . (0 . 0))
+                 (c-hanging-braces-alist
+                  . ((substatement-open before after)
+                     (arglist-cont-nonempty)))
+                 (c-offsets-alist
+                  . ((statement-block-intro . +)
+                     (knr-argdecl-intro . 5)
+                     (substatement-open . 0)
+                     (substatement-label . 0)
+                     (label . 0)
+                     (case-label . 0)
+                     (statement-case-open . 0)
+                     (statement-cont . +)
+                     (arglist-intro . +)
+                     (arglist-close . +)
+                     (inline-open . 0)
+                     (brace-list-open . 0)
+                     (topmost-intro-cont
+                      . (first c-lineup-topmost-intro-cont
+                               c-lineup-gnu-DEFUN-intro-cont))))
+                 (c-special-indent-hook . c-gnu-impose-minimum)
+                 (c-block-comment-prefix . "")))
+
+  (defun opencl ()
+    (interactive)
+    (find-file "~/src/ansi/opencl.c")
+    (find-file-noselect "~/Contracts/TI/bugslayer/cl_0603/cl_0603.c")
+    (find-file-noselect "~/Contracts/TI/bugslayer")
+    (magit-status "~/src/ansi")
+    (gud-gdb "gdb --fullname ~/Contracts/TI/bin/c60/acpia6x"))
+
+  (defun ti-refill-comment ()
+    (interactive)
+    (let ((here (point)))
+      (goto-char (line-beginning-position))
+      (let ((begin (point)) end
+            (marker ?-) (marker-re "\\(-----\\|\\*\\*\\*\\*\\*\\)")
+            (leader-width 0))
+        (unless (looking-at "[ \t]*/\\*[-* ]")
+          (search-backward "/*")
+          (goto-char (line-beginning-position)))
+        (unless (looking-at "[ \t]*/\\*[-* ]")
+          (error "Not in a comment"))
+        (while (and (looking-at "\\([ \t]*\\)/\\* ")
+                    (setq leader-width (length (match-string 1)))
+                    (not (looking-at (concat "[ \t]*/\\*" marker-re))))
+          (forward-line -1)
+          (setq begin (point)))
+        (when (looking-at (concat "[^\n]+?" marker-re "\\*/[ \t]*$"))
+          (setq marker (if (string= (match-string 1) "-----") ?- ?*))
+          (forward-line))
+        (while (and (looking-at "[^\n]+?\\*/[ \t]*$")
+                    (not (looking-at (concat "[^\n]+?" marker-re
+                                             "\\*/[ \t]*$"))))
+          (forward-line))
+        (when (looking-at (concat "[^\n]+?" marker-re "\\*/[ \t]*$"))
+          (forward-line))
+        (setq end (point))
+        (let ((comment (buffer-substring-no-properties begin end)))
+          (with-temp-buffer
+            (insert comment)
+            (goto-char (point-min))
+            (flush-lines (concat "^[ \t]*/\\*" marker-re "[-*]+\\*/[ \t]*$"))
+            (goto-char (point-min))
+            (while (re-search-forward "^[ \t]*/\\* ?" nil t)
+              (goto-char (match-beginning 0))
+              (delete-region (match-beginning 0) (match-end 0)))
+            (goto-char (point-min))
+            (while (re-search-forward "[ \t]*\\*/[ \t]*$" nil t)
+              (goto-char (match-beginning 0))
+              (delete-region (match-beginning 0) (match-end 0)))
+            (goto-char (point-min)) (delete-trailing-whitespace)
+            (goto-char (point-min)) (flush-lines "^$")
+            (set-fill-column (- 80      ; width of the text
+                                6       ; width of "/*  */"
+                                leader-width))
+            (goto-char (point-min)) (fill-paragraph nil)
+            (goto-char (point-min))
+            (while (not (eobp))
+              (insert (make-string leader-width ? ) "/* ")
+              (goto-char (line-end-position))
+              (insert (make-string (- 80 3 (current-column)) ? ) " */")
+              (forward-line))
+            (goto-char (point-min))
+            (insert (make-string leader-width ? )
+                    "/*" (make-string (- 80 4 leader-width) marker) "*/\n")
+            (goto-char (point-max))
+            (insert (make-string leader-width ? )
+                    "/*" (make-string (- 80 4 leader-width) marker) "*/\n")
+            (setq comment (buffer-string)))
+          (goto-char begin)
+          (delete-region begin end)
+          (insert comment)))
+      (goto-char here))))
 
 (use-package abbrev
   :disabled t
@@ -876,8 +1162,6 @@ Keys are in kbd format."
         (ascii-off)
       (ascii-on))))
 
-(use-package ascii-art-to-unicode)
-
 (use-package tex-site
   :disabled t
   :load-path "site-lisp/auctex/preview/"
@@ -913,13 +1197,14 @@ Keys are in kbd format."
                                         ac-source-latex-commands)))
 
       (add-to-list 'ac-modes 'latex-mode)
-      ;; (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
+      (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
 
       (info-lookup-add-help :mode 'latex-mode
                             :regexp ".*"
                             :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
                             :doc-spec '(("(latex2e)Concept Index" )
                                         ("(latex2e)Command Index"))))))
+
 (use-package auto-complete-config
   :disabled t
   :load-path "site-lisp/auto-complete"
@@ -942,6 +1227,20 @@ Keys are in kbd format."
   :commands auto-dim-other-buffers-mode
   :init
   (auto-dim-other-buffers-mode 1))
+
+(use-package autopair
+  :disabled t
+  :load-path "site-lisp/autopair"
+  :commands autopair-mode
+  :diminish autopair-mode
+  :init
+  (hook-into-modes #'autopair-mode
+                   'c-mode-common-hook
+                   'text-mode-hook
+                   'ruby-mode-hook
+                   'php-mode
+                   'python-mode-hook
+                   'sh-mode-hook))
 
 (use-package autorevert
   :commands auto-revert-mode
@@ -1064,36 +1363,6 @@ Keys are in kbd format."
 
   (setq backup-enable-predicate 'my-dont-backup-files-p))
 
-(use-package basecamp
-  :disabled t
-  :commands (syncbasecamp completebasecamp basecamp-showlist basecamp-showprojects)
-  :init
-  (progn
-    (defun syncbasecamp ()
-      (interactive)
-      (http-get
-       "http://floatsolutions.com/docs/basecamp/index.php?accesskey=sdf6SDFwr88sdfASDdye76qw76876DFGDfgsdf"
-       nil 'ignore nil "basecamp.org" nil)
-      (org-mode)
-      (save-buffer))
-
-    (defun completebasecamp (todoid)
-      (interactive)
-      (http-get (concatenate 'string
-                             "http://floatsolutions.com/docs/basecamp/index.php?accesskey=sdf6SDFwr88sdfASDdye76qw76876DFGDfgsdf&complete="
-                             todoid) nil 'ignore nil "basecamp.org" nil)
-      (org-mode)
-      (save-buffer))
-
-    (defun basecamp-showlist ()
-      (interactive)
-      (find-file-other-window "~/org/basecamp.org")
-      (syncbasecamp))
-
-    (defun basecamp-showprojects ()
-      (interactive)
-      (find-file-other-window "~/org/projects.org"))))
-
 (use-package bbdb-com
   :load-path "override/bbdb/lisp"
   :commands bbdb-create
@@ -1120,8 +1389,7 @@ Keys are in kbd format."
   :load-path "site-lisp/bookmark-plus"
   :defer 10
   :config
-  (use-package bookmark+
-    :load-path "site-lisp/bookmark-plus"))
+  (use-package bookmark+))
 
 (use-package browse-kill-ring+
   :defer 10
@@ -1138,9 +1406,6 @@ Keys are in kbd format."
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'"         . cmake-mode)))
-
-(use-package crontab-mode
-  :mode ("\\.?cron\\(tab\\)?\\'" . crontab-mode))
 
 (use-package color-moccur
   :commands (isearch-moccur isearch-all)
@@ -1190,6 +1455,9 @@ Keys are in kbd format."
   :config
   (add-hook 'compilation-filter-hook #'compilation-ansi-color-process-output))
 
+(use-package conf-mode
+  :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
+
 (use-package copy-code
   :disabled t
   :bind ("H-M-W" . copy-code-as-rtf))
@@ -1220,10 +1488,6 @@ Keys are in kbd format."
   :config
   (change-cursor-mode 1)
   (toggle-cursor-type-when-idle 1))
-
-(use-package dash-at-point
-  :commands (dash-at-point)
-  :bind ("\C-c8" . dash-at-point))
 
 (use-package debbugs-gnu
   :disabled t
@@ -1352,32 +1616,6 @@ Keys are in kbd format."
                "\\)")))
         (funcall dired-omit-regexp-orig)))))
 
-(use-package direx
-  :bind ("C-H-M-S-j" . direx:jump-to-directory)
-  :config
-  (progn
-
-    (require 'direx-project)
-    (setq direx:leaf-icon "  "
-          direx:open-icon "▾ "
-          direx:closed-icon "▸ ")
-
-    (defun e2wm:def-plugin-direx (frame wm winfo)
-      (let* ((buf (e2wm:history-get-main-buffer))
-             (dbuf (with-current-buffer buf
-                     (or
-                      (ignore-errors
-                        (direx-project:jump-to-project-root-noselect))
-                      (direx:find-directory-noselect
-                       (or default-directory "."))))))
-        (with-current-buffer dbuf
-          (direx:item-expand direx:root-item))
-        (wlf:set-buffer wm (wlf:window-name winfo) dbuf)))
-
-    (e2wm:plugin-register 'direx
-                          "DireX"
-                          'e2wm:def-plugin-direx)))
-
 (use-package dired-toggle
   :load-path "site-lisp/dired-toggle"
   :bind ("C-. d" . dired-toggle)
@@ -1403,30 +1641,6 @@ Keys are in kbd format."
                (yas-activate-extra-mode 'drupal-mode)
                (when (apply 'derived-mode-p drupal-php-modes)
                  (flycheck-mode t)))))
-
-(use-package e2wm
-  :bind ("M-+" . e2wm:start-management)
-  :config
-  (progn
-    (use-package e2wm-direx
-      :init
-      (progn
-        (setq e2wm:c-code-recipe
-              '(| (:left-max-size 40)
-                  (- (:upper-size-ratio 0.6)
-                     tree history)
-                  (- (:lower-max-size 150)
-                     (| (:right-max-size 40)
-                        main imenu)
-                     sub)))
-
-        (setq e2wm:c-code-winfo
-              '((:name main)
-                (:name tree    :plugin direx)
-                (:name history :plugin history-list)
-                (:name imenu   :plugin imenu :default-hide nil)
-                (:name sub     :buffer "*info*" :default-hide t)))))))
-
 (use-package eclimd
   :load-path "site-lisp/emacs-eclim"
   :commands start-eclimd
@@ -1511,328 +1725,154 @@ Keys are in kbd format."
 (use-package edit-var
   :bind ("C-c e v" . edit-variable))
 
-(use-package elfeed
-  :bind ("C-x w" . elfeed))
-
-(use-package emoji-cheat-sheet
-  :commands (emoji-cheat-sheet))
-
 (use-package emms-setup
   :disabled t
   :load-path "site-lisp/emms/lisp"
-  :defines emms-info-functions
-  :commands (emms-all emms-devel)
-  :init
-  (progn
-    (defvar emms-initialized nil)
+  :defines (emms-info-functions emms-player-simple-process-name)
+  :commands (emms-standard emms-devel)
+  :bind ("C-. M" . my-emms)
+  :preface
+  (defvar emms-initialized nil)
+  (declare-function emms-smart-browse "emms-browser")
 
-    (defun my-emms ()
-      (interactive)
-      (unless emms-initialized
-        (emms-devel)
-        (emms-default-players)
-        (require 'emms-info-libtag)
-        (setq emms-info-functions '(emms-info-libtag))
-        (setq emms-initialized t))
-      (call-interactively #'emms-smart-browse))
-
-    (bind-key "C-. M" 'my-emms))
+  (defun my-emms ()
+    (interactive)
+    (unless emms-initialized
+      (emms-standard)
+      (emms-default-players)
+      (require 'emms-info-libtag)
+      (setq emms-info-functions '(emms-info-libtag)
+            emms-initialized t))
+    (call-interactively #'emms-smart-browse))
 
   :config
-  (progn
-    (bind-key "S-<f7>" 'emms-previous)
-    (bind-key "S-<f8>" 'emms-pause)
-    (bind-key "S-<f9>" 'emms-next)
-    (bind-key "S-<f10>" 'emms-stop)
+  (bind-key "S-<f7>" 'emms-previous)
+  (bind-key "S-<f8>" 'emms-pause)
+  (bind-key "S-<f9>" 'emms-next)
+  (bind-key "S-<f10>" 'emms-stop)
 
-    (defun emms-player-mplayer-volume-up ()
-      "Depends on mplayer’s -slave mode."
-      (interactive)
-      (process-send-string
-       emms-player-simple-process-name "volume 1\n"))
+  (defun emms-player-mplayer-volume-up ()
+    "Depends on mplayer’s -slave mode."
+    (interactive)
+    (process-send-string emms-player-simple-process-name "volume 1\n"))
 
-    (defun emms-player-mplayer-volume-down ()
-      "Depends on mplayer’s -slave mode."
-      (interactive)
-      (process-send-string
-       emms-player-simple-process-name "volume -1\n"))
+  (defun emms-player-mplayer-volume-down ()
+    "Depends on mplayer’s -slave mode."
+    (interactive)
+    (process-send-string emms-player-simple-process-name "volume -1\n"))
 
-    (bind-key "C-. C--" 'emms-player-mplayer-volume-down)
-    (bind-key "C-. C-=" 'emms-player-mplayer-volume-up)
-    (add-to-list 'Info-directory-list
-                 (expand-file-name "~/.emacs.d/site-lisp/emms/doc") t)
-     ;;;  Highlight current line in browser
-    (add-hook 'emms-browser-show-display-hook '(lambda () (hl-line-mode 1)))))
-
-
-(use-package engine-mode
-  :disabled t
-  :load-path "lisp/engine-mode/"
-  :commands (engine-mode defengine)
-  :init (engine-mode t)
-  :config
-  (progn
-    (defengine duckduckgo
-      "https://duckduckgo.com/?q=%s"
-      "C-c e d")
-    (defengine github
-      "https://github.com/search?ref=simplesearch&q=%s"
-      "C-c e g")
-    (defengine wikipedia
-      "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
-      "C-c e w")))
+  (bind-key "C-. C--" 'emms-player-mplayer-volume-down)
+  (bind-key "C-. C-=" 'emms-player-mplayer-volume-up))
 
 (use-package eyebrowse
   :commands eyebrowse-mode)
-
-(use-package conf-mode
-  :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
 
 (use-package gist
   :load-path "site-lisp/gist"
   :bind ("C-c G" . gist-region-or-buffer))
 
 (use-package erc
-  :if running-alternate-emacs
-  :init
-  (progn
-    (defun setup-irc-environment ()
-      (custom-set-faces
-       '(erc-timestamp-face ((t (:foreground "dark violet")))))
+  :defines (erc-timestamp-only-if-changed-flag
+            erc-timestamp-format
+            erc-fill-prefix
+            erc-fill-column
+            erc-insert-timestamp-function
+            erc-modified-channels-alist)
+  :preface
+  (defun lookup-password (host user port)
+    (require 'auth-source)
+    (funcall (plist-get
+              (car (auth-source-search
+                    :host host
+                    :user user
+                    :type 'netrc
+                    :port port))
+              :secret)))
 
-      (setq erc-timestamp-only-if-changed-flag nil
-            erc-timestamp-format "%H:%M "
-            erc-fill-prefix "          "
-            erc-fill-column 88
-            erc-insert-timestamp-function 'erc-insert-timestamp-left)
+  (defun slowping (host)
+    (= 0 (call-process "/sbin/ping" nil nil nil "-c1" "-W5000" "-q" host)))
 
-      (set-input-method "Agda")
-
-      (defun reset-erc-track-mode ()
-        (interactive)
-        (setq erc-modified-channels-alist nil)
-        (erc-modified-channels-update))
-
-      (bind-key "C-c r" 'reset-erc-track-mode))
-
-    (add-hook 'erc-mode-hook 'setup-irc-environment)
-
-    (defun irc ()
-      (interactive)
+  (defun irc ()
+    (interactive)
+    (if (slowping "192.168.9.133")
+        (progn
+          (erc :server "192.168.9.133"
+               :port 6697
+               :nick "johnw"
+               :password (lookup-password "192.168.9.133"
+                                          "johnw/freenode" 6697))
+          (erc :server "192.168.9.133"
+               :port 6697
+               :nick "johnw"
+               :password (lookup-password "192.168.9.133"
+                                          "johnw/bitlbee" 6697)))
 
       (erc-tls :server "irc.freenode.net"
                :port 6697
-               :nick "dkh"
-               :password (funcall
-                          (plist-get
-                           (car (auth-source-search :host "irc.freenode.net"
-                                                    :user "dkh"
-                                                    :type 'netrc
-                                                    :port 6697))
-                           :secret))))
-    (defun im ()
+               :nick "johnw"
+               :password (lookup-password "irc.freenode.net" "johnw" 6667))))
+
+  (defun setup-irc-environment ()
+    (setq erc-timestamp-only-if-changed-flag nil
+          erc-timestamp-format "%H:%M "
+          erc-fill-prefix "          "
+          erc-fill-column 88
+          erc-insert-timestamp-function 'erc-insert-timestamp-left)
+
+    (use-package agda-input
+      :config
+      (set-input-method "Agda"))
+
+    (defun reset-erc-track-mode ()
       (interactive)
-      (erc :server "localhost"
-           :port 6667
-           :nick "dkh"
-           :password (funcall
-                      (plist-get
-                       (car (auth-source-search :host "bitlbee"
-                                                :user "dkh"
-                                                :type 'netrc
-                                                :port 6667))
-                       :secret))))
-    (add-hook 'after-init-hook 'im)
-    (add-hook 'after-init-hook 'irc))
+      (setq erc-modified-channels-alist nil)
+      (erc-modified-channels-update)
+      (erc-modified-channels-display)
+      (force-mode-line-update))
 
-  :config
-  (progn
-    (erc-track-minor-mode 1)
-    (erc-track-mode 1)
+    (bind-key "C-c r" 'reset-erc-track-mode))
 
-    (use-package erc-alert)
-    (use-package erc-highlight-nicknames)
-    (use-package erc-patch)
-
-    (use-package erc-yank
-      :init
-      (bind-key "C-y" 'erc-yank erc-mode-map))
-
-    (use-package wtf
-      :commands wtf-is
-      :init
-      (defun erc-cmd-WTF (term &rest ignore)
-        "Look up definition for TERM."
-        (let ((def (wtf-is term)))
-          (if def
-              (let ((msg (concat "{Term} " (upcase term) " is " def)))
-                (with-temp-buffer
-                  (insert msg)
-                  (kill-ring-save (point-min) (point-max)))
-                (message msg))
-            (message (concat "No definition found for " (upcase term)))))))
-
-    (defun switch-to-bitlbee ()
-      (interactive)
-      (switch-to-buffer "&bitlbee")
-      (call-interactively 'erc-channel-names)
-      (goto-char (point-max)))
-
-    (bind-key "C-c b" 'switch-to-bitlbee)
-
-    (defcustom erc-foolish-content '()
-      "Regular expressions to identify foolish content.
+  (defcustom erc-foolish-content '()
+    "Regular expressions to identify foolish content.
     Usually what happens is that you add the bots to
     `erc-ignore-list' and the bot commands to this list."
-      :group 'erc
-      :type '(repeat regexp))
+    :group 'erc
+    :type '(repeat regexp))
 
-    (defun erc-foolish-content (msg)
-      "Check whether MSG is foolish."
-      (erc-list-match erc-foolish-content msg))
+  (defun erc-foolish-content (msg)
+    "Check whether MSG is foolish."
+    (erc-list-match erc-foolish-content msg))
 
-    (add-hook 'erc-insert-pre-hook
-              (lambda (s)
-                (when (erc-foolish-content s)
-                  (setq erc-insert-this nil))))
+  :init
+  (add-hook 'erc-mode-hook 'setup-irc-environment)
+  (add-to-list
+   'erc-mode-hook
+   #'(lambda () (set (make-local-variable 'scroll-conservatively) 100)))
 
-    (eval-when-compile
-      (defvar erc-fools))
+  (if running-alternate-emacs
+      (add-hook 'after-init-hook 'irc))
 
-    (defun erc-cmd-FOOL (term &rest ignore)
-      (add-to-list 'erc-fools term))
+  :config
+  (erc-track-minor-mode 1)
+  (erc-track-mode 1)
 
-    (defun erc-cmd-UNFOOL (term &rest ignore)
-      (setq erc-fools (delete term erc-fools)))
+  (use-package erc-alert)
+  (use-package erc-highlight-nicknames)
+  (use-package erc-patch)
+  (use-package erc-macros)
 
-    (defun erc-cmd-OPME ()
-      "Request chanserv to op me."
-      (erc-message "PRIVMSG"
-                   (format "chanserv op %s %s"
-                           (erc-default-target)
-                           (erc-current-nick)) nil))
+  (use-package erc-yank
+    :load-path "lisp/erc-yank"
+    :config
+    (bind-key "C-y" 'erc-yank erc-mode-map))
 
-    (defun erc-cmd-DEOPME ()
-      "Deop myself from current channel."
-      (erc-cmd-DEOP (format "%s" (erc-current-nick))))
+  (use-package wtf
+    :commands wtf-is)
 
-    (defun erc-cmd-BAN (nick &optional redirect whole-ip)
-      (let* ((chan (erc-default-target))
-             (who (erc-get-server-user nick))
-             (host (erc-server-user-host who))
-             (user (erc-server-user-login who)))
-        (erc-server-send
-         (format "MODE %s +b *!%s@%s%s"
-                 chan (if whole-ip "*" user) host (or redirect "")))))
-
-    (defun erc-cmd-KICKBAN (nick &rest reason)
-      (setq reason (mapconcat #'identity reason " "))
-      (and (string= reason "")
-           (setq reason nil))
-      (erc-cmd-OPME)
-      (sleep-for 0 250)
-      (erc-cmd-BAN nick)
-      (erc-server-send (format "KICK %s %s %s"
-                                (erc-default-target)
-                                nick
-                                (or reason
-                                    "Kicked (kickban)")))
-      (sleep-for 0 250)
-      (erc-cmd-DEOPME))
-
-    (defun erc-cmd-KICKBANIP (nick &rest reason)
-      (setq reason (mapconcat #'identity reason " "))
-      (and (string= reason "")
-           (setq reason nil))
-      (erc-cmd-OPME)
-      (sleep-for 0 250)
-      (erc-cmd-BAN nick nil t)
-      (erc-server-send (format "KICK %s %s %s"
-                                (erc-default-target)
-                                nick
-                                (or reason
-                                    "Kicked (kickbanip)")))
-      (sleep-for 0 250)
-      (erc-cmd-DEOPME))
-
-    (defun erc-cmd-KICKTROLL (nick &rest reason)
-      (setq reason (mapconcat #'identity reason " "))
-      (and (string= reason "")
-           (setq reason nil))
-      (erc-cmd-OPME)
-      (sleep-for 0 250)
-      (erc-cmd-BAN nick "$#haskell-ops")
-      (erc-server-send (format "KICK %s %s %s"
-                                (erc-default-target)
-                                nick
-                                (or reason
-                                    "Kicked (kicktroll)")))
-      (sleep-for 0 250)
-      (erc-cmd-DEOPME))
-
-    ;; this is essentially a refactored `erc-cmd-KICK'
-    (defun erc-cmd-REMOVE (target &optional reason-or-nick &rest reasonwords)
-      "Remove a user from the default or specified channel.
-    LINE has the format: \"#CHANNEL NICK REASON\" or \"NICK REASON\"."
-      (let* ((target-channel-p (erc-channel-p target))
-             (channel (if target-channel-p target (erc-default-target)))
-             (nick (if target-channel-p reason-or-nick target))
-             (reason
-              (mapconcat 'identity
-                         (or (if target-channel-p reasonwords
-                               (and reason-or-nick
-                                    (cons reason-or-nick reasonwords)))
-                             `("Requested by" ,(erc-current-nick)))
-                         " "))
-             (server-command (format "REMOVE %s %s :%s" channel nick reason)))
-        (if (not channel)
-            (erc-display-message nil 'error (current-buffer)
-                                 'no-default-channel)
-          (erc-log (format "cmd: REMOVE: %s/%s: %s" channel nick reason))
-          (erc-server-send server-command))))
-
-    (defun erc-cmd-UNTRACK (&optional target)
-      "Add TARGET to the list of target to be tracked."
-      (if target
-          (erc-with-server-buffer
-           (let ((untracked
-                  (car (erc-member-ignore-case target erc-track-exclude))))
-             (if untracked
-                 (erc-display-line
-                  (erc-make-notice
-                   (format "%s is not currently tracked!" target))
-                  'active)
-               (add-to-list 'erc-track-exclude target)
-               (erc-display-line
-                (erc-make-notice (format "Now not tracking %s" target))
-                'active))))
-
-        (if (null erc-track-exclude)
-            (erc-display-line
-             (erc-make-notice "Untracked targets list is empty") 'active)
-
-          (erc-display-line (erc-make-notice "Untracked targets list:") 'active)
-          (mapc #'(lambda (item)
-                    (erc-display-line (erc-make-notice item) 'active))
-                (erc-with-server-buffer erc-track-exclude))))
-      t)
-
-    (defun erc-cmd-TRACK (target)
-      "Remove TARGET of the list of targets which they should not be tracked.
-   If no TARGET argument is specified, list contents of `erc-track-exclude'."
-      (when target
-        (erc-with-server-buffer
-         (let ((tracked
-                (not (car (erc-member-ignore-case target erc-track-exclude)))))
-           (if tracked
-               (erc-display-line
-                (erc-make-notice (format "%s is currently tracked!" target))
-                'active)
-             (setq erc-track-exclude (remove target erc-track-exclude))
-             (erc-display-line
-              (erc-make-notice (format "Now tracking %s" target))
-              'active)))))
-      t)))
+  (add-hook 'erc-insert-pre-hook
+            (lambda (s)
+              (when (erc-foolish-content s)
+                (setq erc-insert-this nil)))))
 
 (use-package eshell
   :commands (eshell eshell-command)
@@ -1895,7 +1935,6 @@ Keys are in kbd format."
     (paredit-mode)))
 
 (use-package eww
-  :load-path "/usr/local/share/emacs/24.4/lisp/net"
   :bind ("H-M-g" . eww)
   :config
   (use-package eww-lnum
@@ -2083,9 +2122,6 @@ Keys are in kbd format."
           "M-s"))
   (guide-key-mode 1))
 
-(use-package highlight-symbol
-  :disabled t
-  :commands (highlight-symbol-prev highlight-symbol-next highlight-symbol-at-point highlight-symbol-query-replace))
 
 (use-package helm-grep
   :commands helm-do-grep-1
@@ -2103,7 +2139,11 @@ Keys are in kbd format."
 (use-package helm-swoop
   :load-path "site-lisp/helm-swoop"
   :bind (("M-s o" . helm-swoop)
-         ("M-s /" . helm-multi-swoop)))
+         ("M-s /" . helm-multi-swoop))
+  :config
+  (use-package helm-match-plugin
+    :config
+    (helm-match-plugin-mode 1)))
 
 (use-package helm-descbinds
   :load-path "site-lisp/helm-descbinds"
@@ -2182,7 +2222,7 @@ Keys are in kbd format."
           (last-command last-command)
           (buffer-modified (buffer-modified-p))
           (hippie-expand-function (or hippie-expand-function 'hippie-expand)))
-      (cl-flet ((ding))        ; avoid the (ding) when hippie-expand exhausts its
+      (flet ((ding))        ; avoid the (ding) when hippie-expand exhausts its
                                         ; options.
         (while (progn
                  (funcall hippie-expand-function nil)
@@ -2202,7 +2242,10 @@ Keys are in kbd format."
         (interactive
          (let ((options (my-hippie-expand-completions ,hippie-expand-function)))
            (if options
-               (list (ido-completing-read "Completions: " options)))))
+               (list
+                ;; (ido-completing-read "Completions: " options)
+                (completing-read "Completions: " options)
+                ))))
         (if selection
             (he-substitute-string selection t)
           (message "No expansion found")))))
@@ -2467,6 +2510,7 @@ Keys are in kbd format."
             #'(lambda ()
                 (bind-key "<return>" 'ido-smart-select-text
                           ido-file-completion-map))))
+
 
 (use-package ielm
   :bind ("C-c :" . ielm)
@@ -2941,13 +2985,6 @@ Keys are in kbd format."
   :config
   (setenv "GIT_PAGER" "")
 
-  ;; (use-package magit-backup
-  ;;   :diminish magit-backup-mode)
-
-  ;; (use-package magit-commit
-  ;;   :config
-  ;;   (remove-hook 'server-switch-hook 'magit-commit-diff))
-
   (unbind-key "M-h" magit-mode-map)
   (unbind-key "M-s" magit-mode-map)
   (unbind-key "M-m" magit-mode-map)
@@ -2962,42 +2999,11 @@ Keys are in kbd format."
 
   (add-hook 'magit-status-mode-hook #'(lambda () (magit-monitor t))))
 
-;; (use-package makefile-mode
-;;   :mode ((".make\\'" . makefile-gmake-mode))
-;;   :config
-;;   (progn
-;;     (require 'make-mode)
-
-;;     (defconst makefile-nmake-statements
-;;       `("!IF" "!ELSEIF" "!ELSE" "!ENDIF" "!MESSAGE" "!ERROR" "!INCLUDE" ,@makefile-statements)
-;;       "List of keywords understood by nmake.")
-
-;;     (defconst makefile-nmake-font-lock-keywords
-;;       (makefile-make-font-lock-keywords
-;;        makefile-var-use-regex
-;;        makefile-nmake-statements
-;;        t))
-
-;;     (define-derived-mode makefile-nmake-mode makefile-mode "nMakefile"
-;;       "An adapted `makefile-mode' that knows about nmake."
-;;       (setq font-lock-defaults
-;;             `(makefile-nmake-font-lock-keywords ,@(cdr font-lock-defaults))))))
-
-(use-package manage-minor-mode
-  :commands (manage-minor-mode))
-
 (use-package markdown-mode
   :load-path "site-lisp/markdown-mode"
   :mode (("\\`README\\.md\\'" . gfm-mode)
          ("\\.md\\'"          . markdown-mode)
          ("\\.markdown\\'"    . markdown-mode)))
-
-(use-package mouse+
-  :init
-  (progn
-  (global-set-key [mouse-5]        'mouse-flash-position-or-M-x)
-   (global-set-key [S-down-mouse-2]      'mouse-scan-lines-or-M-:)
-  (global-set-key [mode-line C-mouse-1] 'mouse-tear-off-window)))
 
 (use-package midnight
   :defer 10)
@@ -3062,16 +3068,11 @@ Keys are in kbd format."
   :config
   (setq mc/list-file (expand-file-name "mc-lists.el" user-data-directory)))
 
-(use-package nf-procmail-mode
-  :commands nf-procmail-mode)
-
 (use-package nix-mode
   :mode ("\\.nix\\'" . nix-mode))
 
-(use-package nodejs-mode
-  :disabled t
-  :load-path "nodejs-mode"
-  :commands (nodejs))
+(use-package nf-procmail-mode
+  :commands nf-procmail-mode)
 
 (use-package nroff-mode
   :commands nroff-mode
@@ -3133,15 +3134,6 @@ Keys are in kbd format."
 
   (add-hook 'org-mode-hook  #'yas-minor-mode))
 
-(use-package org-jira
-  :disabled t
-  :load-path ("~/.emacs.d/lisp/org-jira")
-  :init
-  (progn
-
-    (setq
-     org-jira-working-dir "~/Documents/Tasks/.org-jira")))
-
 (use-package pabbrev
   :load-path "site-lisp/pabbrev"
   :commands pabbrev-mode
@@ -3184,6 +3176,7 @@ Keys are in kbd format."
       (show-paren-mode 1)))
 
 (use-package persistent-scratch
+  :disabled t
   :if (and window-system (not running-alternate-emacs)
            (not noninteractive)))
 
@@ -3220,6 +3213,8 @@ Keys are in kbd format."
 
       :config
       (progn
+        (use-package php-auto-yasnippets
+          :load-path "site-lisp/php-auto-yasnippets")
         (defvar emmet-mode-keymap (make-sparse-keymap))
         (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap))))
   :config
@@ -3326,7 +3321,6 @@ unless return was pressed outside the comment"
 
     (define-key php-mode-map "\C-hS" 'describe-function-via-pman)
     (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
-    (use-package php-auto-yasnippets)
 
     (use-package geben
       :commands (geben my-php-debug)
@@ -3573,36 +3567,9 @@ unless return was pressed outside the comment"
   (add-hook 'python-mode-hook 'my-python-mode-hook))
 
 (use-package quickrun
-  :bind ("C-c C-r" . quickrun)
-  :config
-  (progn
-
-    (defface phpunit-pass
-      '((t (:foreground "white" :background "green" :weight bold))) nil)
-    (defface phpunit-fail
-      '((t (:foreground "white" :background "red" :weight bold))) nil)
-
-    (defun quickrun/phpunit-outputter ()
-      (save-excursion
-        (goto-char (point-min))
-        (while (re-search-forward "^M" "")
-          nil))
-      (highlight-phrase "^OK.*$" 'phpunit-pass)
-      (highlight-phrase "^FAILURES.*$" 'phpunit-fail))
-
-    (quickrun-add-command "phpunit" '((:command . "phpunit")
-                                      (:exec . "%c %s")
-                                      (:outputter .
-                                      quickrun/phpunit-outputter)))
-
-    (add-to-list 'quickrun-file-alist '("Test\\.php$" . "phpunit"))
-
-    (quickrun-add-command "phing" '((:command . "phing")
-                                      (:exec . "%c %s")
-                                      (:outputter .
-                                      quickrun/phpunit-outputter)))
-
-    (add-to-list 'quickrun-file-alist '("Test\\.php$" . "phpunit"))))
+  :disabled t
+  :load-path "site-lisp/emacs-quickrun"
+  :bind ("C-c C-r" . quickrun))
 
 (use-package rainbow-delimiters
   :load-path "site-lisp/rainbow-delimiters"
@@ -3740,15 +3707,13 @@ and run compass from that directory"
 
 (use-package selectkey
   :disabled t
-  :init
-  (progn
-    (bind-key "C-. b" 'selectkey-select-prefix-map)
-
-    (selectkey-define-select-key compile "c" "\\*compilation")
-    (selectkey-define-select-key shell-command "o" "Shell Command")
-    (selectkey-define-select-key shell "s" "\\*shell" (shell))
-    (selectkey-define-select-key multi-term "t" "\\*terminal" (multi-term-next))
-    (selectkey-define-select-key eshell "z" "\\*eshell" (eshell))))
+  :bind-keymap ("C-. b" . selectkey-select-prefix-map)
+  :config
+  (selectkey-define-select-key compile "c" "\\*compilation")
+  (selectkey-define-select-key shell-command "o" "Shell Command")
+  (selectkey-define-select-key shell "s" "\\*shell" (shell))
+  (selectkey-define-select-key multi-term "t" "\\*terminal" (multi-term-next))
+  (selectkey-define-select-key eshell "z" "\\*eshell" (eshell)))
 
 (use-package session
   :if (not noninteractive)
@@ -3796,6 +3761,7 @@ and run compass from that directory"
   (add-hook 'after-init-hook 'session-initialize t))
 
 (use-package shift-text
+  :load-path "site-lisp/shift-text"
   :commands (shfit-text-right shfit-text-left shift-text-up shift-text-down)
   :bind (("<M-right>" . shift-text-right)
          ("<M-left>" .  shift-text-left)
@@ -3900,56 +3866,6 @@ and run compass from that directory"
       (setq common-lisp-hyperspec-root
             (expand-file-name "~/Library/Lisp/HyperSpec/")))))
 
-(use-package show-css
-  :commands (showcss-mode)
-  :init
-  (progn
-    (defun toggle-showcss()
-      "Toggle showcss-mode"
-      (interactive)
-      (if (derived-mode-p
-           'html-mode 'nxml-mode 'nxhtml-mode 'web-mode)
-          (showcss-mode 'toggle)
-        (message "Not in an html mode")))))
-
-(use-package skewer-mode
-  :init
-  (progn
-    (use-package skewer-repl)
-    (use-package skewer-setup)
-    (use-package skewer-html)
-    (use-package skewer-css
-      :init
-    (hook-into-modes #'skewer-css-mode
-                     'css-mode-hook
-                     'scss-mode-hook))
-
-    (add-hook 'js2-mode-hook 'skewer-mode)
-    (add-hook 'html-mode-hook 'skewer-html-mode))
-  :config
-  (progn
-        (defun skewer-reload-page ()
-      "Reloads browser."
-      (interactive)
-       (silent-save-some-buffers)
-      (skewer-eval "window.location = window.location"))
-    (defun skewer-scroll-down ()
-      "Scroll down"
-      (interactive)
-      (skewer-eval "window.scrollBy(0,200);"))
-    (defun skewer-scroll-up ()
-      "Scroll down"
-      (interactive)
-      (skewer-eval "window.scrollBy(0,-200);"))
-    (defun skewer-scroll-left ()
-      "Scroll down"
-      (interactive)
-      (skewer-eval "window.scrollBy(-100,0);"))
-    (defun skewer-scroll-right ()
-      "Scroll down"
-      (interactive)
-      (skewer-eval "window.scrollBy(100,0);"))))
-
 (use-package smart-compile
   :disabled t
   :commands smart-compile
@@ -3968,8 +3884,6 @@ and run compass from that directory"
   :commands smerge-mode
   :config
   (setq smerge-command-prefix (kbd "C-. C-.")))
-
-(use-package stripe-buffer)
 
 (use-package stopwatch
   :bind ("<f8>" . stopwatch))
@@ -4130,8 +4044,6 @@ and run compass from that directory"
 (use-package wcount
   :disabled t
   :commands wcount-mode)
-
-(use-package wgrep)
 
 (use-package whitespace
   :diminish (global-whitespace-mode
@@ -4301,10 +4213,6 @@ and run compass from that directory"
      ("/" "/" nil ruby-mode)
      ("/* " " */" "#" (java-mode javascript-mode css-mode c-mode c++-mode))
      ("`" "`" nil (markdown-mode ruby-mode shell-script-mode)))))
-
-(use-package xmsi-math-symbols-input
-  :commands (xmsi-mode xmsi-math-symbols-input)
-  :bind ("<S-space>" . xmsi-mode))
 
 (use-package yaml-mode
   :load-path "site-lisp/yaml-mode"
