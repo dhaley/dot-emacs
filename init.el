@@ -29,9 +29,8 @@
        (push (expand-file-name path user-emacs-directory) load-path))
    '("site-lisp" "override" "lisp" "lisp/use-package" "")))
 
-
-(eval-when-compile
-  ;; (defvar use-package-verbose t)
+(eval-and-compile
+  (defvar use-package-verbose t)
   ;; (defvar use-package-expand-minimally t)
   (eval-after-load 'advice
     `(setq ad-redefinition-action 'accept))
@@ -122,7 +121,7 @@
 ;;; Keybindings
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; dkh (2015-03-25): Move all of these into use-package declarations        ;;
+;; dkh (2015-03-25): Move all of these into declarations                    ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Main keymaps for personal bindings are:
@@ -686,86 +685,6 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
 
 ;;; Packages
 
-;; dkh (2015-03-25): All of these are presently unconfigured
-;; :load-path "lisp/emacs-async"
-;; :load-path "lisp/regex-tool"
-;; :load-path "lisp/springboard"
-;; :load-path "site-lisp/ace-link"
-;; :load-path "site-lisp/ace-window"
-;; :load-path "site-lisp/bbdb-vcard"
-;; :load-path "site-lisp/bdo"
-;; :load-path "site-lisp/boxquote"
-;; :load-path "site-lisp/butler"
-;; :load-path "site-lisp/cmake-font-lock"
-;; :load-path "site-lisp/command-log-mode"
-;; :load-path "site-lisp/company-auctex"
-;; :load-path "site-lisp/company-ghc"
-;; :load-path "site-lisp/company-quickhelp"
-;; :load-path "site-lisp/deft"
-;; :load-path "site-lisp/dircmp-mode"
-;; :load-path "site-lisp/dired-hacks"
-;; :load-path "site-lisp/dired-sync"
-;; :load-path "site-lisp/discover"
-;; :load-path "site-lisp/ee"
-;; :load-path "site-lisp/el-mock"
-;; :load-path "site-lisp/elisp-depend"
-;; :load-path "site-lisp/elnode"
-;; :load-path "site-lisp/elpy"
-;; :load-path "site-lisp/emacros"
-;; :load-path "site-lisp/emacs-edbi"
-;; :load-path "site-lisp/esup"
-;; :load-path "site-lisp/expand-region-el"
-;; :load-path "site-lisp/fancy-narrow"
-;; :load-path "site-lisp/fold-this-el"
-;; :load-path "site-lisp/fringe-helper-el"
-;; :load-path "site-lisp/git-annex"
-;; :load-path "site-lisp/git-gutter-fringe-plus"
-;; :load-path "site-lisp/git-gutter-plus"
-;; :load-path "site-lisp/git-modes"
-;; :load-path "site-lisp/git-timemachine"
-;; :load-path "site-lisp/git-wip"
-;; :load-path "site-lisp/github-issues-el"
-;; :load-path "site-lisp/guess-style"
-;; :load-path "site-lisp/HaRe"
-;; :load-path "site-lisp/hdevtools-emacs"
-;; :load-path "site-lisp/helm-c-yasnippet"
-;; :load-path "site-lisp/helm-cmd-t"
-;; :load-path "site-lisp/helm-emms"
-;; :load-path "site-lisp/helm-gist"
-;; :load-path "site-lisp/helm-github-issues"
-;; :load-path "site-lisp/helm-google"
-;; :load-path "site-lisp/helm-ipython"
-;; :load-path "site-lisp/helm-ls-hg"
-;; :load-path "site-lisp/helm-slime"
-;; :load-path "site-lisp/hsenv"
-;; :load-path "site-lisp/hydra"
-;; :load-path "site-lisp/interaction-log"
-;; :load-path "site-lisp/irony-mode"
-;; :load-path "site-lisp/liquid-types-el"
-;; :load-path "site-lisp/monky"
-;; :load-path "site-lisp/multifiles-el"
-;; :load-path "site-lisp/olivetti"
-;; :load-path "site-lisp/org-download"
-;; :load-path "site-lisp/org-magit"
-;; :load-path "site-lisp/org-merge-driver"
-;; :load-path "site-lisp/org-opml"
-;; :load-path "site-lisp/org-present"
-;; :load-path "site-lisp/orgaggregate"
-;; :load-path "site-lisp/osx-bbdb"
-;; :load-path "site-lisp/page-break-lines"
-;; :load-path "site-lisp/pandoc-mode"
-;; :load-path "site-lisp/persistent-soft"
-;; :load-path "site-lisp/perspective"
-;; :load-path "site-lisp/powerline"
-;; :load-path "site-lisp/prodigy"
-;; :load-path "site-lisp/smart-forward-el"
-;; :load-path "site-lisp/swank-js"
-;; :load-path "site-lisp/tbx2org"
-;; :load-path "site-lisp/tellib"
-;; :load-path "site-lisp/visual-regexp"
-;; :load-path "site-lisp/web-mode"
-;; :load-path "site-lisp/ztree"
-
 (defun define-keys (mode-map keybindings)
   "Takes a mode map, and a list of (key function-designator)
 lists.  The functions are bound to the keys in the given mode-map.
@@ -833,26 +752,10 @@ Keys are in kbd format."
   :load-path "/usr/local/share/emacs/24.4/lisp/progmodes"
   :bind ("M-T" . tags-search))
 
-(use-package gtags
-  :disabled t
-  :commands gtags-mode
-  :diminish gtags-mode
-  :config
-  (bind-key "C-c t ." 'gtags-find-rtag)
-  (bind-key "C-c t f" 'gtags-find-file)
-  (bind-key "C-c t p" 'gtags-parse-file)
-  (bind-key "C-c t g" 'gtags-find-with-grep)
-  (bind-key "C-c t i" 'gtags-find-with-idutils)
-  (bind-key "C-c t s" 'gtags-find-symbol)
-  (bind-key "C-c t r" 'gtags-find-rtag)
-  (bind-key "C-c t v" 'gtags-visit-rootdir)
-
-  (bind-key "<mouse-2>" 'gtags-find-tag-from-here gtags-mode-map)
-
-  (use-package helm-gtags
-    :bind ("M-T" . helm-gtags-select)
-    :config
-    (bind-key "M-," 'helm-gtags-resume gtags-mode-map)))
+(use-package ggtags
+  :load-path "site-lisp/ggtags"
+  :commands ggtags-mode
+  :diminish ggtags-mode)
 
 (use-package abbrev
   :disabled t
@@ -1355,12 +1258,12 @@ Keys are in kbd format."
 
   (defun dired-double-jump (first-dir second-dir)
     (interactive
-     (list (ido-read-directory-name "First directory: "
-                                    (expand-file-name "~")
-                                    nil nil "dl/")
-           (ido-read-directory-name "Second directory: "
-                                    (expand-file-name "~")
-                                    nil nil "Archives/")))
+     (list (read-directory-name "First directory: "
+                                (expand-file-name "~")
+                                nil nil "dl/")
+           (read-directory-name "Second directory: "
+                                (expand-file-name "~")
+                                nil nil "Archives/")))
     (dired first-dir)
     (dired-other-window second-dir))
 
@@ -2185,11 +2088,6 @@ Keys are in kbd format."
   :disabled t
   :commands (highlight-symbol-prev highlight-symbol-next highlight-symbol-at-point highlight-symbol-query-replace))
 
-(use-package helm-mode
-  :load-path "site-lisp/helm"
-  :defer 15
-  :commands (helm--completing-read-default helm-comp-read))
-
 (use-package helm-grep
   :commands helm-do-grep-1
   :bind (("M-s f" . my-helm-do-grep-r)
@@ -2217,15 +2115,15 @@ Keys are in kbd format."
   (require 'helm-config))
 
 (use-package helm-config
-  :defer 10
+  :demand t
+  :load-path "site-lisp/helm"
   :bind (("C-c h"   . helm-command-prefix)
          ("C-h a"   . helm-apropos)
          ("C-h e a" . my-helm-apropos)
          ("C-x f"   . helm-multi-files)
-         ("M-s F"   . helm-for-files)
          ("M-s b"   . helm-occur)
          ("M-s n"   . my-helm-find)
-         ("M-H"     . helm-resume))
+         ("M-h"     . helm-resume))
 
   :preface
   (defun my-helm-find ()
@@ -2236,6 +2134,10 @@ Keys are in kbd format."
   (use-package helm-commands)
   (use-package helm-files)
   (use-package helm-buffers)
+  (use-package helm-mode
+    :diminish helm-mode
+    :init
+    (helm-mode 1))
 
   (use-package helm-ls-git
     :load-path "site-lisp/helm-ls-git")
@@ -2499,8 +2401,7 @@ Keys are in kbd format."
             ido-final-text
             ido-show-confirm-message)
   :bind (("C-x b" . ido-switch-buffer)
-         ("C-x B" . ido-switch-buffer-other-window)
-         ("M-x"   . ido-hacks-execute-extended-command))
+         ("C-x B" . ido-switch-buffer-other-window))
   :preface
   (eval-when-compile
     (defvar ido-require-match)
@@ -2539,15 +2440,23 @@ Keys are in kbd format."
   (ido-mode 'buffer)
 
   (use-package ido-hacks
+    :demand t
     :load-path "site-lisp/ido-hacks"
+    :bind ("M-x" . my-ido-hacks-execute-extended-command)
     :config
-    (ido-hacks-mode 1))
+    (ido-hacks-mode 1)
 
-  (use-package ido-vertical-mode
-    :disabled t
-    :load-path "site-lisp/ido-vertical-mode"
-    :config
-    (ido-vertical-mode 1))
+    (defvar ido-hacks-completing-read (symbol-function 'completing-read))
+    (fset 'completing-read ido-hacks-orgin-completing-read-function)
+    (defun my-ido-hacks-execute-extended-command (&optional arg)
+      (interactive "P")
+      (flet ((completing-read
+              (prompt collection &optional predicate require-match
+                      initial-input hist def inherit-input-method)
+              (funcall ido-hacks-completing-read
+                       prompt collection predicate require-match
+                       initial-input hist def inherit-input-method)))
+        (ido-hacks-execute-extended-command arg))))
 
   (use-package flx-ido
     :disabled t
@@ -2880,8 +2789,9 @@ Keys are in kbd format."
   :interpreter ("lua" . lua-mode))
 
 (use-package lusty-explorer
+  :demand t
   :load-path "site-lisp/lusty-emacs"
-  :bind ("C-x C-f" . lusty-file-explorer)
+  :bind ("C-x C-f" . my-lusty-file-explorer)
   :preface
   (defun lusty-read-directory ()
     "Launch the file/directory mode of LustyExplorer."
@@ -2899,6 +2809,7 @@ Keys are in kbd format."
   (defun lusty-read-file-name ()
     "Launch the file/directory mode of LustyExplorer."
     (interactive)
+    (require 'lusty-explorer)
     (let ((lusty--active-mode :file-explorer))
       (lusty--define-mode-map)
       (let* ((lusty--ignored-extensions-regex
@@ -2907,6 +2818,34 @@ Keys are in kbd format."
              (minibuffer-local-filename-completion-map lusty-mode-map)
              (lusty-only-directories nil))
         (lusty--run 'read-file-name default-directory ""))))
+
+  (defun my-lusty-file-explorer ()
+    "Launch the file/directory mode of LustyExplorer."
+    (interactive)
+    (require 'lusty-explorer)
+    (let ((lusty--active-mode :file-explorer)
+          (helm-mode-prev helm-mode))
+      (helm-mode -1)
+      (unwind-protect
+          (progn
+            (lusty--define-mode-map)
+            (let* ((lusty--ignored-extensions-regex
+                    (concat "\\(?:" (regexp-opt
+                                     completion-ignored-extensions) "\\)$"))
+                   (minibuffer-local-filename-completion-map lusty-mode-map)
+                   (file
+                    ;; read-file-name is silly in that if the result is equal
+                    ;; to the dir argument, it gets converted to the
+                    ;; default-filename argument.  Set it explicitly to "" so
+                    ;; if lusty-launch-dired is called in the directory we
+                    ;; start at, the result is that directory instead of the
+                    ;; name of the current buffer.
+                    (lusty--run 'read-file-name default-directory "")))
+              (when file
+                (switch-to-buffer
+                 (find-file-noselect
+                  (expand-file-name file))))))
+        (helm-mode (if helm-mode-prev 1 -1)))))
 
   :config
   (defun my-lusty-setup-hook ()
@@ -3006,12 +2945,6 @@ Keys are in kbd format."
   ;; (use-package magit-backup
   ;;   :diminish magit-backup-mode)
 
-  ;; (use-package magit-review
-  ;;   :disabled t
-  ;;   :commands magit-review
-  ;;   :config
-  ;;   (use-package json))
-
   ;; (use-package magit-commit
   ;;   :config
   ;;   (remove-hook 'server-switch-hook 'magit-commit-diff))
@@ -3066,6 +2999,9 @@ Keys are in kbd format."
   (global-set-key [mouse-5]        'mouse-flash-position-or-M-x)
    (global-set-key [S-down-mouse-2]      'mouse-scan-lines-or-M-:)
   (global-set-key [mode-line C-mouse-1] 'mouse-tear-off-window)))
+
+(use-package midnight
+  :defer 10)
 
 (use-package mudel
   :disabled t
@@ -3247,12 +3183,6 @@ Keys are in kbd format."
       :defer 5
       :config
       (show-paren-mode 1)))
-
-(use-package per-window-point
-  :commands pwp-mode
-  :defer 5
-  :config
-  (pwp-mode 1))
 
 (use-package persistent-scratch
   :if (and window-system (not running-alternate-emacs)
@@ -4162,38 +4092,7 @@ and run compass from that directory"
   :defer t
   )
 
-(use-package twittering-mode
-  :disabled t
-  :commands twit
-  :config
-  (progn
-    (setq twittering-icon-mode t
-          twittering-timer-interval 150
-          twittering-number-of-tweets-on-retrieval 100
-          Twittering-use-ssl t
-          twittering-use-master-password t
-          twittering-scroll-mode t
-          twittering-initial-timeline-spec-string '(":home"
-                                                    ":replies"
-                                                    ":favorites"
-                                                    ":direct_messages"))
-    (twittering-enable-unread-status-notifier)
-
-    (define-keys twittering-mode-map
-      '(("n" twittering-goto-next-status)
-        ("p" twittering-goto-previous-status)
-        ("j" twittering-goto-next-status-of-user)
-        ("k" twittering-goto-previous-status-of-user)))
-    ))
-
 (use-package unbound)
-
-(use-package undo-tree
-  :disabled t
-  :load-path "site-lisp/undo-tree"
-  :commands undo-tree-mode
-  :config
-  (add-hook 'find-file-hook (lambda () (undo-tree-mode 1))))
 
 (use-package vkill
   :commands vkill
@@ -4206,133 +4105,6 @@ and run compass from that directory"
 
   :config
   (setq vkill-show-all-processes t))
-
-(use-package w3m
-  :disabled t
-  :commands (w3m-search w3m-find-file)
-  :bind (("C-. u"   . w3m-browse-url)
-         ("C-. U"   . w3m-browse-url-new-session)
-         ("C-. H-u" . w3m-browse-chrome-url-new-session)
-         )
-  :init
-  (progn
-    (setq w3m-command "/usr/local/bin/w3m")
-
-    (setq w3m-coding-system 'utf-8
-          w3m-file-coding-system 'utf-8
-          w3m-file-name-coding-system 'utf-8
-          w3m-input-coding-system 'utf-8
-          w3m-output-coding-system 'utf-8
-          w3m-terminal-coding-system 'utf-8)
-
-    (add-hook 'w3m-mode-hook 'w3m-lnum-mode)
-
-    (autoload 'w3m-session-crash-recovery-remove "w3m-session")
-
-    (defun show-browser ()
-      (interactive)
-      (let ((w3m-buf
-             (catch 'found
-               (dolist (buf (buffer-list))
-                 (if (string-match "\\*w3m" (buffer-name buf))
-                     (throw 'found buf))))))
-        (if w3m-buf
-            (switch-to-buffer-other-window w3m-buf)
-          (call-interactively 'w3m-find-file))))
-
-    (bind-key "C-. w" 'show-browser)
-
-    (defun wikipedia-query (term)
-      (interactive (list (read-string "Wikipedia search: " (word-at-point))))
-      (require 'w3m-search)
-      (w3m-search "en.wikipedia" term))
-
-    (eval-when-compile
-      (autoload 'w3m-search-escape-query-string "w3m-search"))
-
-    (defun wolfram-alpha-query (term)
-      (interactive (list (read-string "Ask Wolfram Alpha: " (word-at-point))))
-      (require 'w3m-search)
-      (w3m-browse-url (concat "http://m.wolframalpha.com/input/?i="
-                              (w3m-search-escape-query-string term))))
-
-    (defun goto-emacswiki ()
-      (interactive)
-      (w3m-browse-url "http://www.emacswiki.org"))
-
-    (defun w3m-browse-url-new-session (url)
-      (interactive (progn
-                     (require 'browse-url)
-                     (browse-url-interactive-arg "Emacs-w3m URL: ")))
-      (w3m-browse-url url t))
-
-    (defun w3m-browse-chrome-url-new-session ()
-      (interactive)
-      (let ((url (mac-do-applescript
-                  (string-to-multibyte "tell application \"Google Chrome\"
-  URL of active tab of front window
-  end tell"))))
-        (w3m-browse-url (substring url 1 (1- (length url))) t)))
-
-    (bind-key "H-M-e" 'goto-emacswiki)
-    (bind-key "H-M-g" 'w3m-search)
-    (bind-key "H-M-w" 'wikipedia-query))
-  :config
-  (progn
-
-    (setq w3m-form-textarea-use-org-mode-p t)
-
-    ;;            w3m-command-arguments
-    ;;            (nconc w3m-command-arguments
-
-    ;;                   '("-o" "http_proxy=http://192.168.0.5:8118"))
-    ;;            w3m-no-proxy-domains '("colorado.edu"
-    ;;            "competitions.colorado.edu" "neighbor.com" "jobsatcu.com"
-    ;;            "identi.ca" "vinylisland.org" "dhaley.org")
-    ;;            )))
-
-    (let (proxy-host proxy-port)
-      (with-temp-buffer
-        (shell-command "scutil --proxy" (current-buffer))
-
-        (when (re-search-forward "HTTPPort : \\([0-9]+\\)" nil t)
-          (setq proxy-port (match-string 1)))
-        (when (re-search-forward "HTTPProxy : \\(\\S-+\\)" nil t)
-          (setq proxy-host (match-string 1))))
-
-      (if (and proxy-host proxy-port)
-          (setq w3m-command-arguments
-                (nconc w3m-command-arguments
-                       (list "-o" (format "http_proxy=http://%s:%s/"
-                                          proxy-host proxy-port)))))
-
-      (use-package w3m-type-ahead
-        :requires w3m
-        :init
-        (add-hook 'w3m-mode-hook 'w3m-type-ahead-mode))
-
-      (add-hook 'w3m-display-hook
-                (lambda (url)
-                  (let ((buffer-read-only nil))
-                    (delete-trailing-whitespace))))
-
-      (bind-key "k" 'w3m-delete-buffer w3m-mode-map)
-      (bind-key "i" 'w3m-view-previous-page w3m-mode-map)
-      (bind-key "p" 'w3m-previous-anchor w3m-mode-map)
-      (bind-key "n" 'w3m-next-anchor w3m-mode-map)
-
-      (defun dka-w3m-textarea-hook()
-        (save-excursion
-          (while (re-search-forward "\r\n" nil t)
-            (replace-match "\n" nil nil))
-          (delete-other-windows)))
-
-      (add-hook 'w3m-form-input-textarea-mode-hook 'dka-w3m-textarea-hook)
-
-      (bind-key "<return>" 'w3m-view-url-with-external-browser
-                w3m-minor-mode-map)
-      (bind-key "S-<return>" 'w3m-safe-view-this-url w3m-minor-mode-map))))
-
 (use-package wand
   :bind (("C-. RET" . wand:execute)
          ("C-. l" . wand:execute-current-line)
@@ -4414,7 +4186,6 @@ and run compass from that directory"
         (whitespace-cleanup))))
 
   :init
-  (hook-into-modes 'whitespace-mode 'prog-mode-hook 'c-mode-common-hook)
   (add-hook 'find-file-hooks 'maybe-turn-on-whitespace t)
 
   :config

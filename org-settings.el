@@ -105,6 +105,7 @@
    (quote
     ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/from-mobile.org")))
  '(org-agenda-include-diary nil)
+ '(org-agenda-inhibit-startup t)
  '(org-agenda-insert-diary-extract-time t)
  '(org-agenda-log-mode-items (quote (closed state)))
  '(org-agenda-persistent-filter t)
