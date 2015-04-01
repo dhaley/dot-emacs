@@ -13,21 +13,21 @@
 (require 'org)
 (require 'org-agenda)
 (require 'org-smart-capture)
-
-;; (require 'org-crypt)
+(require 'org-crypt)
+(require 'org-bbdb)
 (require 'org-devonthink)
 (require 'org-mac-link)
-(require 'org-magit)
+;; (require 'org-magit)
+(require 'org-velocity)
 (require 'ob-emacs-lisp)
 (require 'ob-sh)
 (require 'ox-html)
-(require 'async)
 (require 'helm-org)
 (require 'ob-ditaa)
 (require 'ox-md)
 (require 'ox-opml)
 
-(require 'ox-reveal)
+;; (require 'ox-reveal)
 
 (use-package calfw
   :bind ("C-c A" . my-calendar)

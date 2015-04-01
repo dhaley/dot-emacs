@@ -17,7 +17,9 @@
 (require 'bbdb)
 (require 'bbdb-gnus)
 (require 'bbdb-message)
-(require 'async)
+
+(use-package async
+  :load-path "lisp/emacs-async")
 
 ;;(gnus-compile)
 (gnus-delay-initialize)
