@@ -5,7 +5,9 @@
  ;; If there is more than one, they won't work right.
  '(check-mail-summary-function (quote check-mail-box-summary))
  '(gnus-activate-level 2)
- '(gnus-after-getting-new-news-hook (quote (gnus-group-list-groups gnus-group-save-newsrc gnus-display-time-event-handler)))
+ '(gnus-after-getting-new-news-hook
+   (quote
+    (gnus-group-list-groups gnus-group-save-newsrc gnus-display-time-event-handler)))
  '(gnus-agent-expire-all t)
  '(gnus-agent-expire-days 14)
  '(gnus-agent-go-online t)
@@ -23,11 +25,26 @@
  '(gnus-auto-center-summary (quote vertical))
  '(gnus-auto-subscribed-groups "^nntp+news.gmane.org")
  '(gnus-blocked-images nil)
- '(gnus-calendar-org-capture-file "~/Documents/Tasks/todo.txt")
- '(gnus-calendar-org-capture-headline (quote ("Appointments")))
  '(gnus-check-new-newsgroups nil)
  '(gnus-completing-read-function (quote gnus-ido-completing-read))
- '(gnus-default-adaptive-score-alist (quote ((gnus-dormant-mark (from 20) (subject 100)) (gnus-ticked-mark (subject 30)) (gnus-read-mark (subject 30)) (gnus-del-mark (subject -150)) (gnus-catchup-mark (subject -150)) (gnus-killed-mark (subject -1000)) (gnus-expirable-mark (from -1000) (subject -1000)))))
+ '(gnus-default-adaptive-score-alist
+   (quote
+    ((gnus-dormant-mark
+      (from 20)
+      (subject 100))
+     (gnus-ticked-mark
+      (subject 30))
+     (gnus-read-mark
+      (subject 30))
+     (gnus-del-mark
+      (subject -150))
+     (gnus-catchup-mark
+      (subject -150))
+     (gnus-killed-mark
+      (subject -1000))
+     (gnus-expirable-mark
+      (from -1000)
+      (subject -1000)))))
  '(gnus-default-article-saver (quote gnus-summary-save-in-mail))
  '(gnus-gcc-mark-as-read t)
  '(gnus-generate-tree-function (quote gnus-generate-horizontal-tree))
@@ -41,7 +58,9 @@
  '(gnus-harvest-sender-alist (quote ((".*@\\(cu\\|colorado\\)\\.edu" . damon\.haley@colorado\.edu) (".*@fsf\\.org" . dkh@member\.fsf\.org))))
  '(gnus-home-directory "~/Messages/Gnus/")
  '(gnus-ignored-from-addresses "\\(damon\\.haley\\|dhaley\\|dkh\\)\\(-[^@]+\\)?@\\(colorado\\.edu\\|\\(hushmail\\|ssl\\-mail\\)\\.com\\|member\\.fsf\\.org\\)")
- '(gnus-ignored-mime-types (quote ("application/x-pkcs7-signature" "application/ms-tnef" "text/x-vcard")))
+ '(gnus-ignored-mime-types
+   (quote
+    ("application/x-pkcs7-signature" "application/ms-tnef" "text/x-vcard")))
  '(gnus-interactive-exit (quote quiet))
  '(gnus-large-newsgroup 4000)
  '(gnus-mailing-list-groups "\\`\\(list\\|wg21\\)\\.")
@@ -71,12 +90,20 @@
  '(gnus-signature-separator (quote ("^-- $" "^-- *$" "^_____+$")))
  '(gnus-simplify-subject-functions (quote (gnus-simplify-subject-fuzzy)))
  '(gnus-sort-gathered-threads-function (quote gnus-thread-sort-by-date) t)
- '(gnus-split-methods (quote ((gnus-save-site-lisp-file) (gnus-article-archive-name) (gnus-article-nndoc-name))))
- '(gnus-started-hook (quote ((lambda nil (run-hooks (quote gnus-after-getting-new-news-hook))))))
+ '(gnus-split-methods
+   (quote
+    ((gnus-save-site-lisp-file)
+     (gnus-article-archive-name)
+     (gnus-article-nndoc-name))))
+ '(gnus-started-hook
+   (quote
+    ((lambda nil
+       (run-hooks
+        (quote gnus-after-getting-new-news-hook))))))
  '(gnus-subscribe-newsgroup-method (quote gnus-subscribe-topics))
  '(gnus-sum-thread-tree-single-indent "  ")
  '(gnus-summary-expunge-below -100)
- '(gnus-summary-line-format "%«%U%R %uS %ur %»%(%-14,14f   %1«%B%*%s%»%)
+ '(gnus-summary-line-format "%«%U%R %uS %ur %»%(%*%-14,14f   %1«%B%s%»%)
 ")
  '(gnus-summary-mark-below -100)
  '(gnus-summary-pick-line-format "%U%R %uS %ur %(%*%-14,14f  %B%s%)
@@ -86,11 +113,12 @@
  '(gnus-suspend-gnus-hook (quote (gnus-group-save-newsrc)))
  '(gnus-thread-expunge-below -1000)
  '(gnus-thread-hide-subtree t)
- '(gnus-thread-sort-functions (quote (gnus-thread-sort-by-most-recent-number gnus-thread-sort-by-score)))
+ '(gnus-thread-sort-functions
+   (quote
+    (gnus-thread-sort-by-most-recent-number gnus-thread-sort-by-score)))
  '(gnus-topic-display-empty-topics nil)
  '(gnus-topic-line-format "%i[ %A: %(%{%n%}%) ]%v
 ")
- '(gnus-treat-body-boundary nil)
  '(gnus-treat-date-lapsed (quote head))
  '(gnus-treat-display-smileys t)
  '(gnus-treat-display-x-face (quote head))
@@ -116,7 +144,7 @@
  '(mail-source-delete-incoming t)
  '(mail-source-delete-old-incoming-confirm nil)
  '(mail-source-report-new-mail-interval 15)
- '(mail-sources (quote ((file :path "/var/mail/daha1836"))))
+ '(mail-sources (quote ((file :path "/var/mail/dadu"))))
  '(mail-specify-envelope-from t)
  '(mail-user-agent (quote gnus-user-agent))
  '(message-alternative-emails "\\(dhaley\\|vinylisl\\)@\\(hushmail\\|ssl\\-mail\\).com\\|\\(dkh@member\\.fsf\\|news@vinylisland\\)\\.org\\|damon\\.haley@colorado\\.edu")
@@ -130,20 +158,34 @@ Bcc:
  '(message-fill-column 78)
  '(message-interactive t)
  '(message-mail-alias-type nil)
- '(message-mode-hook (quote (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell turn-on-orgstruct (lambda nil (set-fill-column 78)) (lambda nil (local-set-key (kbd "C-c M-o") (quote org-mime-htmlize))))))
+ '(message-mode-hook
+   (quote
+    (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell
+                 (lambda nil
+                   (set-fill-column 78))
+                 turn-on-orgstruct++ turn-on-orgtbl)))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(message-send-mail-partially-limit nil)
  '(message-sendmail-envelope-from (quote header))
  '(message-sent-hook (quote (my-gnus-score-followup)))
- '(message-setup-hook (quote (gnus-alias-determine-identity gnus-harvest-set-from message-check-recipients (lambda nil (bbdb-mail-aliases t)))))
+ '(message-setup-hook (quote (gnus-harvest-set-from message-check-recipients)))
  '(message-signature-separator "^-- *$")
  '(message-subscribed-address-functions (quote (gnus-find-subscribed-addresses)))
- '(message-x-completion-alist (quote (("\\([rR]esent-\\|[rR]eply-\\)?[tT]o:\\|[bB]?[cC][cC]:" . gnus-harvest-find-address) ((if (boundp (quote message-newgroups-header-regexp)) message-newgroups-header-regexp message-newsgroups-header-regexp) . message-expand-group))))
- '(mm-attachment-override-types (quote ("text/x-vcard" "application/pkcs7-mime" "application/x-pkcs7-mime" "application/pkcs7-signature" "application/x-pkcs7-signature" "image/.*")))
+ '(message-x-completion-alist
+   (quote
+    (("\\([rR]esent-\\|[rR]eply-\\)?[tT]o:\\|[bB]?[cC][cC]:" . gnus-harvest-find-address)
+     ((if
+          (boundp
+           (quote message-newgroups-header-regexp))
+          message-newgroups-header-regexp message-newsgroups-header-regexp)
+      . message-expand-group))))
+ '(mm-attachment-override-types
+   (quote
+    ("text/x-vcard" "application/pkcs7-mime" "application/x-pkcs7-mime" "application/pkcs7-signature" "application/x-pkcs7-signature" "image/.*")))
  '(mm-decrypt-option (quote always))
  '(mm-discouraged-alternatives (quote ("application/msword" "text/richtext")))
  '(mm-inline-text-html-with-images nil)
- '(mm-text-html-renderer (quote w3m))
+ '(mm-text-html-renderer (quote shr))
  '(mm-verify-option (quote always))
  '(mm-w3m-safe-url-regexp nil)
  '(nnir-imap-default-search-key "imap")
@@ -154,11 +196,54 @@ Bcc:
  '(sc-citation-leader "")
  '(sc-confirm-always-p nil)
  '(sc-default-attribution "")
- '(sc-default-cite-frame (quote ((begin (progn (sc-fill-if-different) (setq sc-tmp-nested-regexp (sc-cite-regexp "") sc-tmp-nonnested-regexp (sc-cite-regexp) sc-tmp-dumb-regexp (concat "\\(" (sc-cite-regexp "") "\\)" (sc-cite-regexp sc-citation-nonnested-root-regexp))))) ("^[    ]*$" (if sc-cite-blank-lines-p (sc-cite-line) (sc-fill-if-different ""))) ((and (looking-at "^-- ?$") (not (save-excursion (goto-char (match-end 0)) (re-search-forward "^-- ?$" nil t)))) (sc-fill-if-different "")) (sc-reference-tag-string (if (string= sc-reference-tag-string "") (list (quote continue)) nil)) (sc-tmp-dumb-regexp (sc-cite-coerce-dumb-citer)) (sc-tmp-nested-regexp (sc-add-citation-level)) (sc-tmp-nonnested-regexp (sc-cite-coerce-cited-line)) (sc-nested-citation-p (sc-add-citation-level)) (t (sc-cite-line)) (end (sc-fill-if-different "")))))
+ '(sc-default-cite-frame
+   (quote
+    ((begin
+      (progn
+        (sc-fill-if-different)
+        (setq sc-tmp-nested-regexp
+              (sc-cite-regexp "")
+              sc-tmp-nonnested-regexp
+              (sc-cite-regexp)
+              sc-tmp-dumb-regexp
+              (concat "\\("
+                      (sc-cite-regexp "")
+                      "\\)"
+                      (sc-cite-regexp sc-citation-nonnested-root-regexp)))))
+     ("^[ 	]*$"
+      (if sc-cite-blank-lines-p
+          (sc-cite-line)
+        (sc-fill-if-different "")))
+     ((and
+       (looking-at "^-- ?$")
+       (not
+        (save-excursion
+          (goto-char
+           (match-end 0))
+          (re-search-forward "^-- ?$" nil t))))
+      (sc-fill-if-different ""))
+     (sc-reference-tag-string
+      (if
+          (string= sc-reference-tag-string "")
+          (list
+           (quote continue))
+        nil))
+     (sc-tmp-dumb-regexp
+      (sc-cite-coerce-dumb-citer))
+     (sc-tmp-nested-regexp
+      (sc-add-citation-level))
+     (sc-tmp-nonnested-regexp
+      (sc-cite-coerce-cited-line))
+     (sc-nested-citation-p
+      (sc-add-citation-level))
+     (t
+      (sc-cite-line))
+     (end
+      (sc-fill-if-different "")))))
  '(sc-preferred-attribution-list nil)
  '(sc-use-only-preference-p t)
  '(send-mail-function (quote sendmail-send-it))
- '(smtpmail-default-smtp-server "smtp.colorado.edu")
+ '(smtpmail-default-smtp-server "mail.messagingengine.com")
  '(smtpmail-queue-dir "~/Messages/Gnus/Mail/queue/")
  '(smtpmail-smtp-server "smtp.colorado.edu")
  '(smtpmail-smtp-service 587))
