@@ -2022,9 +2022,6 @@ Keys are in kbd format."
   :diminish golden-ratio-mode
   :commands golden-ratio-mode
   :defer 5
-  :init
-  (progn
-    (golden-ratio-mode 1))
   :config
   (progn
     (defun my/helm-alive-p ()

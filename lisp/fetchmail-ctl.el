@@ -29,6 +29,8 @@
 ;; simple control of Fetchmail and Leafnode's fetchnews behind a 'v' keymap
 ;; in the Gnus *Group* buffer.
 
+(require 'cl)
+
 (defgroup fetchmail-ctl nil
   "Simple code for controlling Fetchmail."
   :group 'gnus)
@@ -54,7 +56,7 @@
         (unless once (nconc args '("-d" "900")))
         (setq fetchmail-process
               (apply #'start-process procname buf
-                     "/usr/local/bin/fetchmail" "-d" "900" "-N" extra-args)))
+                     "fetchmail" "-n" "-N" args)))
       (message "Starting Fetchmail...done"))))
 
 (defun safely-kill-process (name &optional signal verb)
@@ -73,7 +75,7 @@
 (defun shutdown-fetchmail ()
   (interactive)
   (safely-kill-process "*fetchmail*")
-  ;; (safely-kill-process "*fetchmail-lists*")
+;;  (safely-kill-process "*fetchmail-lists*")
   ;; (safely-kill-process "*fetchmail-spam*")
   ;; (safely-kill-process "*fetchnews*")
   )
@@ -84,7 +86,6 @@
   ;; (safely-kill-process "*fetchmail-lists*" 'SIGUSR1 "Kicking")
   ;; (safely-kill-process "*fetchmail-spam*" 'SIGUSR1 "Kicking")
   )
-
 
 (defun get-buffer-or-call-func (name func)
   (let ((buf (get-buffer name)))
@@ -111,31 +112,61 @@
           (function
            (lambda ()
              (start-fetchmail "*fetchmail*" nil "--idle")))))
+        (fetchmail-lists-buf
+         (get-buffer-or-call-func
+          "*fetchmail-lists*"
+          (function
+           (lambda ()
+             (let ((process-environment (copy-alist process-environment)))
+               (setenv "FETCHMAILHOME" (expand-file-name "~/Messages/Newsdir"))
+               (start-fetchmail "*fetchmail-lists*" nil
+                                "-f" (expand-file-name
+                                      "~/Messages/fetchmailrc.lists")))))))
+        ;; (fetchmail-spam-buf
+        ;;  (get-buffer-or-call-func
+        ;;   "*fetchmail-spam*"
+        ;;   (function
+        ;;    (lambda ()
+        ;;      (let ((process-environment (copy-alist process-environment)))
+        ;;        (setenv "FETCHMAILHOME" (expand-file-name "~/Messages/Maildir"))
+        ;;        (start-fetchmail "*fetchmail-spam*" t
+        ;;                         "-f" (expand-file-name
+        ;;                               "~/Messages/fetchmailrc.spam")))))))
+        ;; (fetchnews-buf
+        ;;  (get-buffer-or-call-func
+        ;;   "*fetchnews*"
+        ;;   (function
+        ;;    (lambda ()
+        ;;      (start-process "*fetchnews*"
+        ;;                     (get-buffer-create "*fetchnews*")
+        ;;                     (executable-find "fetchnews")
+        ;;                     "-d" (expand-file-name "~/Messages/Newsdir")
+        ;;                     "-F" (expand-file-name "~/Messages/leafnode/config")
+        ;;                     "-vvv" "-n")))))
         (cur-buf (current-buffer)))
     (delete-other-windows)
-    (cl-flet (
-           (switch-in-other-buffer
+    (flet ((switch-in-other-buffer
             (buf)
             (when buf
+              (split-window-vertically)
+              (balance-windows)
               (switch-to-buffer-other-window buf))))
       (switch-to-buffer cur-buf)
       (switch-in-other-buffer fetchmail-buf)
+      ;; (switch-in-other-buffer fetchmail-lists-buf)
+      ;; (switch-in-other-buffer fetchmail-spam-buf)
+      ;; (switch-in-other-buffer fetchnews-buf)
       (select-window (get-buffer-window cur-buf))
       (balance-windows))))
 
 (add-hook 'gnus-after-exiting-gnus-hook 'shutdown-fetchmail)
-
-(defun fetchnews-post ()
-  (interactive)
-  (async-shell-command "fetchnews -vv -n -P"))
 
 (eval-after-load "gnus-group"
   '(progn
      (define-key gnus-group-mode-map [?v ?b] 'switch-to-fetchmail)
      (define-key gnus-group-mode-map [?v ?o] 'start-fetchmail)
      (define-key gnus-group-mode-map [?v ?d] 'shutdown-fetchmail)
-     (define-key gnus-group-mode-map [?v ?k] 'kick-fetchmail)
-     (define-key gnus-group-mode-map [?v ?p] 'fetchnews-post)))
+     (define-key gnus-group-mode-map [?v ?k] 'kick-fetchmail)))
 
 (provide 'fetchmail-ctl)
 
