@@ -3066,9 +3066,6 @@ Keys are in kbd format."
   :config
   (setq mc/list-file (expand-file-name "mc-lists.el" user-data-directory)))
 
-(use-package nix-mode
-  :mode ("\\.nix\\'" . nix-mode))
-
 (use-package nf-procmail-mode
   :commands nf-procmail-mode)
 
