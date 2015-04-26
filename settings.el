@@ -266,6 +266,7 @@
  '(custom-buffer-done-function (quote kill-buffer))
  '(custom-file "~/.emacs.d/settings.el")
  '(custom-raised-buttons nil)
+ '(debug-on-error t)
  '(default-frame-alist
     (quote
      ((font . "-*-Source Code Pro-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
@@ -634,7 +635,7 @@
  '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message "dkh")
  '(inhibit-startup-screen t)
- '(initial-major-mode (quote fundamental-mode))
+ '(initial-major-mode (quote org-mode))
  '(initsplit-customizations-alist
    (quote
     (("\\`\\(gnus\\|nn\\|message\\|mail\\|mm-\\|smtp\\|send-mail\\|check-mail\\|spam\\|sc-\\)" "~/.emacs.d/gnus-settings.el" nil nil)
@@ -662,6 +663,7 @@
  '(magit-backup-mode t)
  '(magit-completing-read-function (quote helm--completing-read-default))
  '(magit-diff-options nil)
+ '(magit-diff-use-overlays nil)
  '(magit-highlight-trailing-whitespace nil)
  '(magit-highlight-whitespace nil)
  '(magit-process-popup-time 15)

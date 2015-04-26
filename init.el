@@ -2535,6 +2535,8 @@ Keys are in kbd format."
 (use-package iflipb
   :load-path "site-lisp/iflipb"
   :commands (iflipb-next-buffer iflipb-previous-buffer)
+  :bind (("C-<tab>" . my-iflipb-next-buffer)
+         ("C-S-<iso-lefttab>" . my-iflipb-previous-buffer))
   :preface
   (defvar my-iflipb-auto-off-timeout-sec 2)
   (defvar my-iflipb-auto-off-timer-canceler-internal nil)
@@ -2560,7 +2562,7 @@ Keys are in kbd format."
         (cancel-timer my-iflipb-auto-off-timer-canceler-internal))
     (run-with-idle-timer my-iflipb-auto-off-timeout-sec 0 'my-iflipb-auto-off)
     (setq my-iflipb-ing-internal t))
-
+  :init (bind-key "C-<escape>" 'mode-line-other-buffer)
   :config
   (setq iflipb-always-ignore-buffers
         "\\`\\( \\|diary\\|ipa\\|\\.newsrc-dribble\\'\\)"
@@ -3056,7 +3058,6 @@ Keys are in kbd format."
     (define-key term-pager-break-map  "\177" 'term-pager-back-page)))
 
 (use-package multiple-cursors
-  :disabled t
   :load-path "site-lisp/multiple-cursors-el"
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C->"         . mc/mark-next-like-this)
@@ -3173,7 +3174,6 @@ Keys are in kbd format."
       (show-paren-mode 1)))
 
 (use-package persistent-scratch
-  :disabled t
   :if (and window-system (not running-alternate-emacs)
            (not noninteractive)))
 
@@ -4311,9 +4311,6 @@ and run compass from that directory"
   (add-hook 'after-init-hook
             (lambda ()
               (cycle-my-theme) t)))
-
-;; http://emacsredux.com/blog/2013/04/28/switch-to-previous-buffer/
-(bind-key "C-<escape>" 'mode-line-other-buffer)
 
 ;; Registers
 
