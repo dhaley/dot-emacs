@@ -96,8 +96,7 @@
           (if (string-match "Group" (buffer-name candidate))
               (gnus-group-get-new-news)))
       (let ((switch-to-gnus-unplugged arg))
-        ;; (gnus)
-        (gnus-unplugged)
+        (gnus)
         (gnus-group-list-groups gnus-activate-level)
         (setq switch-to-gnus-run t)))))
 
@@ -181,6 +180,7 @@
 (add-hook 'message-send-hook 'check-mail)
 
 
+(add-hook 'message-send-hook 'queue-message-if-not-connected)
 
 (defun kick-postfix-if-needed ()
   (if (and (quickping "mail.messagingengine.com")
