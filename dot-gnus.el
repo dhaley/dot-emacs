@@ -163,7 +163,24 @@
   (set (make-local-variable 'gnus-agent-queue-mail)
        (if (quickping "mail.messagingengine.com") t 'always)))
 
-(add-hook 'message-send-hook 'queue-message-if-not-connected)
+;; (add-hook 'message-send-hook 'queue-message-if-not-connected)
+(defvar my-message-attachment-regexp
+  "attach\\|\Wfiles?\W\\|enclose\\|\Wdraft\\|\Wversion")
+(defun check-mail ()
+  "ask for confirmation before sending a mail. Scan for possible attachment"
+  (save-excursion
+    (message-goto-body)
+    (let ((warning ""))
+      (when (and (search-forward-regexp my-message-attachment-regexp nil t nil)
+                 (not (search-forward "<#part" nil t nil)))
+        (setq warning "No attachment.\n"))
+      (goto-char (point-min))
+      (unless (message-y-or-n-p (concat warning "Send the message ? ") nil nil)
+        (error "Message not sent")))))
+
+(add-hook 'message-send-hook 'check-mail)
+
+
 
 (defun kick-postfix-if-needed ()
   (if (and (quickping "mail.messagingengine.com")
