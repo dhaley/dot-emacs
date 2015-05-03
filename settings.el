@@ -263,6 +263,7 @@
  '(compile-command "tail /var/log/drupal.log")
  '(css-indent-offset 2)
  '(current-language-environment "UTF-8")
+ '(cursor-in-non-selected-windows nil)
  '(custom-buffer-done-function (quote kill-buffer))
  '(custom-file "~/.emacs.d/settings.el")
  '(custom-raised-buttons nil)
@@ -663,7 +664,6 @@
  '(magit-backup-mode t)
  '(magit-completing-read-function (quote helm--completing-read-default))
  '(magit-diff-options nil)
- '(magit-diff-use-overlays nil)
  '(magit-highlight-trailing-whitespace nil)
  '(magit-highlight-whitespace nil)
  '(magit-process-popup-time 15)
@@ -916,6 +916,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auto-dim-other-buffers-face ((t (:inherit fringe :foreground "Grey70"))))
+ '(aw-background-face ((t (:background "red" :foreground "black"))))
+ '(aw-leading-char-face ((t (:foreground "white"))))
  '(diff-added ((((background dark)) (:foreground "#FFFF9B9BFFFF")) (t (:foreground "DarkGreen"))))
  '(diff-changed ((((background dark)) (:foreground "Yellow")) (t (:foreground "MediumBlue"))))
  '(diff-context ((((background dark)) (:foreground "White")) (t (:foreground "Black"))))
