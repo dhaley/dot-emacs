@@ -1078,7 +1078,10 @@ Keys are in kbd format."
   (global-ace-isearch-mode 1))
 
 (use-package ace-window
-  :bind (("C-x o" . ace-window)("<C-return>" . ace-window)))
+  :bind (([remap next-multiframe-window] . ace-window))
+  :init (bind-keys ("C-x o"  ace-window)("<C-return>"  ace-window))
+  :config
+  (setq aw-keys (quote (97 111 101 117 105 100 104 116 110))))
 
 (use-package ag
   :load-path "site-lisp/ag-el"
@@ -3993,6 +3996,19 @@ and run compass from that directory"
               (nth 1 entry)
             5))))))
 
+(use-package theme-changer
+  :load-path "site-lisp/theme-changer"
+  :init
+  (use-package solar
+    :init
+    ;; (setq calendar-location-name "New York, NY"
+    ;;       calendar-latitude 41.8
+    ;;       calendar-longitude -73.59))
+    )
+  :config
+  (use-package apropospriate-theme)
+  (change-theme 'apropospriate-light 'apropospriate-dark))
+
 (use-package tiny
   :load-path "site-lisp/tiny"
   :bind ("C-. N" . tiny-expand))
@@ -4275,42 +4291,12 @@ and run compass from that directory"
                           ,load-file-name elapsed)))
             t))
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/site-lisp/solarized")
-
-;;;;; Theme ;;;;;
-;; Cycle through this set of themes
-(setq my-themes '(solarized-light solarized-dark zenburn wombat tango))
-
-(setq my-cur-theme nil)
-(defun cycle-my-theme ()
-  "Cycle through a list of themes, my-themes"
-  (interactive)
-  (when my-cur-theme
-    (disable-theme my-cur-theme)
-    (setq my-themes (append my-themes (list my-cur-theme))))
-  (setq my-cur-theme (pop my-themes))
-  (load-theme my-cur-theme t)
-  )
-
 (defun choose-browser (url &rest args)
   (interactive "sURL: ")
   (if current-prefix-arg
       (eww url)
     (let ((browse-url-browser-function 'browse-url-default-macosx-browser))
       (browse-url url))))
-
-;; Bind this to C-t
-(bind-key "C-H-t" 'cycle-my-theme)
-
-(if running-alternate-emacs
-    (progn
-      (add-hook 'after-init-hook
-                (lambda ()
-                  ;; Switch to the first theme in the list above
-                  (cycle-my-theme))))
-  (add-hook 'after-init-hook
-            (lambda ()
-              (cycle-my-theme) t)))
 
 ;; Registers
 
@@ -4319,16 +4305,34 @@ and run compass from that directory"
          (?a (file . "~/.emacs.d/.abbrev_defs"))
          (?b (file . "~/.profile"))
          (?B (file . "~/.bashrc"))
+         (?d (file . "~/Documents/cde.drush/nrel.aliases.drushrc.php"))
          (?e (file . "~/.emacs.d"))
          (?t (file . "~/Documents/Tasks/todo.txt"))
          (?s (file . "~/.emacs.d/settings.el"))
          (?o (file . "~/.emacs.d/dot-org.el"))
          (?g (file . "~/.emacs.d/dot-gnus.el"))
          (?O (file . "~/.emacs.d/org-settings.el"))
+         (?r (file . "~/src/drupal_scripts/release.sh"))
+         (?T (file . "~/Documents/Tasks"))
          (?G (file . "~/.emacs.d/gnus-settings.el"))
          (?u (file . "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el"))
          (?z (file . "~/.zshrc"))))
   (set-register (car r) (cadr r)))
+
+(global-set-key (kbd "M-?") 'flash-active-buffer)
+ 
+(make-face 'flash-active-buffer-face)
+(set-face-attribute 'flash-active-buffer-face nil
+                    :background "red"
+                    :foreground "black")
+(defun flash-active-buffer ()
+  (interactive)
+  (run-at-time "100 millisec" nil
+               (lambda (remap-cookie)
+                 (face-remap-remove-relative remap-cookie))
+               (face-remap-add-relative 'default 'flash-active-buffer-face)))
+
+
 
 
 ;;; init.el ends here
