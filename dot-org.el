@@ -26,6 +26,7 @@
 (require 'ob-ditaa)
 (require 'ox-md)
 (require 'ox-opml)
+(require 'org-eshell)
 
 ;; (require 'ox-reveal)
 
