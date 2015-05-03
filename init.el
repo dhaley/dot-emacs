@@ -1079,7 +1079,7 @@ Keys are in kbd format."
 
 (use-package ace-window
   :bind (([remap next-multiframe-window] . ace-window))
-  :init (bind-keys ("C-x o"  ace-window)("<C-return>"  ace-window))
+  :init (progn (bind-key "C-x o" 'ace-window)(bind-key "<C-return>" 'ace-window))
   :config
   (setq aw-keys (quote (97 111 101 117 105 100 104 116 110))))
 
