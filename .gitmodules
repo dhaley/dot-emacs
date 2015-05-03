@@ -719,8 +719,8 @@
         path = site-lisp/smart-shift
         url = https://github.com/hbin/smart-shift
 [submodule "site-lisp/org-trello"]
-        path = site-lisp/org-trello
-        url = https://github.com/org-trello/org-trello.git
+	path = site-lisp/org-trello
+	url = git@github.com:org-trello/org-trello.git
 [submodule "site-lisp/persp-mode"]
         path = site-lisp/persp-mode
         url = https://github.com/Bad-ptr/persp-mode.el.git
@@ -919,3 +919,21 @@
 [submodule "site-lisp/flx"]
 	path = site-lisp/flx
 	url = git@github.com:lewang/flx.git
+[submodule "lib/request"]
+	path = lib/request
+	url = git@github.com:tkf/emacs-request.git
+[submodule "site-lisp/apropospriate-theme"]
+	path = site-lisp/apropospriate-theme
+	url = https://github.com/waymondo/apropospriate-theme.git
+[submodule "site-lisp/ace-jump-buffer"]
+	path = site-lisp/ace-jump-buffer
+	url = https://github.com/waymondo/ace-jump-buffer.git
+[submodule "site-lisp/ace-jump-zap"]
+	path = site-lisp/ace-jump-zap
+	url = https://github.com/waymondo/ace-jump-zap.git
+[submodule "site-lisp/org-repo-todo"]
+	path = site-lisp/org-repo-todo
+	url = https://github.com/waymondo/org-repo-todo.git
+[submodule "site-lisp/theme-changer"]
+	path = site-lisp/theme-changer
+	url = git@github.com:hadronzoo/theme-changer.git
