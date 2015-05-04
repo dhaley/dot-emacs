@@ -1466,16 +1466,7 @@ Keys are in kbd format."
   :bind ("H-M-W" . copy-code-as-rtf))
 
 (use-package crosshairs
-  :defer 10
-  :commands crosshairs-mode
-  :bind ("M-o c" . crosshairs-mode)
-  :init
-  (crosshairs-mode 1)
-  :config
-  (progn
-  (toggle-crosshairs-when-idle 1)
-  (col-highlight-set-interval 120)
-  (setq col-highlight-face hl-line-face)))
+  :bind ("M-o c" . crosshairs-mode))
 
 (use-package css-mode
   :load-path "site-lisp/css-mode"
@@ -1946,22 +1937,22 @@ Keys are in kbd format."
     (bind-key "f" 'eww-lnum-follow eww-mode-map)
     (bind-key "F" 'eww-lnum-universal eww-mode-map)))
 
-(use-package expand-region
-  :bind ("C-=" . er/expand-region)
-  :config
-  (progn
-    (use-package change-inner
-      :load-path "lisp/change-inner.el/"
-      :bind (("M-i" . change-inner)
-             ("M-o" . change-outer)))
-    (defun er/add-text-mode-expansions ()
-      (make-variable-buffer-local 'er/try-expand-list)
-      (setq er/try-expand-list (append
-                                er/try-expand-list
-                                '(mark-paragraph
-                                  mark-page))))
+;; (use-package expand-region
+;;   :bind ("C-=" . er/expand-region)
+;;   :config
+;;   (progn
+;;     (use-package change-inner
+;;       :load-path "lisp/change-inner.el/"
+;;       :bind (("M-i" . change-inner)
+;;              ("M-o" . change-outer)))
+;;     (defun er/add-text-mode-expansions ()
+;;       (make-variable-buffer-local 'er/try-expand-list)
+;;       (setq er/try-expand-list (append
+;;                                 er/try-expand-list
+;;                                 '(mark-paragraph
+;;                                   mark-page))))
 
-    (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
+;;     (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
 
 (use-package feature-mode
   :load-path "site-lisp/cucumber"
@@ -4316,7 +4307,7 @@ and run compass from that directory"
          (?z (file . "~/.zshrc"))))
   (set-register (car r) (cadr r)))
 
-(global-set-key (kbd "M-?") 'flash-active-buffer)
+(global-set-key (kbd "M-o a") 'flash-active-buffer)
  
 (make-face 'flash-active-buffer-face)
 (set-face-attribute 'flash-active-buffer-face nil
