@@ -946,3 +946,6 @@
 [submodule "site-lisp/key-chord"]
 	path = site-lisp/key-chord
 	url = git@github.com:emacsmirror/key-chord.git
+[submodule "site-lisp/volatile-highlights"]
+	path = site-lisp/volatile-highlights
+	url = git@github.com:k-talo/volatile-highlights.el.git

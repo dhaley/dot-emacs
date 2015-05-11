@@ -2438,69 +2438,21 @@ Keys are in kbd format."
   :config
   (use-package hl-line+))
 
-(require 'hydra-examples)
-
 (use-package hydra
   :load-path "site-lisp/hydra"
-  :init
-
-  (bind-key "C-z" 'delete-other-windows)
-
-  (use-package buffer-move
-    :load-path "site-lisp/buffer-move"
-    :bind (
-           ("M-o ."    . buf-move-up)
-           ("M-o j"  . buf-move-down)
-           ("M-o a"  . buf-move-left)
-           ("M-o u" . buf-move-right)))
-  
-  (global-set-key (kbd "M-o f") 'flash-active-buffer)
-  
-  (make-face 'flash-active-buffer-face)
-  (set-face-attribute 'flash-active-buffer-face nil
-                      :background "red"
-                      :foreground "black")
-  (defun flash-active-buffer ()
-    (interactive)
-    (run-at-time "100 millisec" nil
-                 (lambda (remap-cookie)
-                   (face-remap-remove-relative remap-cookie))
-                 (face-remap-add-relative 'default 'flash-active-buffer-face)))
-
-  ;; Make window splitting more useful
-  ;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
-
-  (defun my/vsplit-last-buffer (prefix)
-    "Split the window vertically and display the previous buffer."
-    (interactive "p")
-    (split-window-vertically)
-    (other-window 1 nil)
-    (if (= prefix 1)
-        (switch-to-next-buffer)))
-
-  (defun my/hsplit-last-buffer (prefix)
-    "Split the window horizontally and display the previous buffer."
-    (interactive "p")
-    (split-window-horizontally)
-    (other-window 1 nil)
-    (if (= prefix 1) (switch-to-next-buffer)))
-
-  (bind-key "C-x 2" 'my/vsplit-last-buffer)
-  (bind-key "C-x 3" 'my/hsplit-last-buffer)
-
+  :preface
+  (require 'hydra-examples)
   :config
   (hydra-add-font-lock)
-
   (global-set-key
    (kbd "C-H-t")
-   (eval-and-compile 
-     (defhydra hydra-zoom ()
-       "zoom"
-       ("a" text-scale-increase "in")
-       ("u" text-scale-decrease "out")
-       ("0" (text-scale-set 0) "reset")
-       ("1" (text-scale-set 0) :bind nil)
-       ("2" (text-scale-set 0) :bind nil :color blue))))
+   (defhydra hydra-zoom ()
+     "zoom"
+     ("a" text-scale-increase "in")
+     ("u" text-scale-decrease "out")
+     ("0" (text-scale-set 0) "reset")
+     ("1" (text-scale-set 0) :bind nil)
+     ("2" (text-scale-set 0) :bind nil :color blue)))
 
   ;; (defhydra hydra-error (global-map "M-g")
   ;;   "goto-error"
@@ -2550,7 +2502,53 @@ You can use arrow-keys or WASD.
      ("u" hydra--universal-argument nil)
      ("C-s" (lambda () (interactive) (ace-window 4)) nil)
      ("C-z" (lambda () (interactive) (ace-window 16)) nil)
-     ("q" nil "quit"))))
+     ("q" nil "quit")))
+  :init
+
+  (bind-key "C-z" 'delete-other-windows)
+
+  (use-package buffer-move
+    :load-path "site-lisp/buffer-move"
+    :bind (
+           ("M-o ."    . buf-move-up)
+           ("M-o j"  . buf-move-down)
+           ("M-o a"  . buf-move-left)
+           ("M-o u" . buf-move-right)))
+  
+  (global-set-key (kbd "M-o f") 'flash-active-buffer)
+  
+  (make-face 'flash-active-buffer-face)
+  (set-face-attribute 'flash-active-buffer-face nil
+                      :background "red"
+                      :foreground "black")
+  (defun flash-active-buffer ()
+    (interactive)
+    (run-at-time "100 millisec" nil
+                 (lambda (remap-cookie)
+                   (face-remap-remove-relative remap-cookie))
+                 (face-remap-add-relative 'default 'flash-active-buffer-face)))
+
+  ;; Make window splitting more useful
+  ;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
+
+  (defun my/vsplit-last-buffer (prefix)
+    "Split the window vertically and display the previous buffer."
+    (interactive "p")
+    (split-window-vertically)
+    (other-window 1 nil)
+    (if (= prefix 1)
+        (switch-to-next-buffer)))
+
+  (defun my/hsplit-last-buffer (prefix)
+    "Split the window horizontally and display the previous buffer."
+    (interactive "p")
+    (split-window-horizontally)
+    (other-window 1 nil)
+    (if (= prefix 1) (switch-to-next-buffer)))
+
+  (bind-key "C-x 2" 'my/vsplit-last-buffer)
+  (bind-key "C-x 3" 'my/hsplit-last-buffer)
+  )
 
 ;(use-package e-other-window
 ;  :load-path "site-lisp/e-other-window")
@@ -3728,16 +3726,15 @@ unless return was pressed outside the comment"
 
 (use-package rainbow-delimiters
   :load-path "site-lisp/rainbow-delimiters"
-  :commands (rainbow-delimiters-mode))
+  :commands (rainbow-delimiters-mode)
+  :config
+    (add-hook 'prog-mode-hook 'rainbow-mode))
 
 (use-package rainbow-mode
   :diminish ((rainbow-mode . "rb"))
   :commands rainbow-mode
-  :init
-  (progn
-    (hook-into-modes #'rainbow-mode
-                     'css-mode-hook
-                     'stylus-mode-hook)))
+  :config
+    (add-hook 'prog-mode-hook 'rainbow-mode))
 
 (use-package recentf
   :defer 10
@@ -3765,6 +3762,11 @@ unless return was pressed outside the comment"
              insert-patterned-2
              insert-patterned-3
              insert-patterned-4))
+
+(use-package reveal-in-finder
+  :if (eq system-type 'darwin)
+  :bind
+  ("C-c o" . reveal-in-finder))
 
 (use-package ruby-mode
   :load-path "site-lisp/ruby-mode"
@@ -4157,7 +4159,15 @@ of `org-babel-temporary-directory'."
 
   :config
   (setq vkill-show-all-processes t))
+
+(use-package volatile-highlights
+  :load-path "site-lisp/volatile-highlights"
+  :diminish (volatile-highlights-mode . "")
+  :config
+  (volatile-highlights-mode t))
+
 (use-package wand
+    :load-path "site-lisp/wand"
   :bind (("C-. RET" . wand:execute)
          ("C-. l" . wand:execute-current-line)
          ("C-. SPC" . toolbox:execute-and-replace))
