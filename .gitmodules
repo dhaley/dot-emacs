@@ -937,3 +937,6 @@
 [submodule "site-lisp/emacs-rotate"]
 	path = site-lisp/emacs-rotate
 	url = git@github.com:daic-h/emacs-rotate.git
+[submodule "override/org-mode"]
+	path = override/org-mode
+	url = git://orgmode.org/org-mode.git
