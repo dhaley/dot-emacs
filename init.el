@@ -2545,12 +2545,12 @@ You can use arrow-keys or WASD.
      ("M-j"  buf-move-down)
      ("M-."  buf-move-up)
      ("M-i"  buf-move-right)
+     ("C-w"  window-configuration-to-register)
      ("C-a" ace-window nil)
      ("u" hydra--universal-argument nil)
      ("C-s" (lambda () (interactive) (ace-window 4)) nil)
      ("C-z" (lambda () (interactive) (ace-window 16)) nil)
      ("q" nil "quit"))))
-
 
 ;(use-package e-other-window
 ;  :load-path "site-lisp/e-other-window")
