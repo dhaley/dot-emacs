@@ -1062,14 +1062,29 @@ Keys are in kbd format."
   :commands ace-link-setup-default
   :config (ace-link-setup-default))
 
+;; (use-package ace-jump-mode
+;;   :bind ("C-c SPC" . ace-jump-mode)
+;;   :config
+;;   (setq ace-jump-mode-move-keys
+;;       '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?q ?w ?e ?r ?t ?y ?u ?i ?o ?p ?z ?x ?c ?v ?b ?n ?m)))
+
 (use-package ace-jump-mode
   :load-path "site-lisp/ace-jump-mode"
-  :bind ("M-h" . ace-jump-mode)
+    :bind ("C-c SPC" . ace-jump-mode)
+  ;; :bind ("M-h" . ace-jump-mode) 
   :config
   (setq ace-jump-mode-submode-list
         '(ace-jump-char-mode
           ace-jump-word-mode
           ace-jump-line-mode)))
+
+;; (use-package avy-jump
+;;     :load-path "site-lisp/avy"
+;;   :bind ("H-l" . avi-goto-line))
+
+(use-package avy
+    :load-path "site-lisp/avy"
+  :bind ("H-l" . avi-goto-line))
 
 (use-package ace-isearch
   :load-path "site-lisp/ace-isearch"
@@ -1077,7 +1092,21 @@ Keys are in kbd format."
   :config
   (global-ace-isearch-mode 1))
 
+;; (use-package ace-window
+;;   :ensure
+;;   :config
+;;   ;; (setq aw-leading-char-style 'path)
+;;   (setq aw-background nil)
+;;   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+;;   (setq aw-scope 'frame)
+;;   (ace-window-display-mode +1))
+
+;; (use-package swiper-helm
+;;   :bind ("C-o" . swiper-helm))
+
+
 (use-package ace-window
+  :load-path "site-lisp/ace-window"
   :bind (([remap next-multiframe-window] . ace-window))
   :init (bind-key "C-x o" 'ace-window)
   :config
@@ -2424,131 +2453,81 @@ Keys are in kbd format."
   :config
   (use-package hl-line+))
 
-;; (use-package hydra-examples
-;;   :config
-;;   (hydra-add-font-lock)
-;;   (global-set-key
-;;    (kbd "C-x t")
-;;    (defhydra hydra-toggle (:color teal)
-;;      "
-;; _a_ abbrev-mode:      %`abbrev-mode
-;; _d_ debug-on-error    %`debug-on-error
-;; _f_ auto-fill-mode    %`auto-fill-function
-;; _t_ truncate-lines    %`truncate-lines
+(use-package hydra
+  :load-path "site-lisp/hydra"
+  :config
+  (hydra-add-font-lock)
 
-;; "
-;;      ("a" abbrev-mode nil)
-;;      ("d" toggle-debug-on-error nil)
-;;      ("f" auto-fill-mode nil)
-;;      ("t" toggle-truncate-lines nil)
-;;      ("q" nil "cancel")))
+  ;; (global-set-key
+  ;;    (kbd "C-x t")
+  ;;    (defhydra hydra-toggle (:color teal)
+  ;;      "
+  ;; _a_ abbrev-mode:      %`abbrev-mode
+  ;; _d_ debug-on-error    %`debug-on-error
+  ;; _f_ auto-fill-mode    %`auto-fill-function
+  ;; _t_ truncate-lines    %`truncate-lines
 
-;;   (key-chord-define-global
-;;    "ds"
-;;    (defhydra hydra-zoom ()
-;;      "zoom"
-;;      ("j" text-scale-increase "in")
-;;      ("k" text-scale-decrease "out")
-;;      ("0" (text-scale-set 0) "reset")
-;;      ("1" (text-scale-set 0) :bind nil)
-;;      ("2" (text-scale-set 0) :bind nil :color blue)))
+  ;; "
+  ;;      ("a" abbrev-mode nil)
+  ;;      ("d" toggle-debug-on-error nil)
+  ;;      ("f" auto-fill-mode nil)
+  ;;      ("t" toggle-truncate-lines nil)
+  ;;      ("q" nil "cancel")))
 
-;;   (defhydra hydra-error (global-map "M-g")
-;;     "goto-error"
-;;     ("h" first-error "first")
-;;     ("j" next-error "next")
-;;     ("k" previous-error "prev")
-;;     ("v" recenter-top-bottom "recenter")
-;;     ("q" nil "quit"))
+  (global-set-key
+   (kbd "C-H-t")
+   (eval-and-compile 
+   (defhydra hydra-zoom ()
+     "zoom"
+     ("a" text-scale-increase "in")
+     ("u" text-scale-decrease "out")
+     ("0" (text-scale-set 0) "reset")
+     ("1" (text-scale-set 0) :bind nil)
+     ("2" (text-scale-set 0) :bind nil :color blue))))
 
-;;   (global-set-key
-;;    (kbd "C-M-o")
-;;    (defhydra hydra-window (:color amaranth)
-;;      "
-;; Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
-;; --------------------------------------------------------------------------------
-;; _w_, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
-;; _a_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
-;; _s_, _<down>_                    _C-d_: ace-window-delete    ^ ^
-;; _d_, _<right>_                   ^   ^                       ^ ^
-;; You can use arrow-keys or WASD.
-;; "
-;;      ("2" split-window-below nil)
-;;      ("3" split-window-right nil)
-;;      ("a" windmove-left nil)
-;;      ("s" windmove-down nil)
-;;      ("w" windmove-up nil)
-;;      ("d" windmove-right nil)
-;;      ("A" hydra-move-splitter-left nil)
-;;      ("S" hydra-move-splitter-down nil)
-;;      ("W" hydra-move-splitter-up nil)
-;;      ("D" hydra-move-splitter-right nil)
-;;      ("<left>" windmove-left nil)
-;;      ("<down>" windmove-down nil)
-;;      ("<up>" windmove-up nil)
-;;      ("<right>" windmove-right nil)
-;;      ("<S-left>" hydra-move-splitter-left nil)
-;;      ("<S-down>" hydra-move-splitter-down nil)
-;;      ("<S-up>" hydra-move-splitter-up nil)
-;;      ("<S-right>" hydra-move-splitter-right nil)
-;;      ("C-a" ace-window nil)
-;;      ("u" hydra--universal-argument nil)
-;;      ("C-s" (lambda () (interactive) (ace-window 4)) nil)
-;;      ("C-d" (lambda () (interactive) (ace-window 16)) nil)
-;;      ("q" nil "quit")))
+  ;; (defhydra hydra-error (global-map "M-g")
+  ;;   "goto-error"
+  ;;   ("h" first-error "first")
+  ;;   ("j" next-error "next")
+  ;;   ("k" previous-error "prev")
+  ;;   ("v" recenter-top-bottom "recenter")
+  ;;   ("q" nil "quit"))
 
-;;   (defhydra hydra-org-template (:color blue :hint nil)
-;;     "
-;; _c_enter  _q_uote     _e_macs-lisp    _L_aTeX:
-;; _l_atex   _E_xample   _p_erl          _i_ndex:
-;; _a_scii   _v_erse     _P_erl tangled  _I_NCLUDE:
-;; _s_rc     ^ ^         plant_u_ml      _H_TML:
-;; _h_tml    ^ ^         ^ ^             _A_SCII:
-;; "
-;;     ("s" (hot-expand "<s"))
-;;     ("E" (hot-expand "<e"))
-;;     ("q" (hot-expand "<q"))
-;;     ("v" (hot-expand "<v"))
-;;     ("c" (hot-expand "<c"))
-;;     ("l" (hot-expand "<l"))
-;;     ("h" (hot-expand "<h"))
-;;     ("a" (hot-expand "<a"))
-;;     ("L" (hot-expand "<L"))
-;;     ("i" (hot-expand "<i"))
-;;     ("e" (progn
-;;            (hot-expand "<s")
-;;            (insert "emacs-lisp")
-;;            (forward-line)))
-;;     ("p" (progn
-;;            (hot-expand "<s")
-;;            (insert "perl")
-;;            (forward-line)))
-;;     ("u" (progn
-;;            (hot-expand "<s")
-;;            (insert "plantuml :file CHANGE.png")
-;;            (forward-line)))
-;;     ("P" (progn
-;;            (insert "#+HEADERS: :results output :exports both :shebang \"#!/usr/bin/env perl\"\n")
-;;            (hot-expand "<s")
-;;            (insert "perl")
-;;            (forward-line)))
-;;     ("I" (hot-expand "<I"))
-;;     ("H" (hot-expand "<H"))
-;;     ("A" (hot-expand "<A"))
-;;     ("<" self-insert-command "ins")
-;;     ("o" nil "quit"))
-
-;;   (defun hot-expand (str)
-;;     "Expand org template."
-;;     (insert str)
-;;     (org-try-structure-completion))
-
-;;   (with-eval-after-load "org"
-;;     (define-key org-mode-map "<"
-;;       (lambda () (interactive)
-;;         (if (looking-back "^")
-;;             (hydra-org-template/body)
-;;           (self-insert-command 1))))))
+  (global-set-key
+   (kbd "H-t")
+   (defhydra hydra-window (:color amaranth)
+     "
+Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
+--------------------------------------------------------------------------------
+_._, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
+_a_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
+_j_, _<down>_                    _C-d_: ace-window-delete    ^ ^
+_u_, _<right>_                   ^   ^                       ^ ^
+You can use arrow-keys or WASD.
+"
+     ("2" split-window-below nil)
+     ("3" split-window-right nil)
+     ("a" windmove-left nil)
+     ("j" windmove-down nil)
+     ("." windmove-up nil)
+     ("u" windmove-right nil)
+     ("A" hydra-move-splitter-left nil)
+     ("J" hydra-move-splitter-down nil)
+     (">" hydra-move-splitter-up nil)
+     ("U" hydra-move-splitter-right nil)
+     ("<left>" windmove-left nil)
+     ("<down>" windmove-down nil)
+     ("<up>" windmove-up nil)
+     ("<right>" windmove-right nil)
+     ("<S-left>" hydra-move-splitter-left nil)
+     ("<S-down>" hydra-move-splitter-down nil)
+     ("<S-up>" hydra-move-splitter-up nil)
+     ("<S-right>" nil hydra-move-splitter-right)
+     ("C-a" ace-window nil)
+     ("u" hydra--universal-argument nil)
+     ("C-s" (lambda () (interactive) (ace-window 4)) nil)
+     ("C-d" (lambda () (interactive) (ace-window 16)) nil)
+     ("q" nil "quit"))))
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer)
@@ -2761,6 +2740,28 @@ Keys are in kbd format."
               "site-lisp/json-reformat"
               "site-lisp/json-snatcher")
   :mode "\\.json\\'")
+
+(use-package key-chord
+  :config
+  (setq key-chord-two-keys-delay 0.05)
+  ;; (key-chord-define-global "x1" 'delete-other-windows)
+  ;; (key-chord-define-global "xk" 'ace-window)
+  ;; (key-chord-define-global "0o" 'delete-window)
+  ;; (key-chord-define-global "xn" 'helm-mini)
+  ;; (key-chord-define-global "xb" 'projectile-switch-to-buffer)
+  ;; (key-chord-define-global "jk" 'magit-status)
+  ;; (key-chord-define-global "xm" 'helm-M-x)
+  ;; (key-chord-define-global "1q" "!")
+  ;; (key-chord-define-global "2w" "@")
+  ;; (key-chord-define-global "3e" "#")
+  ;; (key-chord-define-global "4r" "$")
+  ;; (key-chord-define-global "5t" "%")
+  ;; (key-chord-define-global "6y" "^")
+  ;; (key-chord-define-global "7y" "&")
+  ;; (key-chord-define-global "8u" "*")
+  ;; (key-chord-define-global "9i" "(")
+  ;; (key-chord-define-global "-p" "_")
+  (key-chord-mode +1))
 
 (use-package ledger-mode
   :load-path "~/src/ledger/lisp"
@@ -3237,6 +3238,7 @@ Keys are in kbd format."
   (on-screen-global-mode 1))
 
 (use-package dot-org
+  :load-path "override/org-mode"
   :commands my-org-startup
   :bind (("M-C"   . jump-to-org-agenda)
          ("M-m"   . org-smart-capture)
