@@ -722,6 +722,7 @@
  '(projectile-drupal-site-base-url-test "http://www-test.colorado.edu")
  '(projectile-drupal-site-name-function (quote dkh-get-site-name))
  '(projectile-enable-caching t)
+ '(projectile-globally-ignored-files (quote ("TAGS" "GPATH" "GRTAGS" "GTAGS" "ID")))
  '(projectile-known-projects-file "~/.emacs.d/data/projectile-bookmarks.eld")
  '(projectile-project-root-files-bottom-up
    (quote
