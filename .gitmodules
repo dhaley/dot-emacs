@@ -943,3 +943,6 @@
 [submodule "site-lisp/avy"]
 	path = site-lisp/avy
 	url = git@github.com:abo-abo/avy.git
+[submodule "site-lisp/key-chord"]
+	path = site-lisp/key-chord
+	url = git@github.com:emacsmirror/key-chord.git

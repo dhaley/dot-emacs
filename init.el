@@ -181,8 +181,6 @@
       (delete-other-windows)
     (bury-buffer)))
 
-(bind-key "C-z" 'delete-other-windows)
-
 ;;; M-
 
 (defadvice async-shell-command (before uniqify-running-shell-command activate)
@@ -1427,14 +1425,6 @@ Keys are in kbd format."
   :defer 10
   :commands browse-kill-ring)
 
-(use-package buffer-move
-  :load-path "site-lisp/buffer-move"
-  :bind (
-         ("M-o ."    . buf-move-up)
-         ("M-o j"  . buf-move-down)
-         ("M-o a"  . buf-move-left)
-         ("M-o u" . buf-move-right)))
-
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
          ("\\.cmake\\'"         . cmake-mode)))
@@ -1957,11 +1947,6 @@ Keys are in kbd format."
     (set-syntax-table emacs-lisp-mode-syntax-table)
     (paredit-mode)))
 
-;(use-package e-other-window
-;  :load-path "site-lisp/e-other-window")
-
-(bind-key "<C-return>" 'other-window)
-
 (use-package eww
   :bind ("H-M-g" . eww)
   :config
@@ -2453,37 +2438,69 @@ Keys are in kbd format."
   :config
   (use-package hl-line+))
 
+(require 'hydra-examples)
+
 (use-package hydra
   :load-path "site-lisp/hydra"
+  :init
+
+  (bind-key "C-z" 'delete-other-windows)
+
+  (use-package buffer-move
+    :load-path "site-lisp/buffer-move"
+    :bind (
+           ("M-o ."    . buf-move-up)
+           ("M-o j"  . buf-move-down)
+           ("M-o a"  . buf-move-left)
+           ("M-o u" . buf-move-right)))
+  
+  (global-set-key (kbd "M-o f") 'flash-active-buffer)
+  
+  (make-face 'flash-active-buffer-face)
+  (set-face-attribute 'flash-active-buffer-face nil
+                      :background "red"
+                      :foreground "black")
+  (defun flash-active-buffer ()
+    (interactive)
+    (run-at-time "100 millisec" nil
+                 (lambda (remap-cookie)
+                   (face-remap-remove-relative remap-cookie))
+                 (face-remap-add-relative 'default 'flash-active-buffer-face)))
+
+  ;; Make window splitting more useful
+  ;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
+
+  (defun my/vsplit-last-buffer (prefix)
+    "Split the window vertically and display the previous buffer."
+    (interactive "p")
+    (split-window-vertically)
+    (other-window 1 nil)
+    (if (= prefix 1)
+        (switch-to-next-buffer)))
+
+  (defun my/hsplit-last-buffer (prefix)
+    "Split the window horizontally and display the previous buffer."
+    (interactive "p")
+    (split-window-horizontally)
+    (other-window 1 nil)
+    (if (= prefix 1) (switch-to-next-buffer)))
+
+  (bind-key "C-x 2" 'my/vsplit-last-buffer)
+  (bind-key "C-x 3" 'my/hsplit-last-buffer)
+
   :config
   (hydra-add-font-lock)
-
-  ;; (global-set-key
-  ;;    (kbd "C-x t")
-  ;;    (defhydra hydra-toggle (:color teal)
-  ;;      "
-  ;; _a_ abbrev-mode:      %`abbrev-mode
-  ;; _d_ debug-on-error    %`debug-on-error
-  ;; _f_ auto-fill-mode    %`auto-fill-function
-  ;; _t_ truncate-lines    %`truncate-lines
-
-  ;; "
-  ;;      ("a" abbrev-mode nil)
-  ;;      ("d" toggle-debug-on-error nil)
-  ;;      ("f" auto-fill-mode nil)
-  ;;      ("t" toggle-truncate-lines nil)
-  ;;      ("q" nil "cancel")))
 
   (global-set-key
    (kbd "C-H-t")
    (eval-and-compile 
-   (defhydra hydra-zoom ()
-     "zoom"
-     ("a" text-scale-increase "in")
-     ("u" text-scale-decrease "out")
-     ("0" (text-scale-set 0) "reset")
-     ("1" (text-scale-set 0) :bind nil)
-     ("2" (text-scale-set 0) :bind nil :color blue))))
+     (defhydra hydra-zoom ()
+       "zoom"
+       ("a" text-scale-increase "in")
+       ("u" text-scale-decrease "out")
+       ("0" (text-scale-set 0) "reset")
+       ("1" (text-scale-set 0) :bind nil)
+       ("2" (text-scale-set 0) :bind nil :color blue))))
 
   ;; (defhydra hydra-error (global-map "M-g")
   ;;   "goto-error"
@@ -2494,27 +2511,28 @@ Keys are in kbd format."
   ;;   ("q" nil "quit"))
 
   (global-set-key
-   (kbd "H-t")
+   (kbd "<C-return>")
    (defhydra hydra-window (:color amaranth)
      "
 Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
 --------------------------------------------------------------------------------
 _._, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
 _a_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
-_j_, _<down>_                    _C-d_: ace-window-delete    ^ ^
+_j_, _<down>_                    _C-z_: ace-window-delete    ^ ^
 _u_, _<right>_                   ^   ^                       ^ ^
 You can use arrow-keys or WASD.
 "
-     ("2" split-window-below nil)
-     ("3" split-window-right nil)
+     ("f" flash-active-buffer nil)
+     ("2" my/vsplit-last-buffer nil)
+     ("3" my/hsplit-last-buffer nil)
      ("a" windmove-left nil)
      ("j" windmove-down nil)
      ("." windmove-up nil)
-     ("u" windmove-right nil)
+     ("i" windmove-right nil)
      ("A" hydra-move-splitter-left nil)
      ("J" hydra-move-splitter-down nil)
      (">" hydra-move-splitter-up nil)
-     ("U" hydra-move-splitter-right nil)
+     ("I" hydra-move-splitter-right nil)
      ("<left>" windmove-left nil)
      ("<down>" windmove-down nil)
      ("<up>" windmove-up nil)
@@ -2523,11 +2541,21 @@ You can use arrow-keys or WASD.
      ("<S-down>" hydra-move-splitter-down nil)
      ("<S-up>" hydra-move-splitter-up nil)
      ("<S-right>" nil hydra-move-splitter-right)
+     ("M-a"  buf-move-left)
+     ("M-j"  buf-move-down)
+     ("M-."  buf-move-up)
+     ("M-i"  buf-move-right)
      ("C-a" ace-window nil)
      ("u" hydra--universal-argument nil)
      ("C-s" (lambda () (interactive) (ace-window 4)) nil)
-     ("C-d" (lambda () (interactive) (ace-window 16)) nil)
+     ("C-z" (lambda () (interactive) (ace-window 16)) nil)
      ("q" nil "quit"))))
+
+
+;(use-package e-other-window
+;  :load-path "site-lisp/e-other-window")
+
+;; (bind-key "<C-return>" 'other-window)
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer)
@@ -2742,6 +2770,7 @@ You can use arrow-keys or WASD.
   :mode "\\.json\\'")
 
 (use-package key-chord
+  :load-path "site-lisp/key-chord"
   :config
   (setq key-chord-two-keys-delay 0.05)
   ;; (key-chord-define-global "x1" 'delete-other-windows)
@@ -4415,40 +4444,6 @@ of `org-babel-temporary-directory'."
          (?u (file . "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el"))
          (?z (file . "~/.zshrc"))))
   (set-register (car r) (cadr r)))
-
-(global-set-key (kbd "M-o f") 'flash-active-buffer)
- 
-(make-face 'flash-active-buffer-face)
-(set-face-attribute 'flash-active-buffer-face nil
-                    :background "red"
-                    :foreground "black")
-(defun flash-active-buffer ()
-  (interactive)
-  (run-at-time "100 millisec" nil
-               (lambda (remap-cookie)
-                 (face-remap-remove-relative remap-cookie))
-               (face-remap-add-relative 'default 'flash-active-buffer-face)))
-
-;; Make window splitting more useful
-;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
-
-(defun my/vsplit-last-buffer (prefix)
-  "Split the window vertically and display the previous buffer."
-  (interactive "p")
-  (split-window-vertically)
-  (other-window 1 nil)
-  (if (= prefix 1)
-    (switch-to-next-buffer)))
-
-(defun my/hsplit-last-buffer (prefix)
-  "Split the window horizontally and display the previous buffer."
-  (interactive "p")
-  (split-window-horizontally)
-  (other-window 1 nil)
-  (if (= prefix 1) (switch-to-next-buffer)))
-
-(bind-key "C-x 2" 'my/vsplit-last-buffer)
-(bind-key "C-x 3" 'my/hsplit-last-buffer)
 
 
 ;;; init.el ends here
