@@ -712,7 +712,7 @@ Keys are in kbd format."
              (set-window-start w2 s1)
              (setq i (1+ i)))))))
 
-(bind-key "C-|" 'rotate-windows)
+(bind-key "C-`" 'rotate-windows)
 
 (defun toggle-window-split ()
   (interactive)
@@ -1079,7 +1079,7 @@ Keys are in kbd format."
 
 (use-package ace-window
   :bind (([remap next-multiframe-window] . ace-window))
-  :init (progn (bind-key "C-x o" 'ace-window)(bind-key "<C-return>" 'ace-window))
+  :init (bind-key "C-x o" 'ace-window)
   :config
   (setq aw-keys (quote (97 111 101 117 105 100 104 116 110))))
 
@@ -1401,10 +1401,10 @@ Keys are in kbd format."
 (use-package buffer-move
   :load-path "site-lisp/buffer-move"
   :bind (
-         ("<C-S-up>"    . buf-move-up)
-         ("<C-S-down>"  . buf-move-down)
-         ("<C-S-left>"  . buf-move-left)
-         ("<C-S-right>" . buf-move-right)))
+         ("M-o ."    . buf-move-up)
+         ("M-o j"  . buf-move-down)
+         ("M-o a"  . buf-move-left)
+         ("M-o u" . buf-move-right)))
 
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
@@ -1928,6 +1928,11 @@ Keys are in kbd format."
     (set-syntax-table emacs-lisp-mode-syntax-table)
     (paredit-mode)))
 
+(use-package e-other-window
+  :load-path "site-lisp/e-other-window")
+
+(bind-key "<C-return>" 'e-other-window)
+
 (use-package eww
   :bind ("H-M-g" . eww)
   :config
@@ -2418,6 +2423,132 @@ Keys are in kbd format."
   :bind (("M-o h" . hl-line-mode))
   :config
   (use-package hl-line+))
+
+;; (use-package hydra-examples
+;;   :config
+;;   (hydra-add-font-lock)
+;;   (global-set-key
+;;    (kbd "C-x t")
+;;    (defhydra hydra-toggle (:color teal)
+;;      "
+;; _a_ abbrev-mode:      %`abbrev-mode
+;; _d_ debug-on-error    %`debug-on-error
+;; _f_ auto-fill-mode    %`auto-fill-function
+;; _t_ truncate-lines    %`truncate-lines
+
+;; "
+;;      ("a" abbrev-mode nil)
+;;      ("d" toggle-debug-on-error nil)
+;;      ("f" auto-fill-mode nil)
+;;      ("t" toggle-truncate-lines nil)
+;;      ("q" nil "cancel")))
+
+;;   (key-chord-define-global
+;;    "ds"
+;;    (defhydra hydra-zoom ()
+;;      "zoom"
+;;      ("j" text-scale-increase "in")
+;;      ("k" text-scale-decrease "out")
+;;      ("0" (text-scale-set 0) "reset")
+;;      ("1" (text-scale-set 0) :bind nil)
+;;      ("2" (text-scale-set 0) :bind nil :color blue)))
+
+;;   (defhydra hydra-error (global-map "M-g")
+;;     "goto-error"
+;;     ("h" first-error "first")
+;;     ("j" next-error "next")
+;;     ("k" previous-error "prev")
+;;     ("v" recenter-top-bottom "recenter")
+;;     ("q" nil "quit"))
+
+;;   (global-set-key
+;;    (kbd "C-M-o")
+;;    (defhydra hydra-window (:color amaranth)
+;;      "
+;; Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
+;; --------------------------------------------------------------------------------
+;; _w_, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
+;; _a_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
+;; _s_, _<down>_                    _C-d_: ace-window-delete    ^ ^
+;; _d_, _<right>_                   ^   ^                       ^ ^
+;; You can use arrow-keys or WASD.
+;; "
+;;      ("2" split-window-below nil)
+;;      ("3" split-window-right nil)
+;;      ("a" windmove-left nil)
+;;      ("s" windmove-down nil)
+;;      ("w" windmove-up nil)
+;;      ("d" windmove-right nil)
+;;      ("A" hydra-move-splitter-left nil)
+;;      ("S" hydra-move-splitter-down nil)
+;;      ("W" hydra-move-splitter-up nil)
+;;      ("D" hydra-move-splitter-right nil)
+;;      ("<left>" windmove-left nil)
+;;      ("<down>" windmove-down nil)
+;;      ("<up>" windmove-up nil)
+;;      ("<right>" windmove-right nil)
+;;      ("<S-left>" hydra-move-splitter-left nil)
+;;      ("<S-down>" hydra-move-splitter-down nil)
+;;      ("<S-up>" hydra-move-splitter-up nil)
+;;      ("<S-right>" hydra-move-splitter-right nil)
+;;      ("C-a" ace-window nil)
+;;      ("u" hydra--universal-argument nil)
+;;      ("C-s" (lambda () (interactive) (ace-window 4)) nil)
+;;      ("C-d" (lambda () (interactive) (ace-window 16)) nil)
+;;      ("q" nil "quit")))
+
+;;   (defhydra hydra-org-template (:color blue :hint nil)
+;;     "
+;; _c_enter  _q_uote     _e_macs-lisp    _L_aTeX:
+;; _l_atex   _E_xample   _p_erl          _i_ndex:
+;; _a_scii   _v_erse     _P_erl tangled  _I_NCLUDE:
+;; _s_rc     ^ ^         plant_u_ml      _H_TML:
+;; _h_tml    ^ ^         ^ ^             _A_SCII:
+;; "
+;;     ("s" (hot-expand "<s"))
+;;     ("E" (hot-expand "<e"))
+;;     ("q" (hot-expand "<q"))
+;;     ("v" (hot-expand "<v"))
+;;     ("c" (hot-expand "<c"))
+;;     ("l" (hot-expand "<l"))
+;;     ("h" (hot-expand "<h"))
+;;     ("a" (hot-expand "<a"))
+;;     ("L" (hot-expand "<L"))
+;;     ("i" (hot-expand "<i"))
+;;     ("e" (progn
+;;            (hot-expand "<s")
+;;            (insert "emacs-lisp")
+;;            (forward-line)))
+;;     ("p" (progn
+;;            (hot-expand "<s")
+;;            (insert "perl")
+;;            (forward-line)))
+;;     ("u" (progn
+;;            (hot-expand "<s")
+;;            (insert "plantuml :file CHANGE.png")
+;;            (forward-line)))
+;;     ("P" (progn
+;;            (insert "#+HEADERS: :results output :exports both :shebang \"#!/usr/bin/env perl\"\n")
+;;            (hot-expand "<s")
+;;            (insert "perl")
+;;            (forward-line)))
+;;     ("I" (hot-expand "<I"))
+;;     ("H" (hot-expand "<H"))
+;;     ("A" (hot-expand "<A"))
+;;     ("<" self-insert-command "ins")
+;;     ("o" nil "quit"))
+
+;;   (defun hot-expand (str)
+;;     "Expand org template."
+;;     (insert str)
+;;     (org-try-structure-completion))
+
+;;   (with-eval-after-load "org"
+;;     (define-key org-mode-map "<"
+;;       (lambda () (interactive)
+;;         (if (looking-back "^")
+;;             (hydra-org-template/body)
+;;           (self-insert-command 1))))))
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer)
@@ -3121,7 +3252,31 @@ Keys are in kbd format."
     (run-with-idle-timer 300 t 'jump-to-org-agenda)
     (my-org-startup))
 
-  (add-hook 'org-mode-hook  #'yas-minor-mode))
+  (add-hook 'org-mode-hook  #'yas-minor-mode)
+
+  ;; bug in org-mode 8.2.10
+  ;; http://www.howardism.org/Technical/Emacs/literate-devops.html
+  (defun org-babel-temp-file (prefix &optional suffix)
+    "Create a temporary file in the `org-babel-temporary-directory'.
+Passes PREFIX and SUFFIX directly to `make-temp-file' with the
+value of `temporary-file-directory' temporarily set to the value
+of `org-babel-temporary-directory'."
+    (if (file-remote-p default-directory)
+        (let ((prefix
+               ;; We cannot use `temporary-file-directory' as local part
+               ;; on the remote host, because it might be another OS
+               ;; there.  So we assume "/tmp", which ought to exist on
+               ;; relevant architectures.
+               (concat (file-remote-p default-directory)
+                       ;; REPLACE temporary-file-directory with /tmp:
+                       (expand-file-name prefix "/tmp/"))))
+          (make-temp-file prefix nil suffix))
+      (let ((temporary-file-directory
+             (or (and (boundp 'org-babel-temporary-directory)
+                      (file-exists-p org-babel-temporary-directory)
+                      org-babel-temporary-directory)
+                 temporary-file-directory)))
+        (make-temp-file prefix nil suffix)))))
 
 (use-package pabbrev
   :load-path "site-lisp/pabbrev"
@@ -3376,6 +3531,12 @@ unless return was pressed outside the comment"
   :bind (("C-. r" . popup-ruler)
          ("C-. R" . popup-ruler-vertical)))
 
+(use-package powerline
+  :load-path "site-lisp/powerline/"
+  :config
+  (powerline-default-theme)
+  (setq powerline-default-separator 'utf-8))
+
 (use-package pp-c-l
   :commands pretty-control-l-mode
   :init
@@ -3570,7 +3731,6 @@ unless return was pressed outside the comment"
   (progn
     (hook-into-modes #'rainbow-mode
                      'css-mode-hook
-                     'scss-mode-hook
                      'stylus-mode-hook)))
 
 (use-package recentf
@@ -3642,56 +3802,6 @@ unless return was pressed outside the comment"
     ;; Keep places in the load path
     (setq save-place-file "~/Documents/places")))
   (add-hook 'ruby-mode-hook 'my-ruby-mode-hook))
-
-(use-package sass-mode
-  :disabled t
-  :mode ("\\.scss\\|\\.sass$" . sass-mode)
-  :init
-  (
-   (use-package haml-mode)
-   (add-hook 'sass-mode-hook
-             (lambda ()
-               (defun compass-compile-hook ()
-                 (if (and (buffer-file-name)
-                          (file-name-extension (buffer-file-name)))
-                     (let* ((filename (buffer-file-name))
-                            (suffix (downcase (file-name-extension filename))))
-                       (if (and filename (string= suffix "scss"))
-                           (compass-compile-project)))))
-               (add-hook 'after-save-hook 'compass-compile-hook)))
-
-   (defun compass-compile-project ()
-     "Search the file-tree up from the current file looking for config.rb
-and run compass from that directory"
-     (interactive)
-     (let* ((sass-file (buffer-file-name (current-buffer)))
-            (local-dir (file-name-directory sass-file)))
-       (cl-flet ((contains-config-rb (dir-name)
-                                  (find "config.rb" (directory-files dir-name)
-                                        :test 'equal))
-              (parent-dir (dir)
-                          (expand-file-name
-                           (file-name-as-directory (concat
-                                                    (file-name-as-directory dir)
-                                                    ".."))))
-              (get-root (d)
-                        (cond ((contains-config-rb d) d)
-                              ((equal (parent-dir d) d) nil)
-                              ((get-root (parent-dir d)))))
-
-              (run-compass (dir)
-                           (let ((default-directory dir))
-                             (start-file-process "compass"
-                                                 "*compass-process*"
-                                                 "compass"
-                                                 "compile"))))
-         (let (( dir (get-root local-dir)))
-           (if dir
-               (run-compass dir)
-             (princ (format "no config from %s" local-dir)))))))))
-
-(use-package scss-mode
-  :mode ("\\.scss\\'" . scss-mode))
 
 (use-package selectkey
   :disabled t
@@ -4307,7 +4417,7 @@ and run compass from that directory"
          (?z (file . "~/.zshrc"))))
   (set-register (car r) (cadr r)))
 
-(global-set-key (kbd "M-o a") 'flash-active-buffer)
+(global-set-key (kbd "M-o f") 'flash-active-buffer)
  
 (make-face 'flash-active-buffer-face)
 (set-face-attribute 'flash-active-buffer-face nil
@@ -4320,7 +4430,26 @@ and run compass from that directory"
                  (face-remap-remove-relative remap-cookie))
                (face-remap-add-relative 'default 'flash-active-buffer-face)))
 
+;; Make window splitting more useful
+;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
 
+(defun my/vsplit-last-buffer (prefix)
+  "Split the window vertically and display the previous buffer."
+  (interactive "p")
+  (split-window-vertically)
+  (other-window 1 nil)
+  (if (= prefix 1)
+    (switch-to-next-buffer)))
+
+(defun my/hsplit-last-buffer (prefix)
+  "Split the window horizontally and display the previous buffer."
+  (interactive "p")
+  (split-window-horizontally)
+  (other-window 1 nil)
+  (if (= prefix 1) (switch-to-next-buffer)))
+
+(bind-key "C-x 2" 'my/vsplit-last-buffer)
+(bind-key "C-x 3" 'my/hsplit-last-buffer)
 
 
 ;;; init.el ends here
