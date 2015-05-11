@@ -940,3 +940,6 @@
 [submodule "override/org-mode"]
 	path = override/org-mode
 	url = git://orgmode.org/org-mode.git
+[submodule "site-lisp/avy"]
+	path = site-lisp/avy
+	url = git@github.com:abo-abo/avy.git
