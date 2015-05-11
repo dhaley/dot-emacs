@@ -937,3 +937,9 @@
 [submodule "site-lisp/theme-changer"]
 	path = site-lisp/theme-changer
 	url = git@github.com:hadronzoo/theme-changer.git
+[submodule "site-lisp/e-other-window"]
+	path = site-lisp/e-other-window
+	url = git@github.com:emacsmirror/e-other-window.git
+[submodule "site-lisp/emacs-rotate"]
+	path = site-lisp/emacs-rotate
+	url = git@github.com:daic-h/emacs-rotate.git
