@@ -1478,7 +1478,7 @@ Keys are in kbd format."
   (add-hook 'compilation-filter-hook #'compilation-ansi-color-process-output))
 
 (use-package conf-mode
-  :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
+  :mode "\\.info\\|\\.gitmodules")
 
 (use-package copy-code
   :disabled t
@@ -1489,7 +1489,7 @@ Keys are in kbd format."
 
 (use-package css-mode
   :load-path "site-lisp/css-mode"
-  :mode ("\\.css$" . css-mode)
+  :mode "\\.css$"
   :config
   (progn
     (define-keys css-mode-map
@@ -1975,10 +1975,10 @@ Keys are in kbd format."
 
 (use-package feature-mode
   :load-path "site-lisp/cucumber"
-  :mode ("\\.feature$" . feature-mode))
+  :mode "\\.feature$")
 
 (use-package fetchmail-mode
-  :mode (".fetchmailrc$" . fetchmail-mode)
+  :mode ".fetchmailrc$"
   :commands fetchmail-mode)
 
 (use-package fic-mode
@@ -2976,11 +2976,11 @@ You can use arrow-keys or WASD.
   (apply #'hook-into-modes 'my-lisp-mode-hook lisp-mode-hooks))
 
 (use-package llvm-mode
-  :mode ("\\.ll\\'" . llvm-mode))
+  :mode "\\.ll\\'")
 
 (use-package lua-mode
   :load-path "site-lisp/lua-mode"
-  :mode ("\\.lua\\'" . lua-mode)
+  :mode "\\.lua\\'"
   :interpreter ("lua" . lua-mode))
 
 (use-package lusty-explorer
@@ -3334,11 +3334,47 @@ You can use arrow-keys or WASD.
   (use-package persp-projectile)
   (persp-mode))
 
+(use-package web-mode
+  :mode "\\.phtml\\|\\.tpl\\.php\\|\\.blade\\.php\\|\\.jsp\\|\\.as[cp]x\\|\\.erb\\|\\.html?\\|/\\(views\\|html\\|theme\\|templates\\)"
+  :init
+  (progn
+    (add-hook 'web-mode-before-auto-complete-hooks
+              '(lambda ()
+                 (let ((web-mode-cur-language
+                        (web-mode-language-at-pos)))
+                   (if (string= web-mode-cur-language "php")
+                       (yas-activate-extra-mode 'php-mode)
+                     (yas-deactivate-extra-mode 'php-mode))
+                   (if (string= web-mode-cur-language "css")
+                       (setq emmet-use-css-transform t)
+                     (setq emmet-use-css-transform nil)))))
+    (defun indent-and-newline ()
+      "Indent and newline"
+      (interactive)
+      (progn (web-mode-indent-line)
+             (newline-and-indent)))
+    (defun web-mode-hook ()
+      "Hooks for Web mode."
+      ;;indent
+      (setq web-mode-attr-indent-offset 2)
+      (setq web-mode-markup-indent-offset 2)
+      (setq web-mode-css-indent-offset 2)
+      (setq web-mode-code-indent-offset 2)
+
+      (setq web-mode-enable-auto-pairing t)
+      (setq web-mode-enable-css-colorization t)
+
+      (setq web-mode-enable-comment-keywords t)
+      (setq web-mode-enable-current-column-highlight t)
+      (setq web-mode-enable-current-element-highlight t)
+      (setq web-mode-enable-element-tag-fontification t)
+
+      (local-set-key (kbd "RET") 'indent-and-newline))
+    (add-hook 'web-mode-hook  'web-mode-hook)))
+
 (use-package php-mode
   :commands php-mode
-  :mode (
-         ("\\.inc$" . php-mode)
-         ("\\.\\(module\\|test\\|install\\|theme\\|\\profile\\)$" . php-mode))
+  :mode "\\.inc$\\|\\.\\(module\\|test\\|install\\|theme\\|\\profile\\)$"
   :interpreter "php"
   :init
   (progn
@@ -3681,13 +3717,13 @@ unless return was pressed outside the comment"
 
 (use-package puppet-mode
   :disabled t
-  :mode ("\\.pp\\'" . puppet-mode)
+  :mode "\\.pp\\'"
   :config
   (use-package puppet-ext))
 
 (use-package python-mode
   :load-path "site-lisp/python-mode"
-  :mode ("\\.py\\'" . python-mode)
+  :mode "\\.py\\'"
   :interpreter ("python" . python-mode)
   :config
   (defvar python-mode-initialized nil)
@@ -3770,7 +3806,7 @@ unless return was pressed outside the comment"
 
 (use-package ruby-mode
   :load-path "site-lisp/ruby-mode"
-  :mode ("\\.rb\\'" . ruby-mode)
+  :mode "\\.rb\\'"
   :interpreter ("ruby" . ruby-mode)
   :functions inf-ruby-keys
   :config
@@ -4069,11 +4105,11 @@ unless return was pressed outside the comment"
         (sr-beginning-of-buffer)))))
 
 (use-package tablegen-mode
-  :mode ("\\.td\\'" . tablegen-mode))
+  :mode "\\.td\\'")
 
 (use-package texinfo
   :defines texinfo-section-list
-  :mode ("\\.texi\\'" . texinfo-mode)
+  :mode "\\.texi\\'"
   :config
   (defun my-texinfo-mode-hook ()
     (dolist (mapping '((?b . "emph")
@@ -4260,51 +4296,6 @@ of `org-babel-temporary-directory'."
         whitespace-silent t
         whitespace-style '(face trailing lines space-before-tab empty)))
 
-(use-package web-mode
-  :mode (("\\.phtml\\'" . web-mode)
-         ("\\.tpl\\.php\\'" . web-mode)
-         ("\\.blade\\.php\\'" . web-mode)
-         ("\\.jsp\\'" . web-mode)
-         ("\\.as[cp]x\\'" . web-mode)
-         ("\\.erb\\'" . web-mode)
-         ("\\.html?\\'" . web-mode)
-         ("/\\(views\\|html\\|theme\\|templates\\)/.*\\.php\\'" . web-mode))
-  :init
-  (progn
-    (add-hook 'web-mode-before-auto-complete-hooks
-              '(lambda ()
-                 (let ((web-mode-cur-language
-                        (web-mode-language-at-pos)))
-                   (if (string= web-mode-cur-language "php")
-                       (yas-activate-extra-mode 'php-mode)
-                     (yas-deactivate-extra-mode 'php-mode))
-                   (if (string= web-mode-cur-language "css")
-                       (setq emmet-use-css-transform t)
-                     (setq emmet-use-css-transform nil)))))
-    (defun indent-and-newline ()
-      "Indent and newline"
-      (interactive)
-      (progn (web-mode-indent-line)
-             (newline-and-indent)))
-    (defun web-mode-hook ()
-      "Hooks for Web mode."
-      ;;indent
-      (setq web-mode-attr-indent-offset 2)
-      (setq web-mode-markup-indent-offset 2)
-      (setq web-mode-css-indent-offset 2)
-      (setq web-mode-code-indent-offset 2)
-
-      (setq web-mode-enable-auto-pairing t)
-      (setq web-mode-enable-css-colorization t)
-
-      (setq web-mode-enable-comment-keywords t)
-      (setq web-mode-enable-current-column-highlight t)
-      (setq web-mode-enable-current-element-highlight t)
-      (setq web-mode-enable-element-tag-fontification t)
-
-      (local-set-key (kbd "RET") 'indent-and-newline))
-    (add-hook 'web-mode-hook  'web-mode-hook)))
-
 (use-package winner
   :if (not noninteractive)
   :defer 5
@@ -4365,7 +4356,7 @@ of `org-babel-temporary-directory'."
 
 (use-package yaml-mode
   :load-path "site-lisp/yaml-mode"
-  :mode ("\\.ya?ml\\'" . yaml-mode))
+  :mode "\\.ya?ml\\'")
 
 (use-package yasnippet
   :load-path "site-lisp/yasnippet"
