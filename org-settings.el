@@ -137,6 +137,13 @@
  '(org-agenda-todo-ignore-with-date nil)
  '(org-agenda-window-setup (quote current-window))
  '(org-archive-location "%s_archive::* Archived Tasks")
+ '(org-babel-load-languages
+   (quote
+    ((emacs-lisp . t)
+     (sh . t)
+     (js . t)
+     (ruby . t)
+     (sql . t))))
  '(org-babel-results-keyword "results")
  '(org-beamer-frame-default-options "fragile")
  '(org-blank-before-new-entry (quote ((heading) (plain-list-item . auto))))

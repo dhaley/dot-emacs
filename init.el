@@ -1928,10 +1928,10 @@ Keys are in kbd format."
     (set-syntax-table emacs-lisp-mode-syntax-table)
     (paredit-mode)))
 
-(use-package e-other-window
-  :load-path "site-lisp/e-other-window")
+;(use-package e-other-window
+;  :load-path "site-lisp/e-other-window")
 
-(bind-key "<C-return>" 'e-other-window)
+(bind-key "<C-return>" 'other-window)
 
 (use-package eww
   :bind ("H-M-g" . eww)
@@ -3237,7 +3237,6 @@ Keys are in kbd format."
   (on-screen-global-mode 1))
 
 (use-package dot-org
-  :load-path "override/org-mode"
   :commands my-org-startup
   :bind (("M-C"   . jump-to-org-agenda)
          ("M-m"   . org-smart-capture)
@@ -3252,31 +3251,7 @@ Keys are in kbd format."
     (run-with-idle-timer 300 t 'jump-to-org-agenda)
     (my-org-startup))
 
-  (add-hook 'org-mode-hook  #'yas-minor-mode)
-
-  ;; bug in org-mode 8.2.10
-  ;; http://www.howardism.org/Technical/Emacs/literate-devops.html
-  (defun org-babel-temp-file (prefix &optional suffix)
-    "Create a temporary file in the `org-babel-temporary-directory'.
-Passes PREFIX and SUFFIX directly to `make-temp-file' with the
-value of `temporary-file-directory' temporarily set to the value
-of `org-babel-temporary-directory'."
-    (if (file-remote-p default-directory)
-        (let ((prefix
-               ;; We cannot use `temporary-file-directory' as local part
-               ;; on the remote host, because it might be another OS
-               ;; there.  So we assume "/tmp", which ought to exist on
-               ;; relevant architectures.
-               (concat (file-remote-p default-directory)
-                       ;; REPLACE temporary-file-directory with /tmp:
-                       (expand-file-name prefix "/tmp/"))))
-          (make-temp-file prefix nil suffix))
-      (let ((temporary-file-directory
-             (or (and (boundp 'org-babel-temporary-directory)
-                      (file-exists-p org-babel-temporary-directory)
-                      org-babel-temporary-directory)
-                 temporary-file-directory)))
-        (make-temp-file prefix nil suffix)))))
+  (add-hook 'org-mode-hook  #'yas-minor-mode))
 
 (use-package pabbrev
   :load-path "site-lisp/pabbrev"
@@ -4112,9 +4087,31 @@ unless return was pressed outside the comment"
   :bind ("C-. N" . tiny-expand))
 
 (use-package tramp-sh
-  :load-path "override/tramp"
   :defer t
-  )
+  :config
+  ;; bug in org-mode 8.2.10
+  ;; http://www.howardism.org/Technical/Emacs/literate-devops.html
+  (defun org-babel-temp-file (prefix &optional suffix)
+    "Create a temporary file in the `org-babel-temporary-directory'.
+Passes PREFIX and SUFFIX directly to `make-temp-file' with the
+value of `temporary-file-directory' temporarily set to the value
+of `org-babel-temporary-directory'."
+    (if (file-remote-p default-directory)
+        (let ((prefix
+               ;; We cannot use `temporary-file-directory' as local part
+               ;; on the remote host, because it might be another OS
+               ;; there.  So we assume "/tmp", which ought to exist on
+               ;; relevant architectures.
+               (concat (file-remote-p default-directory)
+                       ;; REPLACE temporary-file-directory with /tmp:
+                       (expand-file-name prefix "/tmp/"))))
+          (make-temp-file prefix nil suffix))
+      (let ((temporary-file-directory
+             (or (and (boundp 'org-babel-temporary-directory)
+                      (file-exists-p org-babel-temporary-directory)
+                      org-babel-temporary-directory)
+                 temporary-file-directory)))
+        (make-temp-file prefix nil suffix)))))
 
 (use-package unbound)
 

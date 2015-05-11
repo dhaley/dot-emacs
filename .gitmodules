@@ -487,9 +487,6 @@
 [submodule "site-lisp/helm-recentd"]
         path = site-lisp/helm-recentd
         url = git://github.com/ShingoFukuyama/helm-recentd.git
-[submodule "override/org-mode"]
-        path = override/org-mode
-        url = git@github.com:dhaley/org-mode.git
 [submodule "site-lisp/helm-git-grep"]
         path = site-lisp/helm-git-grep
         url = git://github.com/yasuyk/helm-git-grep.git
@@ -508,9 +505,6 @@
 [submodule "site-lisp/php-boris-minor-mode"]
         path = site-lisp/php-boris-minor-mode
         url = git://github.com/steckerhalter/php-boris-minor-mode.git
-[submodule "override/tramp"]
-        path = override/tramp
-        url = git://git.savannah.gnu.org/tramp.git
 [submodule "lisp/use-package"]
 	path = lisp/use-package
 	url = git://github.com/jwiegley/use-package.git
