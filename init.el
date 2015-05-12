@@ -2445,22 +2445,22 @@ Keys are in kbd format."
   :config
   (hydra-add-font-lock)
   (global-set-key
-   (kbd "C-H-t")
+   (kbd "C-H-M-S-SPC")
    (defhydra hydra-zoom ()
      "zoom"
-     ("a" text-scale-increase "in")
-     ("u" text-scale-decrease "out")
+     ("h" text-scale-increase "in")
+     ("t" text-scale-decrease "out")
      ("0" (text-scale-set 0) "reset")
      ("1" (text-scale-set 0) :bind nil)
      ("2" (text-scale-set 0) :bind nil :color blue)))
 
-  ;; (defhydra hydra-error (global-map "M-g")
-  ;;   "goto-error"
-  ;;   ("h" first-error "first")
-  ;;   ("j" next-error "next")
-  ;;   ("k" previous-error "prev")
-  ;;   ("v" recenter-top-bottom "recenter")
-  ;;   ("q" nil "quit"))
+  (defhydra hydra-error (global-map "C-H-M-S-tab")
+    "goto-error"
+    ("h" first-error "first")
+    ("j" next-error "next")
+    ("k" previous-error "prev")
+    ("v" recenter-top-bottom "recenter")
+    ("q" nil "quit"))
 
   (global-set-key
    (kbd "<C-return>")
@@ -2502,7 +2502,17 @@ You can use arrow-keys or WASD.
      ("u" hydra--universal-argument nil)
      ("C-s" (lambda () (interactive) (ace-window 4)) nil)
      ("C-z" (lambda () (interactive) (ace-window 16)) nil)
+     ("h" hl-line-mode nil)
+     ("c" crosshairs-mode nil)
+     ("g" golden-ratio-mode nil)
      ("q" nil "quit")))
+
+  ;; (defhydra hydra-page (ctl-x-map "" :pre (widen))
+  ;;   "page"
+  ;;   ("=" forward-page "next")
+  ;;   ("/;" backward-page "prev")
+  ;;   ("n" narrow-to-page "narrow" :bind nil :exit t))
+  
   :init
 
   (bind-key "C-z" 'delete-other-windows)
