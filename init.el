@@ -3583,6 +3583,7 @@ unless return was pressed outside the comment"
 
 (use-package powerline
   :load-path "site-lisp/powerline/"
+  :disabled t
   :config
   (powerline-default-theme)
   (setq powerline-default-separator 'utf-8))
@@ -3810,9 +3811,10 @@ unless return was pressed outside the comment"
              insert-patterned-4))
 
 (use-package reveal-in-finder
+  :load-path "site-lisp/reveal-in-finder"
   :if (eq system-type 'darwin)
   :bind
-  ("C-c o" . reveal-in-finder))
+  ("C-H-M-S-o" . reveal-in-finder))
 
 (use-package ruby-mode
   :load-path "site-lisp/ruby-mode"

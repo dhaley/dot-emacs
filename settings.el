@@ -933,3 +933,5 @@
  '(ghc-face-error ((t (:inherit default))))
  '(ghc-face-warn ((t (:inherit default))))
  '(idris-loaded-region-face ((t (:background "#eaf8ff")))))
+ '(org-mode-line-clock ((t (:foreground "red" :box (:line-width -1 :style released-button)))) t)
+ '(persp-selected-face ((t (:foreground "purple")))))

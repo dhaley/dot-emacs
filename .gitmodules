@@ -949,3 +949,6 @@
 [submodule "site-lisp/volatile-highlights"]
 	path = site-lisp/volatile-highlights
 	url = git@github.com:k-talo/volatile-highlights.el.git
+[submodule "site-lisp/reveal-in-finder"]
+	path = site-lisp/reveal-in-finder
+	url = git@github.com:kaz-yos/elisp.git
