@@ -1092,24 +1092,9 @@ Keys are in kbd format."
   :config
   (global-ace-isearch-mode 1))
 
-;; (use-package ace-window
-;;   :ensure
-;;   :config
-;;   ;; (setq aw-leading-char-style 'path)
-;;   (setq aw-background nil)
-;;   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-;;   (setq aw-scope 'frame)
-;;   (ace-window-display-mode +1))
-
-;; (use-package swiper-helm
-;;   :bind ("C-o" . swiper-helm))
-
-
 (use-package ace-window
   :load-path "site-lisp/ace-window"
-  :defer 1
-  :bind (([remap next-multiframe-window] . ace-window))
-  :init (bind-key* "<C-return>" 'ace-window)
+  :bind* "<C-return>"
   :config
   (setq aw-keys (quote (97 111 101 117 105 100 104 116 110)))
   (set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 3.0)
