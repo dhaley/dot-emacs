@@ -439,6 +439,8 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
     (if running-alternate-emacs
         "-*-Myriad Pro-normal-normal-normal-*-20-*-*-*-p-0-iso10646-1"
       "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"))
+   ((string= system-name "ubuntu")
+    "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1")
    (t
     (if running-alternate-emacs
         "-*-Myriad Pro-normal-normal-normal-*-17-*-*-*-p-0-iso10646-1"
@@ -2454,7 +2456,7 @@ Keys are in kbd format."
      ("1" (text-scale-set 0) :bind nil)
      ("2" (text-scale-set 0) :bind nil :color blue)))
 
-  (defhydra hydra-error (global-map "C-H-M-S-tab")
+  (defhydra hydra-error (global-map "C-H-M-S tab")
     "goto-error"
     ("h" first-error "first")
     ("j" next-error "next")
@@ -2462,8 +2464,7 @@ Keys are in kbd format."
     ("v" recenter-top-bottom "recenter")
     ("q" nil "quit"))
 
-  (global-set-key
-   (kbd "<C-return>")
+  (bind-key* "<C-return>"
    (defhydra hydra-window (:color amaranth)
      "
 Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
@@ -2557,8 +2558,7 @@ You can use arrow-keys or WASD.
     (if (= prefix 1) (switch-to-next-buffer)))
 
   (bind-key "C-x 2" 'my/vsplit-last-buffer)
-  (bind-key "C-x 3" 'my/hsplit-last-buffer)
-  )
+  (bind-key "C-x 3" 'my/hsplit-last-buffer))
 
 ;(use-package e-other-window
 ;  :load-path "site-lisp/e-other-window")
@@ -3275,7 +3275,7 @@ You can use arrow-keys or WASD.
   (on-screen-global-mode 1))
 
 (use-package dot-org
-  :load-path "override/org-mode"
+  :load-path "override/org-mode/lisp"
   :commands my-org-startup
   :bind (("M-C"   . jump-to-org-agenda)
          ("M-m"   . org-smart-capture)
@@ -3291,6 +3291,9 @@ You can use arrow-keys or WASD.
     (my-org-startup))
 
   (add-hook 'org-mode-hook  #'yas-minor-mode))
+
+(use-package ox-reveal
+  :load-path "site-lisp/org-reveal")
 
 (use-package pabbrev
   :load-path "site-lisp/pabbrev"
