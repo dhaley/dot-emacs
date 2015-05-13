@@ -1107,10 +1107,13 @@ Keys are in kbd format."
 
 (use-package ace-window
   :load-path "site-lisp/ace-window"
+  :defer 1
   :bind (([remap next-multiframe-window] . ace-window))
   :init (bind-key "C-x o" 'ace-window)
   :config
-  (setq aw-keys (quote (97 111 101 117 105 100 104 116 110))))
+  (setq aw-keys (quote (97 111 101 117 105 100 104 116 110)))
+  (set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 3.0)
+  (set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green"))
 
 (use-package ag
   :load-path "site-lisp/ag-el"
