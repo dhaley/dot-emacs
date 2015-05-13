@@ -485,7 +485,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
 
 (bind-key "C-c m" 'emacs-toggle-size)
 
-s(defcustom user-initials nil
+(defcustom user-initials nil
   "*Initials of this user."
   :set
   #'(lambda (symbol value)
