@@ -485,7 +485,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
 
 (bind-key "C-c m" 'emacs-toggle-size)
 
-(defcustom user-initials nil
+s(defcustom user-initials nil
   "*Initials of this user."
   :set
   #'(lambda (symbol value)
@@ -1109,7 +1109,7 @@ Keys are in kbd format."
   :load-path "site-lisp/ace-window"
   :defer 1
   :bind (([remap next-multiframe-window] . ace-window))
-  :init (bind-key "C-x o" 'ace-window)
+  :init (bind-key* "<C-return>" 'ace-window)
   :config
   (setq aw-keys (quote (97 111 101 117 105 100 104 116 110)))
   (set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 3.0)
@@ -2467,7 +2467,8 @@ Keys are in kbd format."
     ("v" recenter-top-bottom "recenter")
     ("q" nil "quit"))
 
-  (bind-key* "<C-return>"
+  ;; (bind-key* "<C-return>"
+  (bind-key* "C-x o"
    (defhydra hydra-window (:color amaranth)
      "
 Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
