@@ -174,6 +174,7 @@
  '(ac-trigger-key "<tab>")
  '(ac-use-fuzzy nil)
  '(ace-isearch-submode (quote ace-jump-char-mode))
+ '(ace-window-display-mode t)
  '(ad-redefinition-action (quote accept))
  '(after-save-hook
    (quote
@@ -194,6 +195,7 @@
  '(auto-save-interval 64)
  '(auto-save-list-file-prefix "~/.emacs.d/data/auto-save-list/.saves-")
  '(auto-save-timeout 2)
+ '(aw-background nil)
  '(aw-keys (quote (97 111 101 117 105 100 104 116 110)))
  '(backup-directory-alist
    (quote
