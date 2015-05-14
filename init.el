@@ -687,60 +687,6 @@ Keys are in kbd format."
             (define-key mode-map (read-kbd-macro key) function)))
         keybindings))
 
-(defun rotate-windows ()
-  "Rotate your windows"
-  (interactive)
-  (cond ((not (> (count-windows)1))
-         (message "You can't rotate a single window!"))
-        (t
-         (setq i 1)
-         (setq numWindows (count-windows))
-         (while  (< i numWindows)
-           (let* (
-                  (w1 (elt (window-list) i))
-                  (w2 (elt (window-list) (+ (% i numWindows) 1)))
-
-                  (b1 (window-buffer w1))
-                  (b2 (window-buffer w2))
-
-                  (s1 (window-start w1))
-                  (s2 (window-start w2))
-                  )
-             (set-window-buffer w1  b2)
-             (set-window-buffer w2 b1)
-             (set-window-start w1 s2)
-             (set-window-start w2 s1)
-             (setq i (1+ i)))))))
-
-(bind-key "C-`" 'rotate-windows)
-
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
-
-(define-key ctl-x-4-map "t" 'toggle-window-split)
-
 ;;; Packages
 
 (use-package etags
@@ -1062,81 +1008,230 @@ Keys are in kbd format."
   :commands ace-link-setup-default
   :config (ace-link-setup-default))
 
-;; (use-package ace-jump-mode
-;;   :bind ("C-c SPC" . ace-jump-mode)
-;;   :config
-;;   (setq ace-jump-mode-move-keys
-;;       '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?q ?w ?e ?r ?t ?y ?u ?i ?o ?p ?z ?x ?c ?v ?b ?n ?m)))
-
 (use-package ace-jump-mode
   :load-path "site-lisp/ace-jump-mode"
-    :bind ("C-c SPC" . ace-jump-mode)
-  ;; :bind ("M-h" . ace-jump-mode) 
+  :bind ("C-c SPC" . ace-jump-mode)
   :config
   (setq ace-jump-mode-submode-list
         '(ace-jump-char-mode
           ace-jump-word-mode
           ace-jump-line-mode)))
 
-;; (use-package avy-jump
-;;     :load-path "site-lisp/avy"
-;;   :bind ("H-l" . avi-goto-line))
+(use-package hydra
+  :load-path "site-lisp/hydra"
+  :preface
+  (require 'hydra-examples)
+  :init
+
+  (bind-key "C-z" 'delete-other-windows)
+
+  (use-package buffer-move
+    :load-path "site-lisp/buffer-move"
+    :bind (
+           ("M-o ."    . buf-move-up)
+           ("M-o j"  . buf-move-down)
+           ("M-o a"  . buf-move-left)
+           ("M-o u" . buf-move-right)))
+  
+  (global-set-key (kbd "M-o f") 'flash-active-buffer)
+  
+  (make-face 'flash-active-buffer-face)
+  (set-face-attribute 'flash-active-buffer-face nil
+                      :background "red"
+                      :foreground "black")
+  (defun flash-active-buffer ()
+    (interactive)
+    (run-at-time "100 millisec" nil
+                 (lambda (remap-cookie)
+                   (face-remap-remove-relative remap-cookie))
+                 (face-remap-add-relative 'default 'flash-active-buffer-face)))
+
+  ;; Make window splitting more useful
+  ;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
+
+  (defun my/vsplit-last-buffer (prefix)
+    "Split the window vertically and display the previous buffer."
+    (interactive "p")
+    (split-window-vertically)
+    (other-window 1 nil)
+    (if (= prefix 1)
+        (switch-to-next-buffer)))
+
+  (defun my/hsplit-last-buffer (prefix)
+    "Split the window horizontally and display the previous buffer."
+    (interactive "p")
+    (split-window-horizontally)
+    (other-window 1 nil)
+    (if (= prefix 1) (switch-to-next-buffer)))
+
+  (bind-key "C-x 2" 'my/vsplit-last-buffer)
+  (bind-key "C-x 3" 'my/hsplit-last-buffer)
+  :config
+  (hydra-add-font-lock)
+  (global-set-key
+   (kbd "C-M-j")
+   (defhydra hydra-bmk ()
+     ("i" (find-file "~/.emacs.d/init.el") "dot-emacs")
+     ("b" (find-file "~/.bash_profile") "bash-profile")
+     ("B" (find-file "~/.bashrc") "bashrc")
+     ("d" (find-file "~/Documents/cde.drush/nrel.aliases.drushrc.php") "drush-aliases")
+     ("e" (find-file "~/.emacs.d") "user-emacs-dir")
+     ("t" (find-file "~/Documents/Tasks/todo.txt") "todo.txt")
+     ("s" (find-file "~/.emacs.d/settings.el") "settings.el")
+     ("o" (find-file "~/.emacs.d/dot-org.el") "dot-org")
+     ("g" (find-file "~/.emacs.d/dot-gnus.el") "dot-gnus")
+     ("O" (find-file "~/.emacs.d/org-settings.el") "org-settings")
+     ("r" (find-file "~/src/drupal_scripts/release.sh") "release.sh")
+     ("T" (find-file "~/Documents/Tasks") "Tasks dir")
+     ("G" (find-file "~/.emacs.d/gnus-settings.el") "gnus-settings")
+     ("u" (find-file "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el") "math-symbols")))
+  (global-set-key
+   (kbd "C-H-M-S-SPC")
+   (defhydra hydra-zoom ()
+     "zoom"
+     ("h" text-scale-increase "in")
+     ("t" text-scale-decrease "out")
+     ("0" (text-scale-set 0) "reset")
+     ("1" (text-scale-set 0) :bind nil)
+     ("2" (text-scale-set 0) :bind nil :color blue)))
+
+  (defhydra hydra-error (global-map "C-H-M-S tab")
+    "goto-error"
+    ("h" first-error "first")
+    ("j" next-error "next")
+    ("k" previous-error "prev")
+    ("v" recenter-top-bottom "recenter")
+    ("q" nil "quit"))
+
+  ;; (bind-key* "<C-return>"
+  (bind-key* "C-x o"
+             (defhydra hydra-window (:color amaranth)
+               "
+Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
+--------------------------------------------------------------------------------
+_._, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
+_a_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
+_j_, _<down>_                    _C-z_: ace-window-delete    ^ ^
+_u_, _<right>_                   ^   ^                       ^ ^
+You can use arrow-keys or WASD.
+"
+               ("f" flash-active-buffer nil)
+               ("2" my/vsplit-last-buffer nil)
+               ("3" my/hsplit-last-buffer nil)
+               ("a" windmove-left nil)
+               ("j" windmove-down nil)
+               ("." windmove-up nil)
+               ("i" windmove-right nil)
+               ("A" hydra-move-splitter-left nil)
+               ("J" hydra-move-splitter-down nil)
+               (">" hydra-move-splitter-up nil)
+               ("I" hydra-move-splitter-right nil)
+               ("<left>" windmove-left nil)
+               ("<down>" windmove-down nil)
+               ("<up>" windmove-up nil)
+               ("<right>" windmove-right nil)
+               ("<S-left>" hydra-move-splitter-left nil)
+               ("<S-down>" hydra-move-splitter-down nil)
+               ("<S-up>" hydra-move-splitter-up nil)
+               ("<S-right>" nil hydra-move-splitter-right)
+               ("M-a"  buf-move-left)
+               ("M-j"  buf-move-down)
+               ("M-."  buf-move-up)
+               ("M-i"  buf-move-right)
+               ("C-w"  window-configuration-to-register)
+               ("C-a" ace-window nil)
+               ("u" hydra--universal-argument nil)
+               ("C-s" (lambda () (interactive) (ace-window 4)) nil)
+               ("C-z" (lambda () (interactive) (ace-window 16)) nil)
+               ("h" hl-line-mode nil)
+               ("c" crosshairs-mode nil)
+               ("g" golden-ratio-mode nil)
+               ("q" nil "quit"))))
 
 (use-package avy
-    :load-path "site-lisp/avy"
-  :bind ("H-l" . avi-goto-line))
+  :load-path "site-lisp/avy"
+  :bind* (("<C-return>" . ace-window)
+          ("H-l" . avy-goto-line))
+  :config
+  (use-package ace-window
+    :load-path "site-lisp/ace-window"
+    :init
+    (defun toggle-window-split ()
+      (interactive)
+      (if (= (count-windows) 2)
+          (let* ((this-win-buffer (window-buffer))
+                 (next-win-buffer (window-buffer (next-window)))
+                 (this-win-edges (window-edges (selected-window)))
+                 (next-win-edges (window-edges (next-window)))
+                 (this-win-2nd (not (and (<= (car this-win-edges)
+                                             (car next-win-edges))
+                                         (<= (cadr this-win-edges)
+                                             (cadr next-win-edges)))))
+                 (splitter
+                  (if (= (car this-win-edges)
+                         (car (window-edges (next-window))))
+                      'split-window-horizontally
+                    'split-window-vertically)))
+            (delete-other-windows)
+            (let ((first-win (selected-window)))
+              (funcall splitter)
+              (if this-win-2nd (other-window 1))
+              (set-window-buffer (selected-window) this-win-buffer)
+              (set-window-buffer (next-window) next-win-buffer)
+              (select-window first-win)
+              (if this-win-2nd (other-window 1))))))
+
+    (define-key ctl-x-4-map "t" 'toggle-window-split)
+
+    (defun joe-scroll-other-window()
+      (interactive)
+      (scroll-other-window 1))
+
+    (defun joe-scroll-other-window-down ()
+      (interactive)
+      (scroll-other-window-down 1))
+    :config
+    (setq aw-keys (quote (97 111 101 117 105 100 104 116 110))
+          aw-dispatch-always t
+          aw-dispatch-alist
+          '((?x aw-delete-window     "Ace - Delete Window")
+            (?c aw-swap-window       "Ace - Swap Window")
+            (?n aw-flip-window)
+            (?v aw-split-window-vert "Ace - Split Vert Window")
+            (?h aw-split-window-horz "Ace - Split Horz Window")
+            (?m delete-other-windows "Ace - Maximize Window")
+            (?g delete-other-windows)
+            (?b balance-windows)
+            (?u winner-undo)
+            (?r winner-redo)
+            (?j dired-jump)
+            (32 mode-line-other-buffer)))
+    (when (package-installed-p 'hydra)
+      (defhydra hydra-window-size (:color red)
+        "Windows size"
+        ("a" shrink-window-horizontally "shrink horizontal")
+        ("." shrink-window "shrink vertical")
+        ("j" enlarge-window "enlarge vertical")
+        ("i" enlarge-window-horizontally "enlarge horizontal"))
+      (defhydra hydra-window-frame (:color red)
+        "Frame"
+        ("f" make-frame "new frame")
+        ("x" delete-frame "delete frame"))
+      (defhydra hydra-window-scroll (:color red)
+        "Scroll other window"
+        ("<SPC>" joe-scroll-other-window "scroll")
+        ("<backspace>" joe-scroll-other-window-down "scroll down"))
+      (add-to-list 'aw-dispatch-alist '(?w hydra-window-size/body) t)
+      (add-to-list 'aw-dispatch-alist '(32 hydra-window-scroll/body) t)
+      (add-to-list 'aw-dispatch-alist '(?\; hydra-window-frame/body) t))
+    (set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 3.0)
+    (set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green")))
 
 (use-package ace-isearch
   :load-path "site-lisp/ace-isearch"
   :disabled t
   :config
   (global-ace-isearch-mode 1))
-
-(use-package ace-window
-  :load-path "site-lisp/ace-window"
-  :bind* "<C-return>"
-  :init
-  (defun joe-scroll-other-window()
-    (interactive)
-    (scroll-other-window 1))
-
-  (defun joe-scroll-other-window-down ()
-    (interactive)
-    (scroll-other-window-down 1))
-  :config
-  (setq aw-keys (quote (97 111 101 117 105 100 104 116 110))
-        aw-dispatch-always t
-        aw-dispatch-alist
-        '((?x aw-delete-window     "Ace - Delete Window")
-          (?c aw-swap-window       "Ace - Swap Window")
-          (?n aw-flip-window)
-          (?v aw-split-window-vert "Ace - Split Vert Window")
-          (?h aw-split-window-horz "Ace - Split Horz Window")
-          (?m delete-other-windows "Ace - Maximize Window")
-          (?g delete-other-windows)
-          (?b balance-windows)
-          (?u winner-undo)
-          (?r winner-redo)))
-  (when (package-installed-p 'hydra)
-    (defhydra hydra-window-size (:color red)
-      "Windows size"
-      ("a" shrink-window-horizontally "shrink horizontal")
-      ("." shrink-window "shrink vertical")
-      ("j" enlarge-window "enlarge vertical")
-      ("i" enlarge-window-horizontally "enlarge horizontal"))
-    (defhydra hydra-window-frame (:color red)
-      "Frame"
-      ("f" make-frame "new frame")
-      ("x" delete-frame "delete frame"))
-    (defhydra hydra-window-scroll (:color red)
-      "Scroll other window"
-      ("<SPC>" joe-scroll-other-window "scroll")
-      ("<backspace>" joe-scroll-other-window-down "scroll down"))
-    (add-to-list 'aw-dispatch-alist '(?w hydra-window-size/body) t)
-    (add-to-list 'aw-dispatch-alist '(32 hydra-window-scroll/body) t)
-    (add-to-list 'aw-dispatch-alist '(?\; hydra-window-frame/body) t))
-  (set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 3.0)
-  (set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green"))
 
 (use-package ag
   :load-path "site-lisp/ag-el"
@@ -1578,7 +1673,7 @@ Keys are in kbd format."
     (unbind-key "M-s f" dired-mode-map))
 
   (bind-key "l" 'dired-up-directory dired-mode-map)
-
+  (bind-key "e" 'dired-mark-files-containing-regexp dired-mode-map)
   (defun my-dired-switch-window ()
     (interactive)
     (if (eq major-mode 'sr-mode)
@@ -2017,7 +2112,23 @@ Keys are in kbd format."
   :load-path "site-lisp/flycheck"
   :defer 5
   :config
-  (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point))
+  (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
+
+  (add-to-list 'display-buffer-alist
+               `(,(rx bos "*Flycheck errors*" eos)
+                 (display-buffer-reuse-window
+                  display-buffer-in-side-window)
+                 (reusable-frames . visible)
+                 (side            . bottom)
+                 (window-height   . 0.4)))
+
+  (defun lunaryorn-quit-bottom-side-windows ()
+    "Quit side windows of the current frame."
+    (interactive)
+    (dolist (window (window-at-side-list))
+      (quit-window nil window)))
+
+  (bind-key "C-H-M-:" 'lunaryorn-quit-bottom-side-windows))
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
@@ -2466,126 +2577,602 @@ Keys are in kbd format."
   :config
   (use-package hl-line+))
 
-(use-package hydra
-  :load-path "site-lisp/hydra"
-  :preface
-  (require 'hydra-examples)
-  :config
-  (hydra-add-font-lock)
-  (global-set-key
-   (kbd "C-H-M-S-SPC")
-   (defhydra hydra-zoom ()
-     "zoom"
-     ("h" text-scale-increase "in")
-     ("t" text-scale-decrease "out")
-     ("0" (text-scale-set 0) "reset")
-     ("1" (text-scale-set 0) :bind nil)
-     ("2" (text-scale-set 0) :bind nil :color blue)))
 
-  (defhydra hydra-error (global-map "C-H-M-S tab")
-    "goto-error"
-    ("h" first-error "first")
-    ("j" next-error "next")
-    ("k" previous-error "prev")
-    ("v" recenter-top-bottom "recenter")
-    ("q" nil "quit"))
+;; (use-package hydra
+;;   :ensure t
+;;   :defer 0.1
+;;   :init
+;;   (bind-key "\\" 'hydra-master/body)
+;;   :config
+;;   (setq lv-use-separator t)
+;;   (set-face-attribute 'hydra-face-blue nil :foreground "deep sky blue" :weight 'bold)
 
-  ;; (bind-key* "<C-return>"
-  (bind-key* "C-x o"
-   (defhydra hydra-window (:color amaranth)
-     "
-Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
---------------------------------------------------------------------------------
-_._, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
-_a_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
-_j_, _<down>_                    _C-z_: ace-window-delete    ^ ^
-_u_, _<right>_                   ^   ^                       ^ ^
-You can use arrow-keys or WASD.
-"
-     ("f" flash-active-buffer nil)
-     ("2" my/vsplit-last-buffer nil)
-     ("3" my/hsplit-last-buffer nil)
-     ("a" windmove-left nil)
-     ("j" windmove-down nil)
-     ("." windmove-up nil)
-     ("i" windmove-right nil)
-     ("A" hydra-move-splitter-left nil)
-     ("J" hydra-move-splitter-down nil)
-     (">" hydra-move-splitter-up nil)
-     ("I" hydra-move-splitter-right nil)
-     ("<left>" windmove-left nil)
-     ("<down>" windmove-down nil)
-     ("<up>" windmove-up nil)
-     ("<right>" windmove-right nil)
-     ("<S-left>" hydra-move-splitter-left nil)
-     ("<S-down>" hydra-move-splitter-down nil)
-     ("<S-up>" hydra-move-splitter-up nil)
-     ("<S-right>" nil hydra-move-splitter-right)
-     ("M-a"  buf-move-left)
-     ("M-j"  buf-move-down)
-     ("M-."  buf-move-up)
-     ("M-i"  buf-move-right)
-     ("C-w"  window-configuration-to-register)
-     ("C-a" ace-window nil)
-     ("u" hydra--universal-argument nil)
-     ("C-s" (lambda () (interactive) (ace-window 4)) nil)
-     ("C-z" (lambda () (interactive) (ace-window 16)) nil)
-     ("h" hl-line-mode nil)
-     ("c" crosshairs-mode nil)
-     ("g" golden-ratio-mode nil)
-     ("q" nil "quit")))
+;;   (eval-and-compile
+;;     (defhydra hydra-common (:color blue)
+;;       ("<ESC>" nil "quit")))
 
-  ;; (defhydra hydra-page (ctl-x-map "" :pre (widen))
-  ;;   "page"
-  ;;   ("=" forward-page "next")
-  ;;   ("/;" backward-page "prev")
-  ;;   ("n" narrow-to-page "narrow" :bind nil :exit t))
-  
-  :init
+;;   (defhydra hydra-master (:color blue :idle 0.4)
+;;     "
+;;                                                                        ╭───────┐
+;;                                                                        │ Index │
+;; ╭──────────────────────────────────────────────────────────────────────┴───────╯
+;;   [_a_] bookmarks    [^h^]               [_o_] organization  [_v_] games
+;;   [_b_] buffers      [_i_] internet      [_p_] project       [_w_] window
+;;   [_c_] flycheck     [_j_] jump          [_q_] exit          [_x_] shell
+;;   [_d_] development  [_k_] spell         [_r_] register      [^y^]
+;;   [_e_] emacs        [_l_] lisp          [_s_] search        [^z^]
+;;   [_f_] file         [_m_] media         [_t_] text
+;;   [_g_] git          [_n_] narrow        [^u^]
+;; --------------------------------------------------------------------------------
+;;     "
+;;     ("<SPC>" joe-alternate-buffers "alternate buffers")
+;;     ("<ESC>" nil "quit")
+;;     ("\\" (insert "\\") "\\")
+;;     ("a"     hydra-bookmarks/body nil)
+;;     ("b"     hydra-buffers/body nil)
+;;     ("c"     hydra-flycheck/body nil)
+;;     ("d"     hydra-development/body nil)
+;;     ("e"     hydra-emacs/body nil)
+;;     ("f"     hydra-file/body nil)
+;;     ("g"     hydra-git/body nil)
+;;     ("i"     hydra-internet/body nil)
+;;     ("j"     hydra-jump/body nil)
+;;     ("k"     hydra-spell/body nil)
+;;     ("l"     hydra-lisp/body nil)
+;;     ("m"     hydra-media/body nil)
+;;     ("n"     hydra-narrow/body nil)
+;;     ("o"     hydra-organization/body nil)
+;;     ("p"     hydra-project/body nil)
+;;     ("q"     hydra-exit/body nil)
+;;     ("r"     hydra-register/body nil)
+;;     ("s"     hydra-search/body nil)
+;;     ("t"     hydra-text/body nil)
+;;     ("v"     hydra-games/body nil)
+;;     ("w"     ace-window nil)
+;;     ("x"     hydra-system/body nil))
 
-  (bind-key "C-z" 'delete-other-windows)
+;;   (defhydra hydra-bookmarks (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;     "
+;;                                                                    ╭───────────┐
+;;        List                          Do                            │ Bookmarks │
+;; ╭──────────────────────────────────────────────────────────────────┴───────────╯
+;;   [_h_] list bookmarks (helm)     [_j_] jump to a bookmark
+;;   [_l_] list bookmarks            [_m_] set bookmark at point
+;;   ^ ^                             [_s_] save bookmarks
+;; --------------------------------------------------------------------------------
+;;     "
+;;     ("h" helm-bookmarks)
+;;     ("j" bookmark-jump)
+;;     ("l" list-bookmarks)
+;;     ("m" bookmark-set)
+;;     ("s" bookmark-save))
 
-  (use-package buffer-move
-    :load-path "site-lisp/buffer-move"
-    :bind (
-           ("M-o ."    . buf-move-up)
-           ("M-o j"  . buf-move-down)
-           ("M-o a"  . buf-move-left)
-           ("M-o u" . buf-move-right)))
-  
-  (global-set-key (kbd "M-o f") 'flash-active-buffer)
-  
-  (make-face 'flash-active-buffer-face)
-  (set-face-attribute 'flash-active-buffer-face nil
-                      :background "red"
-                      :foreground "black")
-  (defun flash-active-buffer ()
-    (interactive)
-    (run-at-time "100 millisec" nil
-                 (lambda (remap-cookie)
-                   (face-remap-remove-relative remap-cookie))
-                 (face-remap-add-relative 'default 'flash-active-buffer-face)))
+;;   (defhydra hydra-buffers (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;     "
+;;                                                                      ╭─────────┐
+;;   Switch                 Do                                          │ Buffers │
+;; ╭────────────────────────────────────────────────────────────────────┴─────────╯
+;;   [_b_] switch (ido)       [_d_] kill the buffer
+;;   [_i_] ibuffer            [_r_] toggle read-only mode
+;;   [_a_] alternate          [_u_] revert buffer changes
+;;   [_s_] switch (helm)      [_w_] save buffer
+;; --------------------------------------------------------------------------------
+;;     "
+;;     ("a" joe-alternate-buffers)
+;;     ("b" ivy-switch-buffer)
+;;     ("d" joe-kill-this-buffer)
+;;     ("i" ibuffer)
+;;     ("m" ace-swap-window)
+;;     ("r" read-only-mode)
+;;     ("s" helm-buffers-list)
+;;     ("u" joe-revert-buffer)
+;;     ("w" save-buffer))
 
-  ;; Make window splitting more useful
-  ;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
+;;     (defhydra hydra-flycheck (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                     ╭──────────┐
+;;    Navigate          Show Errors                  Do                │ Flycheck │
+;; ╭───────────────────────────────────────────────────────────────────┴──────────╯
+;;    ^_p_^revious     [_l_] list errors           [_t_] toggle Flycheck
+;;       ^^↑^^         [_e_] list errors (helm)    [_c_] select checker
+;;     ^_f_^irst       [_d_] clear all errors      [_r_] run via compile
+;;       ^^↓^^          ^ ^                        [_h_] describe checker
+;;     ^_n_^ext
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("c" flycheck-select-checker)
+;;       ("h" flycheck-describe-checker)
+;;       ("d" flycheck-clear)
+;;       ("e" helm-flycheck)
+;;       ("f" flycheck-first-error)
+;;       ("l" flycheck-list-errors)
+;;       ("n" flycheck-next-error :color red)
+;;       ("p" flycheck-previous-error :color red)
+;;       ("r" flycheck-compile)
+;;       ("t" flycheck-mode))
 
-  (defun my/vsplit-last-buffer (prefix)
-    "Split the window vertically and display the previous buffer."
-    (interactive "p")
-    (split-window-vertically)
-    (other-window 1 nil)
-    (if (= prefix 1)
-        (switch-to-next-buffer)))
+;;     (defhydra hydra-development (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                  ╭─────────────┐
+;;      Zeal                   Web                 Quickrun         │ Development │
+;; ╭────────────────────────────────────────────────────────────────┴─────────────╯
+;;   [_z_] search docs   [_c_] Web Colors          [_q_] buffer
+;;   [_d_] set docset    [_h_] HTTP header         [_v_] region
+;;    ^ ^                [_m_] HTTP method         [_x_] shell
+;;    ^ ^                [_r_] HTTP relation       [_p_] with arg
+;;    ^ ^                [_s_] HTTP status code    [_k_] buffer (helm)
+;;    ^ ^                [_g_] RESTclient          [_o_] only compile
+;;    ^ ^                [_f_] RFC doc             [_R_] replace
+;;   [_l_] lines of code [_F_] RFC index           [_e_] eval/print
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("z" zeal-at-point)
+;;       ("d" zeal-at-pont-set-docset)
+;;       ("c" helm-colors)
+;;       ("g" restclient-mode)
+;;       ("f" irfc-visit)
+;;       ("F" irfc-index)
+;;       ("q" quickrun)
+;;       ("v" quickrun-region)
+;;       ("x" quickrun-shell)
+;;       ("p" quickrun-with-arg)
+;;       ("o" quickrun-compile-only)
+;;       ("R" quickrun-replace-region)
+;;       ("e" quickrun-eval-print)
+;;       ("k" helm-quickrun)
+;;       ("h" http-header)
+;;       ("m" http-method)
+;;       ("r" http-relation)
+;;       ("s" http-status-code)
+;;       ("l" cloc))
 
-  (defun my/hsplit-last-buffer (prefix)
-    "Split the window horizontally and display the previous buffer."
-    (interactive "p")
-    (split-window-horizontally)
-    (other-window 1 nil)
-    (if (= prefix 1) (switch-to-next-buffer)))
+;;   (defhydra hydra-emacs (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                        ╭───────┐
+;;    Execute       Packages         Help                     Misc        │ Emacs │
+;; ╭──────────────────────────────────────────────────────────────────────┴───────╯
+;;   [_s_] smex       [_p_] list      [_a_] apropos (helm)    [_t_] change theme (helm)
+;;   [_m_] smex mode  [_i_] install   [_f_] info manual       [_l_] list emacs process
+;;   [_h_] helm M-x   [_u_] upgrade   [_k_] bindings (helm)   [_c_] init time
+;;    ^ ^              ^ ^            [_b_] personal bindings [_o_] unbound commands
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("C-h b" helm-descbinds "bindings")
+;;       ("a" helm-apropos)
+;;       ("b" describe-personal-keybindings)
+;;       ("c" emacs-init-time)
+;;       ("i" package-install)
+;;       ("k" helm-descbinds)
+;;       ("l" list-processes)
+;;       ("f" info-display-manual)
+;;       ("p" paradox-list-packages)
+;;       ("t" helm-themes)
+;;       ("u" paradox-upgrade-packages)
+;;       ("m" smex-major-mode-commands)
+;;       ("s" smex)
+;;       ("h" helm-M-x)
+;;       ("o" smex-show-unbound-commands))
 
-  (bind-key "C-x 2" 'my/vsplit-last-buffer)
-  (bind-key "C-x 3" 'my/hsplit-last-buffer))
+;;   (defhydra hydra-file (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                         ╭──────┐
+;;      Ido               Helm                 Dired        Ztree          │ File │
+;; ╭───────────────────────────────────────────────────────────────────────┴──────╯
+;;   [_o_] open file   [_f_] find file      [_d_] dired    [_z_] diff dirs
+;;    ^ ^              [_m_] mini
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("o" find-file)
+;;       ("f" helm-find-files)
+;;       ("m" helm-mini)
+;;       ("z" ztree-diff)
+;;       ("d" dired))
+
+
+;;   (defhydra hydra-text (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                         ╭──────┐
+;;  Size  Toggle              Unicode                        Do            │ Text │
+;; ╭───────────────────────────────────────────────────────────────────────┴──────╯
+;;   _k_  [_f_] fill column     [_d_] unicode character           [_a_] align with regex
+;;   ^↑^  [_h_] hidden chars    [_e_] evil digraphs table         [_w_] remove trailing ' '
+;;   ^ ^  [_l_] line numbers    [_s_] specific code block         [_n_] count words
+;;   ^↓^  [_t_] trailing ' '    [_u_] unicode character (helm)    [_i_] lorem ipsum
+;;   _j_  [_v_] font space      [_p_] character code              [_x_] comment box
+;;   ^ ^  [_c_] comment          ^ ^                              [_q_] boxquote
+;;   ^ ^  [_b_] multibyte chars  ^ ^                              [_m_] iedit (multiple)
+;;   ^ ^   ^ ^                   ^ ^                              [_r_] expand region
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("a" align-regexp)
+;;       ("b" toggle-enable-multibyte-characters)
+;;       ("c" evilnc-comment-or-uncomment-lines)
+;;       ("d" insert-char)
+;;       ("e" evil-ex-show-digraphs)
+;;       ("f" fci-mode)
+;;       ("h" whitespace-mode)
+;;       ("i" lorem-ipsum-insert-paragraphs)
+;;       ("k" text-scale-increase :color red)
+;;       ("j" text-scale-decrease :color red)
+;;       ("l" linum-mode)
+;;       ("n" count-words)
+;;       ("m" iedit)
+;;       ("p" describe-char)
+;;       ("r" er/expand-region)
+;;       ("s" charmap)
+;;       ("t" joe-toggle-show-trailing-whitespace)
+;;       ("u" helm-ucs)
+;;       ("v" variable-pitch-mode)
+;;       ("w" whitespace-cleanup)
+;;       ("q" hydra-boxquote/body)
+;;       ("x" comment-box))
+
+;;   (defhydra hydra-git (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                          ╭─────┐
+;;    Magit                          VC                    Timemachine      │ Git │
+;; ╭────────────────────────────────────────────────────────────────────────┴─────╯
+;;   [_s_] status              [_d_] diffs between revisions  [_t_] timemachine
+;;   [_B_] blame mode          [_b_] edition history
+;;   [_l_] file log
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("B" magit-blame-mode)
+;;       ("b" vc-annotate)
+;;       ("d" vc-diff)
+;;       ("l" magit-file-log)
+;;       ("s" magit-status)
+;;       ("t" git-timemachine))
+
+;;   (defhydra hydra-internet (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                     ╭──────────┐
+;;     Browse       Search             Social               Post       │ Internet │
+;; ╭───────────────────────────────────────────────────────────────────┴──────────╯
+;;   [_w_] eww      [_g_] google          [_f_] elfeed            [_i_] imgur
+;;   [_u_] url      [_m_] google maps     [_t_] twitter
+;;    ^ ^           [_s_] surfraw         [_x_] stack overflow
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("f" elfeed)
+;;       ("g" google-this)
+;;       ("i" imgur-post)
+;;       ("m" google-maps)
+;;       ("s" helm-surfraw)
+;;       ("t" twit)
+;;       ("w" eww)
+;;       ("u" browse-url-at-point)
+;;       ("x" sx-tab-newest))
+
+;;   (defhydra hydra-jump (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                         ╭──────┐
+;;   Window          Word/Char        Line         iSearch                 │ Jump │
+;; ╭───────────────────────────────────────────────────────────────────────┴──────╯
+;;   [_w_] jump        [_j_] word         [_l_] jump     [_i_] jump
+;;   [_d_] close       [_p_] all words    [_y_] copy
+;;   [_z_] maximize    [_b_] subword      [_m_] move
+;;   [_s_] swap        [_c_] char         [_v_] copy region
+;;    ^ ^              [_a_] two chars
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("w" ace-window)
+;;       ("d" ace-delete-window)
+;;       ("z" ace-maximize-window)
+;;       ("s" ace-swap-window)
+;;       ("j" avy-goto-word-1)
+;;       ("p" avy-goto-word-0)
+;;       ("b" avy-goto-subword-0)
+;;       ("c" avy-goto-char)
+;;       ("a" avy-goto-char-2)
+;;       ("l" avy-goto-line)
+;;       ("y" avy-copy-line)
+;;       ("m" avy-move-line)
+;;       ("v" avy-copy-region)
+;;       ("i" avy-isearch))
+
+;;   (defhydra hydra-spell (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                        ╭───────┐
+;;     Flyspell               Ispell                      Gtranslate      │ Spell │
+;; ╭──────────────────────────────────────────────────────────────────────┴───────╯
+;;   [_k_] correct word       [_w_] check word            [_g_] en ⇆ es
+;;   [_n_] next error         [_t_] toggle dictionary     [_G_] any lang
+;;   [_f_] toggle flyspell    [_d_] change dictionary
+;;   [_p_] toggle prog mode
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("w" ispell-word)
+;;       ("d" ispell-change-dictionary)
+;;       ("t" joe-switch-dictionary)
+;;       ("g" google-translate-smooth-translate)
+;;       ("G" google-translate-query-translate)
+;;       ("f" flyspell-mode)
+;;       ("p" flyspell-prog-mode)
+;;       ("k" flyspell-auto-correct-word)
+;;       ("n" flyspell-goto-next-error))
+
+;;   (defhydra hydra-lisp (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                         ╭──────┐
+;;     Elisp              Bug hunter                                       │ Lisp │
+;; ╭───────────────────────────────────────────────────────────────────────┴──────╯
+;;   [_r_] eval region    [_f_] file
+;;   [_s_] eval sexp      [_i_] init-file
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("f" bug-hunter-file)
+;;       ("i" bug-hunter-init-file)
+;;       ("r" eval-region)
+;;       ("s" eval-last-sexp))
+
+;;   (defhydra hydra-narrow (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                       ╭────────┐
+;;     Narrow                                                            │ Narrow │
+;; ╭─────────────────────────────────────────────────────────────────────┴────────╯
+;;   [_f_] narrow to defun
+;;   [_p_] narrow to page
+;;   [_r_] narrow to region
+;;   [_w_] widen
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("f" narrow-to-defun)
+;;       ("p" narrow-to-page)
+;;       ("r" narrow-to-region)
+;;       ("w" widen))
+
+;;   (defhydra hydra-project (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                   ╭────────────┐
+;;   Files             Search          Buffer             Do         │ Projectile │
+;; ╭─────────────────────────────────────────────────────────────────┴────────────╯
+;;   [_f_] file          [_a_] ag          [_b_] switch         [_g_] magit
+;;   [_l_] file dwim     [_A_] grep        [_v_] show all       [_p_] commander
+;;   [_r_] recent file   [_s_] occur       [_V_] ibuffer        [_i_] info
+;;   [_d_] dir           [_S_] replace     [_K_] kill all
+;;   [_o_] other         [_t_] find tag
+;;   [_u_] test file     [_T_] make tags
+;;   [_h_] root
+;;                                                                       ╭────────┐
+;;   Other Window      Run             Cache              Do             │ Fixmee │
+;; ╭──────────────────────────────────────────────────╯ ╭────────────────┴────────╯
+;;   [_F_] file          [_U_] test        [_kc_] clear         [_x_] TODO & FIXME
+;;   [_L_] dwim          [_m_] compile     [_kk_] add current   [_X_] toggle
+;;   [_D_] dir           [_c_] shell       [_ks_] cleanup
+;;   [_O_] other         [_C_] command     [_kd_] remove
+;;   [_B_] buffer
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("a"   projectile-ag)
+;;       ("A"   projectile-grep)
+;;       ("b"   projectile-switch-to-buffer)
+;;       ("B"   projectile-switch-to-buffer-other-window)
+;;       ("c"   projectile-run-async-shell-command-in-root)
+;;       ("C"   projectile-run-command-in-root)
+;;       ("d"   projectile-find-dir)
+;;       ("D"   projectile-find-dir-other-window)
+;;       ("f"   projectile-find-file)
+;;       ("F"   projectile-find-file-other-window)
+;;       ("g"   projectile-vc)
+;;       ("h"   projectile-dired)
+;;       ("i"   projectile-project-info)
+;;       ("kc"  projectile-invalidate-cache)
+;;       ("kd"  projectile-remove-known-project)
+;;       ("kk"  projectile-cache-current-file)
+;;       ("K"   projectile-kill-buffers)
+;;       ("ks"  projectile-cleanup-known-projects)
+;;       ("l"   projectile-find-file-dwim)
+;;       ("L"   projectile-find-file-dwim-other-window)
+;;       ("m"   projectile-compile-project)
+;;       ("o"   projectile-find-other-file)
+;;       ("O"   projectile-find-other-file-other-window)
+;;       ("p"   projectile-commander)
+;;       ("r"   projectile-recentf)
+;;       ("s"   projectile-multi-occur)
+;;       ("S"   projectile-replace)
+;;       ("t"   projectile-find-tag)
+;;       ("T"   projectile-regenerate-tags)
+;;       ("u"   projectile-find-test-file)
+;;       ("U"   projectile-test-project)
+;;       ("v"   projectile-display-buffer)
+;;       ("V"   projectile-ibuffer)
+;;       ("X"   fixmee-mode)
+;;       ("x"   fixmee-view-listing))
+
+;;   (defhydra hydra-exit (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                         ╭──────┐
+;;    Quit                                                                 │ Exit │
+;; ╭───────────────────────────────────────────────────────────────────────┴──────╯
+;;   [_c_] exit emacs (standalone or client)
+;;   [_s_] shutdown the emacs daemon
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("c" save-buffers-kill-terminal)
+;;       ("s" save-buffers-kill-emacs))
+
+;;   (defhydra hydra-register (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                     ╭──────────┐
+;;    Logs                        Registers                Undo        │ Register │
+;; ╭───────────────────────────────────────────────────────────────────┴──────────╯
+;;   [_c_] commands history       [_e_] emacs registers    [_u_] undo tree
+;;   [_o_] echo-area messages     [_r_] evil registers
+;;   [_b_] minibuffer             [_m_] evil marks
+;;   [_l_] messages               [_k_] kill ring
+;;   [_d_] diff buffer with file
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("c" helm-complex-command-history)
+;;       ("d" joe-diff-buffer-with-file)
+;;       ("e" helm-register)
+;;       ("k" helm-show-kill-ring)
+;;       ("a" helm-all-mark-rings)
+;;       ("l" popwin:messages)
+;;       ("m" evil-show-marks)
+;;       ("o" view-echo-area-messages)
+;;       ("r" evil-show-registers)
+;;       ("b" helm-minibuffer-history)
+;;       ("u" undo-tree-visualize))
+
+;;   (defhydra hydra-search (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                       ╭────────┐
+;;    Files                             Buffer                           │ Search │
+;; ╭─────────────────────────────────────────────────────────────────────┴────────╯
+;;   [_a_] regex search (Ag)           [_b_] by word
+;;   [_A_] regex by filetype (Ag)      [_o_] by word (occur)
+;;   [_h_] regex search (grep & helm)  [_w_] by word (multi)
+;;   [_g_] regex search (grep)         [_t_] tags & titles
+;;   [_f_] find
+;;   [_l_] locate
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("A" ag-files)
+;;       ("a" ag)
+;;       ("b" helm-swoop)
+;;       ("f" helm-find)
+;;       ("g" rgrep)
+;;       ("h" helm-do-grep)
+;;       ("l" helm-locate)
+;;       ("o" helm-occur)
+;;       ("t" helm-semantic-or-imenu)
+;;       ("w" helm-multi-swoop))
+
+;;   (defhydra hydra-games (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                        ╭───────┐
+;;    Game                                                                │ Games │
+;; ╭──────────────────────────────────────────────────────────────────────┴───────╯
+;;   [_p_] 2048-game      [_c_] chess (computer)
+;;   [_b_] bubbles        [_a_] chess (internet)
+;;   [_t_] tetris
+;;   [_g_] gomoku
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("p" 2048-game)
+;;       ("b" bubbles-set-game-hard)
+;;       ("c" chess)
+;;       ("a" chess-ics)
+;;       ("g" gomoku)
+;;       ("t" tetris))
+
+;;   (defhydra hydra-system (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                       ╭────────┐
+;;    Terminals                     System                               │ System │
+;; ╭─────────────────────────────────────────────────────────────────────┴────────╯
+;;   [_s_] new multi-term           [_c_] shell command
+;;   [_n_] next multi-term          [_a_] aync shell command
+;;   [_p_] previous multi-term      [_m_] man page
+;;   [_d_] dedicated multi-term     [_l_] list system process
+;;   [_e_] eshell                   [_t_] top command
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("a" async-shell-command)
+;;       ("c" shell-command)
+;;       ("e" eshell)
+;;       ("m" helm-man-woman)
+;;       ("l" proced)
+;;       ("s" multi-term)
+;;       ("n" multi-term-next)
+;;       ("p" multi-term-previous)
+;;       ("d" multi-term-dedicated-toggle)
+;;       ("t" helm-top))
+
+;;   (defhydra hydra-media (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                        ╭───────┐
+;;    Emms                Mpd                  Volume                     │ Media │
+;; ╭──────────────────────────────────────────────────────────────────────┴───────╯
+;;  [_b_] browse         [_n_] next song          [_-_] volume down
+;;  [_f_] play file      [_p_] previous song      [_+_] volume up
+;;   ^ ^                 [_c_] clear playlist
+;;   ^ ^                 [_o_] show song
+;;   ^ ^                 [_P_] pause
+;;   ^ ^                 [_s_] stop
+;;   ^ ^                 [_y_] start & sync
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("a" emms-start)
+;;       ("x" emms-stop)
+;;       ("b" emms-smart-browse)
+;;       ("f" emms-play-file)
+;;       ("m" emms-player-mpd-connect)
+;;       ("c" emms-player-mpd-clear)
+;;       ("n" emms-player-mpd-next)
+;;       ("o" emms-player-mpd-show)
+;;       ("P" emms-player-mpd-pause)
+;;       ("p" emms-player-mpd-previous)
+;;       ("s" emms-player-mpd-stop)
+;;       ("y" emms-player-mpd-start)
+;;       ("-" emms-volume-lower)
+;;       ("\+" emms-volume-raise))
+
+;;   (defhydra hydra-organization (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+;;       "
+;;                                                                 ╭──────────────┐
+;;      Tasks            Org mode               Comms      Others  │ Organization │
+;; ╭───────────────────────────────────────────────────────────────┴──────────────╯
+;;   [_a_] agenda      [_c_] capture             [_m_] mail      [_x_] speed type
+;;   [_l_] agenda list [_p_] pomodoro            [_t_] contacts
+;;   [_d_] calendar    [_s_] search headings     [_h_] add location
+;;    ^ ^              [_g_] open location gmaps
+;;    ^ ^              [_f_] archive subtree
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("a" org-agenda)
+;;       ("c" org-capture)
+;;       ("d" cfw:open-org-calendar)
+;;       ("g" org-location-google-maps)
+;;       ("h" org-address-google-geocode-set)
+;;       ("l" org-agenda-list)
+;;       ("f" org-archive-subtree)
+;;       ("m" mu4e)
+;;       ("p" org-pomodoro)
+;;       ("s" helm-org-agenda-files-headings)
+;;       ("t" org-contacts)
+;;       ("x" speed-type-text))
+
+;;    (defhydra hydra-leader ( :color blue :hint nil :idle 0.4)
+;;        "
+;;                                                                       ╭────────┐
+;;    Toggle                        Do                                   │ Leader │
+;; ╭─────────────────────────────────────────────────────────────────────┴────────╯
+;;   [_c_] comment                  [_a_] align with regex
+;;   [_f_] fill column              [_p_] show character code
+;;   [_h_] hidden chars             [_i_] insert unicode character (helm)
+;;   [_e_] trailing whitespace      [_<SPC>_] remove trailing whitespaces
+;;   [_v_] font space               [_u_] undo tree
+;;    ^ ^                           [_j_] jump word
+;;    ^ ^                           [_x_] comment box
+;;    ^ ^                           [_r_] expand region
+;;    ^ ^                           [_m_] iedit (multiple edit)
+;;    ^ ^                           [_g_] google translate
+;;    ^ ^                           [_s_] swiper
+;;    ^ ^                           [_t_] helm-semantic-or-imenu
+;; --------------------------------------------------------------------------------
+;;       "
+;;       ("<escape>" nil "quit")
+;;       ("a" align-regexp)
+;;       ("c" evilnc-comment-or-uncomment-lines)
+;;       ("r" er/expand-region)
+;;       ("f" fci-mode)
+;;       ("g" google-translate-smooth-translate)
+;;       ("h" whitespace-mode)
+;;       ("i" helm-ucs)
+;;       ("j" avy-goto-word-1)
+;;       ("m" iedit-mode)
+;;       ("n" count-words)
+;;       ("p" describe-char)
+;;       ("e" joe-toggle-show-trailing-whitespace)
+;;       ("u" undo-tree-visualize)
+;;       ("v" variable-pitch-mode)
+;;       ("<SPC>" whitespace-cleanup)
+;;       ("s" joe-swiper)
+;;       ("t" helm-semantic-or-imenu)
+;;       ("x" comment-box)))
 
 ;(use-package e-other-window
 ;  :load-path "site-lisp/e-other-window")
@@ -4488,5 +5075,7 @@ of `org-babel-temporary-directory'."
          (?z (file . "~/.zshrc"))))
   (set-register (car r) (cadr r)))
 
+;; unused bindings
+;; (bind-key "C-`" 'rotate-windows)
 
 ;;; init.el ends here

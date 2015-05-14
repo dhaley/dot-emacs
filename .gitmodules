@@ -952,3 +952,9 @@
 [submodule "site-lisp/reveal-in-finder"]
 	path = site-lisp/reveal-in-finder
 	url = git@github.com:kaz-yos/elisp.git
+[submodule "site-lisp/writeroom-mode"]
+	path = site-lisp/writeroom-mode
+	url = git@github.com:joostkremers/writeroom-mode.git
+[submodule "site-lisp/visual-fill-column"]
+	path = site-lisp/visual-fill-column
+	url = git@github.com:joostkremers/visual-fill-column.git
