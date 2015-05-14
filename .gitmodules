@@ -970,3 +970,21 @@
 [submodule "site-lisp/smex"]
 	path = site-lisp/smex
 	url = git@github.com:nonsequitur/smex.git
+[submodule "site-lisp/lorem-ipsum"]
+	path = site-lisp/lorem-ipsum
+	url = git@github.com:jschaf/emacs-lorem-ipsum.git
+[submodule "site-lisp/google-maps"]
+	path = site-lisp/google-maps
+	url = git@github.com:jd/google-maps.el.git
+[submodule "site-lisp/pdf-tools"]
+	path = site-lisp/pdf-tools
+	url = git@github.com:politza/pdf-tools.git
+[submodule "site-lisp/org-pdfview"]
+	path = site-lisp/org-pdfview
+	url = git@github.com:markus1189/org-pdfview.git
+[submodule "site-lisp/helm-emmet"]
+	path = site-lisp/helm-emmet
+	url = git@github.com:yasuyk/helm-emmet.git
+[submodule "site-lisp/swiper"]
+	path = site-lisp/swiper
+	url = git@github.com:abo-abo/swiper.git
