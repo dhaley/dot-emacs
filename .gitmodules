@@ -958,3 +958,15 @@
 [submodule "site-lisp/visual-fill-column"]
 	path = site-lisp/visual-fill-column
 	url = git@github.com:joostkremers/visual-fill-column.git
+[submodule "site-lisp/know-your-http-well"]
+	path = site-lisp/know-your-http-well
+	url = git@github.com:for-GET/know-your-http-well.git
+[submodule "site-lisp/spinner"]
+	path = site-lisp/spinner
+	url = git@github.com:Malabarba/spinner.el.git
+[submodule "site-lisp/helm-themes"]
+	path = site-lisp/helm-themes
+	url = git@github.com:syohex/emacs-helm-themes.git
+[submodule "site-lisp/smex"]
+	path = site-lisp/smex
+	url = git@github.com:nonsequitur/smex.git
