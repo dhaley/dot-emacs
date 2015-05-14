@@ -934,6 +934,5 @@
  '(flyparse-warning-face ((t (:background "DeepSkyBlue"))))
  '(ghc-face-error ((t (:inherit default))))
  '(ghc-face-warn ((t (:inherit default))))
- '(idris-loaded-region-face ((t (:background "#eaf8ff")))))
- '(org-mode-line-clock ((t (:foreground "red" :box (:line-width -1 :style released-button)))) t)
+ '(idris-loaded-region-face ((t (:background "#eaf8ff"))))
  '(persp-selected-face ((t (:foreground "purple")))))
