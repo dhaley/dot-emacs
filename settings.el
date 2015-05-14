@@ -525,6 +525,7 @@
  '(helm-adaptive-history-file "~/.emacs.d/data/helm-adaptive-history")
  '(helm-buffers-fuzzy-matching t)
  '(helm-delete-minibuffer-contents-from-point t)
+ '(helm-descbinds-window-style (quote split-window))
  '(helm-ff-file-name-history-use-recentf t)
  '(helm-ff-search-library-in-sexp t)
  '(helm-ff-skip-boring-files t)
