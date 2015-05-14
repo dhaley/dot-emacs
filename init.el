@@ -112,7 +112,6 @@
 (use-package pcache         :defer t :load-path "lib/pcache")
 (use-package pkg-info       :defer t :load-path "lib/pkg-info")
 (use-package popup          :defer t :load-path "lib/popup-el")
-(use-package popwin         :defer t :load-path "lib/popwin-el")
 (use-package pos-tip        :defer t :load-path "lib/pos-tip")
 (use-package s              :defer t :load-path "lib/s-el")
 (use-package working        :defer t)
@@ -337,6 +336,10 @@
 
 (bind-key "C-c <tab>" 'ff-find-other-file)
 (bind-key "C-c SPC" 'just-one-space)
+
+(defmacro when-feature-loaded (feature &rest body)
+  "When FEATURE is loaded, evaluate and execute BODY."
+  `(when (featurep ,feature) ,@body))
 
 (defmacro recursive-edit-preserving-window-config (body)
   "*Return a command that enters a recursive edit after executing BODY.
@@ -1004,10 +1007,6 @@ Keys are in kbd format."
               (add-hook 'expand-expand-hook 'indent-according-to-mode)
               (add-hook 'expand-jump-hook 'indent-according-to-mode))))
 
-(use-package ace-link
-  :commands ace-link-setup-default
-  :config (ace-link-setup-default))
-
 (use-package ace-jump-mode
   :load-path "site-lisp/ace-jump-mode"
   :bind ("C-c SPC" . ace-jump-mode)
@@ -1019,10 +1018,13 @@ Keys are in kbd format."
 
 (use-package hydra
   :load-path "site-lisp/hydra"
+  :defer 0.1
   :preface
   (require 'hydra-examples)
   :init
   (bind-key "\\" 'hydra-master/body)
+  (bind-key* "C-x o" 'hydra-window)
+
   (bind-key "C-z" 'delete-other-windows)
 
   (use-package buffer-move
@@ -1066,8 +1068,10 @@ Keys are in kbd format."
 
   (bind-key "C-x 2" 'my/vsplit-last-buffer)
   (bind-key "C-x 3" 'my/hsplit-last-buffer)
+
   :config
   (hydra-add-font-lock)
+
   (eval-and-compile
     (defhydra hydra-common (:color blue)
       ("<ESC>" nil "quit")))
@@ -1089,6 +1093,7 @@ Keys are in kbd format."
      ("T" (find-file "~/Documents/Tasks") "Tasks dir")
      ("G" (find-file "~/.emacs.d/gnus-settings.el") "gnus-settings")
      ("u" (find-file "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el") "math-symbols")))
+
   (global-set-key
    (kbd "C-H-M-S-SPC")
    (defhydra hydra-zoom ()
@@ -1121,7 +1126,7 @@ Keys are in kbd format."
   [_g_] git          [_n_] narrow        [^u^]
 --------------------------------------------------------------------------------
     "
-    ("<SPC>" joe-alternate-buffers "alternate buffers")
+    ("<SPC>" dkh-alternate-buffers "alternate buffers")
     ("<ESC>" nil "quit")
     ("\\" (insert "\\") "\\")
     ("a"     hydra-bookmarks/body nil)
@@ -1174,14 +1179,14 @@ Keys are in kbd format."
   [_s_] switch (helm)      [_w_] save buffer
 --------------------------------------------------------------------------------
     "
-    ("a" joe-alternate-buffers)
+    ("a" dkh-alternate-buffers)
     ("b" ivy-switch-buffer)
-    ("d" joe-kill-this-buffer)
+    ("d" dkh-kill-this-buffer)
     ("i" ibuffer)
     ("m" ace-swap-window)
     ("r" read-only-mode)
     ("s" helm-buffers-list)
-    ("u" joe-revert-buffer)
+    ("u" dkh-revert-buffer)
     ("w" save-buffer))
 
   (defhydra hydra-flycheck (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
@@ -1284,7 +1289,6 @@ Keys are in kbd format."
     ("z" ztree-diff)
     ("d" dired))
 
-
   (defhydra hydra-text (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
     "
                                                                         ╭──────┐
@@ -1316,7 +1320,7 @@ Keys are in kbd format."
     ("p" describe-char)
     ("r" er/expand-region)
     ("s" charmap)
-    ("t" joe-toggle-show-trailing-whitespace)
+    ("t" dkh-toggle-show-trailing-whitespace)
     ("u" helm-ucs)
     ("v" variable-pitch-mode)
     ("w" whitespace-cleanup)
@@ -1400,7 +1404,7 @@ Keys are in kbd format."
       "
     ("w" ispell-word)
     ("d" ispell-change-dictionary)
-    ("t" joe-switch-dictionary)
+    ("t" dkh-switch-dictionary)
     ("g" google-translate-smooth-translate)
     ("G" google-translate-query-translate)
     ("f" flyspell-mode)
@@ -1521,7 +1525,7 @@ Keys are in kbd format."
 --------------------------------------------------------------------------------
       "
     ("c" helm-complex-command-history)
-    ("d" joe-diff-buffer-with-file)
+    ("d" dkh-diff-buffer-with-file)
     ("e" helm-register)
     ("k" helm-show-kill-ring)
     ("a" helm-all-mark-rings)
@@ -1651,54 +1655,15 @@ Keys are in kbd format."
     ("t" org-contacts)
     ("x" speed-type-text))
 
-  (defhydra hydra-leader ( :color blue :hint nil :idle 0.4)
-    "
-                                                                      ╭────────┐
-   Toggle                        Do                                   │ Leader │
-╭─────────────────────────────────────────────────────────────────────┴────────╯
-  [_c_] comment                  [_a_] align with regex
-  [_f_] fill column              [_p_] show character code
-  [_h_] hidden chars             [_i_] insert unicode character (helm)
-  [_e_] trailing whitespace      [_<SPC>_] remove trailing whitespaces
-  [_v_] font space               [_u_] undo tree
-   ^ ^                           [_j_] jump word
-   ^ ^                           [_x_] comment box
-   ^ ^                           [_r_] expand region
-   ^ ^                           [_m_] iedit (multiple edit)
-   ^ ^                           [_g_] google translate
-   ^ ^                           [_s_] swiper
-   ^ ^                           [_t_] helm-semantic-or-imenu
---------------------------------------------------------------------------------
-      "
-    ("<escape>" nil "quit")
-    ("a" align-regexp)
-    ("c" evilnc-comment-or-uncomment-lines)
-    ("r" er/expand-region)
-    ("f" fci-mode)
-    ("g" google-translate-smooth-translate)
-    ("h" whitespace-mode)
-    ("i" helm-ucs)
-    ("j" avy-goto-word-1)
-    ("m" iedit-mode)
-    ("n" count-words)
-    ("p" describe-char)
-    ("e" joe-toggle-show-trailing-whitespace)
-    ("u" undo-tree-visualize)
-    ("v" variable-pitch-mode)
-    ("<SPC>" whitespace-cleanup)
-    ("s" joe-swiper)
-    ("t" helm-semantic-or-imenu)
-    ("x" comment-box))
-    
-  (bind-key* "C-x o"
+  (bind-key* "C-x o" 
              (defhydra hydra-window (:color amaranth)
                "
 Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
 --------------------------------------------------------------------------------
-_._, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
-_a_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
-_j_, _<down>_                    _C-z_: ace-window-delete    ^ ^
-_u_, _<right>_                   ^   ^                       ^ ^
+_t_, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
+_h_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
+_s_, _<down>_                    _C-z_: ace-window-delete    ^ ^
+_t_, _<right>_                   ^   ^                       ^ ^
 You can use arrow-keys or WASD.
 "
                ("f" flash-active-buffer nil)
@@ -1739,6 +1704,16 @@ You can use arrow-keys or WASD.
   :bind* (("<C-return>" . ace-window)
           ("H-l" . avy-goto-line))
   :config
+  (setq avy-keys       '(?a ?s ?d ?e ?f ?g ?r ?v ?h ?j ?k ?l ?n ?m ?u)
+            avy-background t
+            avy-all-windows t
+            avy-style 'at-full
+            avy-case-fold-search nil)
+  (use-package ace-link
+    :defer 1
+    :config
+    (ace-link-setup-default))
+  
   (use-package ace-window
     :load-path "site-lisp/ace-window"
     :init
@@ -1769,11 +1744,11 @@ You can use arrow-keys or WASD.
 
     (define-key ctl-x-4-map "t" 'toggle-window-split)
 
-    (defun joe-scroll-other-window()
+    (defun dkh-scroll-other-window()
       (interactive)
       (scroll-other-window 1))
 
-    (defun joe-scroll-other-window-down ()
+    (defun dkh-scroll-other-window-down ()
       (interactive)
       (scroll-other-window-down 1))
     :config
@@ -1792,7 +1767,7 @@ You can use arrow-keys or WASD.
             (?r winner-redo)
             (?j dired-jump)
             (32 mode-line-other-buffer)))
-    (when (package-installed-p 'hydra)
+    (when (when-feature-loaded 'hydra)
       (defhydra hydra-window-size (:color red)
         "Windows size"
         ("a" shrink-window-horizontally "shrink horizontal")
@@ -1805,11 +1780,12 @@ You can use arrow-keys or WASD.
         ("x" delete-frame "delete frame"))
       (defhydra hydra-window-scroll (:color red)
         "Scroll other window"
-        ("<SPC>" joe-scroll-other-window "scroll")
-        ("<backspace>" joe-scroll-other-window-down "scroll down"))
+        ("<SPC>" dkh-scroll-other-window "scroll")
+        ("<backspace>" dkh-scroll-other-window-down "scroll down"))
       (add-to-list 'aw-dispatch-alist '(?w hydra-window-size/body) t)
       (add-to-list 'aw-dispatch-alist '(32 hydra-window-scroll/body) t)
       (add-to-list 'aw-dispatch-alist '(?\; hydra-window-frame/body) t))
+    
     (set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 3.0)
     (set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green")))
 
@@ -2134,6 +2110,51 @@ You can use arrow-keys or WASD.
   :config
   (use-package bookmark+))
 
+(use-package boxquote
+  :load-path "site-lisp/boxquote"
+  :defer t
+  :config
+  (setq-default  boxquote-bottom-corner "╰"      ; U+2570
+                 boxquote-side          "│ "     ; U+2572 + space
+                 boxquote-top-and-tail  "────"   ; U+2500 (×4)
+                 boxquote-top-corner    "╭")     ; U+256F
+  (when (when-feature-loaded 'hydra)
+    (defhydra hydra-boxquote (:color blue :hint nil)
+       "
+                                                                    ╭──────────┐
+  Text           External           Apropos         Do              │ Boxquote │
+╭───────────────────────────────────────────────────────────────────┴──────────╯
+  [_r_] region        [_f_] file      [_K_] describe-key        [_t_] title
+  [_p_] paragraph     [_b_] buffer    [_F_] describe-function   [_u_] unbox
+  [_a_] buffer        [_s_] shell     [_V_] describe-variable   [_w_] fill-paragraph
+  [_e_] text           ^ ^            [_W_] where-is            [_n_] narrow
+  [_d_] defun         [_y_] yank       ^ ^                      [_c_] narrow to content
+  [_q_] boxquote      [_Y_] yanked     ^ ^                      [_x_] kill
+--------------------------------------------------------------------------------
+       "
+      ("<esc>" nil "quit")
+      ("x" boxquote-kill)
+      ("Y" boxquote-yank)
+      ("e" boxquote-text)
+      ("u" boxquote-unbox)
+      ("d" boxquote-defun)
+      ("t" boxquote-title)
+      ("r" boxquote-region)
+      ("a" boxquote-buffer)
+      ("q" boxquote-boxquote)
+      ("W" boxquote-where-is)
+      ("p" boxquote-paragraph)
+      ("f" boxquote-insert-file)
+      ("K" boxquote-describe-key)
+      ("s" boxquote-shell-command)
+      ("b" boxquote-insert-buffer)
+      ("y" boxquote-kill-ring-save)
+      ("w" boxquote-fill-paragraph)
+      ("F" boxquote-describe-function)
+      ("V" boxquote-describe-variable)
+      ("n" boxquote-narrow-to-boxquote)
+      ("c" boxquote-narrow-to-boxquote-content))))
+
 (use-package browse-kill-ring+
   :defer 10
   :commands browse-kill-ring)
@@ -2451,6 +2472,39 @@ You can use arrow-keys or WASD.
 (use-package edit-var
   :bind ("C-c e v" . edit-variable))
 
+(use-package emmet-mode
+  :config
+  (add-hook 'sgml-mode-hook 'emmet-mode)
+  (add-hook 'css-mode-hook  'emmet-mode)
+  (bind-keys :map emmet-mode-keymap
+             ("C-n" . emmet-next-edit-point)
+             ("C-p" . emmet-prev-edit-point))
+
+  (use-package helm-emmet
+    :load-path "site-lisp/helm-emmet"
+    :commands helm-emmet)
+
+  ;; (use-package ac-emmet
+  ;;   :ensure auto-complete
+  ;;   :config
+  ;;   (add-hook 'sgml-mode-hook 'ac-emmet-html-setup)
+  ;;   (add-hook 'css-mode-hook  'ac-emmet-css-setup))
+  )
+
+;; (use-package emmet-mode
+;;   :commands emmet-mode
+;;   :init
+;;   (progn
+;;     (add-hook 'nxml-mode-hook 'emmet-mode)
+;;     (add-hook 'html-mode-hook 'emmet-mode)
+;;     (add-hook 'html-mode-hook
+;;               #'(lambda ()
+;;                   (bind-key "<return>" 'newline-and-indent html-mode-map)))
+;;     (add-hook 'web-mode-hook 'emmet-mode)
+;;     )
+;;     (defvar emmet-mode-keymap (make-sparse-keymap))
+;;     (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap)))
+
 (use-package emms-setup
   :disabled t
   :load-path "site-lisp/emms/lisp"
@@ -2524,19 +2578,19 @@ You can use arrow-keys or WASD.
         (progn
           (erc :server "192.168.9.133"
                :port 6697
-               :nick "johnw"
+               :nick "dkh"
                :password (lookup-password "192.168.9.133"
-                                          "johnw/freenode" 6697))
+                                          "dkh/freenode" 6697))
           (erc :server "192.168.9.133"
                :port 6697
-               :nick "johnw"
+               :nick "dkh"
                :password (lookup-password "192.168.9.133"
-                                          "johnw/bitlbee" 6697)))
+                                          "dhk/bitlbee" 6697)))
 
       (erc-tls :server "irc.freenode.net"
                :port 6697
-               :nick "johnw"
-               :password (lookup-password "irc.freenode.net" "johnw" 6667))))
+               :nick "dhk"
+               :password (lookup-password "irc.freenode.net" "dhk" 6667))))
 
   (defun setup-irc-environment ()
     (setq erc-timestamp-only-if-changed-flag nil
@@ -2781,13 +2835,63 @@ You can use arrow-keys or WASD.
           '(erc-mode mu4e-headers-mode mu4e-view-mode ediff-mode)))
     (setq golden-ratio-auto-scale t))
 
-(use-package google-this
-  :commands (google-this-region google-this-translate-query-or-region google-this-error google-this-forecast google-this-lucky-search google-this-lucky-and-insert-url google-this-line google-maps google-this-cpp-reference google-this-symbol google-this google-this-word google-this-search)
-  :diminish google-this-mode
+(use-package google-maps
+  :load-path "site-lisp/google-maps"
+  :defer 5
   :config
-  (google-this-mode))
+  (bind-keys :map google-maps-static-mode-map
+             ("H" . google-maps-static-add-home-marker)
+             ("k" . google-maps-static-move-north)
+             ("j" . google-maps-static-move-south)
+             ("h" . google-maps-static-move-west)
+             ("l" . google-maps-static-move-east)
+             ("y" . google-maps-static-copy-url)
+             ("q" . quit-window))
+
+  (when (when-feature-loaded 'hydra)
+    (bind-keys :map google-maps-static-mode-map
+               ("\\" . hydra-gmaps/body))
+    (defhydra hydra-gmaps (:hint nil :color blue)
+        "
+                                                                   ╭─────────────┐
+    Move       Zoom        Do                                      │ Google maps │
+  ╭────────────────────────────────────────────────────────────────┴─────────────╯
+   ^ ^   ^ _k_ ^    ^ ^   _<_/_+_/_._    [_t_] map type
+   ^ ^   ^ ^↑^ ^    ^ ^   ^ ^ ^↑^ ^ ^    [_g_] refresh
+   _h_ ← _c_|_C_ → _l_    ^ _z_|_Z_ ^    [_y_] yank url
+   ^ ^   ^ ^↓^ ^    ^ ^   ^ ^ ^↓^ ^ ^    [_q_] quit
+   ^ ^   ^ _j_ ^    ^ ^   _>_/_-_/_,_
+  --------------------------------------------------------------------------------
+        "
+        ("\\" hydra-master/body "back")
+        ("<ESC>" nil "quit")
+        ("q"       google-maps-static-quit)
+        ("+"       google-maps-static-zoom-in)
+        (">"       google-maps-static-zoom-in)
+        ("."       google-maps-static-zoom-in)
+        ("-"       google-maps-static-zoom-out)
+        ("<"       google-maps-static-zoom-out)
+        (","       google-maps-static-zoom-out)
+        ("z"       google-maps-static-zoom)
+        ("Z"       google-maps-static-zoom-remove)
+        ("y"       google-maps-static-copy-url)
+        ("c"       google-maps-static-center)
+        ("C"       google-maps-static-center-remove)
+        ("t"       google-maps-static-set-maptype)
+        ("g"       google-maps-static-refresh)
+        ("k"       google-maps-static-move-north)
+        ("j"       google-maps-static-move-south)
+        ("h"       google-maps-static-move-west)
+        ("l"       google-maps-static-move-east)))
+
+  (use-package org-location-google-maps))
+
+(use-package google-this
+  :load-path "site-lisp/emacs-google-this"
+  :defer t)
 
 (use-package google-translate
+    :load-path "site-lisp/google-translate"
   :bind ("\C-ct" . google-translate-smooth-translate)
   :init
   (progn
@@ -2883,16 +2987,22 @@ You can use arrow-keys or WASD.
   :load-path "site-lisp/helm-swoop"
   :bind (("M-s o" . helm-swoop)
          ("M-s /" . helm-multi-swoop))
+  :commands (helm-swoop helm-multi-swoop)
   :config
   (use-package helm-match-plugin))
 
 (use-package helm-descbinds
   :load-path "site-lisp/helm-descbinds"
-  :bind ("C-h b" . helm-descbinds)
   :init
   (fset 'describe-bindings 'helm-descbinds)
+  (bind-key "C-h b" 'helm-descbinds)
   :config
+  ;; (helm-descbinds-mode t)
   (require 'helm-config))
+
+ (use-package helm-descbinds
+    :config
+    (setq helm-descbinds-window-sytle 'split-window))
 
 (use-package helm-config
   :demand t
@@ -2925,9 +3035,6 @@ You can use arrow-keys or WASD.
 
   (use-package helm-match-plugin)
 
-  (use-package helm-themes
-    :load-path "site-lisp/helm-themes")
-
   (helm-autoresize-mode 1)
 
   (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
@@ -2936,7 +3043,50 @@ You can use arrow-keys or WASD.
   (bind-key "H-v" 'helm-previous-page helm-map)
 
   (when (executable-find "curl")
-    (setq helm-google-suggest-use-curl-p t)))
+    (setq helm-google-suggest-use-curl-p t))
+
+  (when (when-feature-loaded 'hydra)
+      (define-key helm-map (kbd "\\") 'hydra-helm/body)
+      (defhydra hydra-helm (:hint nil :color pink)
+        "
+                                                                          ╭──────┐
+   Navigation   Other  Sources     Mark             Do             Help   │ Helm │
+  ╭───────────────────────────────────────────────────────────────────────┴──────╯
+        ^_k_^         _K_       _p_   [_m_] mark         [_v_] view         [_H_] helm help
+        ^^↑^^         ^↑^       ^↑^   [_t_] toggle all   [_d_] delete       [_s_] source help
+    _h_ ←   → _l_     _c_       ^ ^   [_u_] unmark all   [_f_] follow: %(helm-attr 'follow)
+        ^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
+        ^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
+  --------------------------------------------------------------------------------
+        "
+        ("<tab>" helm-keyboard-quit "back" :exit t)
+        ("<escape>" nil "quit")
+        ("\\" (insert "\\") "\\" :color blue)
+        ("h" helm-beginning-of-buffer)
+        ("j" helm-next-line)
+        ("k" helm-previous-line)
+        ("l" helm-end-of-buffer)
+        ("g" helm-beginning-of-buffer)
+        ("G" helm-end-of-buffer)
+        ("n" helm-next-source)
+        ("p" helm-previous-source)
+        ("K" helm-scroll-other-window-down)
+        ("J" helm-scroll-other-window)
+        ("c" helm-recenter-top-bottom-other-window)
+        ("m" helm-toggle-visible-mark)
+        ("t" helm-toggle-all-marks)
+        ("u" helm-unmark-all)
+        ("H" helm-help)
+        ("s" helm-buffer-help)
+        ("v" helm-execute-persistent-action)
+        ("d" helm-persistent-delete-marked)
+        ("y" helm-yank-selection)
+        ("w" helm-toggle-resplit-and-swap-windows)
+        ("f" helm-follow-mode)))
+
+  (use-package helm-themes
+    :load-path "site-lisp/helm-themes"
+    :commands helm-themes))
 
 (use-package hi-lock
   :bind (("M-o l" . highlight-lines-matching-regexp)
@@ -3254,7 +3404,6 @@ You can use arrow-keys or WASD.
                 (bind-key "<return>" 'ido-smart-select-text
                           ido-file-completion-map))))
 
-
 (use-package ielm
   :bind ("C-c :" . ielm)
   :config
@@ -3351,6 +3500,99 @@ You can use arrow-keys or WASD.
   :commands (ipa-insert ipa-load-annotations-into-buffer)
   :init
   (add-hook 'find-file-hook 'ipa-load-annotations-into-buffer))
+
+(use-package irfc
+  :init
+  (setq-default irfc-directory (concat user-data-directory "RFC")
+                irfc-assoc-mode t)
+  (defun irfc-index ()
+    (interactive)
+    (defvar dkh-rfc-index-file (concat irfc-directory "/rfc0000.txt" ))
+    (defvar dkh-rfc-index-url "https://www.ietf.org/download/rfc-index.txt")
+    (unless (file-exists-p dkh-rfc-index-file)
+      (url-copy-file dkh-rfc-index-url dkh-rfc-index-file))
+    (find-file dkh-rfc-index-file))
+  :config
+  (bind-keys :map irfc-mode-map
+             ("SPC" . scroll-up)
+             ("S-SPC" . scroll-down)
+             ("j" . next-line)
+             ("k" . previous-line)
+             ("h" . backward-char)
+             ("l" . forward-char)
+             ("J" . irfc-scroll-up-one-line)
+             ("K" . irfc-scroll-down-one-line)
+             ("G" . end-of-buffer)
+             ("g" . beginning-of-buffer)
+             ("T" . irfc-render-toggle)
+             ("q" . irfc-quit)
+             ("o" . irfc-follow)
+             ("v" . irfc-visit)
+             ("i" . irfc-index)
+             ("r" . irfc-reference-goto)
+             ("f" . irfc-head-goto)
+             ("F" . irfc-head-number-goto)
+             ("e" . irfc-page-goto)
+             ("n" . irfc-page-next)
+             ("p" . irfc-page-prev)
+             (">" . irfc-page-last)
+             ("<" . irfc-page-first)
+             ("t" . irfc-page-table)
+             ("H" . irfc-head-next)
+             ("L" . irfc-head-prev)
+             ("RET" . irfc-table-jump)
+             ("<tab>" . irfc-rfc-link-next)
+             ("<backtab>" . irfc-rfc-link-prev))
+  (when (when-feature-loaded 'hydra)
+    (bind-keys :map irfc-mode-map
+             ("\\" . hydra-irfc/body))
+    (defhydra hydra-irfc (:hint nil :color blue)
+          "
+                                                                            ╭──────┐
+      Move     Scroll   Page  Heads    Links      TOC           Do          │ iRFC │
+    ╭───────────────────────────────────────────────────────────────────────┴──────╯
+          ^_g_^     _S-SPC_    _<_     ^ ^ ^ ^        ^ ^       [_t_] TOC       [_v_] visit RFC
+          ^^↑^^       ^↑^      ^↑^     ^ ^ ^ ^        ^ ^       [_RET_] node    [_i_] index
+          ^_k_^       _K_      _p_     ^ _L_ ^    _<backtab>_    ^ ^            [_r_] reference
+          ^^↑^^       ^↑^      ^↑^     ^ ^↑^ ^        ^↑^        ^ ^            [_T_] toggle
+      _h_ ←   → _l_   ^ ^      _e_     _f_/_F_        _o_                       [_q_] quit
+          ^^↓^^       ^↓^      ^↓^     ^ ^↓^ ^        ^↓^
+          ^_j_^       _J_      _n_     ^ _H_ ^      _<tab>_
+          ^^↓^^       ^↓^      ^↓^     ^ ^ ^ ^        ^ ^
+          ^_G_^      _SPC_     _>_     ^ ^ ^ ^        ^ ^
+    --------------------------------------------------------------------------------
+          "
+          ("\\" hydra-master/body "back")
+          ("<escape>" nil "quit")
+             ("SPC" scroll-up)
+             ("S-SPC" scroll-down)
+             ("j" next-line)
+             ("k" previous-line)
+             ("h" backward-char)
+             ("l" forward-char)
+             ("J" irfc-scroll-up-one-line)
+             ("K" irfc-scroll-down-one-line)
+             ("G" end-of-buffer)
+             ("g" beginning-of-buffer)
+             ("T" irfc-render-toggle)
+             ("q" irfc-quit)
+             ("o" irfc-follow)
+             ("v" irfc-visit)
+             ("i" irfc-index)
+             ("r" irfc-reference-goto)
+             ("f" irfc-head-goto)
+             ("F" irfc-head-number-goto)
+             ("e" irfc-page-goto)
+             ("n" irfc-page-next)
+             ("p" irfc-page-prev)
+             (">" irfc-page-last)
+             ("<" irfc-page-first)
+             ("t" irfc-page-table)
+             ("H" irfc-head-next)
+             ("L" irfc-head-prev)
+             ("RET" irfc-table-jump)
+             ("<tab>" irfc-rfc-link-next)
+             ("<backtab>" irfc-rfc-link-prev))))
 
 (use-package isearch
   :no-require t
@@ -3573,6 +3815,10 @@ You can use arrow-keys or WASD.
 
 (use-package llvm-mode
   :mode "\\.ll\\'")
+
+(use-package lorem-ipsum
+  :load-path "site-lisp/lorem-ipsum"
+  :commands lorem-ipsum-insert-paragraphs)
 
 (use-package lua-mode
   :load-path "site-lisp/lua-mode"
@@ -3934,6 +4180,91 @@ You can use arrow-keys or WASD.
       :config
       (show-paren-mode 1)))
 
+(use-package pdf-tools
+  :load-path "site-lisp/pdf-tools"
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-page
+                pdf-view-use-imagemagick t)
+  (bind-keys :map pdf-view-mode-map
+      ("\\" . hydra-pdftools/body)
+      ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
+      ("g"  . pdf-view-first-page)
+      ("G"  . pdf-view-last-page)
+      ("l"  . image-forward-hscroll)
+      ("h"  . image-backward-hscroll)
+      ("j"  . pdf-view-next-line-or-next-page)
+      ("k"  . pdf-view-previous-line-or-previous-page)
+      ("e"  . pdf-view-goto-page)
+      ("t"  . pdf-view-goto-label)
+      ("u"  . pdf-view-revert-buffer)
+      ("al" . pdf-annot-list-annotations)
+      ("ad" . pdf-annot-delete)
+      ("aa" . pdf-annot-attachment-dired)
+      ("am" . pdf-annot-add-markup-annotation)
+      ("at" . pdf-annot-add-text-annotation)
+      ("y"  . pdf-view-kill-ring-save)
+      ("i"  . pdf-misc-display-metadata)
+      ("s"  . pdf-occur)
+      ("b"  . pdf-view-set-slice-from-bounding-box)
+      ("r"  . pdf-view-reset-slice))
+
+  (when (when-feature-loaded 'hydra)
+    (bind-keys :map pdf-view-mode-map
+               ("\\" . hydra-pdftools/body))
+    (defhydra hydra-pdftools (:color blue :hint nil)
+        "
+                                                                      ╭───────────┐
+       Move  History   Scale/Fit     Annotations  Search/Link    Do   │ PDF Tools │
+   ╭──────────────────────────────────────────────────────────────────┴───────────╯
+      ^^^_g_^^^       _B_    ^↧^    _+_    ^ ^     [_al_] list    [_s_] search    [_u_] revert buffer
+      ^^^^↑^^^^       ^↑^    _H_    ^↑^  ↦ _W_ ↤   [_am_] markup  [_o_] outline   [_i_] info
+      ^^^_p_^^^       ^ ^    ^↥^    _0_    ^ ^     [_at_] text    [_F_] link      [_d_] dark mode
+      ^^^^↑^^^^       ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   [_ad_] delete  [_f_] search link
+ _h_ ← _e_/_t_ → _l_  _N_  │ _P_ │  _-_    _b_     [_aa_] dired
+      ^^^^↓^^^^       ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   [_y_]  yank
+      ^^^_n_^^^       ^ ^  _r_eset slice box
+      ^^^^↓^^^^
+      ^^^_G_^^^
+   --------------------------------------------------------------------------------
+        "
+        ("\\" hydra-master/body "back")
+        ("<ESC>" nil "quit")
+        ("al" pdf-annot-list-annotations)
+        ("ad" pdf-annot-delete)
+        ("aa" pdf-annot-attachment-dired)
+        ("am" pdf-annot-add-markup-annotation)
+        ("at" pdf-annot-add-text-annotation)
+        ("y"  pdf-view-kill-ring-save)
+        ("+" pdf-view-enlarge :color red)
+        ("-" pdf-view-shrink :color red)
+        ("0" pdf-view-scale-reset)
+        ("H" pdf-view-fit-height-to-window)
+        ("W" pdf-view-fit-width-to-window)
+        ("P" pdf-view-fit-page-to-window)
+        ("n" pdf-view-next-page-command :color red)
+        ("p" pdf-view-previous-page-command :color red)
+        ("d" pdf-view-dark-minor-mode)
+        ("b" pdf-view-set-slice-from-bounding-box)
+        ("r" pdf-view-reset-slice)
+        ("g" pdf-view-first-page)
+        ("G" pdf-view-last-page)
+        ("e" pdf-view-goto-page)
+        ("t" pdf-view-goto-label)
+        ("o" pdf-outline)
+        ("s" pdf-occur)
+        ("i" pdf-misc-display-metadata)
+        ("u" pdf-view-revert-buffer)
+        ("F" pdf-links-action-perfom)
+        ("f" pdf-links-isearch-link)
+        ("B" pdf-history-backward :color red)
+        ("N" pdf-history-forward :color red)
+        ("l" image-forward-hscroll :color red)
+        ("h" image-backward-hscroll :color red)))
+
+   (use-package org-pdfview
+     :load-path "site-lisp/org-pdfview"))
+
 (use-package persistent-scratch
   :if (and window-system (not running-alternate-emacs)
            (not noninteractive)))
@@ -3988,31 +4319,11 @@ You can use arrow-keys or WASD.
   :mode "\\.inc$\\|\\.\\(module\\|test\\|install\\|theme\\|\\profile\\)$"
   :interpreter "php"
   :init
-  (progn
-
     (use-package conf-mode
       :mode "\\.info")
-
-    (use-package emmet-mode
-      :commands emmet-mode
-      :init
-      (progn
-        (add-hook 'nxml-mode-hook 'emmet-mode)
-        (add-hook 'html-mode-hook 'emmet-mode)
-        (add-hook 'html-mode-hook
-                  #'(lambda ()
-                      (bind-key "<return>" 'newline-and-indent html-mode-map)))
-        (add-hook 'web-mode-hook 'emmet-mode)
-        )
-
-      :config
-      (progn
-        (use-package php-auto-yasnippets
-          :load-path "site-lisp/php-auto-yasnippets")
-        (defvar emmet-mode-keymap (make-sparse-keymap))
-        (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap))))
+    (use-package php-auto-yasnippets
+      :load-path "site-lisp/php-auto-yasnippets")
   :config
-  (progn
     (defun my-php-return ()
       "Advanced C-m for PHP doc multiline comments.
 Inserts `*' at the beggining of the new line if
@@ -4176,11 +4487,56 @@ unless return was pressed outside the comment"
             (goto-char (region-beginning))
             (insert "var_dump("))
         (insert "var_dump();")
-        (backward-char 3)))))
+        (backward-char 3))))
 
 (use-package popup-ruler
   :bind (("C-. r" . popup-ruler)
          ("C-. R" . popup-ruler-vertical)))
+
+(use-package popwin
+  :load-path "lib/popwin-el"
+  :config
+  (popwin-mode 1)
+  (setq popwin:popup-window-height 35
+        popwin:special-display-config
+        '(("*Miniedit Help*" :noselect t)
+          (help-mode :noselect nil)
+          (completion-list-mode :noselect t)
+          (compilation-mode :noselect nil)
+          (grep-mode :noselect t)
+          (occur-mode :noselect t)
+          ("*Pp Macroexpand Output*" :noselect t)
+          ("*Shell Command Output*")
+          ("*Async Shell Command*")
+          ("*vc-diff*")
+          ("*vc-change-log*")
+          (" *undo-tree*" :width 60 :position right)
+          ("^\\*anything.*\\*$" :regexp t)
+          ("*slime-apropos*")
+          ("*slime-macroexpansion*")
+          ("*slime-description*")
+          ("*slime-compilation*" :noselect t)
+          ("*slime-xref*")
+          ("*Flycheck errors*")
+          ("*Warnings*")
+          ("*Process List*")
+          ("*Smex: Unbound Commands*")
+          ("*Paradox Report*" :noselect nil)
+          ("*Diff*" :noselect nil)
+          ("*Messages*" :noselect nil)
+          ("*Google Maps*" :noselect nil)
+          ("*ag search*" :noselect nil)
+          ("*PDF-Occur*" :noselect nil)
+          ("*PDF-Metadata*" :noselect nil)
+          ("^\\*Outline .*\\.pdf\\*$" :regexp t :noselect nil)
+          ("*MULTI-TERM-DEDICATED*" :noselect nil :stick t)
+          (sldb-mode :stick t)
+          (slime-repl-mode)
+          (slime-connection-list-mode)))
+
+  ;; (add-hook 'popwin:after-popup-hook 'turn-off-evil-mode)
+  (bind-keys :map popwin:window-map
+             ((kbd "<escape>") . popwin:close-popup-window)))
 
 (use-package powerline
   :load-path "site-lisp/powerline/"
@@ -4598,12 +4954,12 @@ unless return was pressed outside the comment"
     (setq slime-lisp-implementations
           '((sbcl
              ("sbcl" "--core"
-              "/Users/johnw/Library/Lisp/sbcl.core-with-slime-X86-64")
+              "/Users/dhaley/Library/Lisp/sbcl.core-with-slime-X86-64")
              :init
              (lambda (port-file _)
                (format "(swank:start-server %S)\n" port-file)))
-            (ecl ("ecl" "-load" "/Users/johnw/Library/Lisp/init.lisp"))
-            (clisp ("clisp" "-i" "/Users/johnw/Library/Lisp/lwinit.lisp"))))
+            (ecl ("ecl" "-load" "/Users/dhk/Library/Lisp/init.lisp"))
+            (clisp ("clisp" "-i" "/Users/dhk/Library/Lisp/lwinit.lisp"))))
 
     (setq slime-default-lisp 'sbcl)
     (setq slime-complete-symbol*-fancy t)
@@ -4726,6 +5082,22 @@ unless return was pressed outside the comment"
          (sr-within dir (sr-alternate-buffer (dired dir))))
         (sr-history-push default-directory)
         (sr-beginning-of-buffer)))))
+
+(use-package swiper
+  :load-path "site-lisp/swiper"
+  :diminish ivy-mode
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (bind-keys :map swiper-map
+             ("<escape>" . minibuffer-keyboard-quit))
+  (bind-keys :map ivy-minibuffer-map
+             ("<escape>" . minibuffer-keyboard-quit)
+             ("C-k"      . delete-minibuffer-contents))
+  (defun dkh-swiper ()
+     (interactive)
+     (swiper)
+     (add-to-list 'regexp-search-ring (ivy--regex ivy-text)))
+  (ivy-mode t))
 
 (use-package tablegen-mode
   :mode "\\.td\\'")
@@ -5025,6 +5397,51 @@ of `org-babel-temporary-directory'."
 
 (use-package zoom-window
   :bind ("H-z" . zoom-window-zoom))
+
+(use-package ztree-diff
+  :load-path "site-lisp/ztree"
+  :config
+  (set-face-attribute 'ztreep-diff-model-add-face  nil :foreground "deep sky blue")
+  (bind-keys :map ztreediff-mode-map
+                 ("p" . previous-line)
+                 ("k" . previous-line)
+                 ("j" . next-line)
+                 ("n" . next-line))
+
+  (when (when-feature-loaded 'hydra)
+      (bind-keys :map ztreediff-mode-map
+                 ("\\" . hydra-ztree/body))
+      (defhydra hydra-ztree (:color blue :hint nil)
+          "
+                                                                      ╭────────────┐
+       Move      File                 Do                              │ Ztree diff │
+    ╭─────────────────────────────────────────────────────────────────┴────────────╯
+      _k_/_p_   [_C_] copy                  [_h_] toggle equal files
+      ^ ^↑^ ^   [_D_] delete                [_x_] toggle subtree
+      ^_TAB_^   [_v_] view                  [_r_] partial rescan
+      ^ ^↓^ ^   [_d_] simple diff           [_R_] full rescan
+      _j_/_n_   [_RET_] diff/expand         [_g_] refresh
+      ^ ^ ^ ^   [_SPC_] simple diff/expand
+    --------------------------------------------------------------------------------
+          "
+         ("\\" hydra-master/body "back")
+         ("<ESC>" nil "quit")
+         ("p" previous-line)
+         ("k" previous-line)
+         ("j" next-line)
+         ("n" next-line)
+         ("C" ztree-diff-copy)
+         ("h" ztree-diff-toggle-show-equal-files)
+         ("D" ztree-diff-delete-file)
+         ("v" ztree-diff-view-file)
+         ("d" ztree-diff-simple-diff-files)
+         ("r" ztree-diff-partial-rescan)
+         ("R" ztree-diff-full-rescan)
+         ("RET" ztree-perform-action)
+         ("SPC" ztree-perform-soft-action)
+         ("TAB" ztree-jump-side)
+         ("g" ztree-refresh-buffer)
+         ("x" ztree-toggle-expand-subtree))))
 
 ;;; Post initialization
 
