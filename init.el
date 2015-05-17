@@ -1022,7 +1022,7 @@ Keys are in kbd format."
   :preface
   (require 'hydra-examples)
   :init
-  (bind-key "\\" 'hydra-master/body)
+  (bind-key* "\\" 'hydra-master/body)
   (bind-key* "C-x o" 'hydra-window)
 
   (bind-key "C-z" 'delete-other-windows)
@@ -1655,9 +1655,8 @@ Keys are in kbd format."
     ("t" org-contacts)
     ("x" speed-type-text))
 
-  (bind-key* "C-x o" 
-             (defhydra hydra-window (:color amaranth)
-               "
+  (defhydra hydra-window (:color amaranth)
+    "
 Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
 --------------------------------------------------------------------------------
 _t_, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
@@ -1666,38 +1665,38 @@ _s_, _<down>_                    _C-z_: ace-window-delete    ^ ^
 _t_, _<right>_                   ^   ^                       ^ ^
 You can use arrow-keys or WASD.
 "
-               ("f" flash-active-buffer nil)
-               ("2" my/vsplit-last-buffer nil)
-               ("3" my/hsplit-last-buffer nil)
-               ("h" windmove-left nil)
-               ("s" windmove-down nil)
-               ("n" windmove-up nil)
-               ("t" windmove-right nil)
-               ("H" hydra-move-splitter-left nil)
-               ("S" hydra-move-splitter-down nil)
-               ("N" hydra-move-splitter-up nil)
-               ("T" hydra-move-splitter-right nil)
-               ("<left>" windmove-left nil)
-               ("<down>" windmove-down nil)
-               ("<up>" windmove-up nil)
-               ("<right>" windmove-right nil)
-               ("<S-left>" hydra-move-splitter-left nil)
-               ("<S-down>" hydra-move-splitter-down nil)
-               ("<S-up>" hydra-move-splitter-up nil)
-               ("<S-right>" nil hydra-move-splitter-right)
-               ("M-h"  buf-move-left)
-               ("M-s"  buf-move-down)
-               ("M-n"  buf-move-up)
-               ("M-t"  buf-move-right)
-               ("C-w"  window-configuration-to-register)
-               ("C-a"  ace-window nil)
-               ("u" hydra--universal-argument nil)
-               ("C-s" (lambda () (interactive) (ace-window 4)) nil)
-               ("C-z" (lambda () (interactive) (ace-window 16)) nil)
-               ("h" hl-line-mode nil)
-               ("c" crosshairs-mode nil)
-               ("g" golden-ratio-mode nil)
-               ("q" nil "quit"))))
+    ("f" flash-active-buffer nil)
+    ("2" my/vsplit-last-buffer nil)
+    ("3" my/hsplit-last-buffer nil)
+    ("h" windmove-left nil)
+    ("s" windmove-down nil)
+    ("n" windmove-up nil)
+    ("t" windmove-right nil)
+    ("H" hydra-move-splitter-left nil)
+    ("S" hydra-move-splitter-down nil)
+    ("N" hydra-move-splitter-up nil)
+    ("T" hydra-move-splitter-right nil)
+    ("<left>" windmove-left nil)
+    ("<down>" windmove-down nil)
+    ("<up>" windmove-up nil)
+    ("<right>" windmove-right nil)
+    ("<S-left>" hydra-move-splitter-left nil)
+    ("<S-down>" hydra-move-splitter-down nil)
+    ("<S-up>" hydra-move-splitter-up nil)
+    ("<S-right>" nil hydra-move-splitter-right)
+    ("M-h"  buf-move-left)
+    ("M-s"  buf-move-down)
+    ("M-n"  buf-move-up)
+    ("M-t"  buf-move-right)
+    ("C-w"  window-configuration-to-register)
+    ("C-a"  ace-window nil)
+    ("u" hydra--universal-argument nil)
+    ("C-s" (lambda () (interactive) (ace-window 4)) nil)
+    ("C-z" (lambda () (interactive) (ace-window 16)) nil)
+    ("h" hl-line-mode nil)
+    ("c" crosshairs-mode nil)
+    ("g" golden-ratio-mode nil)
+    ("q" nil "quit")))
 
 (use-package avy
   :load-path "site-lisp/avy"
