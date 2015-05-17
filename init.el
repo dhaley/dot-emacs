@@ -112,7 +112,6 @@
 (use-package pcache         :defer t :load-path "lib/pcache")
 (use-package pkg-info       :defer t :load-path "lib/pkg-info")
 (use-package popup          :defer t :load-path "lib/popup-el")
-(use-package popwin         :defer t :load-path "lib/popwin-el")
 (use-package pos-tip        :defer t :load-path "lib/pos-tip")
 (use-package s              :defer t :load-path "lib/s-el")
 (use-package working        :defer t)
@@ -180,8 +179,6 @@
   (if (> (length (window-list)) 1)
       (delete-other-windows)
     (bury-buffer)))
-
-(bind-key "C-z" 'delete-other-windows)
 
 ;;; M-
 
@@ -340,6 +337,10 @@
 (bind-key "C-c <tab>" 'ff-find-other-file)
 (bind-key "C-c SPC" 'just-one-space)
 
+(defmacro when-feature-loaded (feature &rest body)
+  "When FEATURE is loaded, evaluate and execute BODY."
+  `(when (featurep ,feature) ,@body))
+
 (defmacro recursive-edit-preserving-window-config (body)
   "*Return a command that enters a recursive edit after executing BODY.
 Upon exiting the recursive edit (with\\[exit-recursive-edit] (exit)
@@ -441,6 +442,8 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
     (if running-alternate-emacs
         "-*-Myriad Pro-normal-normal-normal-*-20-*-*-*-p-0-iso10646-1"
       "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"))
+   ((string= system-name "ubuntu")
+    "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1")
    (t
     (if running-alternate-emacs
         "-*-Myriad Pro-normal-normal-normal-*-17-*-*-*-p-0-iso10646-1"
@@ -686,60 +689,6 @@ Keys are in kbd format."
           (destructuring-bind (key function) keybinding
             (define-key mode-map (read-kbd-macro key) function)))
         keybindings))
-
-(defun rotate-windows ()
-  "Rotate your windows"
-  (interactive)
-  (cond ((not (> (count-windows)1))
-         (message "You can't rotate a single window!"))
-        (t
-         (setq i 1)
-         (setq numWindows (count-windows))
-         (while  (< i numWindows)
-           (let* (
-                  (w1 (elt (window-list) i))
-                  (w2 (elt (window-list) (+ (% i numWindows) 1)))
-
-                  (b1 (window-buffer w1))
-                  (b2 (window-buffer w2))
-
-                  (s1 (window-start w1))
-                  (s2 (window-start w2))
-                  )
-             (set-window-buffer w1  b2)
-             (set-window-buffer w2 b1)
-             (set-window-start w1 s2)
-             (set-window-start w2 s1)
-             (setq i (1+ i)))))))
-
-(bind-key "C-|" 'rotate-windows)
-
-(defun toggle-window-split ()
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
-
-(define-key ctl-x-4-map "t" 'toggle-window-split)
 
 ;;; Packages
 
@@ -1058,30 +1007,792 @@ Keys are in kbd format."
               (add-hook 'expand-expand-hook 'indent-according-to-mode)
               (add-hook 'expand-jump-hook 'indent-according-to-mode))))
 
-(use-package ace-link
-  :commands ace-link-setup-default
-  :config (ace-link-setup-default))
-
 (use-package ace-jump-mode
   :load-path "site-lisp/ace-jump-mode"
-  :bind ("M-h" . ace-jump-mode)
+  :bind ("C-c SPC" . ace-jump-mode)
   :config
   (setq ace-jump-mode-submode-list
         '(ace-jump-char-mode
           ace-jump-word-mode
           ace-jump-line-mode)))
 
+(use-package hydra
+  :load-path "site-lisp/hydra"
+  :defer 0.1
+  :preface
+  (require 'hydra-examples)
+  :init
+  (bind-key* "\\" 'hydra-master/body)
+  (bind-key* "C-x o" 'hydra-window)
+
+  (bind-key "C-z" 'delete-other-windows)
+
+  (use-package buffer-move
+    :load-path "site-lisp/buffer-move"
+    :bind (
+           ("M-o ."    . buf-move-up)
+           ("M-o j"  . buf-move-down)
+           ("M-o a"  . buf-move-left)
+           ("M-o u" . buf-move-right)))
+  
+  (global-set-key (kbd "M-o f") 'flash-active-buffer)
+  
+  (make-face 'flash-active-buffer-face)
+  (set-face-attribute 'flash-active-buffer-face nil
+                      :background "red"
+                      :foreground "black")
+  (defun flash-active-buffer ()
+    (interactive)
+    (run-at-time "100 millisec" nil
+                 (lambda (remap-cookie)
+                   (face-remap-remove-relative remap-cookie))
+                 (face-remap-add-relative 'default 'flash-active-buffer-face)))
+
+  ;; Make window splitting more useful
+  ;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
+
+  (defun my/vsplit-last-buffer (prefix)
+    "Split the window vertically and display the previous buffer."
+    (interactive "p")
+    (split-window-vertically)
+    (other-window 1 nil)
+    (if (= prefix 1)
+        (switch-to-next-buffer)))
+
+  (defun my/hsplit-last-buffer (prefix)
+    "Split the window horizontally and display the previous buffer."
+    (interactive "p")
+    (split-window-horizontally)
+    (other-window 1 nil)
+    (if (= prefix 1) (switch-to-next-buffer)))
+
+  (bind-key "C-x 2" 'my/vsplit-last-buffer)
+  (bind-key "C-x 3" 'my/hsplit-last-buffer)
+
+  :config
+  (hydra-add-font-lock)
+
+  (eval-and-compile
+    (defhydra hydra-common (:color blue)
+      ("<ESC>" nil "quit")))
+
+  (global-set-key
+   (kbd "C-M-j")
+   (defhydra hydra-bmk ()
+     ("i" (find-file "~/.emacs.d/init.el") "dot-emacs")
+     ("b" (find-file "~/.bash_profile") "bash-profile")
+     ("B" (find-file "~/.bashrc") "bashrc")
+     ("d" (find-file "~/Documents/cde.drush/nrel.aliases.drushrc.php") "drush-aliases")
+     ("e" (find-file "~/.emacs.d") "user-emacs-dir")
+     ("t" (find-file "~/Documents/Tasks/todo.txt") "todo.txt")
+     ("s" (find-file "~/.emacs.d/settings.el") "settings.el")
+     ("o" (find-file "~/.emacs.d/dot-org.el") "dot-org")
+     ("g" (find-file "~/.emacs.d/dot-gnus.el") "dot-gnus")
+     ("O" (find-file "~/.emacs.d/org-settings.el") "org-settings")
+     ("r" (find-file "~/src/drupal_scripts/release.sh") "release.sh")
+     ("T" (find-file "~/Documents/Tasks") "Tasks dir")
+     ("G" (find-file "~/.emacs.d/gnus-settings.el") "gnus-settings")
+     ("u" (find-file "~/.emacs.d/site-lisp/xmsi-math-symbols-input.el") "math-symbols")))
+
+  (global-set-key
+   (kbd "C-H-M-S-SPC")
+   (defhydra hydra-zoom ()
+     "zoom"
+     ("h" text-scale-increase "in")
+     ("t" text-scale-decrease "out")
+     ("0" (text-scale-set 0) "reset")
+     ("1" (text-scale-set 0) :bind nil)
+     ("2" (text-scale-set 0) :bind nil :color blue)))
+
+  (defhydra hydra-error (global-map "C-H-M-S tab")
+    "goto-error"
+    ("h" first-error "first")
+    ("j" next-error "next")
+    ("k" previous-error "prev")
+    ("v" recenter-top-bottom "recenter")
+    ("q" nil "quit"))
+
+  (defhydra hydra-master (:color blue :idle 0.4)
+    "
+                                                                       ╭───────┐
+                                                                       │ Index │
+╭──────────────────────────────────────────────────────────────────────┴───────╯
+  [_a_] bookmarks    [^h^]               [_o_] organization  [_v_] games
+  [_b_] buffers      [_i_] internet      [_p_] project       [_w_] window
+  [_c_] flycheck     [_j_] jump          [_q_] exit          [_x_] shell
+  [_d_] development  [_k_] spell         [_r_] register      [^y^]
+  [_e_] emacs        [_l_] lisp          [_s_] search        [^z^]
+  [_f_] file         [_m_] media         [_t_] text
+  [_g_] git          [_n_] narrow        [^u^]
+--------------------------------------------------------------------------------
+    "
+    ("<SPC>" dkh-alternate-buffers "alternate buffers")
+    ("<ESC>" nil "quit")
+    ("\\" (insert "\\") "\\")
+    ("a"     hydra-bookmarks/body nil)
+    ("b"     hydra-buffers/body nil)
+    ("c"     hydra-flycheck/body nil)
+    ("d"     hydra-development/body nil)
+    ("e"     hydra-emacs/body nil)
+    ("f"     hydra-file/body nil)
+    ("g"     hydra-git/body nil)
+    ("i"     hydra-internet/body nil)
+    ("j"     hydra-jump/body nil)
+    ("k"     hydra-spell/body nil)
+    ("l"     hydra-lisp/body nil)
+    ("m"     hydra-media/body nil)
+    ("n"     hydra-narrow/body nil)
+    ("o"     hydra-organization/body nil)
+    ("p"     hydra-project/body nil)
+    ("q"     hydra-exit/body nil)
+    ("r"     hydra-register/body nil)
+    ("s"     hydra-search/body nil)
+    ("t"     hydra-text/body nil)
+    ("v"     hydra-games/body nil)
+    ("w"     ace-window nil)
+    ("x"     hydra-system/body nil))
+  
+  (defhydra hydra-bookmarks (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                   ╭───────────┐
+       List                          Do                            │ Bookmarks │
+╭──────────────────────────────────────────────────────────────────┴───────────╯
+  [_h_] list bookmarks (helm)     [_j_] jump to a bookmark
+  [_l_] list bookmarks            [_m_] set bookmark at point
+  ^ ^                             [_s_] save bookmarks
+--------------------------------------------------------------------------------
+    "
+    ("h" helm-bookmarks)
+    ("j" bookmark-jump)
+    ("l" list-bookmarks)
+    ("m" bookmark-set)
+    ("s" bookmark-save))
+
+  (defhydra hydra-buffers (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                     ╭─────────┐
+  Switch                 Do                                          │ Buffers │
+╭────────────────────────────────────────────────────────────────────┴─────────╯
+  [_b_] switch (ido)       [_d_] kill the buffer
+  [_i_] ibuffer            [_r_] toggle read-only mode
+  [_a_] alternate          [_u_] revert buffer changes
+  [_s_] switch (helm)      [_w_] save buffer
+--------------------------------------------------------------------------------
+    "
+    ("a" dkh-alternate-buffers)
+    ("b" ivy-switch-buffer)
+    ("d" dkh-kill-this-buffer)
+    ("i" ibuffer)
+    ("m" ace-swap-window)
+    ("r" read-only-mode)
+    ("s" helm-buffers-list)
+    ("u" dkh-revert-buffer)
+    ("w" save-buffer))
+
+  (defhydra hydra-flycheck (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                    ╭──────────┐
+   Navigate          Show Errors                  Do                │ Flycheck │
+╭───────────────────────────────────────────────────────────────────┴──────────╯
+   ^_p_^revious     [_l_] list errors           [_t_] toggle Flycheck
+      ^^↑^^         [_e_] list errors (helm)    [_c_] select checker
+    ^_f_^irst       [_d_] clear all errors      [_r_] run via compile
+      ^^↓^^          ^ ^                        [_h_] describe checker
+    ^_n_^ext
+--------------------------------------------------------------------------------
+      "
+    ("c" flycheck-select-checker)
+    ("h" flycheck-describe-checker)
+    ("d" flycheck-clear)
+    ("e" helm-flycheck)
+    ("f" flycheck-first-error)
+    ("l" flycheck-list-errors)
+    ("n" flycheck-next-error :color red)
+    ("p" flycheck-previous-error :color red)
+    ("r" flycheck-compile)
+    ("t" flycheck-mode))
+
+  (defhydra hydra-development (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                 ╭─────────────┐
+     Zeal                   Web                 Quickrun         │ Development │
+╭────────────────────────────────────────────────────────────────┴─────────────╯
+  [_z_] search docs   [_c_] Web Colors          [_q_] buffer
+  [_d_] set docset    [_h_] HTTP header         [_v_] region
+   ^ ^                [_m_] HTTP method         [_x_] shell
+   ^ ^                [_r_] HTTP relation       [_p_] with arg
+   ^ ^                [_s_] HTTP status code    [_k_] buffer (helm)
+   ^ ^                [_g_] RESTclient          [_o_] only compile
+   ^ ^                [_f_] RFC doc             [_R_] replace
+  [_l_] lines of code [_F_] RFC index           [_e_] eval/print
+--------------------------------------------------------------------------------
+      "
+    ("z" zeal-at-point)
+    ("d" zeal-at-pont-set-docset)
+    ("c" helm-colors)
+    ("g" restclient-mode)
+    ("f" irfc-visit)
+    ("F" irfc-index)
+    ("q" quickrun)
+    ("v" quickrun-region)
+    ("x" quickrun-shell)
+    ("p" quickrun-with-arg)
+    ("o" quickrun-compile-only)
+    ("R" quickrun-replace-region)
+    ("e" quickrun-eval-print)
+    ("k" helm-quickrun)
+    ("h" http-header)
+    ("m" http-method)
+    ("r" http-relation)
+    ("s" http-status-code)
+    ("l" cloc))
+
+  (defhydra hydra-emacs (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                       ╭───────┐
+   Execute       Packages         Help                     Misc        │ Emacs │
+╭──────────────────────────────────────────────────────────────────────┴───────╯
+  [_s_] smex       [_p_] list      [_a_] apropos (helm)    [_t_] change theme (helm)
+  [_m_] smex mode  [_i_] install   [_f_] info manual       [_l_] list emacs process
+  [_h_] helm M-x   [_u_] upgrade   [_k_] bindings (helm)   [_c_] init time
+   ^ ^              ^ ^            [_b_] personal bindings [_o_] unbound commands
+--------------------------------------------------------------------------------
+      "
+    ("C-h b" helm-descbinds "bindings")
+    ("a" helm-apropos)
+    ("b" describe-personal-keybindings)
+    ("c" emacs-init-time)
+    ("i" package-install)
+    ("k" helm-descbinds)
+    ("l" list-processes)
+    ("f" info-display-manual)
+    ("p" paradox-list-packages)
+    ("t" helm-themes)
+    ("u" paradox-upgrade-packages)
+    ("m" smex-major-mode-commands)
+    ("s" smex)
+    ("h" helm-M-x)
+    ("o" smex-show-unbound-commands))
+
+  (defhydra hydra-file (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                        ╭──────┐
+     Ido               Helm                 Dired        Ztree          │ File │
+╭───────────────────────────────────────────────────────────────────────┴──────╯
+  [_o_] open file   [_f_] find file      [_d_] dired    [_z_] diff dirs
+   ^ ^              [_m_] mini
+--------------------------------------------------------------------------------
+      "
+    ("o" find-file)
+    ("f" helm-find-files)
+    ("m" helm-mini)
+    ("z" ztree-diff)
+    ("d" dired))
+
+  (defhydra hydra-text (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                        ╭──────┐
+ Size  Toggle              Unicode                        Do            │ Text │
+╭───────────────────────────────────────────────────────────────────────┴──────╯
+  _k_  [_f_] fill column     [_d_] unicode character           [_a_] align with regex
+  ^↑^  [_h_] hidden chars    [_e_] evil digraphs table         [_w_] remove trailing ' '
+  ^ ^  [_l_] line numbers    [_s_] specific code block         [_n_] count words
+  ^↓^  [_t_] trailing ' '    [_u_] unicode character (helm)    [_i_] lorem ipsum
+  _j_  [_v_] font space      [_p_] character code              [_x_] comment box
+  ^ ^  [_c_] comment          ^ ^                              [_q_] boxquote
+  ^ ^  [_b_] multibyte chars  ^ ^                              [_m_] iedit (multiple)
+  ^ ^   ^ ^                   ^ ^                              [_r_] expand region
+--------------------------------------------------------------------------------
+      "
+    ("a" align-regexp)
+    ("b" toggle-enable-multibyte-characters)
+    ("c" evilnc-comment-or-uncomment-lines)
+    ("d" insert-char)
+    ("e" evil-ex-show-digraphs)
+    ("f" fci-mode)
+    ("h" whitespace-mode)
+    ("i" lorem-ipsum-insert-paragraphs)
+    ("k" text-scale-increase :color red)
+    ("j" text-scale-decrease :color red)
+    ("l" linum-mode)
+    ("n" count-words)
+    ("m" iedit)
+    ("p" describe-char)
+    ("r" er/expand-region)
+    ("s" charmap)
+    ("t" dkh-toggle-show-trailing-whitespace)
+    ("u" helm-ucs)
+    ("v" variable-pitch-mode)
+    ("w" whitespace-cleanup)
+    ("q" hydra-boxquote/body)
+    ("x" comment-box))
+
+  (defhydra hydra-git (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                         ╭─────┐
+   Magit                          VC                    Timemachine      │ Git │
+╭────────────────────────────────────────────────────────────────────────┴─────╯
+  [_s_] status              [_d_] diffs between revisions  [_t_] timemachine
+  [_B_] blame mode          [_b_] edition history
+  [_l_] file log
+--------------------------------------------------------------------------------
+      "
+    ("B" magit-blame-mode)
+    ("b" vc-annotate)
+    ("d" vc-diff)
+    ("l" magit-file-log)
+    ("s" magit-status)
+    ("t" git-timemachine))
+
+  (defhydra hydra-internet (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                    ╭──────────┐
+    Browse       Search             Social               Post       │ Internet │
+╭───────────────────────────────────────────────────────────────────┴──────────╯
+  [_w_] eww      [_g_] google          [_f_] elfeed            [_i_] imgur
+  [_u_] url      [_m_] google maps     [_t_] twitter
+   ^ ^           [_s_] surfraw         [_x_] stack overflow
+--------------------------------------------------------------------------------
+      "
+    ("f" elfeed)
+    ("g" google-this)
+    ("i" imgur-post)
+    ("m" google-maps)
+    ("s" helm-surfraw)
+    ("t" twit)
+    ("w" eww)
+    ("u" browse-url-at-point)
+    ("x" sx-tab-newest))
+
+  (defhydra hydra-jump (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                        ╭──────┐
+  Window          Word/Char        Line         iSearch                 │ Jump │
+╭───────────────────────────────────────────────────────────────────────┴──────╯
+  [_w_] jump        [_j_] word         [_l_] jump     [_i_] jump
+  [_d_] close       [_p_] all words    [_y_] copy
+  [_z_] maximize    [_b_] subword      [_m_] move
+  [_s_] swap        [_c_] char         [_v_] copy region
+   ^ ^              [_a_] two chars
+--------------------------------------------------------------------------------
+      "
+    ("w" ace-window)
+    ("d" ace-delete-window)
+    ("z" ace-maximize-window)
+    ("s" ace-swap-window)
+    ("j" avy-goto-word-1)
+    ("p" avy-goto-word-0)
+    ("b" avy-goto-subword-0)
+    ("c" avy-goto-char)
+    ("a" avy-goto-char-2)
+    ("l" avy-goto-line)
+    ("y" avy-copy-line)
+    ("m" avy-move-line)
+    ("v" avy-copy-region)
+    ("i" avy-isearch))
+
+  (defhydra hydra-spell (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                       ╭───────┐
+    Flyspell               Ispell                      Gtranslate      │ Spell │
+╭──────────────────────────────────────────────────────────────────────┴───────╯
+  [_k_] correct word       [_w_] check word            [_g_] en ⇆ es
+  [_n_] next error         [_t_] toggle dictionary     [_G_] any lang
+  [_f_] toggle flyspell    [_d_] change dictionary
+  [_p_] toggle prog mode
+--------------------------------------------------------------------------------
+      "
+    ("w" ispell-word)
+    ("d" ispell-change-dictionary)
+    ("t" dkh-switch-dictionary)
+    ("g" google-translate-smooth-translate)
+    ("G" google-translate-query-translate)
+    ("f" flyspell-mode)
+    ("p" flyspell-prog-mode)
+    ("k" flyspell-auto-correct-word)
+    ("n" flyspell-goto-next-error))
+
+  (defhydra hydra-lisp (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                        ╭──────┐
+    Elisp              Bug hunter                                       │ Lisp │
+╭───────────────────────────────────────────────────────────────────────┴──────╯
+  [_r_] eval region    [_f_] file
+  [_s_] eval sexp      [_i_] init-file
+--------------------------------------------------------------------------------
+      "
+    ("f" bug-hunter-file)
+    ("i" bug-hunter-init-file)
+    ("r" eval-region)
+    ("s" eval-last-sexp))
+
+  (defhydra hydra-narrow (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                      ╭────────┐
+    Narrow                                                            │ Narrow │
+╭─────────────────────────────────────────────────────────────────────┴────────╯
+  [_f_] narrow to defun
+  [_p_] narrow to page
+  [_r_] narrow to region
+  [_w_] widen
+--------------------------------------------------------------------------------
+      "
+    ("f" narrow-to-defun)
+    ("p" narrow-to-page)
+    ("r" narrow-to-region)
+    ("w" widen))
+
+  (defhydra hydra-project (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                  ╭────────────┐
+  Files             Search          Buffer             Do         │ Projectile │
+╭─────────────────────────────────────────────────────────────────┴────────────╯
+  [_f_] file          [_a_] ag          [_b_] switch         [_g_] magit
+  [_l_] file dwim     [_A_] grep        [_v_] show all       [_p_] commander
+  [_r_] recent file   [_s_] occur       [_V_] ibuffer        [_i_] info
+  [_d_] dir           [_S_] replace     [_K_] kill all
+  [_o_] other         [_t_] find tag
+  [_u_] test file     [_T_] make tags
+  [_h_] root
+                                                                      ╭────────┐
+  Other Window      Run             Cache              Do             │ Fixmee │
+╭──────────────────────────────────────────────────╯ ╭────────────────┴────────╯
+  [_F_] file          [_U_] test        [_kc_] clear         [_x_] TODO & FIXME
+  [_L_] dwim          [_m_] compile     [_kk_] add current   [_X_] toggle
+  [_D_] dir           [_c_] shell       [_ks_] cleanup
+  [_O_] other         [_C_] command     [_kd_] remove
+  [_B_] buffer
+--------------------------------------------------------------------------------
+      "
+    ("a"   projectile-ag)
+    ("A"   projectile-grep)
+    ("b"   projectile-switch-to-buffer)
+    ("B"   projectile-switch-to-buffer-other-window)
+    ("c"   projectile-run-async-shell-command-in-root)
+    ("C"   projectile-run-command-in-root)
+    ("d"   projectile-find-dir)
+    ("D"   projectile-find-dir-other-window)
+    ("f"   projectile-find-file)
+    ("F"   projectile-find-file-other-window)
+    ("g"   projectile-vc)
+    ("h"   projectile-dired)
+    ("i"   projectile-project-info)
+    ("kc"  projectile-invalidate-cache)
+    ("kd"  projectile-remove-known-project)
+    ("kk"  projectile-cache-current-file)
+    ("K"   projectile-kill-buffers)
+    ("ks"  projectile-cleanup-known-projects)
+    ("l"   projectile-find-file-dwim)
+    ("L"   projectile-find-file-dwim-other-window)
+    ("m"   projectile-compile-project)
+    ("o"   projectile-find-other-file)
+    ("O"   projectile-find-other-file-other-window)
+    ("p"   projectile-commander)
+    ("r"   projectile-recentf)
+    ("s"   projectile-multi-occur)
+    ("S"   projectile-replace)
+    ("t"   projectile-find-tag)
+    ("T"   projectile-regenerate-tags)
+    ("u"   projectile-find-test-file)
+    ("U"   projectile-test-project)
+    ("v"   projectile-display-buffer)
+    ("V"   projectile-ibuffer)
+    ("X"   fixmee-mode)
+    ("x"   fixmee-view-listing))
+
+  (defhydra hydra-exit (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                        ╭──────┐
+   Quit                                                                 │ Exit │
+╭───────────────────────────────────────────────────────────────────────┴──────╯
+  [_c_] exit emacs (standalone or client)
+  [_s_] shutdown the emacs daemon
+--------------------------------------------------------------------------------
+      "
+    ("c" save-buffers-kill-terminal)
+    ("s" save-buffers-kill-emacs))
+
+  (defhydra hydra-register (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                    ╭──────────┐
+   Logs                        Registers                Undo        │ Register │
+╭───────────────────────────────────────────────────────────────────┴──────────╯
+  [_c_] commands history       [_e_] emacs registers    [_u_] undo tree
+  [_o_] echo-area messages     [_r_] evil registers
+  [_b_] minibuffer             [_m_] evil marks
+  [_l_] messages               [_k_] kill ring
+  [_d_] diff buffer with file
+--------------------------------------------------------------------------------
+      "
+    ("c" helm-complex-command-history)
+    ("d" dkh-diff-buffer-with-file)
+    ("e" helm-register)
+    ("k" helm-show-kill-ring)
+    ("a" helm-all-mark-rings)
+    ("l" popwin:messages)
+    ("m" evil-show-marks)
+    ("o" view-echo-area-messages)
+    ("r" evil-show-registers)
+    ("b" helm-minibuffer-history)
+    ("u" undo-tree-visualize))
+
+  (defhydra hydra-search (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                      ╭────────┐
+   Files                             Buffer                           │ Search │
+╭─────────────────────────────────────────────────────────────────────┴────────╯
+  [_a_] regex search (Ag)           [_b_] by word
+  [_A_] regex by filetype (Ag)      [_o_] by word (occur)
+  [_h_] regex search (grep & helm)  [_w_] by word (multi)
+  [_g_] regex search (grep)         [_t_] tags & titles
+  [_f_] find
+  [_l_] locate
+--------------------------------------------------------------------------------
+      "
+    ("A" ag-files)
+    ("a" ag)
+    ("b" helm-swoop)
+    ("f" helm-find)
+    ("g" rgrep)
+    ("h" helm-do-grep)
+    ("l" helm-locate)
+    ("o" helm-occur)
+    ("t" helm-semantic-or-imenu)
+    ("w" helm-multi-swoop))
+
+  (defhydra hydra-games (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                       ╭───────┐
+   Game                                                                │ Games │
+╭──────────────────────────────────────────────────────────────────────┴───────╯
+  [_p_] 2048-game      [_c_] chess (computer)
+  [_b_] bubbles        [_a_] chess (internet)
+  [_t_] tetris
+  [_g_] gomoku
+--------------------------------------------------------------------------------
+      "
+    ("p" 2048-game)
+    ("b" bubbles-set-game-hard)
+    ("c" chess)
+    ("a" chess-ics)
+    ("g" gomoku)
+    ("t" tetris))
+
+  (defhydra hydra-system (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                      ╭────────┐
+   Terminals                     System                               │ System │
+╭─────────────────────────────────────────────────────────────────────┴────────╯
+  [_s_] new multi-term           [_c_] shell command
+  [_n_] next multi-term          [_a_] aync shell command
+  [_p_] previous multi-term      [_m_] man page
+  [_d_] dedicated multi-term     [_l_] list system process
+  [_e_] eshell                   [_t_] top command
+--------------------------------------------------------------------------------
+      "
+    ("a" async-shell-command)
+    ("c" shell-command)
+    ("e" eshell)
+    ("m" helm-man-woman)
+    ("l" proced)
+    ("s" multi-term)
+    ("n" multi-term-next)
+    ("p" multi-term-previous)
+    ("d" multi-term-dedicated-toggle)
+    ("t" helm-top))
+
+  (defhydra hydra-media (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                       ╭───────┐
+   Emms                Mpd                  Volume                     │ Media │
+╭──────────────────────────────────────────────────────────────────────┴───────╯
+ [_b_] browse         [_n_] next song          [_-_] volume down
+ [_f_] play file      [_p_] previous song      [_+_] volume up
+  ^ ^                 [_c_] clear playlist
+  ^ ^                 [_o_] show song
+  ^ ^                 [_P_] pause
+  ^ ^                 [_s_] stop
+  ^ ^                 [_y_] start & sync
+--------------------------------------------------------------------------------
+      "
+    ("a" emms-start)
+    ("x" emms-stop)
+    ("b" emms-smart-browse)
+    ("f" emms-play-file)
+    ("m" emms-player-mpd-connect)
+    ("c" emms-player-mpd-clear)
+    ("n" emms-player-mpd-next)
+    ("o" emms-player-mpd-show)
+    ("P" emms-player-mpd-pause)
+    ("p" emms-player-mpd-previous)
+    ("s" emms-player-mpd-stop)
+    ("y" emms-player-mpd-start)
+    ("-" emms-volume-lower)
+    ("\+" emms-volume-raise))
+
+  (defhydra hydra-organization (:color blue :hint nil :idle 0.4 :inherit (hydra-common/heads))
+    "
+                                                                ╭──────────────┐
+     Tasks            Org mode               Comms      Others  │ Organization │
+╭───────────────────────────────────────────────────────────────┴──────────────╯
+  [_a_] agenda      [_c_] capture             [_m_] mail      [_x_] speed type
+  [_l_] agenda list [_p_] pomodoro            [_t_] contacts
+  [_d_] calendar    [_s_] search headings     [_h_] add location
+   ^ ^              [_g_] open location gmaps
+   ^ ^              [_f_] archive subtree
+--------------------------------------------------------------------------------
+      "
+    ("a" org-agenda)
+    ("c" org-capture)
+    ("d" cfw:open-org-calendar)
+    ("g" org-location-google-maps)
+    ("h" org-address-google-geocode-set)
+    ("l" org-agenda-list)
+    ("f" org-archive-subtree)
+    ("m" mu4e)
+    ("p" org-pomodoro)
+    ("s" helm-org-agenda-files-headings)
+    ("t" org-contacts)
+    ("x" speed-type-text))
+
+  (defhydra hydra-window (:color amaranth)
+    "
+Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
+--------------------------------------------------------------------------------
+_t_, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
+_h_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
+_s_, _<down>_                    _C-z_: ace-window-delete    ^ ^
+_t_, _<right>_                   ^   ^                       ^ ^
+You can use arrow-keys or WASD.
+"
+    ("f" flash-active-buffer nil)
+    ("2" my/vsplit-last-buffer nil)
+    ("3" my/hsplit-last-buffer nil)
+    ("h" windmove-left nil)
+    ("s" windmove-down nil)
+    ("n" windmove-up nil)
+    ("t" windmove-right nil)
+    ("H" hydra-move-splitter-left nil)
+    ("S" hydra-move-splitter-down nil)
+    ("N" hydra-move-splitter-up nil)
+    ("T" hydra-move-splitter-right nil)
+    ("<left>" windmove-left nil)
+    ("<down>" windmove-down nil)
+    ("<up>" windmove-up nil)
+    ("<right>" windmove-right nil)
+    ("<S-left>" hydra-move-splitter-left nil)
+    ("<S-down>" hydra-move-splitter-down nil)
+    ("<S-up>" hydra-move-splitter-up nil)
+    ("<S-right>" nil hydra-move-splitter-right)
+    ("M-h"  buf-move-left)
+    ("M-s"  buf-move-down)
+    ("M-n"  buf-move-up)
+    ("M-t"  buf-move-right)
+    ("C-w"  window-configuration-to-register)
+    ("C-a"  ace-window nil)
+    ("u" hydra--universal-argument nil)
+    ("C-s" (lambda () (interactive) (ace-window 4)) nil)
+    ("C-z" (lambda () (interactive) (ace-window 16)) nil)
+    ("h" hl-line-mode nil)
+    ("c" crosshairs-mode nil)
+    ("g" golden-ratio-mode nil)
+    ("q" nil "quit")))
+
+(use-package avy
+  :load-path "site-lisp/avy"
+  :bind* (("<C-return>" . ace-window)
+          ("H-l" . avy-goto-line))
+  :config
+  (setq avy-keys       '(?a ?s ?d ?e ?f ?g ?r ?v ?h ?j ?k ?l ?n ?m ?u)
+            avy-background t
+            avy-all-windows t
+            avy-style 'at-full
+            avy-case-fold-search nil)
+  (use-package ace-link
+    :defer 1
+    :config
+    (ace-link-setup-default))
+  
+  (use-package ace-window
+    :load-path "site-lisp/ace-window"
+    :init
+    (defun toggle-window-split ()
+      (interactive)
+      (if (= (count-windows) 2)
+          (let* ((this-win-buffer (window-buffer))
+                 (next-win-buffer (window-buffer (next-window)))
+                 (this-win-edges (window-edges (selected-window)))
+                 (next-win-edges (window-edges (next-window)))
+                 (this-win-2nd (not (and (<= (car this-win-edges)
+                                             (car next-win-edges))
+                                         (<= (cadr this-win-edges)
+                                             (cadr next-win-edges)))))
+                 (splitter
+                  (if (= (car this-win-edges)
+                         (car (window-edges (next-window))))
+                      'split-window-horizontally
+                    'split-window-vertically)))
+            (delete-other-windows)
+            (let ((first-win (selected-window)))
+              (funcall splitter)
+              (if this-win-2nd (other-window 1))
+              (set-window-buffer (selected-window) this-win-buffer)
+              (set-window-buffer (next-window) next-win-buffer)
+              (select-window first-win)
+              (if this-win-2nd (other-window 1))))))
+
+    (define-key ctl-x-4-map "t" 'toggle-window-split)
+
+    (defun dkh-scroll-other-window()
+      (interactive)
+      (scroll-other-window 1))
+
+    (defun dkh-scroll-other-window-down ()
+      (interactive)
+      (scroll-other-window-down 1))
+    :config
+    (setq aw-keys (quote (97 111 101 117 105 100 104 116 110))
+          aw-dispatch-always t
+          aw-dispatch-alist
+          '((?x aw-delete-window     "Ace - Delete Window")
+            (?c aw-swap-window       "Ace - Swap Window")
+            (?n aw-flip-window)
+            (?v aw-split-window-vert "Ace - Split Vert Window")
+            (?h aw-split-window-horz "Ace - Split Horz Window")
+            (?m delete-other-windows "Ace - Maximize Window")
+            (?g delete-other-windows)
+            (?b balance-windows)
+            (?u winner-undo)
+            (?r winner-redo)
+            (?j dired-jump)
+            (32 mode-line-other-buffer)))
+    (when (when-feature-loaded 'hydra)
+      (defhydra hydra-window-size (:color red)
+        "Windows size"
+        ("a" shrink-window-horizontally "shrink horizontal")
+        ("." shrink-window "shrink vertical")
+        ("j" enlarge-window "enlarge vertical")
+        ("i" enlarge-window-horizontally "enlarge horizontal"))
+      (defhydra hydra-window-frame (:color red)
+        "Frame"
+        ("f" make-frame "new frame")
+        ("x" delete-frame "delete frame"))
+      (defhydra hydra-window-scroll (:color red)
+        "Scroll other window"
+        ("<SPC>" dkh-scroll-other-window "scroll")
+        ("<backspace>" dkh-scroll-other-window-down "scroll down"))
+      (add-to-list 'aw-dispatch-alist '(?w hydra-window-size/body) t)
+      (add-to-list 'aw-dispatch-alist '(32 hydra-window-scroll/body) t)
+      (add-to-list 'aw-dispatch-alist '(?\; hydra-window-frame/body) t))
+    
+    (set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 3.0)
+    (set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green")))
+
 (use-package ace-isearch
   :load-path "site-lisp/ace-isearch"
   :disabled t
   :config
   (global-ace-isearch-mode 1))
-
-(use-package ace-window
-  :bind (([remap next-multiframe-window] . ace-window))
-  :init (progn (bind-key "C-x o" 'ace-window)(bind-key "<C-return>" 'ace-window))
-  :config
-  (setq aw-keys (quote (97 111 101 117 105 100 104 116 110))))
 
 (use-package ag
   :load-path "site-lisp/ag-el"
@@ -1164,6 +1875,10 @@ Keys are in kbd format."
     (if ascii-display
         (ascii-off)
       (ascii-on))))
+
+(use-package async
+  :load-path "lisp/emacs-async"
+  :defer t)
 
 (use-package tex-site
   :disabled t
@@ -1394,17 +2109,54 @@ Keys are in kbd format."
   :config
   (use-package bookmark+))
 
+(use-package boxquote
+  :load-path "site-lisp/boxquote"
+  :defer t
+  :config
+  (setq-default  boxquote-bottom-corner "╰"      ; U+2570
+                 boxquote-side          "│ "     ; U+2572 + space
+                 boxquote-top-and-tail  "────"   ; U+2500 (×4)
+                 boxquote-top-corner    "╭")     ; U+256F
+  (when (when-feature-loaded 'hydra)
+    (defhydra hydra-boxquote (:color blue :hint nil)
+       "
+                                                                    ╭──────────┐
+  Text           External           Apropos         Do              │ Boxquote │
+╭───────────────────────────────────────────────────────────────────┴──────────╯
+  [_r_] region        [_f_] file      [_K_] describe-key        [_t_] title
+  [_p_] paragraph     [_b_] buffer    [_F_] describe-function   [_u_] unbox
+  [_a_] buffer        [_s_] shell     [_V_] describe-variable   [_w_] fill-paragraph
+  [_e_] text           ^ ^            [_W_] where-is            [_n_] narrow
+  [_d_] defun         [_y_] yank       ^ ^                      [_c_] narrow to content
+  [_q_] boxquote      [_Y_] yanked     ^ ^                      [_x_] kill
+--------------------------------------------------------------------------------
+       "
+      ("<esc>" nil "quit")
+      ("x" boxquote-kill)
+      ("Y" boxquote-yank)
+      ("e" boxquote-text)
+      ("u" boxquote-unbox)
+      ("d" boxquote-defun)
+      ("t" boxquote-title)
+      ("r" boxquote-region)
+      ("a" boxquote-buffer)
+      ("q" boxquote-boxquote)
+      ("W" boxquote-where-is)
+      ("p" boxquote-paragraph)
+      ("f" boxquote-insert-file)
+      ("K" boxquote-describe-key)
+      ("s" boxquote-shell-command)
+      ("b" boxquote-insert-buffer)
+      ("y" boxquote-kill-ring-save)
+      ("w" boxquote-fill-paragraph)
+      ("F" boxquote-describe-function)
+      ("V" boxquote-describe-variable)
+      ("n" boxquote-narrow-to-boxquote)
+      ("c" boxquote-narrow-to-boxquote-content))))
+
 (use-package browse-kill-ring+
   :defer 10
   :commands browse-kill-ring)
-
-(use-package buffer-move
-  :load-path "site-lisp/buffer-move"
-  :bind (
-         ("<C-S-up>"    . buf-move-up)
-         ("<C-S-down>"  . buf-move-down)
-         ("<C-S-left>"  . buf-move-left)
-         ("<C-S-right>" . buf-move-right)))
 
 (use-package cmake-mode
   :mode (("CMakeLists\\.txt\\'" . cmake-mode)
@@ -1459,27 +2211,18 @@ Keys are in kbd format."
   (add-hook 'compilation-filter-hook #'compilation-ansi-color-process-output))
 
 (use-package conf-mode
-  :mode ("\\.info\\|\\.gitmodules"  . conf-mode))
+  :mode "\\.info\\|\\.gitmodules")
 
 (use-package copy-code
   :disabled t
   :bind ("H-M-W" . copy-code-as-rtf))
 
 (use-package crosshairs
-  :defer 10
-  :commands crosshairs-mode
-  :bind ("M-o c" . crosshairs-mode)
-  :init
-  (crosshairs-mode 1)
-  :config
-  (progn
-  (toggle-crosshairs-when-idle 1)
-  (col-highlight-set-interval 120)
-  (setq col-highlight-face hl-line-face)))
+  :bind ("M-o c" . crosshairs-mode))
 
 (use-package css-mode
   :load-path "site-lisp/css-mode"
-  :mode ("\\.css$" . css-mode)
+  :mode "\\.css$"
   :config
   (progn
     (define-keys css-mode-map
@@ -1540,7 +2283,7 @@ Keys are in kbd format."
     (unbind-key "M-s f" dired-mode-map))
 
   (bind-key "l" 'dired-up-directory dired-mode-map)
-
+  (bind-key "e" 'dired-mark-files-containing-regexp dired-mode-map)
   (defun my-dired-switch-window ()
     (interactive)
     (if (eq major-mode 'sr-mode)
@@ -1728,6 +2471,39 @@ Keys are in kbd format."
 (use-package edit-var
   :bind ("C-c e v" . edit-variable))
 
+(use-package emmet-mode
+  :config
+  (add-hook 'sgml-mode-hook 'emmet-mode)
+  (add-hook 'css-mode-hook  'emmet-mode)
+  (bind-keys :map emmet-mode-keymap
+             ("C-n" . emmet-next-edit-point)
+             ("C-p" . emmet-prev-edit-point))
+
+  (use-package helm-emmet
+    :load-path "site-lisp/helm-emmet"
+    :commands helm-emmet)
+
+  ;; (use-package ac-emmet
+  ;;   :ensure auto-complete
+  ;;   :config
+  ;;   (add-hook 'sgml-mode-hook 'ac-emmet-html-setup)
+  ;;   (add-hook 'css-mode-hook  'ac-emmet-css-setup))
+  )
+
+;; (use-package emmet-mode
+;;   :commands emmet-mode
+;;   :init
+;;   (progn
+;;     (add-hook 'nxml-mode-hook 'emmet-mode)
+;;     (add-hook 'html-mode-hook 'emmet-mode)
+;;     (add-hook 'html-mode-hook
+;;               #'(lambda ()
+;;                   (bind-key "<return>" 'newline-and-indent html-mode-map)))
+;;     (add-hook 'web-mode-hook 'emmet-mode)
+;;     )
+;;     (defvar emmet-mode-keymap (make-sparse-keymap))
+;;     (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap)))
+
 (use-package emms-setup
   :disabled t
   :load-path "site-lisp/emms/lisp"
@@ -1801,19 +2577,19 @@ Keys are in kbd format."
         (progn
           (erc :server "192.168.9.133"
                :port 6697
-               :nick "johnw"
+               :nick "dkh"
                :password (lookup-password "192.168.9.133"
-                                          "johnw/freenode" 6697))
+                                          "dkh/freenode" 6697))
           (erc :server "192.168.9.133"
                :port 6697
-               :nick "johnw"
+               :nick "dkh"
                :password (lookup-password "192.168.9.133"
-                                          "johnw/bitlbee" 6697)))
+                                          "dhk/bitlbee" 6697)))
 
       (erc-tls :server "irc.freenode.net"
                :port 6697
-               :nick "johnw"
-               :password (lookup-password "irc.freenode.net" "johnw" 6667))))
+               :nick "dhk"
+               :password (lookup-password "irc.freenode.net" "dhk" 6667))))
 
   (defun setup-irc-environment ()
     (setq erc-timestamp-only-if-changed-flag nil
@@ -1946,29 +2722,29 @@ Keys are in kbd format."
     (bind-key "f" 'eww-lnum-follow eww-mode-map)
     (bind-key "F" 'eww-lnum-universal eww-mode-map)))
 
-(use-package expand-region
-  :bind ("C-=" . er/expand-region)
-  :config
-  (progn
-    (use-package change-inner
-      :load-path "lisp/change-inner.el/"
-      :bind (("M-i" . change-inner)
-             ("M-o" . change-outer)))
-    (defun er/add-text-mode-expansions ()
-      (make-variable-buffer-local 'er/try-expand-list)
-      (setq er/try-expand-list (append
-                                er/try-expand-list
-                                '(mark-paragraph
-                                  mark-page))))
+;; (use-package expand-region
+;;   :bind ("C-=" . er/expand-region)
+;;   :config
+;;   (progn
+;;     (use-package change-inner
+;;       :load-path "lisp/change-inner.el/"
+;;       :bind (("M-i" . change-inner)
+;;              ("M-o" . change-outer)))
+;;     (defun er/add-text-mode-expansions ()
+;;       (make-variable-buffer-local 'er/try-expand-list)
+;;       (setq er/try-expand-list (append
+;;                                 er/try-expand-list
+;;                                 '(mark-paragraph
+;;                                   mark-page))))
 
-    (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
+;;     (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
 
 (use-package feature-mode
   :load-path "site-lisp/cucumber"
-  :mode ("\\.feature$" . feature-mode))
+  :mode "\\.feature$")
 
 (use-package fetchmail-mode
-  :mode (".fetchmailrc$" . fetchmail-mode)
+  :mode ".fetchmailrc$"
   :commands fetchmail-mode)
 
 (use-package fic-mode
@@ -1979,7 +2755,23 @@ Keys are in kbd format."
   :load-path "site-lisp/flycheck"
   :defer 5
   :config
-  (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point))
+  (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
+
+  (add-to-list 'display-buffer-alist
+               `(,(rx bos "*Flycheck errors*" eos)
+                 (display-buffer-reuse-window
+                  display-buffer-in-side-window)
+                 (reusable-frames . visible)
+                 (side            . bottom)
+                 (window-height   . 0.4)))
+
+  (defun lunaryorn-quit-bottom-side-windows ()
+    "Quit side windows of the current frame."
+    (interactive)
+    (dolist (window (window-at-side-list))
+      (quit-window nil window)))
+
+  (bind-key "C-H-M-:" 'lunaryorn-quit-bottom-side-windows))
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
@@ -2000,6 +2792,10 @@ Keys are in kbd format."
 (use-package git-messenger
   :load-path "site-lisp/emacs-git-messenger"
   :bind ("C-x v m" . git-messenger:popup-message))
+
+(use-package git-timemachine
+  :load-path "site-lisp/git-timemachine"
+  :commands git-timemachine)
 
 (use-package git-wip-mode
   :load-path "site-lisp/git-wip/emacs/"
@@ -2038,13 +2834,63 @@ Keys are in kbd format."
           '(erc-mode mu4e-headers-mode mu4e-view-mode ediff-mode)))
     (setq golden-ratio-auto-scale t))
 
-(use-package google-this
-  :commands (google-this-region google-this-translate-query-or-region google-this-error google-this-forecast google-this-lucky-search google-this-lucky-and-insert-url google-this-line google-maps google-this-cpp-reference google-this-symbol google-this google-this-word google-this-search)
-  :diminish google-this-mode
+(use-package google-maps
+  :load-path "site-lisp/google-maps"
+  :defer 5
   :config
-  (google-this-mode))
+  (bind-keys :map google-maps-static-mode-map
+             ("H" . google-maps-static-add-home-marker)
+             ("k" . google-maps-static-move-north)
+             ("j" . google-maps-static-move-south)
+             ("h" . google-maps-static-move-west)
+             ("l" . google-maps-static-move-east)
+             ("y" . google-maps-static-copy-url)
+             ("q" . quit-window))
+
+  (when (when-feature-loaded 'hydra)
+    (bind-keys :map google-maps-static-mode-map
+               ("\\" . hydra-gmaps/body))
+    (defhydra hydra-gmaps (:hint nil :color blue)
+        "
+                                                                   ╭─────────────┐
+    Move       Zoom        Do                                      │ Google maps │
+  ╭────────────────────────────────────────────────────────────────┴─────────────╯
+   ^ ^   ^ _k_ ^    ^ ^   _<_/_+_/_._    [_t_] map type
+   ^ ^   ^ ^↑^ ^    ^ ^   ^ ^ ^↑^ ^ ^    [_g_] refresh
+   _h_ ← _c_|_C_ → _l_    ^ _z_|_Z_ ^    [_y_] yank url
+   ^ ^   ^ ^↓^ ^    ^ ^   ^ ^ ^↓^ ^ ^    [_q_] quit
+   ^ ^   ^ _j_ ^    ^ ^   _>_/_-_/_,_
+  --------------------------------------------------------------------------------
+        "
+        ("\\" hydra-master/body "back")
+        ("<ESC>" nil "quit")
+        ("q"       google-maps-static-quit)
+        ("+"       google-maps-static-zoom-in)
+        (">"       google-maps-static-zoom-in)
+        ("."       google-maps-static-zoom-in)
+        ("-"       google-maps-static-zoom-out)
+        ("<"       google-maps-static-zoom-out)
+        (","       google-maps-static-zoom-out)
+        ("z"       google-maps-static-zoom)
+        ("Z"       google-maps-static-zoom-remove)
+        ("y"       google-maps-static-copy-url)
+        ("c"       google-maps-static-center)
+        ("C"       google-maps-static-center-remove)
+        ("t"       google-maps-static-set-maptype)
+        ("g"       google-maps-static-refresh)
+        ("k"       google-maps-static-move-north)
+        ("j"       google-maps-static-move-south)
+        ("h"       google-maps-static-move-west)
+        ("l"       google-maps-static-move-east)))
+
+  (use-package org-location-google-maps))
+
+(use-package google-this
+  :load-path "site-lisp/emacs-google-this"
+  :defer t)
 
 (use-package google-translate
+    :load-path "site-lisp/google-translate"
   :bind ("\C-ct" . google-translate-smooth-translate)
   :init
   (progn
@@ -2140,18 +2986,22 @@ Keys are in kbd format."
   :load-path "site-lisp/helm-swoop"
   :bind (("M-s o" . helm-swoop)
          ("M-s /" . helm-multi-swoop))
+  :commands (helm-swoop helm-multi-swoop)
   :config
-  (use-package helm-match-plugin
-    :config
-    (helm-match-plugin-mode 1)))
+  (use-package helm-match-plugin))
 
 (use-package helm-descbinds
   :load-path "site-lisp/helm-descbinds"
-  :bind ("C-h b" . helm-descbinds)
   :init
   (fset 'describe-bindings 'helm-descbinds)
+  (bind-key "C-h b" 'helm-descbinds)
   :config
+  ;; (helm-descbinds-mode t)
   (require 'helm-config))
+
+ (use-package helm-descbinds
+    :config
+    (setq helm-descbinds-window-sytle 'split-window))
 
 (use-package helm-config
   :demand t
@@ -2174,6 +3024,7 @@ Keys are in kbd format."
   (use-package helm-files)
   (use-package helm-buffers)
   (use-package helm-mode
+
     :diminish helm-mode
     :init
     (helm-mode 1))
@@ -2181,9 +3032,7 @@ Keys are in kbd format."
   (use-package helm-ls-git
     :load-path "site-lisp/helm-ls-git")
 
-  (use-package helm-match-plugin
-    :config
-    (helm-match-plugin-mode 1))
+  (use-package helm-match-plugin)
 
   (helm-autoresize-mode 1)
 
@@ -2193,7 +3042,50 @@ Keys are in kbd format."
   (bind-key "H-v" 'helm-previous-page helm-map)
 
   (when (executable-find "curl")
-    (setq helm-google-suggest-use-curl-p t)))
+    (setq helm-google-suggest-use-curl-p t))
+
+  (when (when-feature-loaded 'hydra)
+      (define-key helm-map (kbd "\\") 'hydra-helm/body)
+      (defhydra hydra-helm (:hint nil :color pink)
+        "
+                                                                          ╭──────┐
+   Navigation   Other  Sources     Mark             Do             Help   │ Helm │
+  ╭───────────────────────────────────────────────────────────────────────┴──────╯
+        ^_k_^         _K_       _p_   [_m_] mark         [_v_] view         [_H_] helm help
+        ^^↑^^         ^↑^       ^↑^   [_t_] toggle all   [_d_] delete       [_s_] source help
+    _h_ ←   → _l_     _c_       ^ ^   [_u_] unmark all   [_f_] follow: %(helm-attr 'follow)
+        ^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
+        ^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
+  --------------------------------------------------------------------------------
+        "
+        ("<tab>" helm-keyboard-quit "back" :exit t)
+        ("<escape>" nil "quit")
+        ("\\" (insert "\\") "\\" :color blue)
+        ("h" helm-beginning-of-buffer)
+        ("j" helm-next-line)
+        ("k" helm-previous-line)
+        ("l" helm-end-of-buffer)
+        ("g" helm-beginning-of-buffer)
+        ("G" helm-end-of-buffer)
+        ("n" helm-next-source)
+        ("p" helm-previous-source)
+        ("K" helm-scroll-other-window-down)
+        ("J" helm-scroll-other-window)
+        ("c" helm-recenter-top-bottom-other-window)
+        ("m" helm-toggle-visible-mark)
+        ("t" helm-toggle-all-marks)
+        ("u" helm-unmark-all)
+        ("H" helm-help)
+        ("s" helm-buffer-help)
+        ("v" helm-execute-persistent-action)
+        ("d" helm-persistent-delete-marked)
+        ("y" helm-yank-selection)
+        ("w" helm-toggle-resplit-and-swap-windows)
+        ("f" helm-follow-mode)))
+
+  (use-package helm-themes
+    :load-path "site-lisp/helm-themes"
+    :commands helm-themes))
 
 (use-package hi-lock
   :bind (("M-o l" . highlight-lines-matching-regexp)
@@ -2511,7 +3403,6 @@ Keys are in kbd format."
                 (bind-key "<return>" 'ido-smart-select-text
                           ido-file-completion-map))))
 
-
 (use-package ielm
   :bind ("C-c :" . ielm)
   :config
@@ -2609,6 +3500,99 @@ Keys are in kbd format."
   :init
   (add-hook 'find-file-hook 'ipa-load-annotations-into-buffer))
 
+(use-package irfc
+  :init
+  (setq-default irfc-directory (concat user-data-directory "RFC")
+                irfc-assoc-mode t)
+  (defun irfc-index ()
+    (interactive)
+    (defvar dkh-rfc-index-file (concat irfc-directory "/rfc0000.txt" ))
+    (defvar dkh-rfc-index-url "https://www.ietf.org/download/rfc-index.txt")
+    (unless (file-exists-p dkh-rfc-index-file)
+      (url-copy-file dkh-rfc-index-url dkh-rfc-index-file))
+    (find-file dkh-rfc-index-file))
+  :config
+  (bind-keys :map irfc-mode-map
+             ("SPC" . scroll-up)
+             ("S-SPC" . scroll-down)
+             ("j" . next-line)
+             ("k" . previous-line)
+             ("h" . backward-char)
+             ("l" . forward-char)
+             ("J" . irfc-scroll-up-one-line)
+             ("K" . irfc-scroll-down-one-line)
+             ("G" . end-of-buffer)
+             ("g" . beginning-of-buffer)
+             ("T" . irfc-render-toggle)
+             ("q" . irfc-quit)
+             ("o" . irfc-follow)
+             ("v" . irfc-visit)
+             ("i" . irfc-index)
+             ("r" . irfc-reference-goto)
+             ("f" . irfc-head-goto)
+             ("F" . irfc-head-number-goto)
+             ("e" . irfc-page-goto)
+             ("n" . irfc-page-next)
+             ("p" . irfc-page-prev)
+             (">" . irfc-page-last)
+             ("<" . irfc-page-first)
+             ("t" . irfc-page-table)
+             ("H" . irfc-head-next)
+             ("L" . irfc-head-prev)
+             ("RET" . irfc-table-jump)
+             ("<tab>" . irfc-rfc-link-next)
+             ("<backtab>" . irfc-rfc-link-prev))
+  (when (when-feature-loaded 'hydra)
+    (bind-keys :map irfc-mode-map
+             ("\\" . hydra-irfc/body))
+    (defhydra hydra-irfc (:hint nil :color blue)
+          "
+                                                                            ╭──────┐
+      Move     Scroll   Page  Heads    Links      TOC           Do          │ iRFC │
+    ╭───────────────────────────────────────────────────────────────────────┴──────╯
+          ^_g_^     _S-SPC_    _<_     ^ ^ ^ ^        ^ ^       [_t_] TOC       [_v_] visit RFC
+          ^^↑^^       ^↑^      ^↑^     ^ ^ ^ ^        ^ ^       [_RET_] node    [_i_] index
+          ^_k_^       _K_      _p_     ^ _L_ ^    _<backtab>_    ^ ^            [_r_] reference
+          ^^↑^^       ^↑^      ^↑^     ^ ^↑^ ^        ^↑^        ^ ^            [_T_] toggle
+      _h_ ←   → _l_   ^ ^      _e_     _f_/_F_        _o_                       [_q_] quit
+          ^^↓^^       ^↓^      ^↓^     ^ ^↓^ ^        ^↓^
+          ^_j_^       _J_      _n_     ^ _H_ ^      _<tab>_
+          ^^↓^^       ^↓^      ^↓^     ^ ^ ^ ^        ^ ^
+          ^_G_^      _SPC_     _>_     ^ ^ ^ ^        ^ ^
+    --------------------------------------------------------------------------------
+          "
+          ("\\" hydra-master/body "back")
+          ("<escape>" nil "quit")
+             ("SPC" scroll-up)
+             ("S-SPC" scroll-down)
+             ("j" next-line)
+             ("k" previous-line)
+             ("h" backward-char)
+             ("l" forward-char)
+             ("J" irfc-scroll-up-one-line)
+             ("K" irfc-scroll-down-one-line)
+             ("G" end-of-buffer)
+             ("g" beginning-of-buffer)
+             ("T" irfc-render-toggle)
+             ("q" irfc-quit)
+             ("o" irfc-follow)
+             ("v" irfc-visit)
+             ("i" irfc-index)
+             ("r" irfc-reference-goto)
+             ("f" irfc-head-goto)
+             ("F" irfc-head-number-goto)
+             ("e" irfc-page-goto)
+             ("n" irfc-page-next)
+             ("p" irfc-page-prev)
+             (">" irfc-page-last)
+             ("<" irfc-page-first)
+             ("t" irfc-page-table)
+             ("H" irfc-head-next)
+             ("L" irfc-head-prev)
+             ("RET" irfc-table-jump)
+             ("<tab>" irfc-rfc-link-next)
+             ("<backtab>" irfc-rfc-link-prev))))
+
 (use-package isearch
   :no-require t
   :bind (("C-M-r" . isearch-backward-other-window)
@@ -2639,6 +3623,9 @@ Keys are in kbd format."
               "site-lisp/json-reformat"
               "site-lisp/json-snatcher")
   :mode "\\.json\\'")
+
+(use-package know-your-http-well
+  :load-path "site-lisp/know-your-http-well/emacs")
 
 (use-package ledger-mode
   :load-path "~/src/ledger/lisp"
@@ -2826,11 +3813,15 @@ Keys are in kbd format."
   (apply #'hook-into-modes 'my-lisp-mode-hook lisp-mode-hooks))
 
 (use-package llvm-mode
-  :mode ("\\.ll\\'" . llvm-mode))
+  :mode "\\.ll\\'")
+
+(use-package lorem-ipsum
+  :load-path "site-lisp/lorem-ipsum"
+  :commands lorem-ipsum-insert-paragraphs)
 
 (use-package lua-mode
   :load-path "site-lisp/lua-mode"
-  :mode ("\\.lua\\'" . lua-mode)
+  :mode "\\.lua\\'"
   :interpreter ("lua" . lua-mode))
 
 (use-package lusty-explorer
@@ -3115,7 +4106,7 @@ Keys are in kbd format."
   (on-screen-global-mode 1))
 
 (use-package dot-org
-  :load-path "override/org-mode"
+  :load-path "override/org-mode/lisp"
   :commands my-org-startup
   :bind (("M-C"   . jump-to-org-agenda)
          ("M-m"   . org-smart-capture)
@@ -3132,10 +4123,25 @@ Keys are in kbd format."
 
   (add-hook 'org-mode-hook  #'yas-minor-mode))
 
+(use-package ox-reveal
+  :load-path "site-lisp/org-reveal")
+
 (use-package pabbrev
   :load-path "site-lisp/pabbrev"
   :commands pabbrev-mode
   :diminish pabbrev-mode)
+
+(use-package spinner
+  :load-path "site-lisp/spinner"
+  :defer 5
+  :config
+  (use-package paradox
+    :load-path "site-lisp/paradox"
+    :commands paradox-list-packages
+    :config
+    (setq paradox-github-token t
+          paradox-automatically-star nil
+          paradox-execute-asynchronously t)))
 
 (use-package paredit
   :commands paredit-mode
@@ -3173,6 +4179,91 @@ Keys are in kbd format."
       :config
       (show-paren-mode 1)))
 
+(use-package pdf-tools
+  :load-path "site-lisp/pdf-tools"
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-page
+                pdf-view-use-imagemagick t)
+  (bind-keys :map pdf-view-mode-map
+      ("\\" . hydra-pdftools/body)
+      ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
+      ("g"  . pdf-view-first-page)
+      ("G"  . pdf-view-last-page)
+      ("l"  . image-forward-hscroll)
+      ("h"  . image-backward-hscroll)
+      ("j"  . pdf-view-next-line-or-next-page)
+      ("k"  . pdf-view-previous-line-or-previous-page)
+      ("e"  . pdf-view-goto-page)
+      ("t"  . pdf-view-goto-label)
+      ("u"  . pdf-view-revert-buffer)
+      ("al" . pdf-annot-list-annotations)
+      ("ad" . pdf-annot-delete)
+      ("aa" . pdf-annot-attachment-dired)
+      ("am" . pdf-annot-add-markup-annotation)
+      ("at" . pdf-annot-add-text-annotation)
+      ("y"  . pdf-view-kill-ring-save)
+      ("i"  . pdf-misc-display-metadata)
+      ("s"  . pdf-occur)
+      ("b"  . pdf-view-set-slice-from-bounding-box)
+      ("r"  . pdf-view-reset-slice))
+
+  (when (when-feature-loaded 'hydra)
+    (bind-keys :map pdf-view-mode-map
+               ("\\" . hydra-pdftools/body))
+    (defhydra hydra-pdftools (:color blue :hint nil)
+        "
+                                                                      ╭───────────┐
+       Move  History   Scale/Fit     Annotations  Search/Link    Do   │ PDF Tools │
+   ╭──────────────────────────────────────────────────────────────────┴───────────╯
+      ^^^_g_^^^       _B_    ^↧^    _+_    ^ ^     [_al_] list    [_s_] search    [_u_] revert buffer
+      ^^^^↑^^^^       ^↑^    _H_    ^↑^  ↦ _W_ ↤   [_am_] markup  [_o_] outline   [_i_] info
+      ^^^_p_^^^       ^ ^    ^↥^    _0_    ^ ^     [_at_] text    [_F_] link      [_d_] dark mode
+      ^^^^↑^^^^       ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   [_ad_] delete  [_f_] search link
+ _h_ ← _e_/_t_ → _l_  _N_  │ _P_ │  _-_    _b_     [_aa_] dired
+      ^^^^↓^^^^       ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   [_y_]  yank
+      ^^^_n_^^^       ^ ^  _r_eset slice box
+      ^^^^↓^^^^
+      ^^^_G_^^^
+   --------------------------------------------------------------------------------
+        "
+        ("\\" hydra-master/body "back")
+        ("<ESC>" nil "quit")
+        ("al" pdf-annot-list-annotations)
+        ("ad" pdf-annot-delete)
+        ("aa" pdf-annot-attachment-dired)
+        ("am" pdf-annot-add-markup-annotation)
+        ("at" pdf-annot-add-text-annotation)
+        ("y"  pdf-view-kill-ring-save)
+        ("+" pdf-view-enlarge :color red)
+        ("-" pdf-view-shrink :color red)
+        ("0" pdf-view-scale-reset)
+        ("H" pdf-view-fit-height-to-window)
+        ("W" pdf-view-fit-width-to-window)
+        ("P" pdf-view-fit-page-to-window)
+        ("n" pdf-view-next-page-command :color red)
+        ("p" pdf-view-previous-page-command :color red)
+        ("d" pdf-view-dark-minor-mode)
+        ("b" pdf-view-set-slice-from-bounding-box)
+        ("r" pdf-view-reset-slice)
+        ("g" pdf-view-first-page)
+        ("G" pdf-view-last-page)
+        ("e" pdf-view-goto-page)
+        ("t" pdf-view-goto-label)
+        ("o" pdf-outline)
+        ("s" pdf-occur)
+        ("i" pdf-misc-display-metadata)
+        ("u" pdf-view-revert-buffer)
+        ("F" pdf-links-action-perfom)
+        ("f" pdf-links-isearch-link)
+        ("B" pdf-history-backward :color red)
+        ("N" pdf-history-forward :color red)
+        ("l" image-forward-hscroll :color red)
+        ("h" image-backward-hscroll :color red)))
+
+   (use-package org-pdfview
+     :load-path "site-lisp/org-pdfview"))
+
 (use-package persistent-scratch
   :if (and window-system (not running-alternate-emacs)
            (not noninteractive)))
@@ -3184,38 +4275,54 @@ Keys are in kbd format."
   (use-package persp-projectile)
   (persp-mode))
 
-(use-package php-mode
-  :commands php-mode
-  :mode (
-         ("\\.inc$" . php-mode)
-         ("\\.\\(module\\|test\\|install\\|theme\\|\\profile\\)$" . php-mode))
-  :interpreter "php"
+(use-package web-mode
+  :mode "\\.phtml\\|\\.tpl\\.php\\|\\.blade\\.php\\|\\.jsp\\|\\.as[cp]x\\|\\.erb\\|\\.html?\\|/\\(views\\|html\\|theme\\|templates\\)"
   :init
   (progn
+    (add-hook 'web-mode-before-auto-complete-hooks
+              '(lambda ()
+                 (let ((web-mode-cur-language
+                        (web-mode-language-at-pos)))
+                   (if (string= web-mode-cur-language "php")
+                       (yas-activate-extra-mode 'php-mode)
+                     (yas-deactivate-extra-mode 'php-mode))
+                   (if (string= web-mode-cur-language "css")
+                       (setq emmet-use-css-transform t)
+                     (setq emmet-use-css-transform nil)))))
+    (defun indent-and-newline ()
+      "Indent and newline"
+      (interactive)
+      (progn (web-mode-indent-line)
+             (newline-and-indent)))
+    (defun web-mode-hook ()
+      "Hooks for Web mode."
+      ;;indent
+      (setq web-mode-attr-indent-offset 2)
+      (setq web-mode-markup-indent-offset 2)
+      (setq web-mode-css-indent-offset 2)
+      (setq web-mode-code-indent-offset 2)
 
+      (setq web-mode-enable-auto-pairing t)
+      (setq web-mode-enable-css-colorization t)
+
+      (setq web-mode-enable-comment-keywords t)
+      (setq web-mode-enable-current-column-highlight t)
+      (setq web-mode-enable-current-element-highlight t)
+      (setq web-mode-enable-element-tag-fontification t)
+
+      (local-set-key (kbd "RET") 'indent-and-newline))
+    (add-hook 'web-mode-hook  'web-mode-hook)))
+
+(use-package php-mode
+  :commands php-mode
+  :mode "\\.inc$\\|\\.\\(module\\|test\\|install\\|theme\\|\\profile\\)$"
+  :interpreter "php"
+  :init
     (use-package conf-mode
       :mode "\\.info")
-
-    (use-package emmet-mode
-      :commands emmet-mode
-      :init
-      (progn
-        (add-hook 'nxml-mode-hook 'emmet-mode)
-        (add-hook 'html-mode-hook 'emmet-mode)
-        (add-hook 'html-mode-hook
-                  #'(lambda ()
-                      (bind-key "<return>" 'newline-and-indent html-mode-map)))
-        (add-hook 'web-mode-hook 'emmet-mode)
-        )
-
-      :config
-      (progn
-        (use-package php-auto-yasnippets
-          :load-path "site-lisp/php-auto-yasnippets")
-        (defvar emmet-mode-keymap (make-sparse-keymap))
-        (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap))))
+    (use-package php-auto-yasnippets
+      :load-path "site-lisp/php-auto-yasnippets")
   :config
-  (progn
     (defun my-php-return ()
       "Advanced C-m for PHP doc multiline comments.
 Inserts `*' at the beggining of the new line if
@@ -3379,11 +4486,63 @@ unless return was pressed outside the comment"
             (goto-char (region-beginning))
             (insert "var_dump("))
         (insert "var_dump();")
-        (backward-char 3)))))
+        (backward-char 3))))
 
 (use-package popup-ruler
   :bind (("C-. r" . popup-ruler)
          ("C-. R" . popup-ruler-vertical)))
+
+(use-package popwin
+  :load-path "lib/popwin-el"
+  :config
+  (popwin-mode 1)
+  (setq popwin:popup-window-height 35
+        popwin:special-display-config
+        '(("*Miniedit Help*" :noselect t)
+          (help-mode :noselect nil)
+          (completion-list-mode :noselect t)
+          (compilation-mode :noselect nil)
+          (grep-mode :noselect t)
+          (occur-mode :noselect t)
+          ("*Pp Macroexpand Output*" :noselect t)
+          ("*Shell Command Output*")
+          ("*Async Shell Command*")
+          ("*vc-diff*")
+          ("*vc-change-log*")
+          (" *undo-tree*" :width 60 :position right)
+          ("^\\*anything.*\\*$" :regexp t)
+          ("*slime-apropos*")
+          ("*slime-macroexpansion*")
+          ("*slime-description*")
+          ("*slime-compilation*" :noselect t)
+          ("*slime-xref*")
+          ("*Flycheck errors*")
+          ("*Warnings*")
+          ("*Process List*")
+          ("*Smex: Unbound Commands*")
+          ("*Paradox Report*" :noselect nil)
+          ("*Diff*" :noselect nil)
+          ("*Messages*" :noselect nil)
+          ("*Google Maps*" :noselect nil)
+          ("*ag search*" :noselect nil)
+          ("*PDF-Occur*" :noselect nil)
+          ("*PDF-Metadata*" :noselect nil)
+          ("^\\*Outline .*\\.pdf\\*$" :regexp t :noselect nil)
+          ("*MULTI-TERM-DEDICATED*" :noselect nil :stick t)
+          (sldb-mode :stick t)
+          (slime-repl-mode)
+          (slime-connection-list-mode)))
+
+  ;; (add-hook 'popwin:after-popup-hook 'turn-off-evil-mode)
+  (bind-keys :map popwin:window-map
+             ((kbd "<escape>") . popwin:close-popup-window)))
+
+(use-package powerline
+  :load-path "site-lisp/powerline/"
+  :disabled t
+  :config
+  (powerline-default-theme)
+  (setq powerline-default-separator 'utf-8))
 
 (use-package pp-c-l
   :commands pretty-control-l-mode
@@ -3525,13 +4684,13 @@ unless return was pressed outside the comment"
 
 (use-package puppet-mode
   :disabled t
-  :mode ("\\.pp\\'" . puppet-mode)
+  :mode "\\.pp\\'"
   :config
   (use-package puppet-ext))
 
 (use-package python-mode
   :load-path "site-lisp/python-mode"
-  :mode ("\\.py\\'" . python-mode)
+  :mode "\\.py\\'"
   :interpreter ("python" . python-mode)
   :config
   (defvar python-mode-initialized nil)
@@ -3564,23 +4723,20 @@ unless return was pressed outside the comment"
   (add-hook 'python-mode-hook 'my-python-mode-hook))
 
 (use-package quickrun
-  :disabled t
   :load-path "site-lisp/emacs-quickrun"
-  :bind ("C-c C-r" . quickrun))
+  :defer t)
 
 (use-package rainbow-delimiters
   :load-path "site-lisp/rainbow-delimiters"
-  :commands (rainbow-delimiters-mode))
+  :commands (rainbow-delimiters-mode)
+  :config
+    (add-hook 'prog-mode-hook 'rainbow-mode))
 
 (use-package rainbow-mode
   :diminish ((rainbow-mode . "rb"))
   :commands rainbow-mode
-  :init
-  (progn
-    (hook-into-modes #'rainbow-mode
-                     'css-mode-hook
-                     'scss-mode-hook
-                     'stylus-mode-hook)))
+  :config
+    (add-hook 'prog-mode-hook 'rainbow-mode))
 
 (use-package recentf
   :defer 10
@@ -3609,9 +4765,18 @@ unless return was pressed outside the comment"
              insert-patterned-3
              insert-patterned-4))
 
+(use-package restclient
+  :load-path "site-lisp/restclient")
+
+(use-package reveal-in-finder
+  :load-path "site-lisp/reveal-in-finder"
+  :if (eq system-type 'darwin)
+  :bind
+  ("C-H-M-S-o" . reveal-in-finder))
+
 (use-package ruby-mode
   :load-path "site-lisp/ruby-mode"
-  :mode ("\\.rb\\'" . ruby-mode)
+  :mode "\\.rb\\'"
   :interpreter ("ruby" . ruby-mode)
   :functions inf-ruby-keys
   :config
@@ -3652,55 +4817,6 @@ unless return was pressed outside the comment"
     (setq save-place-file "~/Documents/places")))
   (add-hook 'ruby-mode-hook 'my-ruby-mode-hook))
 
-(use-package sass-mode
-  :disabled t
-  :mode ("\\.scss\\|\\.sass$" . sass-mode)
-  :init
-  (
-   (use-package haml-mode)
-   (add-hook 'sass-mode-hook
-             (lambda ()
-               (defun compass-compile-hook ()
-                 (if (and (buffer-file-name)
-                          (file-name-extension (buffer-file-name)))
-                     (let* ((filename (buffer-file-name))
-                            (suffix (downcase (file-name-extension filename))))
-                       (if (and filename (string= suffix "scss"))
-                           (compass-compile-project)))))
-               (add-hook 'after-save-hook 'compass-compile-hook)))
-
-   (defun compass-compile-project ()
-     "Search the file-tree up from the current file looking for config.rb
-and run compass from that directory"
-     (interactive)
-     (let* ((sass-file (buffer-file-name (current-buffer)))
-            (local-dir (file-name-directory sass-file)))
-       (cl-flet ((contains-config-rb (dir-name)
-                                  (find "config.rb" (directory-files dir-name)
-                                        :test 'equal))
-              (parent-dir (dir)
-                          (expand-file-name
-                           (file-name-as-directory (concat
-                                                    (file-name-as-directory dir)
-                                                    ".."))))
-              (get-root (d)
-                        (cond ((contains-config-rb d) d)
-                              ((equal (parent-dir d) d) nil)
-                              ((get-root (parent-dir d)))))
-
-              (run-compass (dir)
-                           (let ((default-directory dir))
-                             (start-file-process "compass"
-                                                 "*compass-process*"
-                                                 "compass"
-                                                 "compile"))))
-         (let (( dir (get-root local-dir)))
-           (if dir
-               (run-compass dir)
-             (princ (format "no config from %s" local-dir)))))))))
-
-(use-package scss-mode
-  :mode ("\\.scss\\'" . scss-mode))
 
 (use-package selectkey
   :disabled t
@@ -3711,6 +4827,13 @@ and run compass from that directory"
   (selectkey-define-select-key shell "s" "\\*shell" (shell))
   (selectkey-define-select-key multi-term "t" "\\*terminal" (multi-term-next))
   (selectkey-define-select-key eshell "z" "\\*eshell" (eshell)))
+
+;; (use-package smex
+;;   :load-path "site-lisp/smex"
+;;   :init
+;;   (bind-key "<menu>" 'smex)
+;;   :config
+;;   (setq smex-save-file (concat user-data-directory "/smex-items")))
 
 (use-package session
   :if (not noninteractive)
@@ -3830,12 +4953,12 @@ and run compass from that directory"
     (setq slime-lisp-implementations
           '((sbcl
              ("sbcl" "--core"
-              "/Users/johnw/Library/Lisp/sbcl.core-with-slime-X86-64")
+              "/Users/dhaley/Library/Lisp/sbcl.core-with-slime-X86-64")
              :init
              (lambda (port-file _)
                (format "(swank:start-server %S)\n" port-file)))
-            (ecl ("ecl" "-load" "/Users/johnw/Library/Lisp/init.lisp"))
-            (clisp ("clisp" "-i" "/Users/johnw/Library/Lisp/lwinit.lisp"))))
+            (ecl ("ecl" "-load" "/Users/dhk/Library/Lisp/init.lisp"))
+            (clisp ("clisp" "-i" "/Users/dhk/Library/Lisp/lwinit.lisp"))))
 
     (setq slime-default-lisp 'sbcl)
     (setq slime-complete-symbol*-fancy t)
@@ -3959,12 +5082,28 @@ and run compass from that directory"
         (sr-history-push default-directory)
         (sr-beginning-of-buffer)))))
 
+(use-package swiper
+  :load-path "site-lisp/swiper"
+  :diminish ivy-mode
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (bind-keys :map swiper-map
+             ("<escape>" . minibuffer-keyboard-quit))
+  (bind-keys :map ivy-minibuffer-map
+             ("<escape>" . minibuffer-keyboard-quit)
+             ("C-k"      . delete-minibuffer-contents))
+  (defun dkh-swiper ()
+     (interactive)
+     (swiper)
+     (add-to-list 'regexp-search-ring (ivy--regex ivy-text)))
+  (ivy-mode t))
+
 (use-package tablegen-mode
-  :mode ("\\.td\\'" . tablegen-mode))
+  :mode "\\.td\\'")
 
 (use-package texinfo
   :defines texinfo-section-list
-  :mode ("\\.texi\\'" . texinfo-mode)
+  :mode "\\.texi\\'"
   :config
   (defun my-texinfo-mode-hook ()
     (dolist (mapping '((?b . "emph")
@@ -4011,9 +5150,31 @@ and run compass from that directory"
   :bind ("C-. N" . tiny-expand))
 
 (use-package tramp-sh
-  :load-path "override/tramp"
   :defer t
-  )
+  :config
+  ;; bug in org-mode 8.2.10
+  ;; http://www.howardism.org/Technical/Emacs/literate-devops.html
+  (defun org-babel-temp-file (prefix &optional suffix)
+    "Create a temporary file in the `org-babel-temporary-directory'.
+Passes PREFIX and SUFFIX directly to `make-temp-file' with the
+value of `temporary-file-directory' temporarily set to the value
+of `org-babel-temporary-directory'."
+    (if (file-remote-p default-directory)
+        (let ((prefix
+               ;; We cannot use `temporary-file-directory' as local part
+               ;; on the remote host, because it might be another OS
+               ;; there.  So we assume "/tmp", which ought to exist on
+               ;; relevant architectures.
+               (concat (file-remote-p default-directory)
+                       ;; REPLACE temporary-file-directory with /tmp:
+                       (expand-file-name prefix "/tmp/"))))
+          (make-temp-file prefix nil suffix))
+      (let ((temporary-file-directory
+             (or (and (boundp 'org-babel-temporary-directory)
+                      (file-exists-p org-babel-temporary-directory)
+                      org-babel-temporary-directory)
+                 temporary-file-directory)))
+        (make-temp-file prefix nil suffix)))))
 
 (use-package unbound)
 
@@ -4028,7 +5189,15 @@ and run compass from that directory"
 
   :config
   (setq vkill-show-all-processes t))
+
+(use-package volatile-highlights
+  :load-path "site-lisp/volatile-highlights"
+  :diminish (volatile-highlights-mode . "")
+  :config
+  (volatile-highlights-mode t))
+
 (use-package wand
+    :load-path "site-lisp/wand"
   :bind (("C-. RET" . wand:execute)
          ("C-. l" . wand:execute-current-line)
          ("C-. SPC" . toolbox:execute-and-replace))
@@ -4121,51 +5290,6 @@ and run compass from that directory"
         whitespace-silent t
         whitespace-style '(face trailing lines space-before-tab empty)))
 
-(use-package web-mode
-  :mode (("\\.phtml\\'" . web-mode)
-         ("\\.tpl\\.php\\'" . web-mode)
-         ("\\.blade\\.php\\'" . web-mode)
-         ("\\.jsp\\'" . web-mode)
-         ("\\.as[cp]x\\'" . web-mode)
-         ("\\.erb\\'" . web-mode)
-         ("\\.html?\\'" . web-mode)
-         ("/\\(views\\|html\\|theme\\|templates\\)/.*\\.php\\'" . web-mode))
-  :init
-  (progn
-    (add-hook 'web-mode-before-auto-complete-hooks
-              '(lambda ()
-                 (let ((web-mode-cur-language
-                        (web-mode-language-at-pos)))
-                   (if (string= web-mode-cur-language "php")
-                       (yas-activate-extra-mode 'php-mode)
-                     (yas-deactivate-extra-mode 'php-mode))
-                   (if (string= web-mode-cur-language "css")
-                       (setq emmet-use-css-transform t)
-                     (setq emmet-use-css-transform nil)))))
-    (defun indent-and-newline ()
-      "Indent and newline"
-      (interactive)
-      (progn (web-mode-indent-line)
-             (newline-and-indent)))
-    (defun web-mode-hook ()
-      "Hooks for Web mode."
-      ;;indent
-      (setq web-mode-attr-indent-offset 2)
-      (setq web-mode-markup-indent-offset 2)
-      (setq web-mode-css-indent-offset 2)
-      (setq web-mode-code-indent-offset 2)
-
-      (setq web-mode-enable-auto-pairing t)
-      (setq web-mode-enable-css-colorization t)
-
-      (setq web-mode-enable-comment-keywords t)
-      (setq web-mode-enable-current-column-highlight t)
-      (setq web-mode-enable-current-element-highlight t)
-      (setq web-mode-enable-element-tag-fontification t)
-
-      (local-set-key (kbd "RET") 'indent-and-newline))
-    (add-hook 'web-mode-hook  'web-mode-hook)))
-
 (use-package winner
   :if (not noninteractive)
   :defer 5
@@ -4226,7 +5350,7 @@ and run compass from that directory"
 
 (use-package yaml-mode
   :load-path "site-lisp/yaml-mode"
-  :mode ("\\.ya?ml\\'" . yaml-mode))
+  :mode "\\.ya?ml\\'")
 
 (use-package yasnippet
   :load-path "site-lisp/yasnippet"
@@ -4273,6 +5397,51 @@ and run compass from that directory"
 (use-package zoom-window
   :bind ("H-z" . zoom-window-zoom))
 
+(use-package ztree-diff
+  :load-path "site-lisp/ztree"
+  :config
+  (set-face-attribute 'ztreep-diff-model-add-face  nil :foreground "deep sky blue")
+  (bind-keys :map ztreediff-mode-map
+                 ("p" . previous-line)
+                 ("k" . previous-line)
+                 ("j" . next-line)
+                 ("n" . next-line))
+
+  (when (when-feature-loaded 'hydra)
+      (bind-keys :map ztreediff-mode-map
+                 ("\\" . hydra-ztree/body))
+      (defhydra hydra-ztree (:color blue :hint nil)
+          "
+                                                                      ╭────────────┐
+       Move      File                 Do                              │ Ztree diff │
+    ╭─────────────────────────────────────────────────────────────────┴────────────╯
+      _k_/_p_   [_C_] copy                  [_h_] toggle equal files
+      ^ ^↑^ ^   [_D_] delete                [_x_] toggle subtree
+      ^_TAB_^   [_v_] view                  [_r_] partial rescan
+      ^ ^↓^ ^   [_d_] simple diff           [_R_] full rescan
+      _j_/_n_   [_RET_] diff/expand         [_g_] refresh
+      ^ ^ ^ ^   [_SPC_] simple diff/expand
+    --------------------------------------------------------------------------------
+          "
+         ("\\" hydra-master/body "back")
+         ("<ESC>" nil "quit")
+         ("p" previous-line)
+         ("k" previous-line)
+         ("j" next-line)
+         ("n" next-line)
+         ("C" ztree-diff-copy)
+         ("h" ztree-diff-toggle-show-equal-files)
+         ("D" ztree-diff-delete-file)
+         ("v" ztree-diff-view-file)
+         ("d" ztree-diff-simple-diff-files)
+         ("r" ztree-diff-partial-rescan)
+         ("R" ztree-diff-full-rescan)
+         ("RET" ztree-perform-action)
+         ("SPC" ztree-perform-soft-action)
+         ("TAB" ztree-jump-side)
+         ("g" ztree-refresh-buffer)
+         ("x" ztree-toggle-expand-subtree))))
+
 ;;; Post initialization
 
 (when window-system
@@ -4316,20 +5485,8 @@ and run compass from that directory"
          (?z (file . "~/.zshrc"))))
   (set-register (car r) (cadr r)))
 
-(global-set-key (kbd "M-?") 'flash-active-buffer)
- 
-(make-face 'flash-active-buffer-face)
-(set-face-attribute 'flash-active-buffer-face nil
-                    :background "red"
-                    :foreground "black")
-(defun flash-active-buffer ()
-  (interactive)
-  (run-at-time "100 millisec" nil
-               (lambda (remap-cookie)
-                 (face-remap-remove-relative remap-cookie))
-               (face-remap-add-relative 'default 'flash-active-buffer-face)))
-
-
-
+;; unused bindings
+;; (bind-key "C-`" 'rotate-windows)
+;;   :bind ("C-c C-r" . quickrun))
 
 ;;; init.el ends here

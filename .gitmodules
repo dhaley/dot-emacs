@@ -487,9 +487,6 @@
 [submodule "site-lisp/helm-recentd"]
         path = site-lisp/helm-recentd
         url = git://github.com/ShingoFukuyama/helm-recentd.git
-[submodule "override/org-mode"]
-        path = override/org-mode
-        url = git@github.com:dhaley/org-mode.git
 [submodule "site-lisp/helm-git-grep"]
         path = site-lisp/helm-git-grep
         url = git://github.com/yasuyk/helm-git-grep.git
@@ -508,9 +505,6 @@
 [submodule "site-lisp/php-boris-minor-mode"]
         path = site-lisp/php-boris-minor-mode
         url = git://github.com/steckerhalter/php-boris-minor-mode.git
-[submodule "override/tramp"]
-        path = override/tramp
-        url = git://git.savannah.gnu.org/tramp.git
 [submodule "lisp/use-package"]
 	path = lisp/use-package
 	url = git://github.com/jwiegley/use-package.git
@@ -937,3 +931,60 @@
 [submodule "site-lisp/theme-changer"]
 	path = site-lisp/theme-changer
 	url = git@github.com:hadronzoo/theme-changer.git
+[submodule "site-lisp/e-other-window"]
+	path = site-lisp/e-other-window
+	url = git@github.com:emacsmirror/e-other-window.git
+[submodule "site-lisp/emacs-rotate"]
+	path = site-lisp/emacs-rotate
+	url = git@github.com:daic-h/emacs-rotate.git
+[submodule "override/org-mode"]
+	path = override/org-mode
+	url = git://orgmode.org/org-mode.git
+[submodule "site-lisp/avy"]
+	path = site-lisp/avy
+	url = git@github.com:abo-abo/avy.git
+[submodule "site-lisp/key-chord"]
+	path = site-lisp/key-chord
+	url = git@github.com:emacsmirror/key-chord.git
+[submodule "site-lisp/volatile-highlights"]
+	path = site-lisp/volatile-highlights
+	url = git@github.com:k-talo/volatile-highlights.el.git
+[submodule "site-lisp/reveal-in-finder"]
+	path = site-lisp/reveal-in-finder
+	url = git@github.com:kaz-yos/elisp.git
+[submodule "site-lisp/writeroom-mode"]
+	path = site-lisp/writeroom-mode
+	url = git@github.com:joostkremers/writeroom-mode.git
+[submodule "site-lisp/visual-fill-column"]
+	path = site-lisp/visual-fill-column
+	url = git@github.com:joostkremers/visual-fill-column.git
+[submodule "site-lisp/know-your-http-well"]
+	path = site-lisp/know-your-http-well
+	url = git@github.com:for-GET/know-your-http-well.git
+[submodule "site-lisp/spinner"]
+	path = site-lisp/spinner
+	url = git@github.com:Malabarba/spinner.el.git
+[submodule "site-lisp/helm-themes"]
+	path = site-lisp/helm-themes
+	url = git@github.com:syohex/emacs-helm-themes.git
+[submodule "site-lisp/smex"]
+	path = site-lisp/smex
+	url = git@github.com:nonsequitur/smex.git
+[submodule "site-lisp/lorem-ipsum"]
+	path = site-lisp/lorem-ipsum
+	url = git@github.com:jschaf/emacs-lorem-ipsum.git
+[submodule "site-lisp/google-maps"]
+	path = site-lisp/google-maps
+	url = git@github.com:jd/google-maps.el.git
+[submodule "site-lisp/pdf-tools"]
+	path = site-lisp/pdf-tools
+	url = git@github.com:politza/pdf-tools.git
+[submodule "site-lisp/org-pdfview"]
+	path = site-lisp/org-pdfview
+	url = git@github.com:markus1189/org-pdfview.git
+[submodule "site-lisp/helm-emmet"]
+	path = site-lisp/helm-emmet
+	url = git@github.com:yasuyk/helm-emmet.git
+[submodule "site-lisp/swiper"]
+	path = site-lisp/swiper
+	url = git@github.com:abo-abo/swiper.git

@@ -174,6 +174,7 @@
  '(ac-trigger-key "<tab>")
  '(ac-use-fuzzy nil)
  '(ace-isearch-submode (quote ace-jump-char-mode))
+ '(ace-window-display-mode t)
  '(ad-redefinition-action (quote accept))
  '(after-save-hook
    (quote
@@ -194,6 +195,7 @@
  '(auto-save-interval 64)
  '(auto-save-list-file-prefix "~/.emacs.d/data/auto-save-list/.saves-")
  '(auto-save-timeout 2)
+ '(aw-background nil)
  '(aw-keys (quote (97 111 101 117 105 100 104 116 110)))
  '(backup-directory-alist
    (quote
@@ -509,6 +511,8 @@
  '(gc-cons-threshold 3500000)
  '(gdb-find-source-frame t)
  '(gdb-same-frame nil)
+ '(ggtags-oversize-limit 1048576)
+ '(ggtags-use-sqlite3 t)
  '(git-commit-mode-hook
    (quote
     (turn-on-auto-fill flyspell-mode git-commit-save-message)))
@@ -521,6 +525,7 @@
  '(helm-adaptive-history-file "~/.emacs.d/data/helm-adaptive-history")
  '(helm-buffers-fuzzy-matching t)
  '(helm-delete-minibuffer-contents-from-point t)
+ '(helm-descbinds-window-style (quote split-window))
  '(helm-ff-file-name-history-use-recentf t)
  '(helm-ff-search-library-in-sexp t)
  '(helm-ff-skip-boring-files t)
@@ -722,6 +727,7 @@
  '(projectile-drupal-site-base-url-test "http://www-test.colorado.edu")
  '(projectile-drupal-site-name-function (quote dkh-get-site-name))
  '(projectile-enable-caching t)
+ '(projectile-globally-ignored-files (quote ("TAGS" "GPATH" "GRTAGS" "GTAGS" "ID")))
  '(projectile-known-projects-file "~/.emacs.d/data/projectile-bookmarks.eld")
  '(projectile-project-root-files-bottom-up
    (quote
@@ -929,4 +935,5 @@
  '(flyparse-warning-face ((t (:background "DeepSkyBlue"))))
  '(ghc-face-error ((t (:inherit default))))
  '(ghc-face-warn ((t (:inherit default))))
- '(idris-loaded-region-face ((t (:background "#eaf8ff")))))
+ '(idris-loaded-region-face ((t (:background "#eaf8ff"))))
+ '(persp-selected-face ((t (:foreground "purple")))))

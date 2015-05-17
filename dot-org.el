@@ -857,7 +857,8 @@ end tell" (match-string 1))))
             (require 'yasnippet)
             (set (make-local-variable 'yas/trigger-key) [tab])
             (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-            (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)))
+            (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)
+            (define-key org-mode-map (kbd "C-c <return>") 'org-insert-heading-respect-content)))
 
 (remove-hook 'kill-emacs-hook 'org-babel-remove-temporary-directory)
 
@@ -1400,22 +1401,13 @@ When not restricted, skip project and sub-project tasks, habits, and project rel
       (org-display-inline-images)
     (error nil)))
 
-(org-babel-do-load-languages
- (quote org-babel-load-languages)
- (quote ((emacs-lisp . t)
-         (dot . t)
-         (ditaa . t)
-         (R . t)
-         (python . t)
-         (ruby . t)
-         (gnuplot . t)
-         (clojure . t)
-         (sh . t)
-         (ledger . t)
-         (org . t)
-         (plantuml . t)
-         (latex . t))))
+(setq org-babel-default-header-args:screen
+      '((:results  . "silent")
+        (:session  . "default")
+        (:cmd      . "bash")
+        (:terminal . "/opt/X11/bin/xterm")))
 
+(setq org-babel-screen-location "/usr/local/bin/screen")
 
 ; I'm lazy and don't want to remember the name of the project to publish when I modify
 ; a file that is part of a project.  So this function saves the file, and publishes
@@ -1821,7 +1813,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;;(add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'orgtbl-mode 'append)
 (add-hook 'message-mode-hook
-          '(lambda () (setq fill-column 72))
+          '(lambda () (setqT fill-column 72))
           'append)
 (add-hook 'message-mode-hook
           '(lambda () (local-set-key (kbd "C-c M-o") 'org-mime-htmlize))
