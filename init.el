@@ -1023,7 +1023,7 @@ Keys are in kbd format."
   (require 'hydra-examples)
   :init
   (bind-key* "\\" 'hydra-master/body)
-  (bind-key* "C-x o" 'hydra-window)
+  (bind-key* "C-x o" 'hydra-window/body)
 
   (bind-key "C-z" 'delete-other-windows)
 
