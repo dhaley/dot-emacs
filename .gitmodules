@@ -988,3 +988,24 @@
 [submodule "site-lisp/swiper"]
 	path = site-lisp/swiper
 	url = git@github.com:abo-abo/swiper.git
+[submodule "site-lisp/ob-php"]
+	path = site-lisp/ob-php
+	url = git@github.com:steckerhalter/ob-php.git
+[submodule "site-lisp/osx-trash"]
+	path = site-lisp/osx-trash
+	url = git@github.com:lunaryorn/osx-trash.el.git
+[submodule "site-lisp/emacs-php-align"]
+	path = site-lisp/emacs-php-align
+	url = git@github.com:tetsujin/emacs-php-align.git
+[submodule "site-lisp/php-eldoc"]
+	path = site-lisp/php-eldoc
+	url = git@github.com:sabof/php-eldoc.git
+[submodule "site-lisp/helm-bm"]
+	path = site-lisp/helm-bm
+	url = git@github.com:yasuyk/helm-bm.git
+[submodule "site-lisp/helm-company"]
+	path = site-lisp/helm-company
+	url = git@github.com:yasuyk/helm-company.git
+[submodule "site-lisp/helm-flycheck"]
+	path = site-lisp/helm-flycheck
+	url = git@github.com:yasuyk/helm-flycheck.git
