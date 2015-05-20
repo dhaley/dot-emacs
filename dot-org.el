@@ -21,6 +21,11 @@
 (require 'org-velocity)
 (require 'ob-emacs-lisp)
 (require 'ob-sh)
+(use-package ob-php
+  :load-path "site-lisp/ob-php"
+  :init
+  (add-to-list 'org-babel-load-languages '(php . t))
+  (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
 (require 'ox-html)
 (require 'helm-org)
 (require 'ob-ditaa)

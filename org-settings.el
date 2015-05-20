@@ -139,7 +139,8 @@
  '(org-archive-location "%s_archive::* Archived Tasks")
  '(org-babel-load-languages
    (quote
-    ((emacs-lisp . t)
+    ((php . t)
+     (emacs-lisp . t)
      (css . t)
      (js . t)
      (makefile . t)

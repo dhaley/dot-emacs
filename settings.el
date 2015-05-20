@@ -713,7 +713,6 @@
  '(php-completion-file "~/Messages/php/php-completion-file")
  '(php-executable "/Applications/MAMP/bin/php/php5.5.18/bin/php")
  '(php-extras-eldoc-functions-file "~/Messages/php/php-extras-eldoc-functions")
- '(php-manual-path "~/Documents/php/php-chunked-xhtml")
  '(php-mode-coding-style (quote drupal))
  '(php-template-compatibility nil)
  '(pp^L-^L-string
