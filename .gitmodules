@@ -1009,3 +1009,6 @@
 [submodule "site-lisp/helm-flycheck"]
 	path = site-lisp/helm-flycheck
 	url = git@github.com:yasuyk/helm-flycheck.git
+[submodule "site-lisp/drupal-spell"]
+	path = site-lisp/drupal-spell
+	url = git@github.com:arnested/drupal-spell.git
