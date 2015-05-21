@@ -484,8 +484,8 @@
  '(find-ls-subdir-switches "-alh")
  '(flx-ido-use-faces nil)
  '(flycheck-display-errors-delay 0.0)
- '(flycheck-standard-error-navigation nil)
- '(flymake-compilation-prevents-syntax-check nil)
+ '(flycheck-phpmd-rulesets (quote ("drupal")))
+ '(flycheck-standard-error-navigation t)
  '(flyspell-abbrev-p nil)
  '(flyspell-incorrect-hook (quote (flyspell-maybe-correct-transposition)))
  '(flyspell-use-meta-tab nil)
@@ -532,6 +532,9 @@
  '(helm-for-files-preferred-list
    (quote
     (helm-source-files-in-current-dir helm-source-recentf helm-source-bookmarks helm-source-file-cache helm-source-buffers-list helm-source-locate helm-source-ls-git)))
+ '(helm-gtags-auto-update t)
+ '(helm-gtags-ignore-case t)
+ '(helm-gtags-path-style (quote relative))
  '(helm-ls-git-show-abs-or-relative (quote relative))
  '(helm-quick-update t)
  '(helm-recentf-fuzzy-match t)
