@@ -115,7 +115,7 @@
 (use-package pos-tip        :defer t :load-path "lib/pos-tip")
 (use-package s              :defer t :load-path "lib/s-el")
 (use-package working        :defer t)
-(use-package xml-rpc        :defer t)
+(use-package xml-rpc        :defer t :load-path "lib/xml-rpc")
 
 ;;; Keybindings
 
@@ -1659,23 +1659,23 @@ Keys are in kbd format."
     "
 Move Point^^^^   Move Splitter   ^Ace^                       ^Split^
 --------------------------------------------------------------------------------
-_t_, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
-_h_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
-_s_, _<down>_                    _C-z_: ace-window-delete    ^ ^
-_t_, _<right>_                   ^   ^                       ^ ^
+_._, _<up>_      Shift + Move    _C-a_: ace-window           _2_: split-window-below
+_a_, _<left>_                    _C-s_: ace-window-swap      _3_: split-window-right
+_j_, _<down>_                    _C-z_: ace-window-delete    ^ ^
+_i_, _<right>_                   ^   ^                       ^ ^
 You can use arrow-keys or WASD.
 "
     ("f" flash-active-buffer nil)
     ("2" my/vsplit-last-buffer nil)
     ("3" my/hsplit-last-buffer nil)
-    ("h" windmove-left nil)
-    ("s" windmove-down nil)
-    ("n" windmove-up nil)
-    ("t" windmove-right nil)
-    ("H" hydra-move-splitter-left nil)
-    ("S" hydra-move-splitter-down nil)
-    ("N" hydra-move-splitter-up nil)
-    ("T" hydra-move-splitter-right nil)
+    ("a" windmove-left nil)
+    ("j" windmove-down nil)
+    ("." windmove-up nil)
+    ("i" windmove-right nil)
+    ("A" hydra-move-splitter-left nil)
+    ("J" hydra-move-splitter-down nil)
+    (">" hydra-move-splitter-up nil)
+    ("I" hydra-move-splitter-right nil)
     ("<left>" windmove-left nil)
     ("<down>" windmove-down nil)
     ("<up>" windmove-up nil)
@@ -1684,16 +1684,17 @@ You can use arrow-keys or WASD.
     ("<S-down>" hydra-move-splitter-down nil)
     ("<S-up>" hydra-move-splitter-up nil)
     ("<S-right>" nil hydra-move-splitter-right)
-    ("M-h"  buf-move-left)
-    ("M-s"  buf-move-down)
-    ("M-n"  buf-move-up)
-    ("M-t"  buf-move-right)
+    ("M-a"  buf-move-left)
+    ("M-j"  buf-move-down)
+    ("M-."  buf-move-up)
+    ("M-i"  buf-move-right)
     ("C-w"  window-configuration-to-register)
     ("C-a"  ace-window nil)
     ("u" hydra--universal-argument nil)
     ("C-s" (lambda () (interactive) (ace-window 4)) nil)
     ("C-z" (lambda () (interactive) (ace-window 16)) nil)
     ("h" hl-line-mode nil)
+    ("e" eyebrowse-mode nil)
     ("c" crosshairs-mode nil)
     ("g" golden-ratio-mode nil)
     ("q" nil "quit")))
@@ -2185,7 +2186,10 @@ You can use arrow-keys or WASD.
 
   (use-package helm-company
     :load-path "site-lisp/helm-company"
-    :disabled t))
+    :disabled t
+    :init
+    (define-key company-mode-map (kbd "C-:") 'helm-company)
+    (define-key company-active-map (kbd "C-:") 'helm-company)))
 
 (use-package compile
   :bind (("C-c c" . compile)
@@ -2378,15 +2382,6 @@ You can use arrow-keys or WASD.
   :disabled t
   :load-path "site-lisp/doxymacs/lisp/")
 
-(use-package drupal-mode
-  :commands drupal-mode-bootstrap
-  :config
-  (add-hook 'drupal-mode-hook
-            '(lambda ()
-               (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-               (yas-activate-extra-mode 'drupal-mode)
-               (when (apply 'derived-mode-p drupal-php-modes)
-                 (flycheck-mode t)))))
 (use-package eclimd
   :load-path "site-lisp/emacs-eclim"
   :commands start-eclimd
@@ -2544,7 +2539,14 @@ You can use arrow-keys or WASD.
   (bind-key "C-. C-=" 'emms-player-mplayer-volume-up))
 
 (use-package eyebrowse
-  :commands eyebrowse-mode)
+  :commands eyebrowse-mode
+  :diminish eyebrowse-mode
+  :init
+  (setq eyebrowse-wrap-around t
+        eyebrowse-switch-back-and-forth t)
+  :config
+  (eyebrowse-mode 1)
+  (global-set-key (kbd "C-'") 'eyebrowse-next-window-config))
 
 (use-package gist
   :load-path "site-lisp/gist"
@@ -2753,9 +2755,7 @@ You can use arrow-keys or WASD.
 
 (use-package flycheck
   :load-path "site-lisp/flycheck"
-  :defer 5
   :config
-  (defalias 'flycheck-show-error-at-point-soon 'flycheck-show-error-at-point)
 
   (add-to-list 'display-buffer-alist
                `(,(rx bos "*Flycheck errors*" eos)
@@ -2771,7 +2771,24 @@ You can use arrow-keys or WASD.
     (dolist (window (window-at-side-list))
       (quit-window nil window)))
 
-  (bind-key "C-H-M-:" 'lunaryorn-quit-bottom-side-windows))
+  (bind-key "C-H-M-:" 'lunaryorn-quit-bottom-side-windows)
+
+  (use-package helm-flycheck
+    :load-path "site-lisp/helm-flycheck"
+    :init
+    (define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+  (use-package drupal-mode
+    :load-path "site-lisp/drupal-mode"
+    :commands drupal-mode-bootstrap
+    :config
+    (add-hook 'drupal-mode-hook
+              '(lambda ()
+                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+                 (yas-activate-extra-mode 'drupal-mode)
+                 (when (apply 'derived-mode-p drupal-php-modes)
+                   (flycheck-mode t))))
+    (use-package drupal-spell
+      :load-path "site-lisp/drupal-spell")))
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
@@ -2958,14 +2975,15 @@ You can use arrow-keys or WASD.
   :commands guide-key-mode
   :defer 10
   :config
-  (setq guide-key/guide-key-sequence
-        '("C-."
-          "C-h e"
-          "C-x 4"
-          "C-x 5"
-          "C-x r"
-          "M-o"
-          "M-s"))
+  (setq guide-key/guide-key-sequence t)
+  ;; (setq guide-key/guide-key-sequence
+  ;;       '("C-."
+  ;;         "C-h e"
+  ;;         "C-x 4"
+  ;;         "C-x 5"
+  ;;         "C-x r"
+  ;;         "M-o"
+  ;;         "M-s"))
   (guide-key-mode 1))
 
 
@@ -3023,6 +3041,33 @@ You can use arrow-keys or WASD.
   (use-package helm-commands)
   (use-package helm-files)
   (use-package helm-buffers)
+  (use-package helm-bm
+    :load-path "site-lisp/helm-bm"
+    :bind ("C-c b" . helm-bm))
+
+  (use-package helm-open-github
+    :load-path "site-lisp/helm-open-github"
+    :init
+    ;; (global-set-key (kbd "C-c o f") 'helm-open-github-from-file)
+    ;; (global-set-key (kbd "C-c o c") 'helm-open-github-from-commit)
+    ;; (global-set-key (kbd "C-c o i") 'helm-open-github-from-issues)
+    ;; (global-set-key (kbd "C-c o p") 'helm-open-github-from-pull-requests)
+    )
+
+  (use-package helm-gtags
+    :load-path "site-lisp/helm-gtags"
+    :config
+    (setq helm-gtags-path-style 'relative)
+    (setq helm-gtags-ignore-case t)
+    (setq helm-gtags-auto-update t)
+
+    (gtags-mode 1)
+    (helm-gtags-mode 1)
+    (define-key gtags-mode-map (kbd "M-.") nil)
+    (define-key gtags-mode-map (kbd "M-/") nil)
+    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-find-tag)
+    (define-key helm-gtags-mode-map (kbd "M-/") 'helm-gtags-pop-stack))
+  
   (use-package helm-mode
 
     :diminish helm-mode
@@ -4123,6 +4168,13 @@ You can use arrow-keys or WASD.
 
   (add-hook 'org-mode-hook  #'yas-minor-mode))
 
+(use-package osx-trash
+  :load-path "site-lisp/osx-trash"
+  :config
+  (when (eq system-type 'darwin)
+    (osx-trash-setup))
+  (setq delete-by-moving-to-trash t))
+
 (use-package ox-reveal
   :load-path "site-lisp/org-reveal")
 
@@ -4314,179 +4366,218 @@ You can use arrow-keys or WASD.
     (add-hook 'web-mode-hook  'web-mode-hook)))
 
 (use-package php-mode
+  :load-path "site-lisp/php-mode"
   :commands php-mode
   :mode "\\.inc$\\|\\.\\(module\\|test\\|install\\|theme\\|\\profile\\)$"
   :interpreter "php"
   :init
-    (use-package conf-mode
-      :mode "\\.info")
-    (use-package php-auto-yasnippets
-      :load-path "site-lisp/php-auto-yasnippets")
+  (use-package conf-mode
+    :mode "\\.info")
+  (use-package php-auto-yasnippets
+    :load-path "site-lisp/php-auto-yasnippets")
   :config
-    (defun my-php-return ()
-      "Advanced C-m for PHP doc multiline comments.
+  (defun my-php-return ()
+    "Advanced C-m for PHP doc multiline comments.
 Inserts `*' at the beggining of the new line if
 unless return was pressed outside the comment"
-      (interactive)
-      (setq last (point))
-      (setq is-inside
-            (if (search-backward "*/" nil t)
-                ;; there are some comment endings - search forward
-                (if (search-forward "/*" last t)
-                    't
-                  'nil)
-              ;; it's the only comment - search backward
-              (goto-char last)
-              (if (search-backward "/*" nil t)
+    (interactive)
+    (setq last (point))
+    (setq is-inside
+          (if (search-backward "*/" nil t)
+              ;; there are some comment endings - search forward
+              (if (search-forward "/*" last t)
                   't
-                'nil)))
-      ;; go to last char position
-      (goto-char last)
-      ;; the point is inside some comment, insert `*'
-      (if is-inside
+                'nil)
+            ;; it's the only comment - search backward
+            (goto-char last)
+            (if (search-backward "/*" nil t)
+                't
+              'nil)))
+    ;; go to last char position
+    (goto-char last)
+    ;; the point is inside some comment, insert `*'
+    (if is-inside
+        (progn
+          (insert "\n*")
+          (indent-for-tab-command))
+      ;; else insert only new-line
+      (insert "\n")))
+
+  (defun my-php-indent-or-complete ()
+    (interactive)
+    (let (
+          (call-interactively 'indent-according-to-mode)
+          (call-interactively 'php-complete-function))))
+
+  (defun php-show-arglist ()
+    (interactive)
+    (let* ((tagname (php-get-pattern))
+           (buf (find-tag-noselect tagname nil nil))
+           arglist)
+      (with-current-buffer buf
+        (goto-char (point-min))
+        (when (re-search-forward
+               (format "function\\s-+%s\\s-*(\\([^{]*\\))" tagname)
+               nil t)
+          (setq arglist (buffer-substring-no-properties
+                         (match-beginning 1) (match-end 1)))))
+      (if arglist
+          (message "Arglist for %s: %s" tagname arglist)
+        (message "Unknown function: %s" tagname))))
+
+  (defun my-php-mode-hook ()
+    (set (make-local-variable 'yas-fallback-behavior)
+         '(apply my-php-indent-or-complete . nil))
+    (bind-key "<tab>" 'yas-expand-from-trigger-key php-mode-map)
+    (unbind-key "C-." php-mode-map))
+
+  (add-hook 'php-mode-hook
+            '(lambda ()
+               (drupal-mode-bootstrap)
+               (define-abbrev php-mode-abbrev-table "ex" "extends")
+               (hs-minor-mode 1)
+               (turn-on-eldoc-mode)
+               (diminish 'hs-minor-mode)
+               (helm-gtags-mode 1)
+               (setq indicate-empty-lines t)
+               'my-php-mode-hook
+               (local-set-key "\r" 'my-php-return)
+               (local-unset-key (kbd "C-c ."))
+               ;; (paren-toggle-open-paren-context 1)
+               (which-function-mode 1)))
+
+  (bind-key "C-c C-F" 'php-search-local-documentation)
+
+  (use-package php-boris
+    :load-path "site-lisp/php-boris"
+    :init
+    (use-package highlight
+      :load-path "site-lisp/highlight")
+    (use-package php-boris-minor-mode
+      :load-path "site-lisp/php-boris-minor-mode"))
+
+  (use-package php-align
+    :load-path "site-lisp/emacs-php-align"
+    :config
+    (php-align-setup))
+
+  (use-package php-eldoc
+    :load-path "site-lisp/php-eldoc"
+    :disabled t
+    :config
+    (let ((manual "~/Documents/php/php-chunked-xhtml"))
+      (when (file-readable-p manual)
+        (setq php-manual-path manual)))
+
+    (defun my-php-completion-at-point ()
+      "Provide php completions for completion-at-point.
+Relies on functions of `php-mode'."
+      (let ((pattern (php-get-pattern)))
+        (when pattern
+          (list (- (point) (length pattern))
+                (point)
+                (or php-completion-table
+                    (php-completion-table))
+                :exclusive 'no))))
+
+    (add-hook 'completion-at-point-functions 'my-php-completion-at-point nil t)
+    (set (make-local-variable 'company-backends)
+         '((company-capf :with company-dabbrev-code)))
+    (set (make-local-variable 'electric-indent-mode) nil)
+    (php-eldoc-enable))
+
+  (defun var_dump-die ()
+    (interactive)
+    (let ((expression (if (region-active-p)
+                          (buffer-substring (region-beginning) (region-end))
+                        (sexp-at-point)))
+          (line (thing-at-point 'line))
+          (pre "die(var_dump(")
+          (post "));"))
+      (if expression
           (progn
-            (insert "\n*")
-            (indent-for-tab-command))
-        ;; else insert only new-line
-        (insert "\n")))
+            (beginning-of-line)
+            (if (string-match "return" line)
+                (progn
+                  (newline)
+                  (previous-line))
+              (next-line)
+              (newline)
+              (previous-line))
+            (insert pre)
+            (insert (format "%s" expression))
+            (insert post))
+        ()
+        (insert pre)
+        (insert post)
+        (backward-char (length post)))))
 
-    (defun my-php-indent-or-complete ()
-      (interactive)
-      (let (
-            (call-interactively 'indent-according-to-mode)
-            (call-interactively 'php-complete-function))))
+  (defun var_dump ()
+    (interactive)
+    (if (region-active-p)
+        (progn
+          (goto-char (region-end))
+          (insert ");")
+          (goto-char (region-beginning))
+          (insert "var_dump("))
+      (insert "var_dump();")
+      (backward-char 3)))
+  ;; pman
+  ;; sudo pear channel-update doc.php.net
+  ;; sudo pear install doc.php.net/pman
 
-    (defun php-show-arglist ()
-      (interactive)
-      (let* ((tagname (php-get-pattern))
-             (buf (find-tag-noselect tagname nil nil))
-             arglist)
-        (with-current-buffer buf
-          (goto-char (point-min))
-          (when (re-search-forward
-                 (format "function\\s-+%s\\s-*(\\([^{]*\\))" tagname)
-                 nil t)
-            (setq arglist (buffer-substring-no-properties
-                           (match-beginning 1) (match-end 1)))))
-        (if arglist
-            (message "Arglist for %s: %s" tagname arglist)
-          (message "Unknown function: %s" tagname))))
+  (defun describe-function-via-pman (function)
+    "Display the full documentation of FUNCTION, using pman"
+    (interactive
+     (let (
+           (fn (intern-soft (thing-at-point 'symbol)
+                            obarray))
+           (enable-recursive-minibuffers t)
+           val)
+       (setq val (completing-read (if fn
+                                      (format "Describe function (default %s): " fn)
+                                    "Describe function: ")
+                                  obarray 'fboundp t nil nil
+                                  (and fn (symbol-name fn))))
+       (list (if (equal val "")
+                 fn (intern val)))))
+    (if (null function)
+        (message "You didn't specify a function")
+      (help-setup-xref (list #'describe-function function)
+                       (called-interactively-p 'interactive))
+      (save-excursion
+        (let ((manual-program "pman"))
+          (man (symbol-name function))))))
 
-    (defun my-php-mode-hook ()
-      (set (make-local-variable 'yas-fallback-behavior)
-           '(apply my-php-indent-or-complete . nil))
-      (bind-key "<tab>" 'yas-expand-from-trigger-key php-mode-map)
-      (unbind-key "C-." php-mode-map))
+  (define-key php-mode-map "\C-hS" 'describe-function-via-pman)
+  (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
 
-    (add-hook 'php-mode-hook
-              '(lambda ()
-                 (drupal-mode-bootstrap)
-                 (define-abbrev php-mode-abbrev-table "ex" "extends")
-                 (hs-minor-mode 1)
-                 (turn-on-eldoc-mode)
-                 (diminish 'hs-minor-mode)
-                 (setq indicate-empty-lines t)
-                 'my-php-mode-hook
-                 (local-set-key "\r" 'my-php-return)
-                 (local-unset-key (kbd "C-c ."))
-                 (paren-toggle-open-paren-context 1)
-                 (which-function-mode 1)))
+  (use-package geben
+    :commands (geben my-php-debug)
+    :config
+    (progn
 
-    (bind-key "C-c C-F" 'php-search-local-documentation)
+      ;; Debug a simple PHP script.
+      (defun my-php-debug ()
+        "Run current PHP script for debugging with geben"
+        (interactive)
+        (call-interactively 'geben)
+        (shell-command
+         (concat
+          "XDEBUG_CONFIG='idekey=my-php-54'  php "
+          (buffer-file-name) " status" " &")))
 
-    (use-package php-boris)
+      ;; geben won't connect because its "Already in debugging"  This might help.
+      (defun my-geben-release ()
+        (interactive)
+        (geben-stop)
+        (dolist (session geben-sessions)
+          (ignore-errors
+            (geben-session-release session))))
 
-    ;; pman
-    ;; sudo pear channel-update doc.php.net
-    ;; sudo pear install doc.php.net/pman
+      (use-package my-geben)))
 
-    (defun describe-function-via-pman (function)
-      "Display the full documentation of FUNCTION, using pman"
-      (interactive
-       (let (
-             (fn (intern-soft (thing-at-point 'symbol)
-                              obarray))
-             (enable-recursive-minibuffers t)
-             val)
-         (setq val (completing-read (if fn
-                                        (format "Describe function (default %s): " fn)
-                                      "Describe function: ")
-                                    obarray 'fboundp t nil nil
-                                    (and fn (symbol-name fn))))
-         (list (if (equal val "")
-                   fn (intern val)))))
-      (if (null function)
-          (message "You didn't specify a function")
-        (help-setup-xref (list #'describe-function function)
-                         (called-interactively-p 'interactive))
-        (save-excursion
-          (let ((manual-program "pman"))
-            (man (symbol-name function))))))
-
-    (define-key php-mode-map "\C-hS" 'describe-function-via-pman)
-    (define-key php-mode-map (kbd "C-c C-y") 'yas/create-php-snippet)
-
-    (use-package geben
-      :commands (geben my-php-debug)
-      :config
-      (progn
-
-        ;; Debug a simple PHP script.
-        (defun my-php-debug ()
-          "Run current PHP script for debugging with geben"
-          (interactive)
-          (call-interactively 'geben)
-          (shell-command
-           (concat
-            "XDEBUG_CONFIG='idekey=my-php-54'  php "
-            (buffer-file-name) " status" " &")))
-
-        ;; geben won't connect because its "Already in debugging"  This might help.
-        (defun my-geben-release ()
-          (interactive)
-          (geben-stop)
-          (dolist (session geben-sessions)
-            (ignore-errors
-              (geben-session-release session))))
-
-        (use-package my-geben)))
-
-    (defun var_dump-die ()
-      (interactive)
-      (let ((expression (if (region-active-p)
-                            (buffer-substring (region-beginning) (region-end))
-                          (sexp-at-point)))
-            (line (thing-at-point 'line))
-            (pre "die(var_dump(")
-            (post "));"))
-        (if expression
-            (progn
-              (beginning-of-line)
-              (if (string-match "return" line)
-                  (progn
-                    (newline)
-                    (forward-line -1))
-                (next-line)
-                (newline)
-                (forward-line -1))
-              (insert pre)
-              (insert (format "%s" expression))
-              (insert post))
-          ()
-          (insert pre)
-          (insert post)
-          (backward-char (length post)))))
-
-    (defun var_dump ()
-      (interactive)
-      (if (region-active-p)
-          (progn
-            (goto-char (region-end))
-            (insert ");")
-            (goto-char (region-beginning))
-            (insert "var_dump("))
-        (insert "var_dump();")
-        (backward-char 3))))
+  (add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1))))
 
 (use-package popup-ruler
   :bind (("C-. r" . popup-ruler)
@@ -4556,119 +4647,123 @@ unless return was pressed outside the comment"
   :defer 5
   :bind-keymap ("C-c p" . projectile-command-map)
   :init
-  (progn
-    (require 'grizzl)
-    (projectile-global-mode)
+  (require 'grizzl)
+  (projectile-global-mode)
 
-    (use-package projectile-drupal
-      :load-path "lisp/projectile-drupal"
-      :init
-      (progn
-        (defun dkh-get-site-name ()
-          "Gets site name based on University WWNG standard or standalone."
-          (if (locate-dominating-file default-directory
-                                      "current")
-              (let* ((project-root-dir (locate-dominating-file default-directory
-                                                               "current"))
-                     (path (split-string project-root-dir "/")))     ; path as list
-                (car (last (nbutlast path 1))))
-            (projectile-project-name)))
+  (use-package projectile-drupal
+    :load-path "lisp/projectile-drupal"
+    :init
+    (progn
+      (defun dkh-get-site-name ()
+        "Gets site name based on University WWNG standard or standalone."
+        (if (locate-dominating-file default-directory
+                                    "current")
+            (let* ((project-root-dir (locate-dominating-file default-directory
+                                                             "current"))
+                   (path (split-string project-root-dir "/")))     ; path as list
+              (car (last (nbutlast path 1))))
+          (projectile-project-name)))
 
-        (defun dkh-get-base-url ()
-          "Gets the projectile-drupal-base-url based on University WWNG standard or standalone."
-          (let* ((uri
-                  (if (equal projectile-drupal-site-name "admissions_undergraduate")
-                      "ww/admissions/undergraduate"
-                    (concat "colorado.dev/" projectile-drupal-site-name))))
-            (concat "http://" uri)))
+      (defun dkh-get-base-url ()
+        "Gets the projectile-drupal-base-url based on University WWNG standard or standalone."
+        (let* ((uri
+                (if (equal projectile-drupal-site-name "admissions_undergraduate")
+                    "ww/admissions/undergraduate"
+                  (concat "colorado.dev/" projectile-drupal-site-name))))
+          (concat "http://" uri)))
 
-        (bind-key "C-H-M-<" 'projectile-switch-to-prev-buffer)
-        (bind-key "C-H-M->" 'projectile-switch-to-next-buffer)
-        (bind-key "C-H-M-p" 'revert-buffer)
-        (bind-key "C-H-M-\"" 'kill-buffer)))
+      (bind-key "C-H-M-<" 'projectile-switch-to-prev-buffer)
+      (bind-key "C-H-M->" 'projectile-switch-to-next-buffer)
+      (bind-key "C-H-M-p" 'revert-buffer)
+      (bind-key "C-H-M-\"" 'kill-buffer)))
 
-   (add-hook 'projectile-mode-hook 'projectile-drupal-on)
+  (add-hook 'projectile-mode-hook 'projectile-drupal-on)
 
-    (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
+  (bind-key "<C-H-M-S-escape>" 'projectile-project-buffers-other-buffer)
 
-    (defun projectile-switch-to-last-project ()
-      (interactive)
-      (funcall projectile-switch-project-action projectile-last-project-root))
+  (defun projectile-switch-to-last-project ()
+    (interactive)
+    (funcall projectile-switch-project-action projectile-last-project-root))
 
-    (defun projectile-switch-to-last-project-root-buffer ()
-      (interactive)
-      (if (boundp 'projectile-last-project-root-buffer)
-          (if (buffer-live-p projectile-last-project-root-buffer)
-              (switch-to-buffer projectile-last-project-root-buffer)))
-      (if (boundp 'projectile-last-project-root)
-          (projectile-switch-to-last-project))
-      (message "projectile-last-project-root is not defined"))
+  (defun projectile-switch-to-last-project-root-buffer ()
+    (interactive)
+    (if (boundp 'projectile-last-project-root-buffer)
+        (if (buffer-live-p projectile-last-project-root-buffer)
+            (switch-to-buffer projectile-last-project-root-buffer)))
+    (if (boundp 'projectile-last-project-root)
+        (projectile-switch-to-last-project))
+    (message "projectile-last-project-root is not defined"))
 
-    (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-project-root-buffer)
+  (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-project-root-buffer)
 
-    (defun projectile-switch-to-last-project-buffer ()
-      (interactive)
-      (projectile-switch-to-last-project)
-      (projectile-project-buffers-other-buffer))
+  (defun projectile-switch-to-last-project-buffer ()
+    (interactive)
+    (projectile-switch-to-last-project)
+    (projectile-project-buffers-other-buffer))
 
-    (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-project-buffer)
+  (global-set-key (kbd "C-c p B") 'projectile-switch-to-last-project-buffer)
 
-    (defun dkh-project-record ()
-      (setq projectile-last-project-root (projectile-project-root))
-      (setq projectile-last-project-root-buffer (current-buffer)))
+  (defun dkh-project-record ()
+    (setq projectile-last-project-root (projectile-project-root))
+    (setq projectile-last-project-root-buffer (current-buffer)))
 
-    (global-set-key (kbd "C-c p S") 'projectile-switch-to-last-project)
+  (global-set-key (kbd "C-c p S") 'projectile-switch-to-last-project)
 
-    (defun dkh-projectile-dired (&optional arg)
-      "Open `dired' at the root of the project."
-      (interactive)
-      (if arg
-          (dired arg))
-      (dired default-directory))
+  (defun dkh-projectile-dired (&optional arg)
+    "Open `dired' at the root of the project."
+    (interactive)
+    (if arg
+        (dired arg))
+    (dired default-directory))
 
-    (defun buffer-projectile (change-buffer-fun)
-      (let ((current-project-root (projectile-project-p))
-            (next-project-root nil))
-        (while (not (string= next-project-root current-project-root))
-          (funcall change-buffer-fun)
-          (setq next-project-root (projectile-project-p)))))
+  (defun buffer-projectile (change-buffer-fun)
+    (let ((current-project-root (projectile-project-p))
+          (next-project-root nil))
+      (while (not (string= next-project-root current-project-root))
+        (funcall change-buffer-fun)
+        (setq next-project-root (projectile-project-p)))))
 
-    (defun projectile-switch-to-prev-buffer ()
-      (interactive)
-      (buffer-projectile #'previous-buffer))
+  (defun projectile-switch-to-prev-buffer ()
+    (interactive)
+    (buffer-projectile #'previous-buffer))
 
-    (defun projectile-switch-to-next-buffer ()
-      (interactive)
-      (buffer-projectile #'next-buffer))
+  (defun projectile-switch-to-next-buffer ()
+    (interactive)
+    (buffer-projectile #'next-buffer))
 
-    (global-set-key (kbd "C-c p <left>") 'projectile-switch-to-prev-buffer)
-    (global-set-key (kbd "C-c p <right>") 'projectile-switch-to-next-buffer)
+  (global-set-key (kbd "C-c p <left>") 'projectile-switch-to-prev-buffer)
+  (global-set-key (kbd "C-c p <right>") 'projectile-switch-to-next-buffer)
 
-    (defun projectile-post-project ()
-      "Which project am I actually in?"
-      (interactive)
-      (message (projectile-project-root)))
+  (defun projectile-post-project ()
+    "Which project am I actually in?"
+    (interactive)
+    (message (projectile-project-root)))
 
-    (defun projectile-add-project ()
-      "Add folder of current buffer's file to list of projectile projects"
-      (interactive)
-      (if (buffer-file-name (current-buffer))
-          (projectile-add-known-project
-           (file-name-directory (buffer-file-name (current-buffer))))))
+  (defun projectile-add-project ()
+    "Add folder of current buffer's file to list of projectile projects"
+    (interactive)
+    (if (buffer-file-name (current-buffer))
+        (projectile-add-known-project
+         (file-name-directory (buffer-file-name (current-buffer))))))
 
-    (global-set-key (kbd "C-c p w") 'projectile-post-project)
-    (global-set-key (kbd "C-c p +") 'projectile-add-project)
+  (global-set-key (kbd "C-c p w") 'projectile-post-project)
+  (global-set-key (kbd "C-c p +") 'projectile-add-project)
 
 
-    (use-package persp-projectile
-      :bind ("C-\\" . projectile-persp-switch-project)
-      )
+  (use-package persp-projectile
+    :bind ("C-\\" . projectile-persp-switch-project)
+    )
 
-      (use-package helm-projectile
+  (use-package helm-projectile
     :config
     (setq projectile-completion-system 'helm)
+    ;; (setq projectile-completion-system 'grizzl)
+    ;; (setq *grizzl-read-max-results* 30)
     (helm-projectile-on)
-    (bind-key "M-s P" 'helm-projectile))))
+    (bind-key "M-s P" 'helm-projectile)
+    (defun projectile-helm-ag ()
+      (interactive)
+      (helm-ag (projectile-project-root)))))
 
 (use-package ps-print
   :defer t
