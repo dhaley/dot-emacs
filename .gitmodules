@@ -1012,3 +1012,6 @@
 [submodule "site-lisp/drupal-spell"]
 	path = site-lisp/drupal-spell
 	url = git@github.com:arnested/drupal-spell.git
+[submodule "site-lisp/company-web"]
+	path = site-lisp/company-web
+	url = https://github.com/osv/company-web.git

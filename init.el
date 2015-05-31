@@ -697,6 +697,7 @@ Keys are in kbd format."
   :bind ("M-T" . tags-search))
 
 (use-package ggtags
+  :disabled t
   :load-path "site-lisp/ggtags"
   :commands ggtags-mode
   :diminish ggtags-mode)
@@ -746,7 +747,7 @@ Keys are in kbd format."
 
   (defun my-c-mode-common-hook ()
     (abbrev-mode 1)
-    (ggtags-mode 1)
+    ;; (ggtags-mode 1)
     (eldoc-mode 1)
     (hs-minor-mode 1)
     (hide-ifdef-mode 1)
@@ -3056,6 +3057,7 @@ You can use arrow-keys or WASD.
 
   (use-package helm-gtags
     :load-path "site-lisp/helm-gtags"
+    :disabled t
     :config
     (setq helm-gtags-path-style 'relative)
     (setq helm-gtags-ignore-case t)
@@ -4438,7 +4440,7 @@ unless return was pressed outside the comment"
                (hs-minor-mode 1)
                (turn-on-eldoc-mode)
                (diminish 'hs-minor-mode)
-               (helm-gtags-mode 1)
+               ;; (helm-gtags-mode 1)
                (setq indicate-empty-lines t)
                'my-php-mode-hook
                (local-set-key "\r" 'my-php-return)
