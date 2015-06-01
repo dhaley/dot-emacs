@@ -698,6 +698,7 @@ Keys are in kbd format."
 
 (use-package ggtags
   :load-path "site-lisp/ggtags"
+  :disabled
   :commands ggtags-mode
   :diminish ggtags-mode)
 
@@ -746,7 +747,7 @@ Keys are in kbd format."
 
   (defun my-c-mode-common-hook ()
     (abbrev-mode 1)
-    (ggtags-mode 1)
+    ;; (ggtags-mode 1)
     (eldoc-mode 1)
     (hs-minor-mode 1)
     (hide-ifdef-mode 1)
@@ -3056,6 +3057,7 @@ You can use arrow-keys or WASD.
 
   (use-package helm-gtags
     :load-path "site-lisp/helm-gtags"
+    :disabled t
     :config
     (setq helm-gtags-path-style 'relative)
     (setq helm-gtags-ignore-case t)
@@ -4321,6 +4323,7 @@ You can use arrow-keys or WASD.
            (not noninteractive)))
 
 (use-package perspective
+  :disabled 1
   :commands persp-mode
   :defer 5
   :init
@@ -4438,7 +4441,7 @@ unless return was pressed outside the comment"
                (hs-minor-mode 1)
                (turn-on-eldoc-mode)
                (diminish 'hs-minor-mode)
-               (helm-gtags-mode 1)
+               ;; (helm-gtags-mode 1)
                (setq indicate-empty-lines t)
                'my-php-mode-hook
                (local-set-key "\r" 'my-php-return)
@@ -5394,43 +5397,36 @@ of `org-babel-temporary-directory'."
   (winner-mode 1))
 
 (use-package workgroups
-  :disabled t
   :load-path "site-lisp/workgroups"
   :diminish workgroups-mode
-  :if (not noninteractive)
-  :init
-  (progn
-    (workgroups-mode 1)
+  :bind-keymap ("C-\\" . wg-map)
+  :config
+  (workgroups-mode 1)
 
-    (let ((workgroups-file (expand-file-name "workgroups" user-data-directory)))
-      (if (file-readable-p workgroups-file)
-          (wg-load workgroups-file)))
+  (let ((workgroups-file (expand-file-name "workgroups" user-data-directory)))
+    (if (file-readable-p workgroups-file)
+        (wg-load workgroups-file)))
 
-    (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
-    (bind-key "\\" 'toggle-input-method wg-map)
+  (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
+  (bind-key "\\" 'toggle-input-method wg-map)
+  
+  (defun wg-create-workgroup-awesome ()
+    "create workgroups using names from awesome button"
+    (interactive)
+    (wg-create-workgroup (get-awesome-button)))
 
-    (add-hook 'wg-switch-hook
-              '(lambda ()
-                 ;; (message "ho")
-                 ))
-
-    (defun wg-create-workgroup-awesome ()
-      "create workgroups using names from awesome button"
-      (interactive)
-      (wg-create-workgroup (get-awesome-button)))
-
-    (use-package awesome-button
-      :commands (get-awesome-button awesome-button-say)
-      :init
-      (progn
-        (defun awesome-button-say ()
-          "Say a word for awesome"
-          (interactive)
-          (let
-              ((a-word (get-awesome-button)))
-            (kill-new a-word 't)
-            (osx-say a-word)
-            (message a-word)))))))
+  (use-package awesome-button
+    :commands (get-awesome-button awesome-button-say)
+    :init
+    (progn
+      (defun awesome-button-say ()
+        "Say a word for awesome"
+        (interactive)
+        (let
+            ((a-word (get-awesome-button)))
+          (kill-new a-word 't)
+          (osx-say a-word)
+          (message a-word))))))
 
 (use-package wrap-region
   :load-path "site-lisp/wrap-region"
