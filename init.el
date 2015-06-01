@@ -697,6 +697,7 @@ Keys are in kbd format."
   :bind ("M-T" . tags-search))
 
 (use-package ggtags
+  :disabled t
   :load-path "site-lisp/ggtags"
   :disabled
   :commands ggtags-mode
@@ -2370,7 +2371,8 @@ You can use arrow-keys or WASD.
                 (split-string omitted-files "\n" t)
                 "\\|")
                "\\)")))
-        (funcall dired-omit-regexp-orig)))))
+        (funcall dired-omit-regexp-orig))))
+  (setq insert-directory-program (executable-find "gls")))
 
 (use-package dired-toggle
   :load-path "site-lisp/dired-toggle"
