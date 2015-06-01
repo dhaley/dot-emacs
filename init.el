@@ -1049,6 +1049,11 @@ Keys are in kbd format."
                    (face-remap-remove-relative remap-cookie))
                  (face-remap-add-relative 'default 'flash-active-buffer-face)))
 
+  (defun dkh-toggle-show-trailing-whitespace ()
+    "Toggle show-trailing-whitespace between t and nil"
+    (interactive)
+    (setq show-trailing-whitespace (not show-trailing-whitespace)))
+
   ;; Make window splitting more useful
   ;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
 
