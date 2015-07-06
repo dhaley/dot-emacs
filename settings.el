@@ -938,4 +938,6 @@
  '(ghc-face-error ((t (:inherit default))))
  '(ghc-face-warn ((t (:inherit default))))
  '(idris-loaded-region-face ((t (:background "#eaf8ff"))))
- '(persp-selected-face ((t (:foreground "purple")))))
+ '(persp-selected-face ((t (:foreground "purple"))))
+ '(persp-selected-face ((t (:foreground "purple"))))
+ '(wg-current-workgroup-face ((t (:foreground "purple")))))
