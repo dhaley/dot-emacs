@@ -2761,42 +2761,44 @@ You can use arrow-keys or WASD.
   :init
   (hook-into-modes 'fic-mode 'prog-mode-hook))
 
-(use-package flycheck
-  :load-path "site-lisp/flycheck"
+(use-package let-alist
   :config
-
-  (add-to-list 'display-buffer-alist
-               `(,(rx bos "*Flycheck errors*" eos)
-                 (display-buffer-reuse-window
-                  display-buffer-in-side-window)
-                 (reusable-frames . visible)
-                 (side            . bottom)
-                 (window-height   . 0.4)))
-
-  (defun lunaryorn-quit-bottom-side-windows ()
-    "Quit side windows of the current frame."
-    (interactive)
-    (dolist (window (window-at-side-list))
-      (quit-window nil window)))
-
-  (bind-key "C-H-M-:" 'lunaryorn-quit-bottom-side-windows)
-
-  (use-package helm-flycheck
-    :load-path "site-lisp/helm-flycheck"
-    :init
-    (define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
-  (use-package drupal-mode
-    :load-path "site-lisp/drupal-mode"
-    :commands drupal-mode-bootstrap
+  (use-package flycheck
+    :load-path "site-lisp/flycheck"
     :config
-    (add-hook 'drupal-mode-hook
-              '(lambda ()
-                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                 (yas-activate-extra-mode 'drupal-mode)
-                 (when (apply 'derived-mode-p drupal-php-modes)
-                   (flycheck-mode t))))
-    (use-package drupal-spell
-      :load-path "site-lisp/drupal-spell")))
+
+    (add-to-list 'display-buffer-alist
+                 `(,(rx bos "*Flycheck errors*" eos)
+                   (display-buffer-reuse-window
+                    display-buffer-in-side-window)
+                   (reusable-frames . visible)
+                   (side            . bottom)
+                   (window-height   . 0.4)))
+
+    (defun lunaryorn-quit-bottom-side-windows ()
+      "Quit side windows of the current frame."
+      (interactive)
+      (dolist (window (window-at-side-list))
+        (quit-window nil window)))
+
+    (bind-key "C-H-M-:" 'lunaryorn-quit-bottom-side-windows)
+
+    (use-package helm-flycheck
+      :load-path "site-lisp/helm-flycheck"
+      :init
+      (define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+    (use-package drupal-mode
+      :load-path "site-lisp/drupal-mode"
+      :commands drupal-mode-bootstrap
+      :config
+      (add-hook 'drupal-mode-hook
+                '(lambda ()
+                   (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+                   (yas-activate-extra-mode 'drupal-mode)
+                   (when (apply 'derived-mode-p drupal-php-modes)
+                     (flycheck-mode t))))
+      (use-package drupal-spell
+        :load-path "site-lisp/drupal-spell"))))
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
