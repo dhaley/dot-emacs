@@ -1015,3 +1015,6 @@
 [submodule "site-lisp/company-web"]
 	path = site-lisp/company-web
 	url = https://github.com/osv/company-web.git
+[submodule "site-lisp/orgit"]
+	path = site-lisp/orgit
+	url = git@github.com:magit/orgit.git

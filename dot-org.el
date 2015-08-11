@@ -32,7 +32,8 @@
 (require 'ox-md)
 (require 'ox-opml)
 (require 'org-eshell)
-
+(use-package orgit
+  :load-path "site-lisp/orgit")
 ;; (require 'ox-reveal)
 
 (use-package calfw
