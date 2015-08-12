@@ -4016,18 +4016,6 @@ You can use arrow-keys or WASD.
                              (lusty-read-directory)))))
     (magit-status-internal dir switch-function))
 
-  (defun eshell/git (&rest args)
-    (cond
-     ((or (null args)
-          (and (string= (car args) "status") (null (cdr args))))
-      (magit-status-internal default-directory))
-     ((and (string= (car args) "log") (null (cdr args)))
-      (magit-log "HEAD"))
-     (t (throw 'eshell-replace-command
-               (eshell-parse-command
-                "*git"
-                (eshell-stringify-list (eshell-flatten-list args)))))))
-
   :init
   (add-hook 'magit-mode-hook 'hl-line-mode)
 
@@ -5281,7 +5269,12 @@ of `org-babel-temporary-directory'."
                       (file-exists-p org-babel-temporary-directory)
                       org-babel-temporary-directory)
                  temporary-file-directory)))
-        (make-temp-file prefix nil suffix)))))
+        (make-temp-file prefix nil suffix))))
+
+  (defun jgk/xterm-ssh (host)
+    "Spawn a xterm with a ssh to the host"
+    (start-process-shell-command "*org-xterm-ssh*" "ssh-xterm" "xterm" "-e"
+                                 (concat "'ssh -AY "  host "'"))))
 
 (use-package unbound)
 
@@ -5489,10 +5482,11 @@ of `org-babel-temporary-directory'."
 
   (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap)
 
-  (hook-into-modes #'yas-minor-mode
-                   'prog-mode-hook
-                   'org-mode-hook
-                   'message-mode-hook))
+  ;; (hook-into-modes #'yas-minor-mode
+  ;;                  'prog-mode-hook
+  ;;                  'org-mode-hook
+  ;;                  'message-mode-hook)
+  )
 
 (use-package zoom-window
   :bind ("H-z" . zoom-window-zoom))
