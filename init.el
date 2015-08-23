@@ -3144,7 +3144,8 @@ You can use arrow-keys or WASD.
   :bind ("M-o C" . highlight-changes-mode))
 
 (use-package hippie-exp
-  :bind ("M-/" . hippie-expand)
+  :bind (("M-/" . dabbrev-expand)
+         ("M-?" . hippie-expand))
   :preface
   (autoload 'yas-expand "yasnippet" nil t)
 
@@ -4178,9 +4179,7 @@ You can use arrow-keys or WASD.
   :config
   (when (not running-alternate-emacs)
     (run-with-idle-timer 300 t 'jump-to-org-agenda)
-    (my-org-startup))
-
-  (add-hook 'org-mode-hook  #'yas-minor-mode))
+    (my-org-startup)))
 
 (use-package osx-trash
   :load-path "site-lisp/osx-trash"
@@ -5496,12 +5495,7 @@ of `org-babel-temporary-directory'."
   :config
   (yas-load-directory "~/.emacs.d/snippets/")
 
-  (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap)
-
-  (hook-into-modes #'yas-minor-mode
-                   'prog-mode-hook
-                   'org-mode-hook
-                   'message-mode-hook))
+  (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap))
 
 (use-package zoom-window
   :bind ("H-z" . zoom-window-zoom))
