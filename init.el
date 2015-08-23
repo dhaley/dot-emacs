@@ -3979,7 +3979,7 @@ You can use arrow-keys or WASD.
   :bind ("C-c e m" . macrostep-expand))
 
 (use-package magit
-  :load-path "site-lisp/magit"
+  :load-path "site-lisp/magit/lisp"
   :bind (("C-x g" . magit-status)
          ("C-x G" . magit-status-with-prefix))
   :preface
@@ -4026,12 +4026,23 @@ You can use arrow-keys or WASD.
   :config
   (setenv "GIT_PAGER" "")
 
+  (use-package magit-backup
+    :commands magit-backup-mode
+    :config
+    (magit-backup-mode -1))
+
+  (use-package magit-commit
+    :config
+    (remove-hook 'server-switch-hook 'magit-commit-diff))
+
   (unbind-key "M-h" magit-mode-map)
   (unbind-key "M-s" magit-mode-map)
   (unbind-key "M-m" magit-mode-map)
+  (unbind-key "M-w" magit-mode-map)
 
-  (bind-key "M-H" #'magit-show-level-2-all magit-mode-map)
-  (bind-key "M-S" #'magit-show-level-4-all magit-mode-map)
+  ;; (bind-key "M-H" #'magit-show-level-2-all magit-mode-map)
+  ;; (bind-key "M-S" #'magit-show-level-4-all magit-mode-map)
+  (bind-key "U" #'magit-unstage-all magit-mode-map)
 
   (add-hook 'magit-log-edit-mode-hook
             #'(lambda ()
