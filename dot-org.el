@@ -34,26 +34,64 @@
 (require 'org-eshell)
 (use-package orgit
   :load-path "site-lisp/orgit")
+
 ;; (require 'ox-reveal)
 
+(declare-function cfw:open-calendar-buffer "calfw")
+(declare-function cfw:refresh-calendar-buffer "calfw")
+(declare-function cfw:org-create-source "calfw-org")
+(declare-function cfw:cal-create-source "calfw-cal")
+
+(defun org-fit-agenda-window ()
+  "Fit the window to the buffer size."
+  (and (memq org-agenda-window-setup '(reorganize-frame))
+       (fboundp 'fit-window-to-buffer)
+       (fit-window-to-buffer)))
+
+(defun my-org-startup ()
+  (org-agenda-list)
+  (org-fit-agenda-window)
+  (org-agenda-to-appt)
+  ;; (other-window 1)
+  ;; (my-calendar)
+  ;; (run-with-idle-timer
+  ;;  0.1 nil
+  ;;  (lambda ()
+  ;;    (let ((wind (get-buffer-window "*Org Agenda*")))
+  ;;      (when wind
+  ;;        (set-frame-selected-window nil wind)
+  ;;        (call-interactively #'org-agenda-redo)))
+  ;;    (let ((wind (get-buffer-window "*cfw-calendar*")))
+  ;;      (when wind
+  ;;        (set-frame-selected-window nil wind)
+  ;;        (call-interactively #'cfw:refresh-calendar-buffer)))
+  ;;    (let ((wind (get-buffer-window "*Org Agenda*")))
+  ;;      (when wind
+  ;;        (set-frame-selected-window nil wind)
+  ;;        (call-interactively #'org-resolve-clocks)))))
+  )
+
+(defun my-calendar ()
+  (interactive)
+  (let ((buf (get-buffer "*cfw-calendar*")))
+    (if buf
+        (pop-to-buffer buf nil)
+      (cfw:open-calendar-buffer
+       :contents-sources
+       (list (cfw:org-create-source "Dark Blue")
+             (cfw:cal-create-source "Dark Orange"))
+       :view 'two-weeks))))
+
 (use-package calfw
+  :load-path "site-lisp/emacs-calfw"
   :bind ("C-c A" . my-calendar)
   :init
   (progn
     (use-package calfw-cal)
     (use-package calfw-org)
 
-    (defun my-calendar ()
-      (interactive)
-      (delete-other-windows)
-      (let ((buf (get-buffer "*cfw-calendar*")))
-        (if buf
-            (switch-to-buffer buf)
-          (cfw:open-calendar-buffer
-           :contents-sources
-           (list
-            (cfw:org-create-source "Dark Blue")
-            (cfw:cal-create-source "Dark Orange")))))))
+    (bind-key "M-n" 'cfw:navi-next-month-command cfw:calendar-mode-map)
+    (bind-key "M-p" 'cfw:navi-previous-month-command cfw:calendar-mode-map))
 
   :config
   (progn
@@ -70,39 +108,16 @@
     (bind-key "j" 'cfw:navi-goto-date-command cfw:calendar-mode-map)
     (bind-key "g" 'cfw:refresh-calendar-buffer cfw:calendar-mode-map)))
 
-
-(defun org-link-to-named-task ()
-  (interactive))
-(fset 'org-link-to-named-task
-   [?\C-  ?\C-  ?\C-e ?\C-w ?\C-s ?\M-y ?\C-a ?\M-f ?\C-c ?S ?\C-u ?\C-  ?\C-c ?\C-l return return ?\C-x ?\C-x ?\C-  ?\C- ])
-
-
-(defun org-link-to-named-task ()
-  (interactive))
-(fset 'org-link-to-named-task
-   [?\C-  ?\C-  ?\C-e ?\C-w ?\C-s ?\M-y ?\C-a ?\M-f ?\C-c ?S ?\C-u ?\C-  ?\C-c
-  ?\C-l return return ?\C-x ?\C-x ?\C-  ?\C- ])
-
-(defun org-find-top-category (&optional pos)
-  (let ((cat
-         (save-excursion
-           (with-current-buffer (if pos (marker-buffer pos) (current-buffer))
-             (if pos (goto-char pos))
-             ;; Skip up to the topmost parent
-             (while (ignore-errors (outline-up-heading 1) t))
-             (ignore-errors
-               (nth 4 (org-heading-components)))))))
-    (if (and cat (string= cat "BoostPro"))
-        cat
-      (save-excursion
-        (with-current-buffer (if pos (marker-buffer pos) (current-buffer))
-          (org-entry-get pos "OVERLAY" t))))))
+(defadvice org-refile-get-location (before clear-refile-history activate)
+  "Fit the Org Agenda to its buffer."
+  (setq org-refile-history nil))
 
 (defun jump-to-org-agenda ()
   (interactive)
-  (let ((recordings-dir "~/Dropbox/Dropvox"))
-    (if (directory-files recordings-dir nil "\\`[^.]")
-        (find-file recordings-dir)))
+  (let ((recordings-dir "~/Dropbox/Apps/Dropvox"))
+    (ignore-errors
+      (if (directory-files recordings-dir nil "\\`[^.]")
+          (find-file recordings-dir))))
   (let ((buf (get-buffer "*Org Agenda*"))
         wind)
     (if buf
@@ -118,17 +133,11 @@
               (org-fit-window-to-buffer))))
       (call-interactively 'org-agenda-list))))
 
-;; (defun org-export-tasks ()
-;;   (interactive)
-;;   (let ((index 1))
-;;     (org-map-entries
-;;      #'(lambda ()
-;;          (outline-mark-subtree)
-;;          (org-export-as-html 3)
-;;          (write-file (format "%d.html" index))
-;;          (kill-buffer (current-buffer))
-;;          (setq index (1+ index)))
-;;      "LEVEL=2")))
+(defun org-get-global-property (name)
+  (save-excursion
+    (goto-char (point-min))
+    (and (re-search-forward (concat "#\\+PROPERTY: " name " \\(.*\\)") nil t)
+         (match-string 1))))
 
 (defun org-agenda-add-overlays (&optional line)
   "Add overlays found in OVERLAY properties to agenda items.
@@ -182,7 +191,10 @@ To use this function, add it to `org-agenda-finalize-hook':
                      (not (get-text-property (point) 'org-habit-p))
                      (string-match "\\(sched\\|dead\\|todo\\)"
                                    (get-text-property (point) 'type)))
-            (let ((overlays (org-entry-get org-marker "OVERLAY" t)))
+            (let ((overlays
+                   (or (org-entry-get org-marker "OVERLAY" t)
+                       (with-current-buffer (marker-buffer org-marker)
+                         (org-get-global-property "OVERLAY")))))
               (when overlays
                 (goto-char (line-end-position))
                 (let ((rest (- (window-width) (current-column))))
@@ -196,23 +208,25 @@ To use this function, add it to `org-agenda-finalize-hook':
                     (setq proplist (cddr proplist))))))))
         (forward-line)))))
 
-(add-hook 'org-agenda-finalize-hook 'org-agenda-add-overlays)
+(add-hook 'org-finalize-agenda-hook 'org-agenda-add-overlays)
 
-(autoload 'gnus-goto-article "dot-gnus")
+(autoload 'gnus-goto-article ".gnus")
 (autoload 'gnus-string-remove-all-properties "gnus-util")
 
-(defun org-my-message-open (message-id)
-  (gnus-goto-article
-   (gnus-string-remove-all-properties (substring message-id 2))))
+(defun gnus-summary-mark-read-and-unread-as-read (&optional new-mark)
+  "Intended to be used by `gnus-mark-article-hook'."
+  (let ((mark (gnus-summary-article-mark)))
+    (when (or (gnus-unread-mark-p mark)
+	      (gnus-read-mark-p mark))
+      (ignore-errors
+        (gnus-summary-mark-article gnus-current-article
+                                   (or new-mark gnus-read-mark))))))
 
-;;(defun org-my-message-open (message-id)
-;;  (condition-case err
-;;      (if (get-buffer "*Group*")
-;;          (gnus-goto-article
-;;           (gnus-string-remove-all-properties (substring message-id 2)))
-;;        (org-mac-message-open message-id))
-;;    (error
-;;     (org-mac-message-open message-id))))
+(defun org-my-message-open (message-id)
+  (if (get-buffer "*Group*")
+      (gnus-goto-article
+       (gnus-string-remove-all-properties (substring message-id 2)))
+    (org-mac-message-open message-id)))
 
 (add-to-list 'org-link-protocols (list "message" 'org-my-message-open nil))
 
@@ -235,6 +249,9 @@ To use this function, add it to `org-agenda-finalize-hook':
   (defvar org-mobile-directory)
   (defvar org-mobile-capture-file))
 
+(defun quickping (host)
+  (= 0 (call-process "ping" nil nil nil "-c1" "-W50" "-q" host)))
+
 (defun org-my-auto-exclude-function (tag)
   (and (cond
         ;; ((string= tag "call")
@@ -255,200 +272,86 @@ To use this function, add it to `org-agenda-finalize-hook':
          org-clock-current-task))
        (concat "-" tag)))
 
-;; (defun my-mobileorg-convert ()
-;;   (interactive)
-;;   (while (re-search-forward "^\\* " nil t)
-;;     (goto-char (match-beginning 0))
-;;     (insert ?*)
-;;     (forward-char 2)
-;;     (insert "TODO ")
-;;     (goto-char (line-beginning-position))
-;;     (forward-line)
-;;     (re-search-forward "^\\[")
-;;     (goto-char (match-beginning 0))
-;;     (let ((uuid
-;;            (save-excursion
-;;              (re-search-forward "^\\*\\* Note ID: \\(.+\\)")
-;;              (prog1
-;;                  (match-string 1)
-;;                (delete-region (match-beginning 0)
-;;                               (match-end 0))))))
-;;       (insert (format "SCHEDULED: %s\n:PROPERTIES:\n"
-;;                       (format-time-string (org-time-stamp-format))))
-;;       (insert (format ":ID:       %s\n:CREATED:  " uuid)))
-;;     (forward-line)
-;;     (insert ":END:")))
+(defun my-mobileorg-convert ()
+  (interactive)
+  (while (re-search-forward "^\\* " nil t)
+    (goto-char (match-beginning 0))
+    (insert ?*)
+    (forward-char 2)
+    (insert "TODO ")
+    (goto-char (line-beginning-position))
+    (forward-line)
+    (re-search-forward "^\\[")
+    (goto-char (match-beginning 0))
+    (let ((uuid
+           (save-excursion
+             (re-search-forward "^\\*\\* Note ID: \\(.+\\)")
+             (prog1
+                 (match-string 1)
+               (delete-region (match-beginning 0)
+                              (match-end 0))))))
+      (insert (format "SCHEDULED: %s\n:PROPERTIES:\n"
+                      (format-time-string (org-time-stamp-format))))
+      (insert (format ":ID:       %s\n:CREATED:  " uuid)))
+    (forward-line)
+    (insert ":END:")))
 
-;; (defun my-org-convert-incoming-items ()
-;;   (interactive)
-;;   (with-current-buffer
-;;       (find-file-noselect (expand-file-name org-mobile-capture-file
-;;                                             org-mobile-directory))
-;;     (goto-char (point-min))
-;;     (unless (eobp)
-;;       (my-mobileorg-convert)
-;;       (goto-char (point-max))
-;;       (if (bolp)
-;;           (delete-char -1))
-;;       (let ((tasks (buffer-string)))
-;;         (set-buffer-modified-p nil)
-;;         (kill-buffer (current-buffer))
-;;         (with-current-buffer (find-file-noselect "~/Documents/Tasks/todo.txt")
-;;           (save-excursion
-;;             (goto-char (point-min))
-;;             (re-search-forward "^\\* Inbox$")
-;;             (re-search-forward "^:END:")
-;;             (forward-line)
-;;             (goto-char (line-beginning-position))
-;;             (if (and tasks (> (length tasks) 0))
-;;                 (insert tasks ?\n))))))))
+(defun my-org-convert-incoming-items ()
+  (interactive)
+  (with-current-buffer
+      (find-file-noselect (expand-file-name org-mobile-capture-file
+                                            org-mobile-directory))
+    (goto-char (point-min))
+    (unless (eobp)
+      (my-mobileorg-convert)
+      (goto-char (point-max))
+      (if (bolp)
+          (delete-char -1))
+      (let ((tasks (buffer-string)))
+        (set-buffer-modified-p nil)
+        (kill-buffer (current-buffer))
+        (with-current-buffer (find-file-noselect "~/Documents/todo.txt")
+          (save-excursion
+            (goto-char (point-min))
+            (re-search-forward "^\\* Inbox$")
+            (re-search-forward "^:END:")
+            (forward-line)
+            (goto-char (line-beginning-position))
+            (if (and tasks (> (length tasks) 0))
+                (insert tasks ?\n))))))))
 
-;;;_Don't sync agendas.org to MobileOrg.  I do this because I only use
-;;;_MobileOrg for recording new tasks on the phone, and never for viewing
-;;;_tasks.  This allows MobileOrg to start up and sync extremely quickly.
-
-;;(add-hook 'org-mobile-post-push-hook
-;;          (function
-;;           (lambda ()
-;;             (shell-command "/bin/rm -f ~/Dropbox/MobileOrg/agendas.org")
-;;             (shell-command
-;;              (concat "perl -i -ne 'print unless /agendas\\.org/;'"
-;;                      "~/Dropbox/MobileOrg/checksums.dat"))
-;;             (shell-command
-;;              (concat "perl -i -ne 'print unless /agendas\\.org/;'"
-;;                      "~/Dropbox/MobileOrg/index.org")))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun my-org-mobile-pre-pull-function ()
   (my-org-convert-incoming-items))
 
-(defun my-org-mobile-post-push-function ())
-
 (add-hook 'org-mobile-pre-pull-hook 'my-org-mobile-pre-pull-function)
-(add-hook 'org-mobile-post-push-hook 'my-org-mobile-post-push-function)
 
-;; (defun org-my-state-after-clock-out (state)
-;;   (if (string= state "STARTED")
-;;       "TODO"
-;;     state))
+(defun org-link-to-named-task ()
+  (interactive))
+(fset 'org-link-to-named-task
+   [?\C-  ?\C-  ?\C-e ?\C-w ?\C-s ?\M-y ?\C-a ?\M-f ?\C-c ?S ?\C-u ?\C-  ?\C-c ?\C-l return return ?\C-x ?\C-x ?\C-  ?\C- ])
 
-;; (defvar org-my-archive-expiry-days 1
-;;   "The number of days after which a completed task should be auto-archived.
-;; This can be 0 for immediate, or a floating point value.")
+(defun org-link-to-named-task ()
+  (interactive))
+(fset 'org-link-to-named-task
+   [?\C-  ?\C-  ?\C-e ?\C-w ?\C-s ?\M-y ?\C-a ?\M-f ?\C-c ?S ?\C-u ?\C-  ?\C-c
+  ?\C-l return return ?\C-x ?\C-x ?\C-  ?\C- ])
 
-;; (defconst org-my-ts-regexp
-;;   "[[<]\\([0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\} [^]>\r\n]*?\\)[]>]"
-;;   "Regular expression for fast inactive time stamp matching.")
-
-;; (defun org-my-closing-time ()
-;;   (let* ((state-regexp
-;;           (concat "- State \"\\(?:" (regexp-opt org-done-keywords)
-;;                   "\\)\"\\s-*\\[\\([^]\n]+\\)\\]"))
-;;          (regexp (concat "\\(" state-regexp "\\|" org-my-ts-regexp "\\)"))
-;;          (end (save-excursion
-;;                 (outline-next-heading)
-;;                 (point)))
-;;          begin
-;;          end-time)
-;;     (goto-char (line-beginning-position))
-;;     (while (re-search-forward regexp end t)
-;;       (let ((moment (org-parse-time-string (match-string 1))))
-;;         (if (or (not end-time)
-;;                 (time-less-p (apply #'encode-time end-time)
-;;                              (apply #'encode-time moment)))
-;;             (setq end-time moment))))
-;;     (goto-char end)
-;;     end-time))
-
-;; (defun org-my-archive-done-tasks ()
-;;   (interactive)
-;;   (save-excursion
-;;     (goto-char (point-min))
-;;     (let ((done-regexp
-;;            (concat "^\\*\\* \\(" (regexp-opt org-done-keywords) "\\) ")))
-;;       (while (re-search-forward done-regexp nil t)
-;;         (if (>= (time-to-number-of-days
-;;                  (time-subtract (current-time)
-;;                                 (apply #'encode-time (org-my-closing-time))))
-;;                 org-my-archive-expiry-days)
-;;             (org-archive-subtree))))
-;;     (save-buffer)))
-
-;; (defalias 'archive-done-tasks 'org-my-archive-done-tasks)
-
-;; (defun org-get-inactive-time ()
-;;   (float-time (org-time-string-to-time
-;;                (or (org-entry-get (point) "TIMESTAMP")
-;;                    (org-entry-get (point) "TIMESTAMP_IA")
-;;                    (debug)))))
-
-;; (defun org-get-completed-time ()
-;;   (let ((begin (point)))
-;;     (save-excursion
-;;       (outline-next-heading)
-;;       (and (re-search-backward "\\(- State \"\\(DONE\\|DEFERRED\\|CANCELED\\)\"\\s-+\\[\\(.+?\\)\\]\\|CLOSED: \\[\\(.+?\\)\\]\\)" begin t)
-;;            (float-time (org-time-string-to-time (or (match-string 3)
-;;                                                     (match-string 4))))))))
-
-;; (defun org-my-sort-done-tasks ()
-;;   (interactive)
-;;   (goto-char (point-min))
-;;   (org-sort-entries t ?F #'org-get-inactive-time #'<)
-;;   (goto-char (point-min))
-;;   (while (re-search-forward "
-
-
-;; +" nil t)
-;;     (delete-region (match-beginning 0) (match-end 0))
-;;     (insert "
-;; "))
-;;   (let (after-save-hook)
-;;     (save-buffer))
-;;   (org-overview))
-
-;; (defalias 'sort-done-tasks 'org-my-sort-done-tasks)
-
-;; (defun org-archive-done-tasks ()
-;;   (interactive)
-;;   (save-excursion
-;;     (goto-char (point-min))
-;;     (while (re-search-forward "\* \\(DONE\\|CANCELED\\) " nil t)
-;;       (if (save-restriction
-;;             (save-excursion
-;;               (error "Need to replace org-x-narrow-to-entry")
-;;               ;; (org-x-narrow-to-entry)
-;;               (search-forward ":LOGBOOK:" nil t)))
-;;           (forward-line)
-;;         (org-archive-subtree)
-;;         (goto-char (line-beginning-position))))))
-
-;; (defun org-sort-all ()
-;;   (interactive)
-;;   (save-excursion
-;;     (goto-char (point-min))
-;;     (while (re-search-forward "^\* " nil t)
-;;       (goto-char (match-beginning 0))
-;;       (condition-case err
-;;           (progn
-;;             (org-sort-entries t ?a)
-;;             (org-sort-entries t ?p)
-;;             (org-sort-entries t ?o)
-;;             (forward-line))
-;;         (error nil)))
-;;     (goto-char (point-min))
-;;     (while (re-search-forward "\* PROJECT " nil t)
-;;       (goto-char (line-beginning-position))
-;;       (ignore-errors
-;;         (org-sort-entries t ?a)
-;;         (org-sort-entries t ?p)
-;;         (org-sort-entries t ?o))
-;;       (forward-line))))
-
-;; (defun org-cleanup ()
-;;   (interactive)
-;;   (org-archive-done-tasks)
-;;   (org-sort-all)
-;;   ;;(org-x-normalize-all-entries)
-;;   )
+(defun org-find-top-category (&optional pos)
+  (let ((cat
+         (save-excursion
+           (with-current-buffer (if pos (marker-buffer pos) (current-buffer))
+             (if pos (goto-char pos))
+             ;; Skip up to the topmost parent
+             (while (ignore-errors (outline-up-heading 1) t))
+             (ignore-errors
+               (nth 4 (org-heading-components)))))))
+    (if (and cat (string= cat "BoostPro"))
+        cat
+      (save-excursion
+        (with-current-buffer (if pos (marker-buffer pos) (current-buffer))
+          (org-entry-get pos "OVERLAY" t))))))
 
 (defvar my-org-wrap-region-history nil)
 
@@ -486,22 +389,6 @@ To use this function, add it to `org-agenda-finalize-hook':
   (save-excursion
     (forward-line)
     (org-cycle)))
-
-;; (defun org-maybe-remember (&optional done)
-;;   (interactive "P")
-;;   (if (string= (buffer-name) "*Remember*")
-;;       (call-interactively 'org-ctrl-c-ctrl-c)
-;;     (if (null done)
-;;         (call-interactively 'org-remember)
-;;       (let ((org-capture-templates
-;;              '((110 "* STARTED %?
-;; - State \"STARTED\"    %U
-;; SCHEDULED: %t
-;; :PROPERTIES:
-;; :ID:       %(shell-command-to-string \"uuidgen\"):CREATED:  %U
-;; :END:" "~/Documents/Tasks/todo.txt" "Inbox"))))
-;;         (org-remember))))
-;;   (set-fill-column 72))
 
 (defun org-get-message-link (&optional title)
   (assert (get-buffer "*Group*"))
@@ -855,36 +742,6 @@ end tell" (match-string 1))))
   (define-key map (kbd "<f5>") 'cfw:open-org-calendar))
 
 (unbind-key "M-m" org-agenda-keymap)
-
-(defun org-fit-agenda-window ()
-  "Fit the window to the buffer size."
-  (and (memq org-agenda-window-setup '(reorganize-frame))
-       (fboundp 'fit-window-to-buffer)
-       (fit-window-to-buffer)))
-
-(defun my-org-startup ()
-  (org-agenda-list)
-  (org-fit-agenda-window)
-  (org-agenda-to-appt)
-  (other-window 1)
-  (my-calendar)
-  (run-with-idle-timer
-   0.1 nil
-   (lambda ()
-     (let ((wind (get-buffer-window "*Org Agenda*")))
-       (when wind
-         (set-frame-selected-window nil wind)
-         (call-interactively #'org-agenda-redo)))
-     (let ((wind (get-buffer-window "*cfw-calendar*")))
-       (when wind
-         (set-frame-selected-window nil wind)
-         (call-interactively #'cfw:refresh-calendar-buffer)))
-     (let ((wind (get-buffer-window "*Org Agenda*")))
-       (when wind
-         (set-frame-selected-window nil wind)
-         (call-interactively #'org-resolve-clocks))))))
-
-
 (defadvice org-agenda-redo (after fit-windows-for-agenda-redo activate)
   "Fit the Org Agenda to its buffer."
   (org-fit-agenda-window))
