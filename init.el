@@ -1883,10 +1883,12 @@ You can use arrow-keys or WASD.
   :defer t)
 
 (use-package tex-site
-  :disabled t
-  :load-path "site-lisp/auctex/preview/"
+  :load-path "~/.emacs.d/elpa/auctex-11.88.4"
   :defines (latex-help-cmd-alist latex-help-file)
   :mode ("\\.tex\\'" . TeX-latex-mode)
+  :init
+  (load "auctex-autoloads")
+
   :config
   (defun latex-help-get-cmd-alist ()    ;corrected version:
     "Scoop up the commands in the index of the latex info manual.
@@ -1907,23 +1909,18 @@ You can use arrow-keys or WASD.
   (use-package latex-mode
     :defer t
     :config
-    (progn
-      (use-package preview)
-      (use-package ac-math)
+    (use-package preview)
 
-      (defun ac-latex-mode-setup ()
-        (nconc ac-sources
-               '(ac-source-math-unicode ac-source-math-latex
-                                        ac-source-latex-commands)))
+    (defun ac-latex-mode-setup ()
+      (nconc ac-sources
+             '(ac-source-math-unicode ac-source-math-latex
+                                      ac-source-latex-commands)))
 
-      (add-to-list 'ac-modes 'latex-mode)
-      (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
-
-      (info-lookup-add-help :mode 'latex-mode
-                            :regexp ".*"
-                            :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
-                            :doc-spec '(("(latex2e)Concept Index" )
-                                        ("(latex2e)Command Index"))))))
+    (info-lookup-add-help :mode 'latex-mode
+                          :regexp ".*"
+                          :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
+                          :doc-spec '(("(latex2e)Concept Index" )
+                                      ("(latex2e)Command Index")))))
 
 (use-package auto-complete-config
   :disabled t
