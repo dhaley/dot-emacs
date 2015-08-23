@@ -1889,7 +1889,7 @@ You can use arrow-keys or WASD.
   :defer t)
 
 (use-package tex-site
-  :load-path "~/.emacs.d/elpa/auctex-11.88.4"
+  :load-path "~/.emacs.d/elpa/auctex-11.88.7"
   :defines (latex-help-cmd-alist latex-help-file)
   :mode ("\\.tex\\'" . TeX-latex-mode)
   :init
