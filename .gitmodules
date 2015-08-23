@@ -436,9 +436,6 @@
 [submodule "site-lisp/magit"]
         path = site-lisp/magit
         url = git://github.com/magit/magit.git
-[submodule "site-lisp/git-modes"]
-        path = site-lisp/git-modes
-        url = git://github.com/magit/git-modes.git
 [submodule "site-lisp/emoji-cheat-sheet"]
         path = site-lisp/emoji-cheat-sheet
         url = git://github.com/ShingoFukuyama/emacs-emoji-cheat-sheet.git
