@@ -606,7 +606,7 @@
  '(recentf-auto-cleanup (quote never))
  '(recentf-exclude
    (quote
-    ("~\\'" "\\`out\\'" "\\.log\\'" "^/[^/]*:" "\\.el\\.gz\\'")))
+    ("~\\'" "\\`out\\'" "\\.log\\'" "^/[^/]*:" "\\.el\\.gz\\'")) t)
  '(recentf-max-saved-items 2000)
  '(recentf-save-file "~/.emacs.d/data/recentf")
  '(redisplay-dont-pause t t)
@@ -791,6 +791,5 @@
  '(ghc-face-error ((t (:inherit default))))
  '(ghc-face-warn ((t (:inherit default))))
  '(idris-loaded-region-face ((t (:background "#eaf8ff"))))
- '(persp-selected-face ((t (:foreground "purple"))))
  '(persp-selected-face ((t (:foreground "purple"))))
  '(wg-current-workgroup-face ((t (:foreground "purple")))))
