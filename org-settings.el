@@ -246,6 +246,7 @@ SCHEDULED: %t
      ("beamer" "\\documentclass{beamer}" org-beamer-sectioning))))
  '(org-export-latex-listings t)
  '(org-export-with-section-numbers nil)
+ '(org-export-with-sub-superscripts (quote {}))
  '(org-export-with-timestamps nil)
  '(org-fast-tag-selection-single-key (quote expert))
  '(org-file-apps

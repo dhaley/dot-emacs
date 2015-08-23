@@ -699,6 +699,7 @@ Keys are in kbd format."
 (use-package ggtags
   :disabled t
   :load-path "site-lisp/ggtags"
+  :disabled
   :commands ggtags-mode
   :diminish ggtags-mode)
 
@@ -1048,6 +1049,11 @@ Keys are in kbd format."
                  (lambda (remap-cookie)
                    (face-remap-remove-relative remap-cookie))
                  (face-remap-add-relative 'default 'flash-active-buffer-face)))
+
+  (defun dkh-toggle-show-trailing-whitespace ()
+    "Toggle show-trailing-whitespace between t and nil"
+    (interactive)
+    (setq show-trailing-whitespace (not show-trailing-whitespace)))
 
   ;; Make window splitting more useful
   ;; Copied from http://www.reddit.com/r/emacs/comments/25v0eo/you_emacs_tips_and_tricks/chldury
@@ -2752,42 +2758,44 @@ You can use arrow-keys or WASD.
   :init
   (hook-into-modes 'fic-mode 'prog-mode-hook))
 
-(use-package flycheck
-  :load-path "site-lisp/flycheck"
+(use-package let-alist
   :config
-
-  (add-to-list 'display-buffer-alist
-               `(,(rx bos "*Flycheck errors*" eos)
-                 (display-buffer-reuse-window
-                  display-buffer-in-side-window)
-                 (reusable-frames . visible)
-                 (side            . bottom)
-                 (window-height   . 0.4)))
-
-  (defun lunaryorn-quit-bottom-side-windows ()
-    "Quit side windows of the current frame."
-    (interactive)
-    (dolist (window (window-at-side-list))
-      (quit-window nil window)))
-
-  (bind-key "C-H-M-:" 'lunaryorn-quit-bottom-side-windows)
-
-  (use-package helm-flycheck
-    :load-path "site-lisp/helm-flycheck"
-    :init
-    (define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
-  (use-package drupal-mode
-    :load-path "site-lisp/drupal-mode"
-    :commands drupal-mode-bootstrap
+  (use-package flycheck
+    :load-path "site-lisp/flycheck"
     :config
-    (add-hook 'drupal-mode-hook
-              '(lambda ()
-                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                 (yas-activate-extra-mode 'drupal-mode)
-                 (when (apply 'derived-mode-p drupal-php-modes)
-                   (flycheck-mode t))))
-    (use-package drupal-spell
-      :load-path "site-lisp/drupal-spell")))
+
+    (add-to-list 'display-buffer-alist
+                 `(,(rx bos "*Flycheck errors*" eos)
+                   (display-buffer-reuse-window
+                    display-buffer-in-side-window)
+                   (reusable-frames . visible)
+                   (side            . bottom)
+                   (window-height   . 0.4)))
+
+    (defun lunaryorn-quit-bottom-side-windows ()
+      "Quit side windows of the current frame."
+      (interactive)
+      (dolist (window (window-at-side-list))
+        (quit-window nil window)))
+
+    (bind-key "C-H-M-:" 'lunaryorn-quit-bottom-side-windows)
+
+    (use-package helm-flycheck
+      :load-path "site-lisp/helm-flycheck"
+      :init
+      (define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+    (use-package drupal-mode
+      :load-path "site-lisp/drupal-mode"
+      :commands drupal-mode-bootstrap
+      :config
+      (add-hook 'drupal-mode-hook
+                '(lambda ()
+                   (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+                   (yas-activate-extra-mode 'drupal-mode)
+                   (when (apply 'derived-mode-p drupal-php-modes)
+                     (flycheck-mode t))))
+      (use-package drupal-spell
+        :load-path "site-lisp/drupal-spell"))))
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
@@ -4006,18 +4014,6 @@ You can use arrow-keys or WASD.
                              (lusty-read-directory)))))
     (magit-status-internal dir switch-function))
 
-  (defun eshell/git (&rest args)
-    (cond
-     ((or (null args)
-          (and (string= (car args) "status") (null (cdr args))))
-      (magit-status-internal default-directory))
-     ((and (string= (car args) "log") (null (cdr args)))
-      (magit-log "HEAD"))
-     (t (throw 'eshell-replace-command
-               (eshell-parse-command
-                "*git"
-                (eshell-stringify-list (eshell-flatten-list args)))))))
-
   :init
   (add-hook 'magit-mode-hook 'hl-line-mode)
 
@@ -4331,6 +4327,7 @@ You can use arrow-keys or WASD.
            (not noninteractive)))
 
 (use-package perspective
+  :disabled 1
   :commands persp-mode
   :defer 5
   :init
@@ -5279,7 +5276,12 @@ of `org-babel-temporary-directory'."
                       (file-exists-p org-babel-temporary-directory)
                       org-babel-temporary-directory)
                  temporary-file-directory)))
-        (make-temp-file prefix nil suffix)))))
+        (make-temp-file prefix nil suffix))))
+
+  (defun jgk/xterm-ssh (host)
+    "Spawn a xterm with a ssh to the host"
+    (start-process-shell-command "*org-xterm-ssh*" "ssh-xterm" "xterm" "-e"
+                                 (concat "'ssh -AY "  host "'"))))
 
 (use-package unbound)
 
@@ -5404,43 +5406,36 @@ of `org-babel-temporary-directory'."
   (winner-mode 1))
 
 (use-package workgroups
-  :disabled t
   :load-path "site-lisp/workgroups"
   :diminish workgroups-mode
-  :if (not noninteractive)
-  :init
-  (progn
-    (workgroups-mode 1)
+  :bind-keymap ("C-\\" . wg-map)
+  :config
+  (workgroups-mode 1)
 
-    (let ((workgroups-file (expand-file-name "workgroups" user-data-directory)))
-      (if (file-readable-p workgroups-file)
-          (wg-load workgroups-file)))
+  (let ((workgroups-file (expand-file-name "workgroups" user-data-directory)))
+    (if (file-readable-p workgroups-file)
+        (wg-load workgroups-file)))
 
-    (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
-    (bind-key "\\" 'toggle-input-method wg-map)
+  (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
+  (bind-key "\\" 'toggle-input-method wg-map)
+  
+  (defun wg-create-workgroup-awesome ()
+    "create workgroups using names from awesome button"
+    (interactive)
+    (wg-create-workgroup (get-awesome-button)))
 
-    (add-hook 'wg-switch-hook
-              '(lambda ()
-                 ;; (message "ho")
-                 ))
-
-    (defun wg-create-workgroup-awesome ()
-      "create workgroups using names from awesome button"
-      (interactive)
-      (wg-create-workgroup (get-awesome-button)))
-
-    (use-package awesome-button
-      :commands (get-awesome-button awesome-button-say)
-      :init
-      (progn
-        (defun awesome-button-say ()
-          "Say a word for awesome"
-          (interactive)
-          (let
-              ((a-word (get-awesome-button)))
-            (kill-new a-word 't)
-            (osx-say a-word)
-            (message a-word)))))))
+  (use-package awesome-button
+    :commands (get-awesome-button awesome-button-say)
+    :init
+    (progn
+      (defun awesome-button-say ()
+        "Say a word for awesome"
+        (interactive)
+        (let
+            ((a-word (get-awesome-button)))
+          (kill-new a-word 't)
+          (osx-say a-word)
+          (message a-word))))))
 
 (use-package wrap-region
   :load-path "site-lisp/wrap-region"
@@ -5492,7 +5487,13 @@ of `org-babel-temporary-directory'."
   :config
   (yas-load-directory "~/.emacs.d/snippets/")
 
-  (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap))
+  (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap)
+
+  ;; (hook-into-modes #'yas-minor-mode
+  ;;                  'prog-mode-hook
+  ;;                  'org-mode-hook
+  ;;                  'message-mode-hook)
+  )
 
 (use-package zoom-window
   :bind ("H-z" . zoom-window-zoom))

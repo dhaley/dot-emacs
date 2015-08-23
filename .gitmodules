@@ -808,9 +808,6 @@
 [submodule "site-lisp/multifiles-el"]
 	path = site-lisp/multifiles-el
 	url = https://github.com/magnars/multifiles.el.git
-[submodule "elpa"]
-	path = elpa
-	url = http://git.savannah.gnu.org/cgit/emacs/elpa.git
 [submodule "site-lisp/ASynK"]
 	path = site-lisp/ASynK
 	url = https://github.com/skarra/ASynK.git
@@ -820,9 +817,6 @@
 [submodule "site-lisp/osx-bbdb"]
 	path = site-lisp/osx-bbdb
 	url = https://github.com/chrisbarrett/osx-bbdb.git
-[submodule "melpa"]
-	path = melpa
-	url = https://github.com/milkypostman/melpa.git
 [submodule "site-lisp/emacs-cl"]
 	path = site-lisp/emacs-cl
 	url = git://github.com/larsbrinkhoff/emacs-cl.git
@@ -1015,3 +1009,9 @@
 [submodule "site-lisp/company-web"]
 	path = site-lisp/company-web
 	url = https://github.com/osv/company-web.git
+[submodule "site-lisp/orgit"]
+	path = site-lisp/orgit
+	url = git@github.com:magit/orgit.git
+[submodule "lisp/emacs-pl"]
+	path = lisp/emacs-pl
+	url = git://github.com/jwiegley/emacs-pl.git

@@ -26,3 +26,5 @@ logs/
 /geben/
 /org-clock-save.el
 /flycheck_org-clock-save.el
+elpa
+elpa/*
