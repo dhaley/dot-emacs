@@ -73,9 +73,6 @@
 [submodule "site-lisp/ghc-mod"]
         path = site-lisp/ghc-mod
         url = git://github.com/kazu-yamamoto/ghc-mod.git
-[submodule "site-lisp/git-commit-mode"]
-        path = site-lisp/git-commit-mode
-        url = git://github.com/jwiegley/git-commit-mode.git
 [submodule "site-lisp/sunrise-commander"]
         path = site-lisp/sunrise-commander
         url = git://github.com/jwiegley/sunrise-commander.git
