@@ -506,7 +506,7 @@ SCHEDULED: %t
  '(org-treat-S-cursor-todo-selection-as-state-change nil)
  '(org-use-fast-todo-selection t)
  '(org-use-speed-commands t)
- '(org-use-sub-superscripts nil)
+ '(org-use-sub-superscripts (quote {}))
  '(org-yank-adjusted-subtrees t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
