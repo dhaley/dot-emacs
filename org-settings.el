@@ -222,7 +222,6 @@ SCHEDULED: %t
  '(org-default-priority 69)
  '(org-directory "~/Documents")
  '(org-ditaa-jar-path "~/bin/DitaaEps/DitaaEps.jar")
- '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "OUT")))
  '(org-edit-src-content-indentation 0)
  '(org-emphasis-alist
    (quote
