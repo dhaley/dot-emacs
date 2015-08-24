@@ -1710,12 +1710,38 @@ You can use arrow-keys or WASD.
   :load-path "site-lisp/avy"
   :bind* (("<C-return>" . ace-window)
           ("H-l" . avy-goto-line))
+  :init
+  (defun toggle-window-split ()
+    (interactive)
+    (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
+  (define-key ctl-x-4-map "t" 'toggle-window-split)
   :config
   (setq avy-keys       '(?a ?s ?d ?e ?f ?g ?r ?v ?h ?j ?k ?l ?n ?m ?u)
-            avy-background t
-            avy-all-windows t
-            avy-style 'at-full
-            avy-case-fold-search nil)
+        avy-background t
+        avy-all-windows t
+        avy-style 'at-full
+        avy-case-fold-search nil)
   (use-package ace-link
     :defer 1
     :config
@@ -1724,32 +1750,6 @@ You can use arrow-keys or WASD.
   (use-package ace-window
     :load-path "site-lisp/ace-window"
     :init
-    (defun toggle-window-split ()
-      (interactive)
-      (if (= (count-windows) 2)
-          (let* ((this-win-buffer (window-buffer))
-                 (next-win-buffer (window-buffer (next-window)))
-                 (this-win-edges (window-edges (selected-window)))
-                 (next-win-edges (window-edges (next-window)))
-                 (this-win-2nd (not (and (<= (car this-win-edges)
-                                             (car next-win-edges))
-                                         (<= (cadr this-win-edges)
-                                             (cadr next-win-edges)))))
-                 (splitter
-                  (if (= (car this-win-edges)
-                         (car (window-edges (next-window))))
-                      'split-window-horizontally
-                    'split-window-vertically)))
-            (delete-other-windows)
-            (let ((first-win (selected-window)))
-              (funcall splitter)
-              (if this-win-2nd (other-window 1))
-              (set-window-buffer (selected-window) this-win-buffer)
-              (set-window-buffer (next-window) next-win-buffer)
-              (select-window first-win)
-              (if this-win-2nd (other-window 1))))))
-
-    (define-key ctl-x-4-map "t" 'toggle-window-split)
 
     (defun dkh-scroll-other-window()
       (interactive)
@@ -2982,17 +2982,15 @@ You can use arrow-keys or WASD.
   :commands guide-key-mode
   :defer 10
   :config
-  (setq guide-key/guide-key-sequence t)
-  ;; (setq guide-key/guide-key-sequence
-  ;;       '("C-."
-  ;;         "C-h e"
-  ;;         "C-x 4"
-  ;;         "C-x 5"
-  ;;         "C-x r"
-  ;;         "M-o"
-  ;;         "M-s"))
+  (setq guide-key/guide-key-sequence
+        '("C-."
+          "C-h e"
+          "C-x 4"
+          "C-x 5"
+          "C-x r"
+          "M-o"
+          "M-s"))
   (guide-key-mode 1))
-
 
 (use-package helm-grep
   :commands helm-do-grep-1
