@@ -3,6 +3,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-M-RET-may-split-line (quote ((headline) (default . t))))
+ '(org-adapt-indentation nil)
  '(org-agenda-auto-exclude-function (quote org-my-auto-exclude-function))
  '(org-agenda-clock-consistency-checks
    (quote
@@ -96,26 +98,41 @@
                (quote bh/skip-non-archivable-tasks))
               (org-tags-match-list-sublevels nil))))
       nil))))
- '(org-agenda-diary-file "~/Documents/Tasks/diary.org")
+ '(org-agenda-deadline-leaders (quote ("!D!: " "D%02d: ")))
+ '(org-agenda-default-appointment-duration 60)
+ '(org-agenda-diary-file "~/Documents/diary.org")
  '(org-agenda-dim-blocked-tasks nil)
  '(org-agenda-exporter-settings
    (quote
     ((org-agenda-write-buffer-name "Damon's VC-Rsrch/Dean-Grad Agenda"))))
  '(org-agenda-files
    (quote
-    ("~/Documents/Tasks/todo.txt" "~/Documents/Tasks/from-mobile.org")))
- '(org-agenda-include-diary nil)
+    ("~/Documents/todo.txt" "~/Documents/from-mobile.org")))
+ '(org-agenda-fontify-priorities t)
+ '(org-agenda-include-diary t)
  '(org-agenda-inhibit-startup t)
  '(org-agenda-insert-diary-extract-time t)
- '(org-agenda-log-mode-items (quote (closed state)))
+ '(org-agenda-log-mode-items (quote (closed clock state)))
+ '(org-agenda-ndays 1)
  '(org-agenda-persistent-filter t)
+ '(org-agenda-prefix-format
+   (quote
+    ((agenda . "  %-11c%?-12t% s")
+     (timeline . "  % s")
+     (todo . "  %-11c")
+     (tags . "  %-11c"))))
  '(org-agenda-repeating-timestamp-show-all t)
  '(org-agenda-restriction-lock-highlight-subtree nil)
+ '(org-agenda-scheduled-leaders (quote ("" "S%d: ")))
+ '(org-agenda-scheduled-relative-text "S%d: ")
+ '(org-agenda-scheduled-text "")
  '(org-agenda-show-all-dates t)
  '(org-agenda-skip-additional-timestamps-same-entry t)
  '(org-agenda-skip-deadline-if-done t)
+ '(org-agenda-skip-scheduled-if-deadline-is-shown t)
  '(org-agenda-skip-scheduled-if-done t)
  '(org-agenda-skip-timestamp-if-done t)
+ '(org-agenda-skip-unavailable-files t)
  '(org-agenda-sorting-strategy
    (quote
     ((agenda habit-down time-up user-defined-up effort-up category-keep)
@@ -123,9 +140,10 @@
      (tags category-up effort-up)
      (search category-up))))
  '(org-agenda-span (quote day))
- '(org-agenda-start-on-weekday 1)
+ '(org-agenda-start-on-weekday nil)
+ '(org-agenda-start-with-log-mode nil)
  '(org-agenda-sticky t)
- '(org-agenda-tags-column -102)
+ '(org-agenda-tags-column -100)
  '(org-agenda-tags-todo-honor-ignore-options t)
  '(org-agenda-text-search-extra-files (quote (agenda-archives)))
  '(org-agenda-time-grid
@@ -135,8 +153,11 @@
        (org-heading t))
      (900 1100 1300 1500 1700))))
  '(org-agenda-todo-ignore-with-date nil)
+ '(org-agenda-use-time-grid nil)
  '(org-agenda-window-setup (quote current-window))
  '(org-archive-location "%s_archive::* Archived Tasks")
+ '(org-archive-save-context-info (quote (time category itags)))
+ '(org-attach-method (quote mv))
  '(org-babel-load-languages
    (quote
     ((php . t)
@@ -159,7 +180,7 @@
  '(org-capture-templates
    (quote
     (("t" "Task" entry
-      (file+headline "~/Documents/Tasks/todo.txt" "Inbox")
+      (file+headline "~/Documents/todo.txt" "Inbox")
       "* TODO %?
 SCHEDULED: %t
 :PROPERTIES:
@@ -167,31 +188,41 @@ SCHEDULED: %t
 :END:" :prepend t))))
  '(org-catch-invisible-edits (quote error))
  '(org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+ '(org-clock-clocked-in-display nil)
  '(org-clock-history-length 23)
+ '(org-clock-idle-time 10)
  '(org-clock-in-resume t)
  '(org-clock-in-switch-to-state (quote bh/clock-in-to-next))
  '(org-clock-into-drawer t)
+ '(org-clock-mode-line-total (quote current))
+ '(org-clock-modeline-total (quote current))
  '(org-clock-out-remove-zero-time-clocks t)
+ '(org-clock-out-switch-to-state nil)
  '(org-clock-out-when-done t)
  '(org-clock-persist t)
+ '(org-clock-persist-file "~/.emacs.d/data/org-clock-save.el")
  '(org-clock-persist-query-resume nil)
  '(org-clock-report-include-clocking-task t)
+ '(org-clock-resolve-expert t)
  '(org-clock-sound "/usr/local/lib/tngchime.wav")
  '(org-clone-delete-id t)
  '(org-columns-default-format
    "%80ITEM(Task) %10Effort(Effort){:} %10Confidence(Confidence) %10CLOCKSUM")
  '(org-completion-use-ido t)
  '(org-confirm-babel-evaluate nil)
+ '(org-confirm-elisp-link-function nil)
+ '(org-confirm-shell-link-function nil)
  '(org-crypt-disable-auto-save nil)
  '(org-crypt-key "F0B66B40")
+ '(org-cycle-global-at-bob t)
  '(org-cycle-include-plain-lists t)
  '(org-cycle-separator-lines 0)
- '(org-deadline-warning-days 30)
- '(org-default-notes-file "~/Documents/Tasks/todo.txt")
+ '(org-deadline-warning-days 14)
+ '(org-default-notes-file "~/Documents/todo.txt")
  '(org-default-priority 69)
- '(org-directory "~/Documents/Tasks")
- '(org-ditaa-jar-path "~/git/foss/org-mode/contrib/scripts/ditaa.jar")
- '(org-drawers (quote ("PROPERTIES" "LOGBOOK")))
+ '(org-directory "~/Documents")
+ '(org-ditaa-jar-path "~/bin/DitaaEps/DitaaEps.jar")
+ '(org-drawers (quote ("PROPERTIES" "CLOCK" "LOGBOOK" "OUT")))
  '(org-edit-src-content-indentation 0)
  '(org-emphasis-alist
    (quote
@@ -203,6 +234,7 @@ SCHEDULED: %t
  '(org-enable-priority-commands t)
  '(org-enforce-todo-dependencies t)
  '(org-export-allow-BIND t)
+ '(org-export-babel-evaluate nil)
  '(org-export-html-inline-images t)
  '(org-export-html-style-extra
    "<link rel=\"stylesheet\" href=\"http://doc.norang.ca/org.css\" type=\"text/css\" />")
@@ -225,7 +257,7 @@ SCHEDULED: %t
 \\usepackage{linalgjh}
 [DEFAULT-PACKAGES]
 [EXTRA]
-[PACKAGES]"
+`[PACKAGES]"
       ("\\section{%s}" . "\\section*{%s}")
       ("\\subsection{%s}" . "\\subsection*{%s}")
       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -248,6 +280,7 @@ SCHEDULED: %t
  '(org-export-with-section-numbers nil)
  '(org-export-with-sub-superscripts (quote {}))
  '(org-export-with-timestamps nil)
+ '(org-extend-today-until 8)
  '(org-fast-tag-selection-single-key (quote expert))
  '(org-file-apps
 (quote
@@ -255,19 +288,25 @@ SCHEDULED: %t
   ("\\.mm\\'" . system)
   ("\\.x?html?\\'" . system)
   ("\\.pdf\\'" . system))))
+ '(org-fontify-done-headline t)
+ '(org-footnote-section nil)
  '(org-global-properties
 (quote
  (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
   ("Confidence_ALL" . "low medium high")
   ("STYLE_ALL" . "habit"))))
  '(org-habit-graph-column 50)
- '(org-hide-leading-stars nil)
+ '(org-habit-preceding-days 42)
+ '(org-habit-today-glyph 45)
+ '(org-hide-leading-stars t)
  '(org-html-checkbox-type "unicode")
  '(org-id-link-to-org-use-id (quote create-if-interactive-and-no-custom-id))
+ '(org-id-locations-file "~/.emacs.d/data/org-id-locations")
  '(org-id-method (quote uuidgen))
  '(org-image-actual-width (quote (800)))
  '(org-indirect-buffer-display (quote current-window))
- '(org-insert-heading-respect-content nil)
+ '(org-insert-heading-respect-content t)
+ '(org-irc-link-to-logs t t)
  '(org-latex-default-packages-alist
 (quote
  (("T1" "fontenc" t)
@@ -317,15 +356,17 @@ SCHEDULED: %t
  '(org-lowest-priority 69)
  '(org-mobile-agendas (quote ("Z")))
  '(org-mobile-directory "~/Dropbox/Apps/MobileOrg")
- '(org-mobile-files (quote ("~/Documents/Tasks/todo.txt")))
+ '(org-mobile-files (quote ("~/Documents/todo.txt")))
  '(org-mobile-files-exclude-regexp "\\(TODO\\(-.*\\)?\\)\\'")
- '(org-mobile-inbox-for-pull "~/Documents/Tasks/from-mobile.org")
- '(org-modules
-(quote
- (org-bbdb org-bibtex org-crypt org-gnus org-id org-info org-habit org-inlinetask org-irc org-mew org-mhe org-protocol org-rmail org-vm org-wl org-w3m)))
+ '(org-mobile-inbox-for-pull "~/Documents/from-mobile.org")
+ '(org-modules (quote (org-gnus org-id org-info org-habit org-depend)))
  '(org-odd-levels-only nil)
  '(org-outline-path-complete-in-steps nil)
  '(org-plantuml-jar-path nil)
+ '(org-priority-faces
+(quote
+ ((65 :foreground "ForestGreen" :weight bold)
+  (67 :foreground "dark gray" :slant italic))))
  '(org-refile-allow-creating-parent-nodes (quote confirm))
  '(org-refile-target-verify-function (quote bh/verify-refile-target))
  '(org-refile-targets
@@ -336,11 +377,7 @@ SCHEDULED: %t
  '(org-remove-highlights-with-change t)
  '(org-return-follows-link t)
  '(org-reveal-root "/Users/dhaley/src/reveal.js")
- '(org-reverse-note-order nil)
- '(org-show-entry-below t)
- '(org-show-following-heading t)
- '(org-show-hierarchy-above t)
- '(org-show-siblings (quote ((default))))
+ '(org-reverse-note-order t)
  '(org-special-ctrl-a/e (quote reversed))
  '(org-special-ctrl-k t)
  '(org-speed-commands-user
@@ -450,7 +487,7 @@ SCHEDULED: %t
   ("A" "#+ascii: ")
   ("i" "#+index: ?" "#+index: ?")
   ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
- '(org-stuck-projects (quote ("" nil nil "")))
+ '(org-stuck-projects (quote ("TODO=\"PROJECT\"" nil nil "SCHEDULED:")))
  '(org-tag-alist
 (quote
  ((:startgroup)
@@ -466,11 +503,13 @@ SCHEDULED: %t
   ("NOTE" . 78)
   ("CANCELLED" . 99)
   ("FLAGGED" . 63))))
+ '(org-tags-column -97)
  '(org-tags-exclude-from-inheritance (quote ("crypt")))
  '(org-tags-match-list-sublevels t)
  '(org-time-clocksum-format
 (quote
  (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
+ '(org-time-clocksum-use-fractional t)
  '(org-todo-keyword-faces
 (quote
  (("TODO" :inherit org-todo)
@@ -479,6 +518,7 @@ SCHEDULED: %t
 (quote
  ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
   (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+ '(org-todo-repeat-to-state "TODO")
  '(org-todo-state-tags-triggers
 (quote
  (("CANCELLED"
@@ -505,12 +545,31 @@ SCHEDULED: %t
    ("HOLD")))))
  '(org-treat-S-cursor-todo-selection-as-state-change nil)
  '(org-use-fast-todo-selection t)
+ '(org-use-property-inheritance (quote ("AREA")))
  '(org-use-speed-commands t)
  '(org-use-sub-superscripts (quote {}))
+ '(org-use-tag-inheritance nil)
+ '(org-velocity-always-use-bucket t)
+ '(org-velocity-bucket "~/Documents/notes.txt")
+ '(org-velocity-capture-templates
+(quote
+ (("v" "Velocity" entry
+   (file "~/Documents/notes.txt")
+   "* NOTE %:search
+%i%?
+:PROPERTIES:
+:ID:       %(shell-command-to-string \\\"uuidgen\\\"):CREATED:  %U
+:END:" :prepend t))))
+ '(org-velocity-exit-on-match t)
+ '(org-velocity-force-new t)
+ '(org-velocity-search-method (quote regexp))
+ '(org-x-backends (quote (ox-org ox-redmine)))
+ '(org-x-redmine-title-prefix-function (quote org-x-redmine-title-prefix))
+ '(org-x-redmine-title-prefix-match-function (quote org-x-redmine-title-prefix-match))
  '(org-yank-adjusted-subtrees t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-mode-line-clock ((t (:foreground "red" :box (:line-width -1 :style released-button)))) t))
+ '(org-mode-line-clock ((t (:foreground "red" :box (:line-width -1 :style released-button))))))
