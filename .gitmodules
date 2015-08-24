@@ -73,9 +73,6 @@
 [submodule "site-lisp/ghc-mod"]
         path = site-lisp/ghc-mod
         url = git://github.com/kazu-yamamoto/ghc-mod.git
-[submodule "site-lisp/git-commit-mode"]
-        path = site-lisp/git-commit-mode
-        url = git://github.com/jwiegley/git-commit-mode.git
 [submodule "site-lisp/sunrise-commander"]
         path = site-lisp/sunrise-commander
         url = git://github.com/jwiegley/sunrise-commander.git
@@ -439,9 +436,6 @@
 [submodule "site-lisp/magit"]
         path = site-lisp/magit
         url = git://github.com/magit/magit.git
-[submodule "site-lisp/git-modes"]
-        path = site-lisp/git-modes
-        url = git://github.com/magit/git-modes.git
 [submodule "site-lisp/emoji-cheat-sheet"]
         path = site-lisp/emoji-cheat-sheet
         url = git://github.com/ShingoFukuyama/emacs-emoji-cheat-sheet.git
@@ -808,9 +802,6 @@
 [submodule "site-lisp/multifiles-el"]
 	path = site-lisp/multifiles-el
 	url = https://github.com/magnars/multifiles.el.git
-[submodule "elpa"]
-	path = elpa
-	url = http://git.savannah.gnu.org/cgit/emacs/elpa.git
 [submodule "site-lisp/ASynK"]
 	path = site-lisp/ASynK
 	url = https://github.com/skarra/ASynK.git
@@ -820,9 +811,6 @@
 [submodule "site-lisp/osx-bbdb"]
 	path = site-lisp/osx-bbdb
 	url = https://github.com/chrisbarrett/osx-bbdb.git
-[submodule "melpa"]
-	path = melpa
-	url = https://github.com/milkypostman/melpa.git
 [submodule "site-lisp/emacs-cl"]
 	path = site-lisp/emacs-cl
 	url = git://github.com/larsbrinkhoff/emacs-cl.git
@@ -1018,3 +1006,6 @@
 [submodule "site-lisp/orgit"]
 	path = site-lisp/orgit
 	url = git@github.com:magit/orgit.git
+[submodule "lisp/emacs-pl"]
+	path = lisp/emacs-pl
+	url = git://github.com/jwiegley/emacs-pl.git
