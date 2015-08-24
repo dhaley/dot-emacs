@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# contributor : Damon Haley <dhaley@fastmail.com>
+# name: drupal
+# key: update
+# --
+
+/**
+ * Implementation of hook_update().
+ */
+function ${1:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`}_update_7100(){
+$0
+
+    module_enable(array('color_field'));
+    module_disable(array('backup_migrate'));
+
+}
+
+
