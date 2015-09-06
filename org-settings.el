@@ -279,7 +279,7 @@ SCHEDULED: %t
  '(org-export-with-section-numbers nil)
  '(org-export-with-sub-superscripts (quote {}))
  '(org-export-with-timestamps nil)
- '(org-extend-today-until 8)
+ '(org-extend-today-until 7)
  '(org-fast-tag-selection-single-key (quote expert))
  '(org-file-apps
 (quote
