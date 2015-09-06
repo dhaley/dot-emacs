@@ -102,8 +102,8 @@
      ("\\(mail\\.\\|INBOX\\)"
       (gnus-use-scoring nil))
      ("mail\\.archive"
-      (gnus-summary-line-format "%Â«%U%R %uS %ur %Â»%(%*%-14,14f %4u&size;
-%1Â«%B%s%Â»%) "))
+      (gnus-summary-line-format "%«%U%R %uS %ur %»%(%*%-14,14f %4u&size;
+%1«%B%s%»%) "))
      ("list\\.emacs\\.devel"
       (to-address . "emacs-devel@gnu.org")
       (to-list . "emacs-devel@gnu.org")
@@ -291,7 +291,7 @@
  '(gnus-subscribe-newsgroup-method (quote gnus-subscribe-topics))
  '(gnus-sum-thread-tree-single-indent "  ")
  '(gnus-summary-expunge-below -100)
- '(gnus-summary-line-format "%Â«%U%R %uS %ur %Â»%(%*%-14,14f   %1Â«%B%s%Â»%)
+ '(gnus-summary-line-format "%«%U%R %uS %ur %»%(%*%-14,14f   %1«%B%s%»%)
 ")
  '(gnus-summary-mark-below -100)
  '(gnus-summary-pick-line-format "%U%R %uS %ur %(%*%-14,14f  %B%s%)
