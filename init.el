@@ -1952,11 +1952,8 @@ You can use arrow-keys or WASD.
       ad-do-it))
 
   (use-package helm-company
-    :load-path "site-lisp/helm-company"
     :disabled t
-    :init
-    (define-key company-mode-map (kbd "C-:") 'helm-company)
-    (define-key company-active-map (kbd "C-:") 'helm-company)))
+    :load-path "site-lisp/helm-company"))
 
 (use-package compile
   :bind (("C-c c" . compile)
@@ -1991,15 +1988,8 @@ You can use arrow-keys or WASD.
 (use-package crosshairs
   :bind ("M-o c" . crosshairs-mode))
 
-(use-package css-mode
-  :load-path "site-lisp/css-mode"
-  :mode "\\.css$"
-  :config
-  (progn
-    (define-keys css-mode-map
-      '(("<return>" newline-and-indent)))))
-
 (use-package cursor-chg
+  :disabled t
   :defer 10
   :commands change-cursor-mode
   :config
@@ -2245,11 +2235,10 @@ You can use arrow-keys or WASD.
     :load-path "site-lisp/helm-emmet"
     :commands helm-emmet)
 
-  ;; (use-package ac-emmet
-  ;;   :ensure auto-complete
-  ;;   :config
-  ;;   (add-hook 'sgml-mode-hook 'ac-emmet-html-setup)
-  ;;   (add-hook 'css-mode-hook  'ac-emmet-css-setup))
+  (use-package ac-emmet
+    :config
+    (add-hook 'sgml-mode-hook 'ac-emmet-html-setup)
+    (add-hook 'css-mode-hook  'ac-emmet-css-setup))
   )
 
 ;; (use-package emmet-mode
@@ -2520,44 +2509,44 @@ You can use arrow-keys or WASD.
   :init
   (hook-into-modes 'fic-mode 'prog-mode-hook))
 
-(use-package let-alist
+(use-package flycheck
+  :load-path "site-lisp/flycheck"
+  :defer 5
   :config
-  (use-package flycheck
-    :load-path "site-lisp/flycheck"
+
+  (add-to-list 'display-buffer-alist
+               `(,(rx bos "*Flycheck errors*" eos)
+                 (display-buffer-reuse-window
+                  display-buffer-in-side-window)
+                 (reusable-frames . visible)
+                 (side            . bottom)
+                 (window-height   . 0.4)))
+
+  (defun lunaryorn-quit-bottom-side-windows ()
+    "Quit side windows of the current frame."
+    (interactive)
+    (dolist (window (window-at-side-list))
+      (quit-window nil window)))
+
+  (bind-key "C-H-M-:" 'lunaryorn-quit-bottom-side-windows)
+
+  (use-package helm-flycheck
+    :load-path "site-lisp/helm-flycheck"
+    :init
+    (define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+
+  (use-package drupal-mode
+    :load-path "site-lisp/drupal-mode"
+    :commands drupal-mode-bootstrap
     :config
-
-    (add-to-list 'display-buffer-alist
-                 `(,(rx bos "*Flycheck errors*" eos)
-                   (display-buffer-reuse-window
-                    display-buffer-in-side-window)
-                   (reusable-frames . visible)
-                   (side            . bottom)
-                   (window-height   . 0.4)))
-
-    (defun lunaryorn-quit-bottom-side-windows ()
-      "Quit side windows of the current frame."
-      (interactive)
-      (dolist (window (window-at-side-list))
-        (quit-window nil window)))
-
-    (bind-key "C-H-M-:" 'lunaryorn-quit-bottom-side-windows)
-
-    (use-package helm-flycheck
-      :load-path "site-lisp/helm-flycheck"
-      :init
-      (define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
-    (use-package drupal-mode
-      :load-path "site-lisp/drupal-mode"
-      :commands drupal-mode-bootstrap
-      :config
-      (add-hook 'drupal-mode-hook
-                '(lambda ()
-                   (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
-                   (yas-activate-extra-mode 'drupal-mode)
-                   (when (apply 'derived-mode-p drupal-php-modes)
-                     (flycheck-mode t))))
-      (use-package drupal-spell
-        :load-path "site-lisp/drupal-spell"))))
+    (add-hook 'drupal-mode-hook
+              '(lambda ()
+                 (add-to-list 'Info-directory-list '"~/.emacs.d/site-lisp/drupal-mode")
+                 (yas-activate-extra-mode 'drupal-mode)
+                 (when (apply 'derived-mode-p drupal-php-modes)
+                   (flycheck-mode t))))
+    (use-package drupal-spell
+      :load-path "site-lisp/drupal-spell")))
 
 (use-package flyspell
   :bind (("C-c i b" . flyspell-buffer)
@@ -2578,10 +2567,6 @@ You can use arrow-keys or WASD.
 (use-package git-messenger
   :load-path "site-lisp/emacs-git-messenger"
   :bind ("C-x v m" . git-messenger:popup-message))
-
-(use-package git-timemachine
-  :load-path "site-lisp/git-timemachine"
-  :commands git-timemachine)
 
 (use-package git-wip-mode
   :load-path "site-lisp/git-wip/emacs/"
@@ -2672,35 +2657,14 @@ You can use arrow-keys or WASD.
 (use-package grep
   :bind (("M-s d" . find-grep-dired)
          ("M-s F" . find-grep)
-         ("M-s G" . grep)
-         ("M-s p" . find-grep-in-project))
-  :preface
-  (defun find-grep-in-project (command-args)
-    (interactive
-     (let ((default (thing-at-point 'symbol)))
-       (list (read-shell-command "Run find (like this): "
-                                 (cons (concat "git --no-pager grep -n "
-                                               default)
-                                       (+ 24 (length default)))
-                                 'grep-find-history))))
-    (if command-args
-        (let ((null-device nil))        ; see grep
-          (grep command-args))))
-
+         ("M-s G" . grep))
   :config
   (add-hook 'grep-mode-hook #'(lambda () (use-package grep-ed)))
 
   (grep-apply-setting 'grep-command "egrep -nH -e ")
-  (if nil
-      (progn
-        (setq-default grep-first-column 1)
-        (grep-apply-setting
-         'grep-find-command
-         '("ag --noheading --nocolor --smart-case --nogroup --column -- "
-           . 61)))
-    (grep-apply-setting
-     'grep-find-command
-     '("find . -type f -print0 | xargs -P4 -0 egrep -nH " . 49))))
+  (grep-apply-setting
+   'grep-find-command
+   '("find . -type f -print0 | xargs -P4 -0 egrep -nH " . 49)))
 
 (use-package gud
   :disabled t
@@ -2725,6 +2689,7 @@ You can use arrow-keys or WASD.
     (bind-key "S-<f11>" 'gud-finish)))
 
 (use-package guide-key
+  :disabled t
   :load-path "site-lisp/guide-key"
   :diminish guide-key-mode
   :commands guide-key-mode
@@ -2757,24 +2722,21 @@ You can use arrow-keys or WASD.
   :load-path "site-lisp/helm-swoop"
   :bind (("M-s o" . helm-swoop)
          ("M-s /" . helm-multi-swoop))
-  :commands (helm-swoop helm-multi-swoop)
   :config
-  (use-package helm-match-plugin))
+  (use-package helm-match-plugin
+    :config
+    (helm-match-plugin-mode 1)))
 
 (use-package helm-descbinds
   :load-path "site-lisp/helm-descbinds"
+  :bind ("C-h b" . helm-descbinds)
   :init
   (fset 'describe-bindings 'helm-descbinds)
-  (bind-key "C-h b" 'helm-descbinds)
   :config
-  ;; (helm-descbinds-mode t)
   (require 'helm-config))
 
- (use-package helm-descbinds
-    :config
-    (setq helm-descbinds-window-sytle 'split-window))
-
 (use-package helm-config
+  :if (not running-alternate-emacs)
   :demand t
   :load-path "site-lisp/helm"
   :bind (("C-c h"   . helm-command-prefix)
@@ -2823,7 +2785,6 @@ You can use arrow-keys or WASD.
     (define-key helm-gtags-mode-map (kbd "M-/") 'helm-gtags-pop-stack))
   
   (use-package helm-mode
-
     :diminish helm-mode
     :init
     (helm-mode 1))
@@ -2831,7 +2792,9 @@ You can use arrow-keys or WASD.
   (use-package helm-ls-git
     :load-path "site-lisp/helm-ls-git")
 
-  (use-package helm-match-plugin)
+  (use-package helm-match-plugin
+    :config
+    (helm-match-plugin-mode 1))
 
   (helm-autoresize-mode 1)
 
@@ -3514,17 +3477,16 @@ You can use arrow-keys or WASD.
         (eldoc-add-command 'paredit-backward-delete
                            'paredit-close-round))
 
-
       (use-package cldoc
+        :commands (cldoc-mode turn-on-cldoc-mode)
         :diminish cldoc-mode)
 
       (use-package ert
-        :commands ert-run-tests-interactively
         :bind ("C-c e t" . ert-run-tests-interactively))
 
       (use-package elint
         :commands 'elint-initialize
-        :init
+        :preface
         (defun elint-current-buffer ()
           (interactive)
           (elint-initialize)
@@ -3571,6 +3533,9 @@ You can use arrow-keys or WASD.
         (info-lookmore-elisp-gnus)
         (info-lookmore-apropos-elisp))
 
+      (use-package testcover
+        :commands testcover-this-defun)
+
       (mapc (lambda (mode)
               (info-lookup-add-help
                :mode mode
@@ -3616,10 +3581,6 @@ You can use arrow-keys or WASD.
 (use-package llvm-mode
   :mode "\\.ll\\'")
 
-(use-package lorem-ipsum
-  :load-path "site-lisp/lorem-ipsum"
-  :commands lorem-ipsum-insert-paragraphs)
-
 (use-package lua-mode
   :load-path "site-lisp/lua-mode"
   :mode "\\.lua\\'"
@@ -3661,8 +3622,9 @@ You can use arrow-keys or WASD.
     (interactive)
     (require 'lusty-explorer)
     (let ((lusty--active-mode :file-explorer)
-          (helm-mode-prev helm-mode))
-      (helm-mode -1)
+          (helm-mode-prev (and (boundp 'helm-mode) helm-mode)))
+      (if (fboundp 'helm-mode)
+          (helm-mode -1))
       (unwind-protect
           (progn
             (lusty--define-mode-map)
@@ -3682,7 +3644,8 @@ You can use arrow-keys or WASD.
                 (switch-to-buffer
                  (find-file-noselect
                   (expand-file-name file))))))
-        (helm-mode (if helm-mode-prev 1 -1)))))
+        (if (fboundp 'helm-mode)
+            (helm-mode (if helm-mode-prev 1 -1))))))
 
   :config
   (defun my-lusty-setup-hook ()
@@ -3958,7 +3921,6 @@ You can use arrow-keys or WASD.
   (bind-key "C-. j" 'paredit-join-with-next-list paredit-mode-map)
   (bind-key "C-. J" 'paredit-join-with-previous-list paredit-mode-map))
 
-
 (or (use-package mic-paren
       :defer 5
       :config
@@ -3967,6 +3929,12 @@ You can use arrow-keys or WASD.
       :defer 5
       :config
       (show-paren-mode 1)))
+
+(use-package per-window-point
+  :commands pwp-mode
+  :defer 5
+  :config
+  (pwp-mode 1))
 
 (use-package pdf-tools
   :load-path "site-lisp/pdf-tools"
@@ -4058,10 +4026,8 @@ You can use arrow-keys or WASD.
            (not noninteractive)))
 
 (use-package perspective
-  :disabled 1
-  :commands persp-mode
-  :defer 5
-  :init
+  :disabled t
+  :config
   (use-package persp-projectile)
   (persp-mode))
 
@@ -4495,8 +4461,6 @@ Relies on functions of `php-mode'."
   (use-package helm-projectile
     :config
     (setq projectile-completion-system 'helm)
-    ;; (setq projectile-completion-system 'grizzl)
-    ;; (setq *grizzl-read-max-results* 30)
     (helm-projectile-on)
     (bind-key "M-s P" 'helm-projectile)
     (defun projectile-helm-ag ()
@@ -4556,8 +4520,9 @@ Relies on functions of `php-mode'."
   (add-hook 'python-mode-hook 'my-python-mode-hook))
 
 (use-package quickrun
+  :disabled t
   :load-path "site-lisp/emacs-quickrun"
-  :defer t)
+  :bind ("C-c C-r" . quickrun))
 
 (use-package rainbow-delimiters
   :load-path "site-lisp/rainbow-delimiters"
@@ -4660,13 +4625,6 @@ Relies on functions of `php-mode'."
   (selectkey-define-select-key shell "s" "\\*shell" (shell))
   (selectkey-define-select-key multi-term "t" "\\*terminal" (multi-term-next))
   (selectkey-define-select-key eshell "z" "\\*eshell" (eshell)))
-
-;; (use-package smex
-;;   :load-path "site-lisp/smex"
-;;   :init
-;;   (bind-key "<menu>" 'smex)
-;;   :config
-;;   (setq smex-save-file (concat user-data-directory "/smex-items")))
 
 (use-package session
   :if (not noninteractive)
@@ -5218,13 +5176,7 @@ of `org-babel-temporary-directory'."
   :config
   (yas-load-directory "~/.emacs.d/snippets/")
 
-  (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap)
-
-  ;; (hook-into-modes #'yas-minor-mode
-  ;;                  'prog-mode-hook
-  ;;                  'org-mode-hook
-  ;;                  'message-mode-hook)
-  )
+  (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap))
 
 (use-package zoom-window
   :bind ("H-z" . zoom-window-zoom))
