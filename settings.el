@@ -151,6 +151,7 @@
  '(dired-omit-mode nil t)
  '(dired-recursive-copies (quote always))
  '(dired-recursive-deletes (quote always))
+ '(dired-use-ls-dired (quote unspecified))
  '(diredful-init-file "~/.emacs.d/data/diredful-conf.el")
  '(display-time-use-mail-icon t)
  '(doc-view-resolution 300)
