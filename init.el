@@ -1539,8 +1539,8 @@ You can use arrow-keys or WASD.
     (set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green")))
 
 (use-package ace-isearch
-  :load-path "site-lisp/ace-isearch"
   :disabled t
+  :load-path "site-lisp/ace-isearch"
   :config
   (global-ace-isearch-mode 1))
 
@@ -1626,17 +1626,12 @@ You can use arrow-keys or WASD.
         (ascii-off)
       (ascii-on))))
 
-(use-package async
-  :load-path "lisp/emacs-async"
-  :defer t)
-
 (use-package tex-site
   :load-path "~/.emacs.d/elpa/auctex-11.88.7"
   :defines (latex-help-cmd-alist latex-help-file)
   :mode ("\\.tex\\'" . TeX-latex-mode)
   :init
-  (load "auctex-autoloads")
-
+  (setq reftex-plug-into-AUCTeX t)
   :config
   (defun latex-help-get-cmd-alist ()    ;corrected version:
     "Scoop up the commands in the index of the latex info manual.
@@ -1654,15 +1649,26 @@ You can use arrow-keys or WASD.
               (add-to-list 'latex-help-cmd-alist (cons key value))))))
     latex-help-cmd-alist)
 
+  (use-package ebib
+    :load-path "site-lisp/ebib"
+    :preface
+    (use-package parsebib :load-path "site-lisp/parsebib"))
+
+  
   (use-package latex-mode
     :defer t
     :config
     (use-package preview)
+    (use-package ac-math)
 
     (defun ac-latex-mode-setup ()
       (nconc ac-sources
              '(ac-source-math-unicode ac-source-math-latex
                                       ac-source-latex-commands)))
+
+    (add-to-list 'ac-modes 'latex-mode)
+    (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
+    (add-hook 'latex-mode-hook 'reftex-mode)
 
     (info-lookup-add-help :mode 'latex-mode
                           :regexp ".*"
@@ -1692,6 +1698,21 @@ You can use arrow-keys or WASD.
   :commands auto-dim-other-buffers-mode
   :init
   (auto-dim-other-buffers-mode 1))
+
+(use-package auto-complete-config
+  :disabled t
+  :load-path "site-lisp/auto-complete"
+  :diminish auto-complete-mode
+  :init
+  (use-package pos-tip)
+  (ac-config-default)
+
+  :config
+  (ac-set-trigger-key "<backtab>")
+  (setq ac-use-menu-map t)
+
+  (bind-key "H-M-?" 'ac-last-help)
+  (unbind-key "C-s" ac-completing-map))
 
 (use-package autopair
   :disabled t
@@ -2820,7 +2841,7 @@ You can use arrow-keys or WASD.
   (bind-key "H-v" 'helm-previous-page helm-map)
 
   (when (executable-find "curl")
-    (setq helm-google-suggest-use-curl-p t))
+    (setq helm-net-prefer-curl t))
 
   (when (when-feature-loaded 'hydra)
       (define-key helm-map (kbd "\\") 'hydra-helm/body)

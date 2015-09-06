@@ -1009,3 +1009,9 @@
 [submodule "lisp/emacs-pl"]
 	path = lisp/emacs-pl
 	url = git://github.com/jwiegley/emacs-pl.git
+[submodule "site-lisp/ebib"]
+	path = site-lisp/ebib
+	url = git@github.com:joostkremers/ebib.git
+[submodule "site-lisp/parsebib"]
+	path = site-lisp/parsebib
+	url = git@github.com:joostkremers/parsebib.git
