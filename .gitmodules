@@ -478,9 +478,6 @@
 [submodule "site-lisp/helm-git-grep"]
         path = site-lisp/helm-git-grep
         url = git://github.com/yasuyk/helm-git-grep.git
-[submodule "site-lisp/Hyde"]
-        path = site-lisp/Hyde
-        url = git://github.com/nibrahim/Hyde.git
 [submodule "site-lisp/github-browse-file"]
         path = site-lisp/github-browse-file
         url = git://github.com/osener/github-browse-file.git
@@ -793,9 +790,6 @@
 [submodule "site-lisp/multifiles-el"]
 	path = site-lisp/multifiles-el
 	url = https://github.com/magnars/multifiles.el.git
-[submodule "site-lisp/ASynK"]
-	path = site-lisp/ASynK
-	url = https://github.com/skarra/ASynK.git
 [submodule "site-lisp/iflipb"]
 	path = site-lisp/iflipb
 	url = https://github.com/jrosdahl/iflipb.git
