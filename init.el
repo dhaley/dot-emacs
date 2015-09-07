@@ -2240,8 +2240,7 @@ You can use arrow-keys or WASD.
 
 (use-package emmet-mode
   :config
-  (add-hook 'sgml-mode-hook 'emmet-mode)
-  (add-hook 'css-mode-hook  'emmet-mode)
+  (add-hook 'web-mode-hook  'emmet-mode)
   (bind-keys :map emmet-mode-keymap
              ("C-n" . emmet-next-edit-point)
              ("C-p" . emmet-prev-edit-point))
@@ -2252,23 +2251,7 @@ You can use arrow-keys or WASD.
 
   (use-package ac-emmet
     :config
-    (add-hook 'sgml-mode-hook 'ac-emmet-html-setup)
-    (add-hook 'css-mode-hook  'ac-emmet-css-setup))
-  )
-
-;; (use-package emmet-mode
-;;   :commands emmet-mode
-;;   :init
-;;   (progn
-;;     (add-hook 'nxml-mode-hook 'emmet-mode)
-;;     (add-hook 'html-mode-hook 'emmet-mode)
-;;     (add-hook 'html-mode-hook
-;;               #'(lambda ()
-;;                   (bind-key "<return>" 'newline-and-indent html-mode-map)))
-;;     (add-hook 'web-mode-hook 'emmet-mode)
-;;     )
-;;     (defvar emmet-mode-keymap (make-sparse-keymap))
-;;     (bind-key "C-c C-c" 'emmet-expand-line emmet-mode-keymap)))
+    (add-hook 'web-mode-hook 'ac-emmet-html-setup)))
 
 (use-package emms-setup
   :disabled t
@@ -4082,7 +4065,23 @@ You can use arrow-keys or WASD.
       (setq web-mode-enable-element-tag-fontification t)
 
       (local-set-key (kbd "RET") 'indent-and-newline))
-    (add-hook 'web-mode-hook  'web-mode-hook)))
+    (add-hook 'web-mode-hook  'web-mode-hook)
+
+    (setq web-mode-ac-sources-alist
+          '(("php" . (ac-source-yasnippet ac-source-php-auto-yasnippets))
+            ("html" . (ac-source-emmet-html-aliases ac-source-emmet-html-snippets))
+            ("css" . (ac-source-css-property ac-source-emmet-css-snippets))))
+
+    (add-hook 'web-mode-before-auto-complete-hooks
+              '(lambda ()
+                 (let ((web-mode-cur-language
+                        (web-mode-language-at-pos)))
+                   (if (string= web-mode-cur-language "php")
+                       (yas-activate-extra-mode 'php-mode)
+                     (yas-deactivate-extra-mode 'php-mode))
+                   (if (string= web-mode-cur-language "css")
+                       (setq emmet-use-css-transform t)
+                     (setq emmet-use-css-transform nil)))))))
 
 (use-package php-mode
   :load-path "site-lisp/php-mode"
@@ -5150,7 +5149,7 @@ of `org-babel-temporary-directory'."
   (wrap-region-add-wrappers
    '(("$" "$")
      ("/" "/" nil ruby-mode)
-     ("/* " " */" "#" (java-mode javascript-mode css-mode c-mode c++-mode))
+     ("/* " " */" "#" (java-mode javascript-mode c-mode c++-mode))
      ("`" "`" nil (markdown-mode ruby-mode shell-script-mode)))))
 
 (use-package yaml-mode
