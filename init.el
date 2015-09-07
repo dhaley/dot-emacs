@@ -1985,6 +1985,21 @@ You can use arrow-keys or WASD.
   :disabled t
   :bind ("H-M-W" . copy-code-as-rtf))
 
+(use-package counsel
+  :load-path "site-lisp/swiper"
+  :bind (("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
+         ("C-x C-f" . counsel-find-file)
+         ;; ("C-c j" . counsel-git-grep)
+         ("M-x" . counsel-M-x))
+  :config
+  (setq counsel-find-file-at-point t)
+  (ivy-set-actions
+   'counsel-find-file
+   `((,(propertize "delete" 'face 'font-lock-warning-face)
+      (lambda (x) (delete-file (expand-file-name x ivy--directory))))))
+  (use-package smex))
+
 (use-package crosshairs
   :bind ("M-o c" . crosshairs-mode))
 

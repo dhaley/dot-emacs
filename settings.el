@@ -793,4 +793,8 @@
  '(ghc-face-warn ((t (:inherit default))))
  '(idris-loaded-region-face ((t (:background "#eaf8ff"))))
  '(persp-selected-face ((t (:foreground "purple"))))
+ '(swiper-minibuffer-match-face-1 ((t :background "#dddddd")))
+ '(swiper-minibuffer-match-face-2 ((t :background "#bbbbbb" :weight bold)))
+ '(swiper-minibuffer-match-face-3 ((t :background "#bbbbff" :weight bold)))
+ '(swiper-minibuffer-match-face-4 ((t :background "#ffbbff" :weight bold)))
  '(wg-current-workgroup-face ((t (:foreground "purple")))))
