@@ -4878,6 +4878,7 @@ Relies on functions of `php-mode'."
   :diminish ivy-mode
   :config
   (setq ivy-use-virtual-buffers t)
+  (setq ivy-display-style 'fancy)
   (bind-keys :map swiper-map
              ("<escape>" . minibuffer-keyboard-quit))
   (bind-keys :map ivy-minibuffer-map
