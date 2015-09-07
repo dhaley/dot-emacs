@@ -1006,6 +1006,3 @@
 [submodule "site-lisp/parsebib"]
 	path = site-lisp/parsebib
 	url = git@github.com:joostkremers/parsebib.git
-[submodule "lisp/initsplit"]
-	path = lisp/initsplit
-	url = https://github.com/dabrahams/initsplit
