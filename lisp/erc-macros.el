@@ -1,4 +1,7 @@
-(eval-when-compile (defvar erc-fools))
+(eval-when-compile
+  (require 'cl)
+
+  (defvar erc-fools))
 
 (defun erc-cmd-FOOL (term &rest ignore)
   (add-to-list 'erc-fools term))
@@ -22,7 +25,7 @@
          (who (erc-get-server-user nick))
          (host (erc-server-user-host who))
          (user (erc-server-user-login who)))
-    (erc-server-send
+    (erc-send-command
      (format "MODE %s +b *!%s@%s%s"
              chan (if whole-ip "*" user) host (or redirect "")))))
 
@@ -33,7 +36,7 @@
   (erc-cmd-OPME)
   (sleep-for 0 250)
   (erc-cmd-BAN nick)
-  (erc-server-send (format "KICK %s %s %s"
+  (erc-send-command (format "KICK %s %s %s"
                             (erc-default-target)
                             nick
                             (or reason
@@ -48,7 +51,7 @@
   (erc-cmd-OPME)
   (sleep-for 0 250)
   (erc-cmd-BAN nick nil t)
-  (erc-server-send (format "KICK %s %s %s"
+  (erc-send-command (format "KICK %s %s %s"
                             (erc-default-target)
                             nick
                             (or reason
@@ -63,7 +66,7 @@
   (erc-cmd-OPME)
   (sleep-for 0 250)
   (erc-cmd-BAN nick "$#haskell-ops")
-  (erc-server-send (format "KICK %s %s %s"
+  (erc-send-command (format "KICK %s %s %s"
                             (erc-default-target)
                             nick
                             (or reason
