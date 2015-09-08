@@ -31,7 +31,7 @@
 (require 'ob-ditaa)
 (require 'ox-md)
 (require 'ox-opml)
-(require 'org-eshell)
+(use-package org-eshell)
 (use-package orgit
   :load-path "site-lisp/orgit")
 
