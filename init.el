@@ -3466,12 +3466,7 @@ You can use arrow-keys or WASD.
         :diminish eldoc-mode
         :commands eldoc-mode
         :config
-        (use-package eldoc-extension
-          :disabled t
-          :defer t
-          :init
-          (add-hook 'emacs-lisp-mode-hook
-                    #'(lambda () (require 'eldoc-extension)) t))
+
         (eldoc-add-command 'paredit-backward-delete
                            'paredit-close-round))
 
