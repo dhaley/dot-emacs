@@ -2279,8 +2279,9 @@ You can use arrow-keys or WASD.
   :bind ("C-c e v" . edit-variable))
 
 (use-package emmet-mode
+  :disabled t
   :config
-  (add-hook 'web-mode-hook  'emmet-mode)
+  ;; (add-hook 'web-mode-hook  'emmet-mode)
   (bind-keys :map emmet-mode-keymap
              ("C-n" . emmet-next-edit-point)
              ("C-p" . emmet-prev-edit-point))
@@ -2721,9 +2722,10 @@ You can use arrow-keys or WASD.
   :bind (("M-s o" . helm-swoop)
          ("M-s /" . helm-multi-swoop))
   :config
-  (use-package helm-match-plugin
-    :config
-    (helm-match-plugin-mode 1)))
+  ;; (use-package helm-match-plugin
+  ;;   :config
+  ;;   (helm-match-plugin-mode 1))
+  )
 
 (use-package helm-descbinds
   :load-path "site-lisp/helm-descbinds"
