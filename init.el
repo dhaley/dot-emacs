@@ -2777,10 +2777,10 @@ You can use arrow-keys or WASD.
     (setq helm-gtags-ignore-case t)
     (setq helm-gtags-auto-update t)
 
-    (gtags-mode 1)
+    (ggtags-mode 1)
     (helm-gtags-mode 1)
-    (define-key gtags-mode-map (kbd "M-.") nil)
-    (define-key gtags-mode-map (kbd "M-/") nil)
+    (define-key ggtags-mode-map (kbd "M-.") nil)
+    (define-key ggtags-mode-map (kbd "M-/") nil)
     (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-find-tag)
     (define-key helm-gtags-mode-map (kbd "M-/") 'helm-gtags-pop-stack))
   
