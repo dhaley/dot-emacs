@@ -298,6 +298,7 @@
 ")
  '(gnus-summary-prepared-hook (quote (gnus-summary-hide-all-threads)))
  '(gnus-summary-save-parts-default-mime ".*")
+ '(gnus-suppress-duplicates t)
  '(gnus-suspend-gnus-hook (quote (gnus-group-save-newsrc)))
  '(gnus-thread-expunge-below -1000)
  '(gnus-thread-hide-subtree t)
