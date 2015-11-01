@@ -1,6 +1,6 @@
 ;;; smartparens-html.el --- Additional configuration for HTML based modes.
 
-;; Copyright (C) 2013 Matus Goljer
+;; Copyright (C) 2013-2014 Matus Goljer
 
 ;; Author: Matus Goljer <matus.goljer@gmail.com>
 ;; Maintainer: Matus Goljer <matus.goljer@gmail.com>
@@ -163,6 +163,9 @@ backward."
 (sp-with-modes sp--html-modes
   (sp-local-pair "<" ">")
   (sp-local-tag  "<" "<_>" "</_>" :transform 'sp-match-sgml-tags :post-handlers '(sp-html-post-handler)))
+
+(--each sp--html-modes
+  (add-to-list 'sp-navigate-consider-sgml-tags it))
 
 (provide 'smartparens-html)
 
