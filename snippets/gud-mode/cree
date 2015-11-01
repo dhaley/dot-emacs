@@ -1,1 +1,1 @@
-run -d1 --c --llvm_file_name - ~/src/edg/test/eok_address_of.c
+run --gcc -DUSE_ASCII -I/usr/local/opt/libffi/lib/libffi-3.0.11/include --llvm_file_name - ~/src/cree/test/wc.c
