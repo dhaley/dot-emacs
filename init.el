@@ -49,8 +49,8 @@
 ;;; Utility macros and functions
 
 ;; support textexpander (dkh (2015-03-25): check if it's running)
-;; (bind-key "M-v" 'scroll-up)
-(bind-key "H-v" 'yank)
+;; (bind-key "M-v" #'scroll-up)
+(bind-key "H-v" #'yank)
 
 (defsubst hook-into-modes (func &rest modes)
   (dolist (mode-hook modes) (add-hook mode-hook func)))
@@ -170,18 +170,18 @@
 
 (define-key key-translation-map (kbd "H-TAB") (kbd "C-TAB"))
 
-(bind-key "<H-down>" 'shrink-window)
-(bind-key "<H-left>" 'shrink-window-horizontally)
-(bind-key "<H-right>" 'enlarge-window-horizontally)
-(bind-key "<H-up>" 'enlarge-window)
-(bind-key "H-`" 'new-frame)
+(bind-key "<H-down>" #'shrink-window)
+(bind-key "<H-left>" #'shrink-window-horizontally)
+(bind-key "<H-right>" #'enlarge-window-horizontally)
+(bind-key "<H-up>" #'enlarge-window)
+(bind-key "H-`" #'new-frame)
 ;;; C-
 
 (defvar ctl-period-map)
 (define-prefix-command 'ctl-period-map)
-(bind-key "C-." 'ctl-period-map)
+(bind-key "C-." #'ctl-period-map)
 
-(bind-key* "<C-return>" 'other-window)
+(bind-key* "<C-return>" #'other-window)
 
 (defun collapse-or-expand ()
   (interactive)
@@ -189,7 +189,7 @@
       (delete-other-windows)
     (bury-buffer)))
 
-(bind-key "C-z" 'delete-other-windows)
+(bind-key "C-z" #'delete-other-windows)
 
 ;;; M-
 
@@ -201,15 +201,15 @@
               (with-current-buffer buf
                 (rename-uniquely)))))))
 
-(bind-key "M-!" 'async-shell-command)
-(bind-key "M-'" 'insert-pair)
-(bind-key "M-\"" 'insert-pair)
-(bind-key "M-`" 'other-frame)
+(bind-key "M-!" #'async-shell-command)
+(bind-key "M-'" #'insert-pair)
+(bind-key "M-\"" #'insert-pair)
+(bind-key "M-`" #'other-frame)
 
-(bind-key "M-j" 'delete-indentation-forward)
-(bind-key "M-J" 'delete-indentation)
+(bind-key "M-j" #'delete-indentation-forward)
+(bind-key "M-J" #'delete-indentation)
 
-(bind-key "M-W" 'mark-word)
+(bind-key "M-W" #'mark-word)
 
 (defun mark-line (&optional arg)
   (interactive "p")
@@ -220,19 +220,19 @@
     (set-mark (point))
     (goto-char here)))
 
-(bind-key "M-L" 'mark-line)
+(bind-key "M-L" #'mark-line)
 
 (defun mark-sentence (&optional arg)
   (interactive "P")
   (backward-sentence)
   (mark-end-of-sentence arg))
 
-(bind-key "M-S" 'mark-sentence)
-(bind-key "M-X" 'mark-sexp)
-(bind-key "M-D" 'mark-defun)
+(bind-key "M-S" #'mark-sentence)
+(bind-key "M-X" #'mark-sexp)
+(bind-key "M-D" #'mark-defun)
 
-(bind-key "M-g c" 'goto-char)
-(bind-key "M-g l" 'goto-line)
+(bind-key "M-g c" #'goto-char)
+(bind-key "M-g l" #'goto-line)
 
 (defun delete-indentation-forward ()
   (interactive)
@@ -240,15 +240,15 @@
 
 ;;; M-C-
 
-(bind-key "<C-M-backspace>" 'backward-kill-sexp)
+(bind-key "<C-M-backspace>" #'backward-kill-sexp)
 
 ;;; ctl-x-map
 
 ;;; C-x
 
-(bind-key "C-x d" 'delete-whitespace-rectangle)
-(bind-key "C-x F" 'set-fill-column)
-(bind-key "C-x t" 'toggle-truncate-lines)
+(bind-key "C-x d" #'delete-whitespace-rectangle)
+(bind-key "C-x F" #'set-fill-column)
+(bind-key "C-x t" #'toggle-truncate-lines)
 
 (defun delete-current-buffer-file ()
   "Delete the current buffer and the file connected with it"
@@ -263,7 +263,7 @@
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 
-(bind-key "C-x K" 'delete-current-buffer-file)
+(bind-key "C-x K" #'delete-current-buffer-file)
 
 ;;; C-x C-
 
@@ -282,19 +282,19 @@
       (open-line 1)
       (insert line-text))))
 
-(bind-key "C-x C-d" 'duplicate-line)
-(bind-key "C-x C-e" 'pp-eval-last-sexp)
-(bind-key "C-x C-n" 'next-line)
+(bind-key "C-x C-d" #'duplicate-line)
+(bind-key "C-x C-e" #'pp-eval-last-sexp)
+(bind-key "C-x C-n" #'next-line)
 
 (defun find-alternate-file-with-sudo ()
   (interactive)
   (find-alternate-file (concat "/sudo::" (buffer-file-name))))
 
-(bind-key "C-x C-v" 'find-alternate-file-with-sudo)
+(bind-key "C-x C-v" #'find-alternate-file-with-sudo)
 
 ;;; C-x M-
 
-(bind-key "C-x M-n" 'set-goal-column)
+(bind-key "C-x M-n" #'set-goal-column)
 
 (defun refill-paragraph (arg)
   (interactive "*P")
@@ -329,14 +329,14 @@
       (funcall fun nil))
     (goto-char (+ end 2))))
 
-(bind-key "C-x M-q" 'refill-paragraph)
+(bind-key "C-x M-q" #'refill-paragraph)
 
 ;;; mode-specific-map
 
 ;;; C-c
 
-(bind-key "C-c <tab>" 'ff-find-other-file)
-(bind-key "C-c SPC" 'just-one-space)
+(bind-key "C-c <tab>" #'ff-find-other-file)
+(bind-key "C-c SPC" #'just-one-space)
 
 (defmacro when-feature-loaded (feature &rest body)
   "When FEATURE is loaded, evaluate and execute BODY."
@@ -370,7 +370,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
     (kill-line arg)
     (goto-char here)))
 
-(bind-key "C-c d" 'delete-current-line)
+(bind-key "C-c d" #'delete-current-line)
 
 (defun do-eval-buffer ()
   (interactive)
@@ -396,7 +396,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
            ("s" . scratch)
            ("z" . byte-recompile-directory))
 
-(bind-key "C-c f" 'flush-lines)
+(bind-key "C-c f" #'flush-lines)
 
 (defun goto-line-with-feedback ()
   "Show line numbers temporarily, while prompting for the line number input"
@@ -408,10 +408,10 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
         (forward-line (read-number "Goto line: ")))
     (linum-mode -1)))
 
-(bind-key "C-c g" 'goto-line)
+(bind-key "C-c g" #'goto-line)
 (global-set-key [remap goto-line] 'goto-line-with-feedback)
 
-(bind-key "C-c k" 'keep-lines)
+(bind-key "C-c k" #'keep-lines)
 
 (eval-when-compile
   (defvar emacs-min-height)
@@ -493,7 +493,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
       (emacs-min)
     (emacs-max)))
 
-(bind-key "C-c m" 'emacs-toggle-size)
+(bind-key "C-c m" #'emacs-toggle-size)
 
 (defcustom user-initials nil
   "*Initials of this user."
@@ -518,17 +518,17 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
   (insert (format "%s (%s): " user-initials
                   (format-time-string "%Y-%m-%d" (current-time)))))
 
-(bind-key "C-c n" 'insert-user-timestamp)
-(bind-key "C-c o" 'customize-option)
-(bind-key "C-c O" 'customize-group)
-(bind-key "C-c F" 'customize-face)
+(bind-key "C-c n" #'insert-user-timestamp)
+(bind-key "C-c o" #'customize-option)
+(bind-key "C-c O" #'customize-group)
+(bind-key "C-c F" #'customize-face)
 
-(bind-key "C-c q" 'fill-region)
-(bind-key "C-c r" 'replace-regexp)
-(bind-key "C-c s" 'replace-string)
-(bind-key "C-c u" 'rename-uniquely)
+(bind-key "C-c q" #'fill-region)
+(bind-key "C-c r" #'replace-regexp)
+(bind-key "C-c s" #'replace-string)
+(bind-key "C-c u" #'rename-uniquely)
 
-(bind-key "C-c v" 'ffap)
+(bind-key "C-c v" #'ffap)
 
 (defun view-clipboard ()
   (interactive)
@@ -539,11 +539,11 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
     (clipboard-yank)
     (goto-char (point-min))))
 
-(bind-key "C-c V" 'view-clipboard)
-(bind-key "C-c z" 'clean-buffer-list)
+(bind-key "C-c V" #'view-clipboard)
+(bind-key "C-c z" #'clean-buffer-list)
 
-(bind-key "C-c =" 'count-matches)
-(bind-key "C-c ;" 'comment-or-uncomment-region)
+(bind-key "C-c =" #'count-matches)
+(bind-key "C-c ;" #'comment-or-uncomment-region)
 
 ;;; C-c C-
 
@@ -577,7 +577,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
         (while (re-search-forward "[^.;!?:]\\([ \t][ \t]+\\)" end t)
           (replace-match " " nil nil nil 1))))))
 
-(bind-key "C-c M-q" 'unfill-paragraph)
+(bind-key "C-c M-q" #'unfill-paragraph)
 
 (defun unfill-region (beg end)
   (interactive "r")
@@ -592,23 +592,23 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
 
 ;;; C-.
 
-(bind-key "C-. m" 'kmacro-keymap)
+(bind-key "C-. m" #'kmacro-keymap)
 
-(bind-key "C-. C-i" 'indent-rigidly)
+(bind-key "C-. C-i" #'indent-rigidly)
 
 ;;; help-map
 
 (defvar lisp-find-map)
 (define-prefix-command 'lisp-find-map)
 
-(bind-key "C-h e" 'lisp-find-map)
+(bind-key "C-h e" #'lisp-find-map)
 
 ;;; C-h e
 
-(bind-key "C-h e c" 'finder-commentary)
-(bind-key "C-h e e" 'view-echo-area-messages)
-(bind-key "C-h e f" 'find-function)
-(bind-key "C-h e F" 'find-face-definition)
+(bind-key "C-h e c" #'finder-commentary)
+(bind-key "C-h e e" #'view-echo-area-messages)
+(bind-key "C-h e f" #'find-function)
+(bind-key "C-h e F" #'find-face-definition)
 
 (defun my-switch-in-other-buffer (buf)
   (when buf
@@ -647,10 +647,10 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
     ;;(switch-in-other-buffer cust-buf)
     (balance-windows)))
 
-(bind-key "C-h e d" 'my-describe-symbol)
-(bind-key "C-h e i" 'info-apropos)
-(bind-key "C-h e k" 'find-function-on-key)
-(bind-key "C-h e l" 'find-library)
+(bind-key "C-h e d" #'my-describe-symbol)
+(bind-key "C-h e i" #'info-apropos)
+(bind-key "C-h e k" #'find-function-on-key)
+(bind-key "C-h e l" #'find-library)
 
 (defvar lisp-modes '(emacs-lisp-mode
                      inferior-emacs-lisp-mode
@@ -679,9 +679,9 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
     (if (memq current-mode lisp-modes)
         (funcall current-mode))))
 
-(bind-key "C-h e s" 'scratch)
-(bind-key "C-h e v" 'find-variable)
-(bind-key "C-h e V" 'apropos-value)
+(bind-key "C-h e s" #'scratch)
+(bind-key "C-h e v" #'find-variable)
+(bind-key "C-h e V" #'apropos-value)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; dkh (2015-03-25): Move all of the above into use-package declarations    ;;
