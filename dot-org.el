@@ -42,6 +42,24 @@
 (declare-function cfw:org-create-source "calfw-org")
 (declare-function cfw:cal-create-source "calfw-cal")
 
+(defun org-insert-src-block (src-code-type)
+  "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+  (interactive
+   (let ((src-code-types
+          '("emacs-lisp" "php" "C" "sh" "java" "js" "clojure" "C++" "css"
+            "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+            "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+            "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+            "scheme" "sqlite")))
+     (list (ido-completing-read "Source code type: " src-code-types))))
+  (progn
+    (newline-and-indent)
+    (insert (format "#+BEGIN_SRC %s\n" src-code-type))
+    (newline-and-indent)
+    (insert "#+END_SRC\n")
+    (previous-line 2)
+    (org-edit-src-code)))
+
 (defun org-fit-agenda-window ()
   "Fit the window to the buffer size."
   (and (memq org-agenda-window-setup '(reorganize-frame))
@@ -662,6 +680,8 @@ end tell" (match-string 1))))
 (bind-key "C-c x U" 'org-set-url-link)
 (bind-key "C-c x f" 'org-insert-file-link)
 (bind-key "C-c x F" 'org-set-file-link)
+(bind-key "C-c x c" 'org-edit-src-code)
+(bind-key "C-c x i" 'org-insert-src-block)
 
 (bind-key "C-c C-x b" `org-agenda-tree-to-indirect-buffer)
 
@@ -679,47 +699,6 @@ end tell" (match-string 1))))
 (org-defkey org-mode-map [(control ?c) (control ?x) ?@] 'visible-mode)
 (org-defkey org-mode-map [(control ?c) (meta ?m)] 'my-org-wrap-region)
 (org-defkey org-mode-map (kbd "C-c k") 'org-cut-subtree)
-
-;; (defvar my-org-expand-map)
-;; (define-prefix-command 'my-org-expand-map)
-;; (define-key org-mode-map [(control ?c) (control ?.)] 'my-org-expand-map)
-;; ;; (define-key my-org-expand-map [(control ?t)] 'ledger-test-create)
-;; (define-key my-org-expand-map [(control ?t)] 'bh/org-todo)
-;; (define-key my-org-expand-map [(control ?w)] 'bh/widen)
-;; (define-key my-org-expand-map [(control ?l)] 'bh/set-truncate-lines)
-;; (define-key my-org-expand-map [(control ?H)] 'bh/hide-other)
-;; ;; (define-key my-org-expand-map [(control ?n)] 'bh/narrow-up-one-level)
-;; (define-key my-org-expand-map [(control ?i)] 'bh/punch-in)
-;; (define-key my-org-expand-map [(control ?o)] 'bh/punch-out)
-;; (define-key my-org-expand-map [(control ?t)] 'bh/insert-inactive-timestamp)
-;; (define-key my-org-expand-map [(control ?T)] 'bh/toggle-insert-inactive-timestamp)
-;; (define-key my-org-expand-map [(control ?v)] 'visible-mode)
-;; (define-key my-org-expand-map [(control ?L)] 'org-toggle-link-display)
-;; (define-key my-org-expand-map [(control ?c)] 'bh/clock-in-last-task)
-;; ;; (define-key my-org-expand-map [(control ?P)] 'previous-buffer)
-;; (define-key my-org-expand-map [(control ?p)] 'org-toggle-inline-images)
-;; (define-key my-org-expand-map [(control ?r)] 'narrow-to-region)
-;; ;; (define-key my-org-expand-map [(control ?n)] 'next-buffer)
-;; (define-key my-org-expand-map [(control ?g)] 'org-clock-goto)
-;; (define-key my-org-expand-map [(control ?C)] 'org-clock-in)
-;; (define-key my-org-expand-map [(control ?s)] 'bh/save-then-publish)
-
-(eval-when-compile
-  (defvar yas/trigger-key)
-  (defvar yas/keymap)
-
-  (autoload 'yas/expand "yasnippet"))
-
-(defun yas/org-very-safe-expand ()
-  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
-
-(add-hook 'org-mode-hook
-          (lambda ()
-            (require 'yasnippet)
-            (set (make-local-variable 'yas/trigger-key) [tab])
-            (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-            (define-key yas/keymap [tab] 'yas/next-field-or-maybe-expand)
-            (define-key org-mode-map (kbd "C-c <return>") 'org-insert-heading-respect-content)))
 
 (remove-hook 'kill-emacs-hook 'org-babel-remove-temporary-directory)
 
@@ -1665,7 +1644,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
           'append)
 
 ;; flyspell mode for spell checking everywhere
-;; (add-hook 'org-mode-hook 'turn-on-flyspell 'append)
+(add-hook 'org-mode-hook 'turn-on-flyspell 'append)
 
 ;; Disable keys in org-mode
 ;;    C-c [
