@@ -2827,8 +2827,8 @@ You can use arrow-keys or WASD.
 
   (use-package helm-themes
     :load-path "site-lisp/helm-themes"
-    :commands helm-themes))
-    (setq helm-google-suggest-use-curl-p t)))
+    :commands helm-themes)
+    (setq helm-google-suggest-use-curl-p t))
 
 (use-package hi-lock
   :bind (("M-o l" . highlight-lines-matching-regexp)
@@ -4940,8 +4940,8 @@ Relies on functions of `php-mode'."
   :bind ("C-. N" . tiny-expand))
 
 (use-package tramp-sh
-  :defer t
-  :config
+  :defer t)
+
 (use-package unbound)
 
 (use-package vkill
