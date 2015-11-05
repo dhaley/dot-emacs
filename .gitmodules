@@ -1003,3 +1003,63 @@
 [submodule "site-lisp/org-macros"]
 	path = site-lisp/org-macros
 	url = git@github.com:fniessen/org-macros.git
+[submodule "site-lisp/ace-isearch"]
+	path = site-lisp/ace-isearch
+	url = git@github.com:tam17aki/ace-isearch.git
+[submodule "site-lisp/aria2"]
+	path = site-lisp/aria2
+	url = git@github.com:tatsuhiro-t/aria2.git
+[submodule "site-lisp/backup-walker"]
+	path = site-lisp/backup-walker
+	url = git@github.com:lewang/backup-walker.git
+[submodule "site-lisp/company-auctex"]
+	path = site-lisp/company-auctex
+	url = git@github.com:alexeyr/company-auctex.git
+[submodule "site-lisp/company-math"]
+	path = site-lisp/company-math
+	url = git@github.com:vspinu/company-math.git
+[submodule "site-lisp/company-quickhelp"]
+	path = site-lisp/company-quickhelp
+	url = git@github.com:expez/company-quickhelp.git
+[submodule "site-lisp/diffview-mode"]
+	path = site-lisp/diffview-mode
+	url = git@github.com:mgalgs/diffview-mode.git
+[submodule "site-lisp/guess-style"]
+	path = site-lisp/guess-style
+	url = git@github.com:nschum/guess-style.git
+[submodule "site-lisp/helm-cmd-t"]
+	path = site-lisp/helm-cmd-t
+	url = git@github.com:emacs-helm/helm-cmd-t.git
+[submodule "site-lisp/helm-emms"]
+	path = site-lisp/helm-emms
+	url = git@github.com:emacs-helm/helm-emms.git
+[submodule "site-lisp/helm-github-issues"]
+	path = site-lisp/helm-github-issues
+	url = git@github.com:syohex/emacs-helm-github-issues.git
+[submodule "site-lisp/helm-google"]
+	path = site-lisp/helm-google
+	url = git@github.com:steckerhalter/helm-google.git
+[submodule "site-lisp/lentic"]
+	path = site-lisp/lentic
+	url = git@github.com:phillord/lentic.git
+[submodule "site-lisp/log4j-mode"]
+	path = site-lisp/log4j-mode
+	url = git@github.com:emacsmirror/log4j-mode.git
+[submodule "site-lisp/math-symbol-lists"]
+	path = site-lisp/math-symbol-lists
+	url = git@github.com:vspinu/math-symbol-lists.git
+[submodule "site-lisp/olivetti"]
+	path = site-lisp/olivetti
+	url = git@github.com:rnkn/olivetti.git
+[submodule "site-lisp/smart-forward-el"]
+	path = site-lisp/smart-forward-el
+	url = git@github.com:magnars/smart-forward.el.git
+[submodule "site-lisp/tellib"]
+	path = site-lisp/tellib
+	url = git@github.com:jwiegley/tellib.git
+[submodule "site-lisp/transpose-mark"]
+	path = site-lisp/transpose-mark
+	url = git@github.com:AtticHacker/transpose-mark.git
+[submodule "site-lisp/vimish-fold"]
+	path = site-lisp/vimish-fold
+	url = git@github.com:mrkkrp/vimish-fold.git
