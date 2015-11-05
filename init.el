@@ -1738,22 +1738,6 @@ You can use arrow-keys or WASD.
   :commands auto-dim-other-buffers-mode
   :init
   (auto-dim-other-buffers-mode 1))
-
-(use-package auto-complete-config
-  :disabled t
-  :load-path "site-lisp/auto-complete"
-  :diminish auto-complete-mode
-  :init
-  (use-package pos-tip)
-  (ac-config-default)
-
-  :config
-  (ac-set-trigger-key "<backtab>")
-  (setq ac-use-menu-map t)
-
-  (bind-key "H-M-?" 'ac-last-help)
-  (unbind-key "C-s" ac-completing-map))
-
 (use-package autopair
   :disabled t
   :load-path "site-lisp/autopair"
@@ -2533,23 +2517,6 @@ You can use arrow-keys or WASD.
     (bind-key "f" 'eww-lnum-follow eww-mode-map)
     (bind-key "F" 'eww-lnum-universal eww-mode-map)))
 
-;; (use-package expand-region
-;;   :bind ("C-=" . er/expand-region)
-;;   :config
-;;   (progn
-;;     (use-package change-inner
-;;       :load-path "lisp/change-inner.el/"
-;;       :bind (("M-i" . change-inner)
-;;              ("M-o" . change-outer)))
-;;     (defun er/add-text-mode-expansions ()
-;;       (make-variable-buffer-local 'er/try-expand-list)
-;;       (setq er/try-expand-list (append
-;;                                 er/try-expand-list
-;;                                 '(mark-paragraph
-;;                                   mark-page))))
-
-;;     (add-hook 'text-mode-hook 'er/add-text-mode-expansions)))
-
 (use-package feature-mode
   :load-path "site-lisp/cucumber"
   :mode "\\.feature$")
@@ -2736,10 +2703,9 @@ You can use arrow-keys or WASD.
   :bind (("M-s o" . helm-swoop)
          ("M-s /" . helm-multi-swoop))
   :config
-  ;; (use-package helm-match-plugin
-  ;;   :config
-  ;;   (helm-match-plugin-mode 1))
-  )
+  (use-package helm-match-plugin
+    :config
+    (helm-match-plugin-mode 1)))
 
 (use-package helm-descbinds
   :load-path "site-lisp/helm-descbinds"
@@ -2862,6 +2828,7 @@ You can use arrow-keys or WASD.
   (use-package helm-themes
     :load-path "site-lisp/helm-themes"
     :commands helm-themes))
+    (setq helm-google-suggest-use-curl-p t)))
 
 (use-package hi-lock
   :bind (("M-o l" . highlight-lines-matching-regexp)
@@ -3482,7 +3449,12 @@ You can use arrow-keys or WASD.
         :diminish eldoc-mode
         :commands eldoc-mode
         :config
-
+        (use-package eldoc-extension
+          :disabled t
+          :defer t
+          :init
+          (add-hook 'emacs-lisp-mode-hook
+                    #'(lambda () (require 'eldoc-extension)) t))
         (eldoc-add-command 'paredit-backward-delete
                            'paredit-close-round))
 
@@ -3872,6 +3844,7 @@ You can use arrow-keys or WASD.
   (bind-key "C-c M-h" 'tidy-xml-buffer nxml-mode-map))
 
 (use-package on-screen
+  :disabled t
   :load-path "site-lisp/on-screen"
   :defer 5
   :config
@@ -4506,13 +4479,13 @@ Relies on functions of `php-mode'."
 
 (use-package puppet-mode
   :disabled t
-  :mode "\\.pp\\'"
+  :mode ("\\.pp\\'" . puppet-mode)
   :config
   (use-package puppet-ext))
 
 (use-package python-mode
   :load-path "site-lisp/python-mode"
-  :mode "\\.py\\'"
+  :mode ("\\.py\\'" . python-mode)
   :interpreter ("python" . python-mode)
   :config
   (defvar python-mode-initialized nil)
@@ -4969,35 +4942,6 @@ Relies on functions of `php-mode'."
 (use-package tramp-sh
   :defer t
   :config
-  ;; bug in org-mode 8.2.10
-  ;; http://www.howardism.org/Technical/Emacs/literate-devops.html
-  (defun org-babel-temp-file (prefix &optional suffix)
-    "Create a temporary file in the `org-babel-temporary-directory'.
-Passes PREFIX and SUFFIX directly to `make-temp-file' with the
-value of `temporary-file-directory' temporarily set to the value
-of `org-babel-temporary-directory'."
-    (if (file-remote-p default-directory)
-        (let ((prefix
-               ;; We cannot use `temporary-file-directory' as local part
-               ;; on the remote host, because it might be another OS
-               ;; there.  So we assume "/tmp", which ought to exist on
-               ;; relevant architectures.
-               (concat (file-remote-p default-directory)
-                       ;; REPLACE temporary-file-directory with /tmp:
-                       (expand-file-name prefix "/tmp/"))))
-          (make-temp-file prefix nil suffix))
-      (let ((temporary-file-directory
-             (or (and (boundp 'org-babel-temporary-directory)
-                      (file-exists-p org-babel-temporary-directory)
-                      org-babel-temporary-directory)
-                 temporary-file-directory)))
-        (make-temp-file prefix nil suffix))))
-
-  (defun jgk/xterm-ssh (host)
-    "Spawn a xterm with a ssh to the host"
-    (start-process-shell-command "*org-xterm-ssh*" "ssh-xterm" "xterm" "-e"
-                                 (concat "'ssh -AY "  host "'"))))
-
 (use-package unbound)
 
 (use-package vkill
@@ -5160,15 +5104,16 @@ of `org-babel-temporary-directory'."
   (wrap-region-add-wrappers
    '(("$" "$")
      ("/" "/" nil ruby-mode)
-     ("/* " " */" "#" (java-mode javascript-mode c-mode c++-mode))
+     ("/* " " */" "#" (java-mode javascript-mode css-mode c-mode c++-mode))
      ("`" "`" nil (markdown-mode ruby-mode shell-script-mode)))))
 
 (use-package yaml-mode
   :load-path "site-lisp/yaml-mode"
-  :mode "\\.ya?ml\\'")
+  :mode ("\\.ya?ml\\'" . yaml-mode))
 
 (use-package yasnippet
   :load-path "site-lisp/yasnippet"
+  :demand t
   :diminish yas-minor-mode
   :commands (yas-expand yas-minor-mode)
   :functions (yas-guess-snippet-directories yas-table-name)
@@ -5201,6 +5146,7 @@ of `org-babel-temporary-directory'."
 
   :config
   (yas-load-directory "~/.emacs.d/snippets/")
+  (yas-global-mode 1)
 
   (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap))
 
