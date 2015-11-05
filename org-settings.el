@@ -327,7 +327,10 @@ SCHEDULED: %t
 (quote
  (("gmail" . "https://mail.google.com/mail/u/0/#all/%s")
   ("google" . "http://www.google.com/search?q=%s")
-  ("map" . "http://maps.google.com/maps?q=%s"))))
+  ("map" . "http://maps.google.com/maps?q=%s")
+  ("github_nrel" . "https://github.nrel.gov")
+  ("github" . "https://github.com")
+  ("ndg" . "https://github.nrel.gov/NrelDrupal/%s"))))
  '(org-link-frame-setup
 (quote
  ((vm . vm-visit-folder)

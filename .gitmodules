@@ -1000,3 +1000,6 @@
 [submodule "site-lisp/parsebib"]
 	path = site-lisp/parsebib
 	url = git@github.com:joostkremers/parsebib.git
+[submodule "site-lisp/org-macros"]
+	path = site-lisp/org-macros
+	url = git@github.com:fniessen/org-macros.git
