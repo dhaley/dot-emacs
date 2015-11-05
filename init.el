@@ -1731,7 +1731,7 @@ You can use arrow-keys or WASD.
   (ac-set-trigger-key "<backtab>")
   (setq ac-use-menu-map t)
 
-  (bind-key "A-M-?" 'ac-last-help)
+  (bind-key "H-M-?" #'ac-last-help)
   (unbind-key "C-s" ac-completing-map))
 
 ;;;_ , auto-dim-other-buffers
@@ -1852,7 +1852,7 @@ You can use arrow-keys or WASD.
           (move-marker (process-mark proc) 1 (current-buffer)))
         (setq mode-line-process '(":%s")))))
 
-  (bind-key "C-x ~" 'show-backups)
+  (bind-key "C-x ~" #'show-backups)
 
   :init
   (defun my-make-backup-file-name (file)
@@ -2316,8 +2316,8 @@ You can use arrow-keys or WASD.
     (interactive)
     (process-send-string emms-player-simple-process-name "volume -1\n"))
 
-  (bind-key "C-. C--" 'emms-player-mplayer-volume-down)
-  (bind-key "C-. C-=" 'emms-player-mplayer-volume-up))
+  (bind-key "C-. C--" #'emms-player-mplayer-volume-down)
+  (bind-key "C-. C-=" #'emms-player-mplayer-volume-up))
 
 (use-package eyebrowse
   :commands eyebrowse-mode
