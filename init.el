@@ -790,18 +790,16 @@ Keys are in kbd format."
           ace-jump-word-mode
           ace-jump-line-mode)))
 
-(use-package buffer-move
-  :load-path "site-lisp/buffer-move"
-  :bind (
-         ("M-o ."    . buf-move-up)
-         ("M-o j"  . buf-move-down)
-         ("M-o a"  . buf-move-left)
-         ("M-o u" . buf-move-right)))
-
 (use-package ace-link
   :defer 1
   :config
   (ace-link-setup-default))
+
+(use-package ace-isearch
+  :disabled t
+  :load-path "site-lisp/ace-isearch"
+  :config
+  (global-ace-isearch-mode 1))
 
 (use-package ace-window
   :load-path "site-lisp/ace-window"
@@ -1566,11 +1564,6 @@ You can use arrow-keys or WASD.
     ("c" crosshairs-mode nil)
     ("g" golden-ratio-mode nil)
     ("q" nil "quit")))
-
-(use-package ace-isearch
-  :load-path "site-lisp/ace-isearch"
-  :config
-  (global-ace-isearch-mode 1))
 
 (use-package ag
   :load-path "site-lisp/ag-el"
@@ -4891,7 +4884,7 @@ Relies on functions of `php-mode'."
         (sr-beginning-of-buffer)))))
 
 (use-package swiper
-  :bind ("C-. C-s" . swiper)
+  :bind ("C-. r" . swiper)
   :load-path "site-lisp/swiper"
   :diminish ivy-mode
   :config
