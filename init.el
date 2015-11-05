@@ -852,8 +852,7 @@ Keys are in kbd format."
 
 (use-package avy
   :load-path "site-lisp/avy"
-  :bind* (("<C-return>" . ace-window)
-          ("H-l" . avy-goto-line))
+  :bind* (("H-l" . avy-goto-line))
   :init
   (defun toggle-window-split ()
     (interactive)
