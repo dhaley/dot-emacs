@@ -792,6 +792,14 @@ Keys are in kbd format."
           ace-jump-word-mode
           ace-jump-line-mode)))
 
+(use-package buffer-move
+  :load-path "site-lisp/buffer-move"
+  :bind (
+         ("M-o ."    . buf-move-up)
+         ("M-o j"  . buf-move-down)
+         ("M-o a"  . buf-move-left)
+         ("M-o u" . buf-move-right)))
+
 (use-package hydra
   :load-path "site-lisp/hydra"
   :defer 0.1
@@ -803,14 +811,6 @@ Keys are in kbd format."
 
   (bind-key "C-z" 'delete-other-windows)
 
-  (use-package buffer-move
-    :load-path "site-lisp/buffer-move"
-    :bind (
-           ("M-o ."    . buf-move-up)
-           ("M-o j"  . buf-move-down)
-           ("M-o a"  . buf-move-left)
-           ("M-o u" . buf-move-right)))
-  
   (global-set-key (kbd "M-o f") 'flash-active-buffer)
   
   (make-face 'flash-active-buffer-face)
