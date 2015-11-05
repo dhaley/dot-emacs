@@ -1066,3 +1066,6 @@
 [submodule "site-lisp/m-buffer"]
 	path = site-lisp/m-buffer
 	url = git@github.com:phillord/m-buffer-el.git
+[submodule "site-lisp/org-autolist"]
+	path = site-lisp/org-autolist
+	url = git@github.com:calvinwyoung/org-autolist.git
