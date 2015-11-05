@@ -96,7 +96,8 @@
           (if (string-match "Group" (buffer-name candidate))
               (gnus-group-get-new-news)))
       (let ((switch-to-gnus-unplugged arg))
-        (gnus)
+        ;; (gnus)
+        (gnus-unplugged)
         (gnus-group-list-groups gnus-activate-level)
         (setq switch-to-gnus-run t)))))
 
@@ -123,6 +124,13 @@
      (lambda (ret)
        ;; (do-applescript "tell application \"Notify\" to quit")
        ))))
+
+(use-package gnus-sum
+  :config
+  (bind-key "F" #'gnus-summary-wide-reply-with-original
+            gnus-summary-mode-map)
+  (bind-key "F" #'gnus-article-wide-reply-with-original
+            gnus-article-mode-map))
 
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 (add-hook 'gnus-group-mode-hook 'hl-line-mode)

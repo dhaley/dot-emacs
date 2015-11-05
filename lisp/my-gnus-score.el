@@ -92,6 +92,20 @@
 ;;    right back.  But if you run across an author you really like, use
 ;;    'I A' to manually boost that person.  This may show you followups
 ;;    in future to threads you're currently ignoring.
+;; 
+;; | gnus-ticked-mark    | ! | Mark used for ticked articles                    |
+;; | gnus-saved-mark     | S | Mark used for articles that have been saved      |
+;; | gnus-dormant-mark   | ? | Mark used for dormant articles                   |
+;; | gnus-forwarded-mark | F | Mark used for articles that have been forwarded  |
+;; | gnus-replied-mark   | A | Mark used for articles that have been replied to |
+;; | gnus-read-mark      | R | Mark used for read articles                      |
+;; | gnus-del-mark       | r | Mark used for del'd articles                     |
+;; | gnus-recent-mark    | N | Mark used for articles that are recent           |
+;; | gnus-killed-mark    | K | Mark used for killed articles                    |
+;; | gnus-catchup-mark   | C | Mark used for articles that are caught up        |
+;; | gnus-duplicate-mark | M | Mark used for duplicate articles                 |
+;; | gnus-expirable-mark | E | Mark used for expirable articles                 |
+;; | gnus-spam-mark      | $ | Mark used for spam articles                      |
 
 ;;; Code:
 
@@ -134,19 +148,31 @@
 
 ;;; Customization variable overrides:
 
-;; These "overrides" specify the defaults that I have found useful over the
-;; past 12 years.  I've had little reason to change them in all that time.
+;; Previously, and for the longest time, this list was a bit simpler:
+;;  '((gnus-dormant-mark   (from 20)
+;;                         (subject 100))
+;;    (gnus-ticked-mark    (subject 30))
+;;    (gnus-read-mark      (subject 30))
+;;    (gnus-del-mark       (subject -150))
+;;    (gnus-catchup-mark   (subject -150))
+;;    (gnus-killed-mark    (subject -1000))
+;;    (gnus-expirable-mark (from -1000)
+;;                         (subject -1000)))
 
 (my-gnus-score-defcustom gnus-default-adaptive-score-alist
-  '((gnus-dormant-mark   (from 20)
-                         (subject 100))
-    (gnus-ticked-mark    (subject 30))
-    (gnus-read-mark      (subject 30))
-    (gnus-del-mark       (subject -150))
-    (gnus-catchup-mark   (subject -150))
-    (gnus-killed-mark    (subject -1000))
-    (gnus-expirable-mark (from -1000)
-                         (subject -1000))))
+  '((gnus-saved-mark     (subject 250)  (from 50))
+    (gnus-dormant-mark   (subject 150)  (from 50))
+    (gnus-forwarded-mark (subject 100)  (from 25))
+    (gnus-replied-mark   (subject 75)   (from 15))
+    ;;(gnus-ticked-mark    (subject 0)    (from 0))
+    (gnus-read-mark      (subject 30)   (from 5))
+    (gnus-del-mark       (subject 5))
+    ;;(gnus-recent-mark    (subject 0)    (from 0))
+    (gnus-killed-mark    (subject -5)   (from -2))
+    (gnus-catchup-mark   (subject -250))
+    (gnus-duplicate-mark (subject -250))
+    (gnus-expirable-mark (subject -250))
+    (gnus-spam-mark      (from -150))))
 
 (my-gnus-score-defcustom gnus-score-default-duration  'p)
 (my-gnus-score-defcustom gnus-score-expiry-days 30)

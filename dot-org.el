@@ -82,6 +82,10 @@
              (cfw:cal-create-source "Dark Orange"))
        :view 'two-weeks))))
 
+(use-package org-autolist
+  :load-path "site-lisp/org-autolist"
+  :commands org-autolist-mode)
+
 (use-package calfw
   :load-path "site-lisp/emacs-calfw"
   :bind ("C-c A" . my-calendar)
@@ -241,7 +245,7 @@ To use this function, add it to `org-agenda-finalize-hook':
 
 (defun my-org-push-mobile ()
   (interactive)
-  (with-current-buffer (find-file-noselect "~/Documents/Tasks/todo.txt")
+  (with-current-buffer (find-file-noselect "~/Documents/todo.txt")
     (org-mobile-push)))
 
 (eval-when-compile
@@ -678,6 +682,7 @@ end tell" (match-string 1))))
 (org-defkey org-mode-map [return] 'org-return-indent)
 (org-defkey org-mode-map
             [(control ?c) (control ?x) ?@] 'visible-mode)
+(org-defkey org-mode-map [(control ?c) (control ?x) ?@] 'visible-mode)
 (org-defkey org-mode-map [(control ?c) (meta ?m)] 'my-org-wrap-region)
 (org-defkey org-mode-map (kbd "C-c k") 'org-cut-subtree)
 
@@ -727,7 +732,12 @@ end tell" (match-string 1))))
 ;;;_  . org-agenda-mode
 
 (let ((map org-agenda-mode-map))
-                                        ; r runs the command org-agenda-redo
+  (define-key map "\C-n" 'next-line)
+  (define-key map "\C-p" 'previous-line)
+
+  (define-key map "g" 'org-agenda-redo)
+  (define-key map "f" 'org-agenda-date-later)
+  (define-key map "b" 'org-agenda-date-earlier)
   (define-key map "r" 'org-agenda-refile)
   (define-key map " " 'org-agenda-tree-to-indirect-buffer)
   (define-key map "Z" 'org-agenda-follow-mode)
@@ -740,6 +750,15 @@ end tell" (match-string 1))))
   (define-key map "V" 'bh/view-next-project)
   (define-key map "\C-c\C-x<" 'bh/set-agenda-restriction-lock)
   (define-key map (kbd "<f5>") 'cfw:open-org-calendar))
+  (define-key map "F" 'org-agenda-follow-mode)
+  (define-key map "q" 'delete-window)
+  (define-key map [(meta ?p)] 'org-agenda-earlier)
+  (define-key map [(meta ?n)] 'org-agenda-later)
+  (define-key map "x" 'org-todo-state-map)
+
+  (define-key map ">" 'org-agenda-filter-by-top-headline)
+
+  (define-key org-todo-state-map "z" 'make-bug-link))
 
 (unbind-key "M-m" org-agenda-keymap)
 (defadvice org-agenda-redo (after fit-windows-for-agenda-redo activate)
@@ -1806,7 +1825,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 ;; Local Variables:
 ;;   mode: emacs-lisp
-;;   mode: allout
 ;;   outline-regexp: "^;;;_\\([,. ]+\\)"
 ;; End:
 

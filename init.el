@@ -112,10 +112,11 @@
 (use-package pcache         :defer t :load-path "lib/pcache")
 (use-package pkg-info       :defer t :load-path "lib/pkg-info")
 (use-package popup          :defer t :load-path "lib/popup-el")
+(use-package popwin         :defer t :load-path "lib/popwin-el")
 (use-package pos-tip        :defer t :load-path "lib/pos-tip")
 (use-package s              :defer t :load-path "lib/s-el")
 (use-package working        :defer t)
-(use-package xml-rpc        :defer t :load-path "lib/xml-rpc")
+(use-package xml-rpc        :defer t)
 
 ;;; Keybindings
 

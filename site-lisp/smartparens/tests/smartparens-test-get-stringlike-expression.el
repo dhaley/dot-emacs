@@ -98,7 +98,7 @@
 ;; latex pairs
 
 (defvar sp--test-latex-pairs
-  (sp-test-merge-pairs '((:open "$"   :close "$" :actions (insert wrap)))))
+  (sp-test-merge-pairs '((:open "$"   :close "$" :actions (insert wrap autoskip navigate)))))
 
 (defvar sp-test-get-stringlike-expression-latex
   '(("foo $bar$ baz $quux$ bux" 1 5 10 "$" "$" "" "")
@@ -116,7 +116,8 @@
   "Test basic stringlike expressions in `latex-mode'."
   (sp-test-setup-stringlike-expression-env-latex
    (--each sp-test-get-stringlike-expression
-     (sp-test-stringlike-sexp (car it) (apply 'sp-test-make-pair (cddr it)) (cadr it) nil nil))
+     (when (sp-get-pair (nth 4 it))
+       (sp-test-stringlike-sexp (car it) (apply 'sp-test-make-pair (cddr it)) (cadr it) nil nil)))
    (--each sp-test-get-stringlike-expression-latex
      (sp-test-stringlike-sexp (car it) (apply 'sp-test-make-pair (cddr it)) (cadr it) nil nil))))
 

@@ -45,22 +45,45 @@
  '(gnus-completing-read-function (quote gnus-ido-completing-read))
  '(gnus-default-adaptive-score-alist
    (quote
-    ((gnus-dormant-mark
-      (from 20)
-      (subject 100))
+    ((gnus-saved-mark
+      (subject 250)
+      (from 50))
+     (gnus-dormant-mark
+      (subject 150)
+      (from 50))
+     (gnus-forwarded-mark
+      (subject 100)
+      (from 25))
+     (gnus-replied-mark
+      (subject 75)
+      (from 15))
      (gnus-ticked-mark
-      (subject 30))
+      (subject 0)
+      (from 0))
      (gnus-read-mark
-      (subject 30))
+      (subject 30)
+      (from 5))
      (gnus-del-mark
-      (subject -150))
-     (gnus-catchup-mark
-      (subject -150))
+      (subject 5)
+      (from 0))
+     (gnus-recent-mark
+      (subject 0)
+      (from 0))
      (gnus-killed-mark
-      (subject -1000))
+      (subject -5)
+      (from -5))
+     (gnus-catchup-mark
+      (subject -150)
+      (from 0))
+     (gnus-duplicate-mark
+      (subject -150)
+      (from 0))
      (gnus-expirable-mark
-      (from -1000)
-      (subject -1000)))))
+      (subject -250)
+      (from 0))
+     (gnus-spam-mark
+      (subject -10)
+      (from -150)))))
  '(gnus-default-article-saver (quote gnus-summary-save-in-mail))
  '(gnus-directory "~/Messages/Gnus/News")
  '(gnus-gcc-mark-as-read t)
@@ -291,13 +314,14 @@
  '(gnus-subscribe-newsgroup-method (quote gnus-subscribe-topics))
  '(gnus-sum-thread-tree-single-indent "  ")
  '(gnus-summary-expunge-below -100)
- '(gnus-summary-line-format "%«%U%R %uS %ur %»%(%*%-14,14f   %1«%B%s%»%)
+ '(gnus-summary-line-format "%Â«%U%R %uS %ur %Â»%(%*%-14,14f   %1Â«%B%s%Â»%)
 ")
  '(gnus-summary-mark-below -100)
  '(gnus-summary-pick-line-format "%U%R %uS %ur %(%*%-14,14f  %B%s%)
 ")
  '(gnus-summary-prepared-hook (quote (gnus-summary-hide-all-threads)))
  '(gnus-summary-save-parts-default-mime ".*")
+ '(gnus-suppress-duplicates t)
  '(gnus-suspend-gnus-hook (quote (gnus-group-save-newsrc)))
  '(gnus-thread-expunge-below -1000)
  '(gnus-thread-hide-subtree t)
