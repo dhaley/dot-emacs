@@ -27,7 +27,13 @@
   (mapc
    #'(lambda (path)
        (push (expand-file-name path user-emacs-directory) load-path))
-   '("site-lisp" "override" "lisp" "lisp/use-package" "")))
+   '("site-lisp" "override" "lisp" "lisp/use-package" ""))
+
+  (defun agda-site-lisp ()
+    (let ((agda
+           (nth 1 (split-string
+                   (shell-command-to-string "load-env-agda which agda")
+                   "\n"))))))) 
 
 (eval-and-compile
   (defvar use-package-verbose t)
