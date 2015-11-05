@@ -168,7 +168,7 @@
     ;; `hippie-expand-try-functions-list'.
     (hippie-expand arg))))
 
-(define-key key-translation-map (kbd "A-TAB") (kbd "C-TAB"))
+(define-key key-translation-map (kbd "H-TAB") (kbd "C-TAB"))
 
 (bind-key "<H-down>" 'shrink-window)
 (bind-key "<H-left>" 'shrink-window-horizontally)
