@@ -743,7 +743,7 @@ end tell" (match-string 1))))
   (define-key map "P" 'bh/narrow-to-project)
   (define-key map "V" 'bh/view-next-project)
   (define-key map "\C-c\C-x<" 'bh/set-agenda-restriction-lock)
-  (define-key map (kbd "<f5>") 'cfw:open-org-calendar))
+  (define-key map (kbd "<f5>") 'cfw:open-org-calendar)
   (define-key map "F" 'org-agenda-follow-mode)
   (define-key map "q" 'delete-window)
   (define-key map [(meta ?p)] 'org-agenda-earlier)
@@ -752,7 +752,7 @@ end tell" (match-string 1))))
 
   (define-key map ">" 'org-agenda-filter-by-top-headline)
 
-  (define-key org-todo-state-map "z" 'make-bug-link)
+  (define-key org-todo-state-map "z" 'make-bug-link))
 
 (unbind-key "M-m" org-agenda-keymap)
 (defadvice org-agenda-redo (after fit-windows-for-agenda-redo activate)
