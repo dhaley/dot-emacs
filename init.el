@@ -175,11 +175,15 @@
 (define-prefix-command 'ctl-period-map)
 (bind-key "C-." 'ctl-period-map)
 
+(bind-key* "<C-return>" 'other-window)
+
 (defun collapse-or-expand ()
   (interactive)
   (if (> (length (window-list)) 1)
       (delete-other-windows)
     (bury-buffer)))
+
+(bind-key "C-z" 'delete-other-windows)
 
 ;;; M-
 
@@ -194,16 +198,6 @@
 (bind-key "M-!" 'async-shell-command)
 (bind-key "M-'" 'insert-pair)
 (bind-key "M-\"" 'insert-pair)
-
-(defun align-code (beg end &optional arg)
-  (interactive "rP")
-  (if (null arg)
-      (align beg end)
-    (let ((end-mark (copy-marker end)))
-      (indent-region beg end-mark nil)
-      (align beg end-mark))))
-
-(bind-key "M-[" 'align-code)
 (bind-key "M-`" 'other-frame)
 
 (bind-key "M-j" 'delete-indentation-forward)
@@ -338,10 +332,6 @@
 (bind-key "C-c <tab>" 'ff-find-other-file)
 (bind-key "C-c SPC" 'just-one-space)
 
-(defmacro when-feature-loaded (feature &rest body)
-  "When FEATURE is loaded, evaluate and execute BODY."
-  `(when (featurep ,feature) ,@body))
-
 (defmacro recursive-edit-preserving-window-config (body)
   "*Return a command that enters a recursive edit after executing BODY.
 Upon exiting the recursive edit (with\\[exit-recursive-edit] (exit)
@@ -427,7 +417,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
   (cond ((eq display-name 'retina-imac) 975)
         (t 521)))
 (defvar emacs-min-height
-  (cond ((eq display-name 'retina-imac) 55)
+  (cond ((eq display-name 'retina-imac) 57)
         (t 44)))
 (defvar emacs-min-width 100)
 
@@ -443,7 +433,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
     (if running-alternate-emacs
         "-*-Myriad Pro-normal-normal-normal-*-20-*-*-*-p-0-iso10646-1"
       ;; "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"
-      "-*-Hack-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1"
+      "-*-Hack-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1"
       ))
    ((string= system-name "ubuntu")
     ;; "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"
@@ -542,7 +532,6 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
 (bind-key "C-c V" 'view-clipboard)
 (bind-key "C-c z" 'clean-buffer-list)
 
-(bind-key "C-c [" 'align-regexp)
 (bind-key "C-c =" 'count-matches)
 (bind-key "C-c ;" 'comment-or-uncomment-region)
 
@@ -766,10 +755,6 @@ Keys are in kbd format."
         keybindings))
 
 ;;; Packages
-
-(use-package etags
-  :load-path "/usr/local/share/emacs/24.4/lisp/progmodes"
-  :bind ("M-T" . tags-search))
 
 (use-package ggtags
   :load-path "site-lisp/ggtags"
@@ -1595,7 +1580,7 @@ You can use arrow-keys or WASD.
 
 (use-package agda2-mode
   :mode "\\.agda\\'"
-  :load-path "site-lisp/agda-mode"
+  :load-path (lambda () (list (agda-site-lisp)))
   :defines agda2-mode-map
   :preface
   (defun agda2-insert-helper-function (&optional prefix)
@@ -1624,6 +1609,19 @@ You can use arrow-keys or WASD.
 (use-package alert
   :load-path "lisp/alert"
   :commands alert)
+
+(use-package align
+  :bind (("M-["   . align-code)
+         ("C-c [" . align-regexp))
+  :commands align
+  :preface
+  (defun align-code (beg end &optional arg)
+    (interactive "rP")
+    (if (null arg)
+        (align beg end)
+      (let ((end-mark (copy-marker end)))
+        (indent-region beg end-mark nil)
+        (align beg end-mark)))))
 
 (use-package allout
   :disabled t
@@ -1695,23 +1693,24 @@ You can use arrow-keys or WASD.
     :preface
     (use-package parsebib :load-path "site-lisp/parsebib"))
 
-  
-  (use-package latex-mode
+  (use-package latex
     :defer t
     :config
     (use-package preview)
-    (use-package ac-math)
+    (use-package ac-math
+      :disabled t
+      :config
+      (defun ac-latex-mode-setup ()
+        (nconc ac-sources
+               '(ac-source-math-unicode ac-source-math-latex
+                                        ac-source-latex-commands)))
 
-    (defun ac-latex-mode-setup ()
-      (nconc ac-sources
-             '(ac-source-math-unicode ac-source-math-latex
-                                      ac-source-latex-commands)))
+      (add-to-list 'ac-modes 'latex-mode)
+      (add-hook 'latex-mode-hook 'ac-latex-mode-setup))
 
-    (add-to-list 'ac-modes 'latex-mode)
-    (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
-    (add-hook 'latex-mode-hook 'reftex-mode)
+    (add-hook 'LaTeX-mode-hook 'reftex-mode)
 
-    (info-lookup-add-help :mode 'latex-mode
+    (info-lookup-add-help :mode 'LaTeX-mode
                           :regexp ".*"
                           :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
                           :doc-spec '(("(latex2e)Concept Index" )
@@ -1972,7 +1971,7 @@ You can use arrow-keys or WASD.
          ("\\.cmake\\'"         . cmake-mode)))
 
 (use-package color-moccur
-  :commands (isearch-moccur isearch-all)
+  :commands (isearch-moccur isearch-all isearch-moccur-all)
   :bind ("M-s O" . moccur)
   :init
   (bind-key "M-o" 'isearch-moccur isearch-mode-map)
@@ -2349,6 +2348,7 @@ You can use arrow-keys or WASD.
   :bind ("C-c G" . gist-region-or-buffer))
 
 (use-package erc
+  :defer t
   :defines (erc-timestamp-only-if-changed-flag
             erc-timestamp-format
             erc-fill-prefix
@@ -2367,10 +2367,11 @@ You can use arrow-keys or WASD.
               :secret)))
 
   (defun slowping (host)
-    (= 0 (call-process "/sbin/ping" nil nil nil "-c1" "-W5000" "-q" host)))
+    (= 0 (call-process "ping" nil nil nil "-c1" "-W5000" "-q" host)))
 
   (defun irc ()
     (interactive)
+    (require 'erc)
     (if (slowping "192.168.9.133")
         (progn
           (erc :server "192.168.9.133"
@@ -2437,6 +2438,18 @@ You can use arrow-keys or WASD.
   (use-package erc-highlight-nicknames)
   (use-package erc-patch)
   (use-package erc-macros)
+  (use-package erc-image
+    :disabled t
+    :load-path "site-lisp/erc-image"
+    :commands (erc-image-show-url-image)
+    :init
+    (define-erc-module image nil
+      "Display inlined images in ERC buffer"
+      ((add-hook 'erc-insert-modify-hook 'erc-image-show-url-image t)
+       (add-hook 'erc-send-modify-hook 'erc-image-show-url-image t))
+      ((remove-hook 'erc-insert-modify-hook 'erc-image-show-url-image)
+       (remove-hook 'erc-send-modify-hook 'erc-image-show-url-image))
+      t))
 
   (use-package erc-yank
     :load-path "lisp/erc-yank"
