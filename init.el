@@ -338,6 +338,10 @@
 (bind-key "C-c <tab>" 'ff-find-other-file)
 (bind-key "C-c SPC" 'just-one-space)
 
+(defmacro when-feature-loaded (feature &rest body)
+  "When FEATURE is loaded, evaluate and execute BODY."
+  `(when (featurep ,feature) ,@body))
+
 (defmacro recursive-edit-preserving-window-config (body)
   "*Return a command that enters a recursive edit after executing BODY.
 Upon exiting the recursive edit (with\\[exit-recursive-edit] (exit)
@@ -763,7 +767,6 @@ Keys are in kbd format."
 ;;; Packages
 
 (use-package ggtags
-  :disabled 1
   :load-path "site-lisp/ggtags"
   :commands ggtags-mode
   :diminish ggtags-mode)
@@ -786,7 +789,6 @@ Keys are in kbd format."
 
 (use-package ace-jump-mode
   :load-path "site-lisp/ace-jump-mode"
-  :disabled 1
   :bind ("M-h" . ace-jump-mode)
   :config
   (setq ace-jump-mode-submode-list
@@ -795,7 +797,6 @@ Keys are in kbd format."
           ace-jump-line-mode)))
 
 (use-package buffer-move
-  :disabled 1
   :load-path "site-lisp/buffer-move"
   :bind (
          ("M-o ."    . buf-move-up)
@@ -803,14 +804,12 @@ Keys are in kbd format."
          ("M-o a"  . buf-move-left)
          ("M-o u" . buf-move-right)))
 
-;; (use-package ace-link
-;;   :defer 1
-;;   :config
-;;   (ace-link-setup-default)
-;;  )
+(use-package ace-link
+  :defer 1
+  :config
+  (ace-link-setup-default))
 
 (use-package ace-window
-  :disabled 1
   :load-path "site-lisp/ace-window"
   :init
 
@@ -860,7 +859,6 @@ Keys are in kbd format."
   (set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green"))
 
 (use-package avy
-  :disabled 1
   :load-path "site-lisp/avy"
   :bind* (("<C-return>" . ace-window)
           ("H-l" . avy-goto-line))
@@ -899,7 +897,6 @@ Keys are in kbd format."
 
 (use-package hydra
   :load-path "site-lisp/hydra"
-  :disabled 1
   :defer 0.1
   :preface
   (require 'hydra-examples)
@@ -1577,20 +1574,17 @@ You can use arrow-keys or WASD.
     ("q" nil "quit")))
 
 (use-package ace-isearch
-  :disabled t
   :load-path "site-lisp/ace-isearch"
   :config
   (global-ace-isearch-mode 1))
 
 (use-package ag
-  :disabled 1
   :load-path "site-lisp/ag-el"
   :commands (ag ag-regexp)
   :init
-  ;; (use-package helm-ag
-  ;;   :load-path "site-lisp/emacs-helm-ag"
-  ;;   :commands helm-ag)
-  )
+  (use-package helm-ag
+    :load-path "site-lisp/emacs-helm-ag"
+    :commands helm-ag))
 
 (use-package agda2-mode
   :disabled 1
@@ -2294,7 +2288,6 @@ You can use arrow-keys or WASD.
     (add-hook 'web-mode-hook 'ac-emmet-html-setup)))
 
 (use-package emms-setup
-  :disabled t
   :load-path "site-lisp/emms/lisp"
   :defines (emms-info-functions emms-player-simple-process-name)
   :commands (emms-standard emms-devel)
@@ -2769,7 +2762,6 @@ You can use arrow-keys or WASD.
 
   (use-package helm-gtags
     :load-path "site-lisp/helm-gtags"
-    :disabled t
     :config
     (setq helm-gtags-path-style 'relative)
     (setq helm-gtags-ignore-case t)
@@ -4469,7 +4461,6 @@ Relies on functions of `php-mode'."
   (global-set-key (kbd "C-c p w") 'projectile-post-project)
   (global-set-key (kbd "C-c p +") 'projectile-add-project)
 
-
   (use-package persp-projectile
     :bind ("C-\\" . projectile-persp-switch-project)
     )
@@ -4479,10 +4470,9 @@ Relies on functions of `php-mode'."
     (setq projectile-completion-system 'helm)
     (helm-projectile-on)
     (bind-key "M-s P" 'helm-projectile)
-    ;; (defun projectile-helm-ag ()
-    ;;   (interactive)
-    ;;   (helm-ag (projectile-project-root)))
-    ))
+    (defun projectile-helm-ag ()
+      (interactive)
+      (helm-ag (projectile-project-root)))))
 
 (use-package ps-print
   :defer t
