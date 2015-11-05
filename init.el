@@ -763,6 +763,7 @@ Keys are in kbd format."
 ;;; Packages
 
 (use-package ggtags
+  :disabled 1
   :load-path "site-lisp/ggtags"
   :commands ggtags-mode
   :diminish ggtags-mode)
@@ -785,6 +786,7 @@ Keys are in kbd format."
 
 (use-package ace-jump-mode
   :load-path "site-lisp/ace-jump-mode"
+  :disabled 1
   :bind ("M-h" . ace-jump-mode)
   :config
   (setq ace-jump-mode-submode-list
@@ -793,6 +795,7 @@ Keys are in kbd format."
           ace-jump-line-mode)))
 
 (use-package buffer-move
+  :disabled 1
   :load-path "site-lisp/buffer-move"
   :bind (
          ("M-o ."    . buf-move-up)
@@ -800,8 +803,103 @@ Keys are in kbd format."
          ("M-o a"  . buf-move-left)
          ("M-o u" . buf-move-right)))
 
+;; (use-package ace-link
+;;   :defer 1
+;;   :config
+;;   (ace-link-setup-default)
+;;  )
+
+(use-package ace-window
+  :disabled 1
+  :load-path "site-lisp/ace-window"
+  :init
+
+  (defun dkh-scroll-other-window()
+    (interactive)
+    (scroll-other-window 1))
+
+  (defun dkh-scroll-other-window-down ()
+    (interactive)
+    (scroll-other-window-down 1))
+  :config
+  (setq aw-keys (quote (97 111 101 117 105 100 104 116 110))
+        aw-dispatch-always t
+        aw-dispatch-alist
+        '((?x aw-delete-window     "Ace - Delete Window")
+          (?c aw-swap-window       "Ace - Swap Window")
+          (?n aw-flip-window)
+          (?v aw-split-window-vert "Ace - Split Vert Window")
+          (?h aw-split-window-horz "Ace - Split Horz Window")
+          (?m delete-other-windows "Ace - Maximize Window")
+          (?g delete-other-windows)
+          (?b balance-windows)
+          (?u winner-undo)
+          (?r winner-redo)
+          (?j dired-jump)
+          (32 mode-line-other-buffer)))
+  (when (when-feature-loaded 'hydra)
+    (defhydra hydra-window-size (:color red)
+      "Windows size"
+      ("a" shrink-window-horizontally "shrink horizontal")
+      ("." shrink-window "shrink vertical")
+      ("j" enlarge-window "enlarge vertical")
+      ("i" enlarge-window-horizontally "enlarge horizontal"))
+    (defhydra hydra-window-frame (:color red)
+      "Frame"
+      ("f" make-frame "new frame")
+      ("x" delete-frame "delete frame"))
+    (defhydra hydra-window-scroll (:color red)
+      "Scroll other window"
+      ("<SPC>" dkh-scroll-other-window "scroll")
+      ("<backspace>" dkh-scroll-other-window-down "scroll down"))
+    (add-to-list 'aw-dispatch-alist '(?w hydra-window-size/body) t)
+    (add-to-list 'aw-dispatch-alist '(32 hydra-window-scroll/body) t)
+    (add-to-list 'aw-dispatch-alist '(?\; hydra-window-frame/body) t))
+  
+  (set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 3.0)
+  (set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green"))
+
+(use-package avy
+  :disabled 1
+  :load-path "site-lisp/avy"
+  :bind* (("<C-return>" . ace-window)
+          ("H-l" . avy-goto-line))
+  :init
+  (defun toggle-window-split ()
+    (interactive)
+    (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
+  (define-key ctl-x-4-map "t" 'toggle-window-split)
+  :config
+  (setq avy-keys       '(?a ?s ?d ?e ?f ?g ?r ?v ?h ?j ?k ?l ?n ?m ?u)
+        avy-background t
+        avy-all-windows t
+        avy-style 'at-full
+        avy-case-fold-search nil))
+
 (use-package hydra
   :load-path "site-lisp/hydra"
+  :disabled 1
   :defer 0.1
   :preface
   (require 'hydra-examples)
@@ -1456,7 +1554,6 @@ You can use arrow-keys or WASD.
     ("A" hydra-move-splitter-left nil)
     ("J" hydra-move-splitter-down nil)
     (">" hydra-move-splitter-up nil)
-    ("I" hydra-move-splitter-right nil)
     ("<left>" windmove-left nil)
     ("<down>" windmove-down nil)
     ("<up>" windmove-up nil)
@@ -1464,7 +1561,6 @@ You can use arrow-keys or WASD.
     ("<S-left>" hydra-move-splitter-left nil)
     ("<S-down>" hydra-move-splitter-down nil)
     ("<S-up>" hydra-move-splitter-up nil)
-    ("<S-right>" nil hydra-move-splitter-right)
     ("M-a"  buf-move-left)
     ("M-j"  buf-move-down)
     ("M-."  buf-move-up)
@@ -1480,97 +1576,6 @@ You can use arrow-keys or WASD.
     ("g" golden-ratio-mode nil)
     ("q" nil "quit")))
 
-(use-package avy
-  :load-path "site-lisp/avy"
-  :bind* (("<C-return>" . ace-window)
-          ("H-l" . avy-goto-line))
-  :init
-  (defun toggle-window-split ()
-    (interactive)
-    (if (= (count-windows) 2)
-        (let* ((this-win-buffer (window-buffer))
-               (next-win-buffer (window-buffer (next-window)))
-               (this-win-edges (window-edges (selected-window)))
-               (next-win-edges (window-edges (next-window)))
-               (this-win-2nd (not (and (<= (car this-win-edges)
-                                           (car next-win-edges))
-                                       (<= (cadr this-win-edges)
-                                           (cadr next-win-edges)))))
-               (splitter
-                (if (= (car this-win-edges)
-                       (car (window-edges (next-window))))
-                    'split-window-horizontally
-                  'split-window-vertically)))
-          (delete-other-windows)
-          (let ((first-win (selected-window)))
-            (funcall splitter)
-            (if this-win-2nd (other-window 1))
-            (set-window-buffer (selected-window) this-win-buffer)
-            (set-window-buffer (next-window) next-win-buffer)
-            (select-window first-win)
-            (if this-win-2nd (other-window 1))))))
-  (define-key ctl-x-4-map "t" 'toggle-window-split)
-  :config
-  (setq avy-keys       '(?a ?s ?d ?e ?f ?g ?r ?v ?h ?j ?k ?l ?n ?m ?u)
-        avy-background t
-        avy-all-windows t
-        avy-style 'at-full
-        avy-case-fold-search nil))
-
-(use-package ace-link
-  :defer 1
-  :config
-  (ace-link-setup-default))
-  
-(use-package ace-window
-  :load-path "site-lisp/ace-window"
-  :init
-
-  (defun dkh-scroll-other-window()
-    (interactive)
-    (scroll-other-window 1))
-
-  (defun dkh-scroll-other-window-down ()
-    (interactive)
-    (scroll-other-window-down 1))
-  :config
-  (setq aw-keys (quote (97 111 101 117 105 100 104 116 110))
-        aw-dispatch-always t
-        aw-dispatch-alist
-        '((?x aw-delete-window     "Ace - Delete Window")
-          (?c aw-swap-window       "Ace - Swap Window")
-          (?n aw-flip-window)
-          (?v aw-split-window-vert "Ace - Split Vert Window")
-          (?h aw-split-window-horz "Ace - Split Horz Window")
-          (?m delete-other-windows "Ace - Maximize Window")
-          (?g delete-other-windows)
-          (?b balance-windows)
-          (?u winner-undo)
-          (?r winner-redo)
-          (?j dired-jump)
-          (32 mode-line-other-buffer)))
-  (when (when-feature-loaded 'hydra)
-    (defhydra hydra-window-size (:color red)
-      "Windows size"
-      ("a" shrink-window-horizontally "shrink horizontal")
-      ("." shrink-window "shrink vertical")
-      ("j" enlarge-window "enlarge vertical")
-      ("i" enlarge-window-horizontally "enlarge horizontal"))
-    (defhydra hydra-window-frame (:color red)
-      "Frame"
-      ("f" make-frame "new frame")
-      ("x" delete-frame "delete frame"))
-    (defhydra hydra-window-scroll (:color red)
-      "Scroll other window"
-      ("<SPC>" dkh-scroll-other-window "scroll")
-      ("<backspace>" dkh-scroll-other-window-down "scroll down"))
-    (add-to-list 'aw-dispatch-alist '(?w hydra-window-size/body) t)
-    (add-to-list 'aw-dispatch-alist '(32 hydra-window-scroll/body) t)
-    (add-to-list 'aw-dispatch-alist '(?\; hydra-window-frame/body) t))
-  
-  (set-face-attribute 'aw-leading-char-face nil :foreground "deep sky blue" :weight 'bold :height 3.0)
-  (set-face-attribute 'aw-mode-line-face nil :inherit 'mode-line-buffer-id :foreground "lawn green"))
-
 (use-package ace-isearch
   :disabled t
   :load-path "site-lisp/ace-isearch"
@@ -1578,14 +1583,17 @@ You can use arrow-keys or WASD.
   (global-ace-isearch-mode 1))
 
 (use-package ag
+  :disabled 1
   :load-path "site-lisp/ag-el"
   :commands (ag ag-regexp)
   :init
-  (use-package helm-ag
-    :load-path "site-lisp/emacs-helm-ag"
-    :commands helm-ag))
+  ;; (use-package helm-ag
+  ;;   :load-path "site-lisp/emacs-helm-ag"
+  ;;   :commands helm-ag)
+  )
 
 (use-package agda2-mode
+  :disabled 1
   :mode "\\.agda\\'"
   :load-path (lambda () (list (agda-site-lisp)))
   :defines agda2-mode-map
@@ -2502,6 +2510,9 @@ You can use arrow-keys or WASD.
   :disabled t
   :load-path "site-lisp/ess/lisp/"
   :commands R)
+
+(use-package etags
+  :bind ("M-T" . tags-search))
 
 (use-package eval-expr
   :load-path "site-lisp/eval-expr"
@@ -4468,9 +4479,10 @@ Relies on functions of `php-mode'."
     (setq projectile-completion-system 'helm)
     (helm-projectile-on)
     (bind-key "M-s P" 'helm-projectile)
-    (defun projectile-helm-ag ()
-      (interactive)
-      (helm-ag (projectile-project-root)))))
+    ;; (defun projectile-helm-ag ()
+    ;;   (interactive)
+    ;;   (helm-ag (projectile-project-root)))
+    ))
 
 (use-package ps-print
   :defer t
