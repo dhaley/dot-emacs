@@ -397,20 +397,6 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
            ("z" . byte-recompile-directory))
 
 (bind-key "C-c f" #'flush-lines)
-
-(defun goto-line-with-feedback ()
-  "Show line numbers temporarily, while prompting for the line number input"
-  (interactive)
-  (unwind-protect
-      (progn
-        (linum-mode 1)
-        (goto-char (point-min))
-        (forward-line (read-number "Goto line: ")))
-    (linum-mode -1)))
-
-(bind-key "C-c g" #'goto-line)
-(global-set-key [remap goto-line] 'goto-line-with-feedback)
-
 (bind-key "C-c k" #'keep-lines)
 
 (eval-when-compile
@@ -551,7 +537,15 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
   (interactive)
   (kill-region (point) (point-max)))
 
-(bind-key "C-c C-z" 'delete-to-end-of-buffer)
+(bind-key "C-c C-z" #'delete-to-end-of-buffer)
+
+(defun copy-current-buffer-name ()
+  (interactive)
+  (let ((name (buffer-file-name)))
+    (kill-new name)
+    (message name)))
+
+(bind-key "C-c C-0" #'copy-current-buffer-name)
 
 ;;; C-c M-
 
@@ -1893,7 +1887,7 @@ You can use arrow-keys or WASD.
   :init
   (defvar ctl-period-breadcrumb-map)
   (define-prefix-command 'ctl-period-breadcrumb-map)
-  (bind-key "C-. c" 'ctl-period-breadcrumb-map)
+  (bind-key "C-. c" #'ctl-period-breadcrumb-map)
 
   :bind (("C-. c b" . bm-last-in-previous-buffer)
          ("C-. c f" . bm-first-in-next-buffer)
@@ -1967,8 +1961,8 @@ You can use arrow-keys or WASD.
   :commands (isearch-moccur isearch-all isearch-moccur-all)
   :bind ("M-s O" . moccur)
   :init
-  (bind-key "M-o" 'isearch-moccur isearch-mode-map)
-  (bind-key "M-O" 'isearch-moccur-all isearch-mode-map)
+  (bind-key "M-o" #'isearch-moccur isearch-mode-map)
+  (bind-key "M-O" #'isearch-moccur-all isearch-mode-map)
   :config
   (use-package moccur-edit))
 
@@ -2091,17 +2085,17 @@ You can use arrow-keys or WASD.
     :config
     (unbind-key "M-s f" dired-mode-map))
 
-  (bind-key "l" 'dired-up-directory dired-mode-map)
-  (bind-key "e" 'dired-mark-files-containing-regexp dired-mode-map)
+  (bind-key "l" #'dired-up-directory dired-mode-map)
+  (bind-key "e" #'dired-mark-files-containing-regexp dired-mode-map)
   (defun my-dired-switch-window ()
     (interactive)
     (if (eq major-mode 'sr-mode)
         (call-interactively #'sr-change-window)
       (call-interactively #'other-window)))
 
-  (bind-key "<tab>" 'my-dired-switch-window dired-mode-map)
+  (bind-key "<tab>" #'my-dired-switch-window dired-mode-map)
 
-  (bind-key "M-!" 'async-shell-command dired-mode-map)
+  (bind-key "M-!" #'async-shell-command dired-mode-map)
   (unbind-key "M-G" dired-mode-map)
 
   (defadvice dired-omit-startup (after diminish-dired-omit activate)
@@ -2241,7 +2235,7 @@ You can use arrow-keys or WASD.
   :init
   (defvar ctl-period-equals-map)
   (define-prefix-command 'ctl-period-equals-map)
-  (bind-key "C-. =" 'ctl-period-equals-map)
+  (bind-key "C-. =" #'ctl-period-equals-map)
 
   :bind (("C-. = b" . ediff-buffers)
          ("C-. = B" . ediff-buffers3)
@@ -2307,10 +2301,10 @@ You can use arrow-keys or WASD.
     (call-interactively #'emms-smart-browse))
 
   :config
-  (bind-key "S-<f7>" 'emms-previous)
-  (bind-key "S-<f8>" 'emms-pause)
-  (bind-key "S-<f9>" 'emms-next)
-  (bind-key "S-<f10>" 'emms-stop)
+  (bind-key "S-<f7>" #'emms-previous)
+  (bind-key "S-<f8>" #'emms-pause)
+  (bind-key "S-<f9>" #'emms-next)
+  (bind-key "S-<f10>" #'emms-stop)
 
   (defun emms-player-mplayer-volume-up ()
     "Depends on mplayer’s -slave mode."
@@ -2400,7 +2394,7 @@ You can use arrow-keys or WASD.
       (erc-modified-channels-display)
       (force-mode-line-update))
 
-    (bind-key "C-c r" 'reset-erc-track-mode))
+    (bind-key "C-c r" #'reset-erc-track-mode))
 
   (defcustom erc-foolish-content '()
     "Regular expressions to identify foolish content.
@@ -2446,7 +2440,7 @@ You can use arrow-keys or WASD.
   (use-package erc-yank
     :load-path "lisp/erc-yank"
     :config
-    (bind-key "C-y" 'erc-yank erc-mode-map))
+    (bind-key "C-y" #'erc-yank erc-mode-map))
 
   (use-package wtf
     :commands wtf-is)
@@ -2525,8 +2519,8 @@ You can use arrow-keys or WASD.
   (use-package eww-lnum
     :load-path "site-lisp/eww-lnum"
     :config
-    (bind-key "f" 'eww-lnum-follow eww-mode-map)
-    (bind-key "F" 'eww-lnum-universal eww-mode-map)))
+    (bind-key "f" #'eww-lnum-follow eww-mode-map)
+    (bind-key "F" #'eww-lnum-universal eww-mode-map)))
 
 (use-package feature-mode
   :load-path "site-lisp/cucumber"
@@ -2674,10 +2668,10 @@ You can use arrow-keys or WASD.
         (call-interactively 'gud-gdb))))
   :config
   (progn
-    (bind-key "<f9>" 'gud-cont)
-    (bind-key "<f10>" 'gud-next)
-    (bind-key "<f11>" 'gud-step)
-    (bind-key "S-<f11>" 'gud-finish)))
+    (bind-key "<f9>" #'gud-cont)
+    (bind-key "<f10>" #'gud-next)
+    (bind-key "<f11>" #'gud-step)
+    (bind-key "S-<f11>" #'gud-finish)))
 
 (use-package guide-key
   :disabled t
@@ -2788,10 +2782,10 @@ You can use arrow-keys or WASD.
 
   (helm-autoresize-mode 1)
 
-  (bind-key "<tab>" 'helm-execute-persistent-action helm-map)
-  (bind-key "C-i" 'helm-execute-persistent-action helm-map)
-  (bind-key "C-z" 'helm-select-action helm-map)
-  (bind-key "H-v" 'helm-previous-page helm-map)
+  (bind-key "<tab>" #'helm-execute-persistent-action helm-map)
+  (bind-key "C-i" #'helm-execute-persistent-action helm-map)
+  (bind-key "C-z" #'helm-select-action helm-map)
+  (bind-key "H-v" #'helm-previous-page helm-map)
 
   (when (executable-find "curl")
     (setq helm-net-prefer-curl t))
@@ -3061,7 +3055,7 @@ You can use arrow-keys or WASD.
           try-complete-lisp-symbol-partially
           try-complete-lisp-symbol))
 
-  (bind-key "M-i" 'my-ido-hippie-expand)
+  (bind-key "M-i" #'my-ido-hippie-expand)
 
   (defadvice he-substitute-string (after he-paredit-fix)
     "remove extra paren when expanding line in paredit"
@@ -3154,7 +3148,7 @@ You can use arrow-keys or WASD.
 
   (add-hook 'ido-minibuffer-setup-hook
             #'(lambda ()
-                (bind-key "<return>" 'ido-smart-select-text
+                (bind-key "<return>" #'ido-smart-select-text
                           ido-file-completion-map))))
 
 (use-package ielm
@@ -3177,7 +3171,7 @@ You can use arrow-keys or WASD.
   (add-hook 'ielm-mode-hook
             (function
              (lambda ()
-               (bind-key "<return>" 'my-ielm-return ielm-map)))
+               (bind-key "<return>" #'my-ielm-return ielm-map)))
             t))
 
 (use-package iflipb
@@ -3363,10 +3357,10 @@ You can use arrow-keys or WASD.
     (call-interactively 'isearch-forward))
 
   :config
-  (bind-key "C-c" 'isearch-toggle-case-fold isearch-mode-map)
-  (bind-key "C-t" 'isearch-toggle-regexp isearch-mode-map)
-  (bind-key "C-^" 'isearch-edit-string isearch-mode-map)
-  (bind-key "C-i" 'isearch-complete isearch-mode-map))
+  (bind-key "C-c" #'isearch-toggle-case-fold isearch-mode-map)
+  (bind-key "C-t" #'isearch-toggle-regexp isearch-mode-map)
+  (bind-key "C-^" #'isearch-edit-string isearch-mode-map)
+  (bind-key "C-i" #'isearch-complete isearch-mode-map))
 
 (use-package js2-mode
   :load-path "site-lisp/js2-mode"
@@ -3547,8 +3541,8 @@ You can use arrow-keys or WASD.
     (unless (memq major-mode
                   '(emacs-lisp-mode inferior-emacs-lisp-mode ielm-mode))
       (turn-on-cldoc-mode)
-      (bind-key "M-q" 'slime-reindent-defun lisp-mode-map)
-      (bind-key "M-l" 'slime-selector lisp-mode-map)))
+      (bind-key "M-q" #'slime-reindent-defun lisp-mode-map)
+      (bind-key "M-l" #'slime-selector lisp-mode-map)))
 
   ;; Change lambda to an actual lambda symbol
   :init
@@ -3640,8 +3634,8 @@ You can use arrow-keys or WASD.
 
   :config
   (defun my-lusty-setup-hook ()
-    (bind-key "SPC" 'lusty-select-match lusty-mode-map)
-    (bind-key "C-d" 'exit-minibuffer lusty-mode-map))
+    (bind-key "SPC" #'lusty-select-match lusty-mode-map)
+    (bind-key "C-d" #'exit-minibuffer lusty-mode-map))
 
   (add-hook 'lusty-setup-hook 'my-lusty-setup-hook)
 
@@ -3817,6 +3811,22 @@ You can use arrow-keys or WASD.
 (use-package nf-procmail-mode
   :commands nf-procmail-mode)
 
+(use-package nlinum
+  :preface
+  (defun goto-line-with-feedback ()
+    "Show line numbers temporarily, while prompting for the line number input"
+    (interactive)
+    (unwind-protect
+        (progn
+          (nlinum-mode 1)
+          (goto-char (point-min))
+          (forward-line (read-number "Goto line: ")))
+      (nlinum-mode -1)))
+
+  :init
+  (bind-key "C-c g" #'goto-line)
+  (global-set-key [remap goto-line] 'goto-line-with-feedback))
+
 (use-package nroff-mode
   :commands nroff-mode
   :config
@@ -3851,7 +3861,7 @@ You can use arrow-keys or WASD.
       (call-process-region (point-min) (point-max) "tidy" t t nil
                            "-xml" "-i" "-wrap" "0" "-omit" "-q" "-utf8")))
 
-  (bind-key "C-c M-h" 'tidy-xml-buffer nxml-mode-map))
+  (bind-key "C-c M-h" #'tidy-xml-buffer nxml-mode-map))
 
 (use-package on-screen
   :disabled t
@@ -3893,25 +3903,25 @@ You can use arrow-keys or WASD.
   :config
   (use-package paredit-ext)
 
-  (bind-key "C-M-l" 'paredit-recentre-on-sexp paredit-mode-map)
+  (bind-key "C-M-l" #'paredit-recentre-on-sexp paredit-mode-map)
 
-  (bind-key ")" 'paredit-close-round-and-newline paredit-mode-map)
-  (bind-key "M-)" 'paredit-close-round paredit-mode-map)
+  (bind-key ")" #'paredit-close-round-and-newline paredit-mode-map)
+  (bind-key "M-)" #'paredit-close-round paredit-mode-map)
 
-  (bind-key "M-k" 'paredit-raise-sexp paredit-mode-map)
-  (bind-key "M-I" 'paredit-splice-sexp paredit-mode-map)
+  (bind-key "M-k" #'paredit-raise-sexp paredit-mode-map)
+  (bind-key "M-I" #'paredit-splice-sexp paredit-mode-map)
 
   (unbind-key "M-r" paredit-mode-map)
   (unbind-key "M-s" paredit-mode-map)
 
-  (bind-key "C-. D" 'paredit-forward-down paredit-mode-map)
-  (bind-key "C-. B" 'paredit-splice-sexp-killing-backward paredit-mode-map)
-  (bind-key "C-. C" 'paredit-convolute-sexp paredit-mode-map)
-  (bind-key "C-. F" 'paredit-splice-sexp-killing-forward paredit-mode-map)
-  (bind-key "C-. a" 'paredit-add-to-next-list paredit-mode-map)
-  (bind-key "C-. A" 'paredit-add-to-previous-list paredit-mode-map)
-  (bind-key "C-. j" 'paredit-join-with-next-list paredit-mode-map)
-  (bind-key "C-. J" 'paredit-join-with-previous-list paredit-mode-map))
+  (bind-key "C-. D" #'paredit-forward-down paredit-mode-map)
+  (bind-key "C-. B" #'paredit-splice-sexp-killing-backward paredit-mode-map)
+  (bind-key "C-. C" #'paredit-convolute-sexp paredit-mode-map)
+  (bind-key "C-. F" #'paredit-splice-sexp-killing-forward paredit-mode-map)
+  (bind-key "C-. a" #'paredit-add-to-next-list paredit-mode-map)
+  (bind-key "C-. A" #'paredit-add-to-previous-list paredit-mode-map)
+  (bind-key "C-. j" #'paredit-join-with-next-list paredit-mode-map)
+  (bind-key "C-. J" #'paredit-join-with-previous-list paredit-mode-map))
 
 (or (use-package mic-paren
       :defer 5
@@ -4521,7 +4531,7 @@ Relies on functions of `php-mode'."
     (set (make-local-variable 'parens-require-spaces) nil)
     (setq indent-tabs-mode nil)
 
-    (bind-key "C-c C-z" 'python-shell python-mode-map)
+    (bind-key "C-c C-z" #'python-shell python-mode-map)
     (unbind-key "C-c c" python-mode-map))
 
   (add-hook 'python-mode-hook 'my-python-mode-hook))
@@ -4611,8 +4621,8 @@ Relies on functions of `php-mode'."
   (defun my-ruby-mode-hook ()
     (require 'inf-ruby)
     (inf-ruby-keys)
-    (bind-key "<return>" 'my-ruby-smart-return ruby-mode-map)
-    (bind-key "C-h C-i" 'helm-yari ruby-mode-map))
+    (bind-key "<return>" #'my-ruby-smart-return ruby-mode-map)
+    (bind-key "C-h C-i" #'helm-yari ruby-mode-map))
 
 (use-package saveplace
   :config
@@ -4828,20 +4838,20 @@ Relies on functions of `php-mode'."
   (require 'sunrise-x-tree)
   (require 'sunrise-x-tabs)
 
-  (bind-key "/" 'sr-sticky-isearch-forward sr-mode-map)
-  (bind-key "<backspace>" 'sr-scroll-quick-view-down sr-mode-map)
-  (bind-key "C-x t" 'sr-toggle-truncate-lines sr-mode-map)
+  (bind-key "/" #'sr-sticky-isearch-forward sr-mode-map)
+  (bind-key "<backspace>" #'sr-scroll-quick-view-down sr-mode-map)
+  (bind-key "C-x t" #'sr-toggle-truncate-lines sr-mode-map)
 
-  (bind-key "q" 'sr-history-prev sr-mode-map)
-  (bind-key "z" 'sr-quit sr-mode-map)
+  (bind-key "q" #'sr-history-prev sr-mode-map)
+  (bind-key "z" #'sr-quit sr-mode-map)
 
   (unbind-key "C-e" sr-mode-map)
   (unbind-key "C-p" sr-tabs-mode-map)
   (unbind-key "C-n" sr-tabs-mode-map)
   (unbind-key "M-<backspace>" sr-term-line-minor-mode-map)
 
-  (bind-key "M-[" 'sr-tabs-prev sr-tabs-mode-map)
-  (bind-key "M-]" 'sr-tabs-next sr-tabs-mode-map)
+  (bind-key "M-[" #'sr-tabs-prev sr-tabs-mode-map)
+  (bind-key "M-]" #'sr-tabs-next sr-tabs-mode-map)
 
   (defun sr-browse-file (&optional file)
     "Display the selected file with the default appication."
@@ -5085,8 +5095,8 @@ Relies on functions of `php-mode'."
     (if (file-readable-p workgroups-file)
         (wg-load workgroups-file)))
 
-  (bind-key "C-\\" 'wg-switch-to-previous-workgroup wg-map)
-  (bind-key "\\" 'toggle-input-method wg-map)
+  (bind-key "C-\\" #'wg-switch-to-previous-workgroup wg-map)
+  (bind-key "\\" #'toggle-input-method wg-map)
   
   (defun wg-create-workgroup-awesome ()
     "create workgroups using names from awesome button"
@@ -5158,7 +5168,7 @@ Relies on functions of `php-mode'."
   (yas-load-directory "~/.emacs.d/snippets/")
   (yas-global-mode 1)
 
-  (bind-key "C-i" 'yas-next-field-or-maybe-expand yas-keymap))
+  (bind-key "C-i" #'yas-next-field-or-maybe-expand yas-keymap))
 
 (use-package zoom-window
   :bind ("H-z" . zoom-window-zoom))
