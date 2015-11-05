@@ -4581,7 +4581,7 @@ Relies on functions of `php-mode'."
 
 (use-package ruby-mode
   :load-path "site-lisp/ruby-mode"
-  :mode "\\.rb\\'"
+  :mode ("\\.rb\\'" . ruby-mode)
   :interpreter ("ruby" . ruby-mode)
   :functions inf-ruby-keys
   :config
@@ -4881,6 +4881,7 @@ Relies on functions of `php-mode'."
         (sr-beginning-of-buffer)))))
 
 (use-package swiper
+  :bind ("C-. C-s" . swiper)
   :load-path "site-lisp/swiper"
   :diminish ivy-mode
   :config
@@ -4898,11 +4899,11 @@ Relies on functions of `php-mode'."
   (ivy-mode t))
 
 (use-package tablegen-mode
-  :mode "\\.td\\'")
+  :mode ("\\.td\\'" . tablegen-mode))
 
 (use-package texinfo
   :defines texinfo-section-list
-  :mode "\\.texi\\'"
+  :mode ("\\.texi\\'" . texinfo-mode)
   :config
   (defun my-texinfo-mode-hook ()
     (dolist (mapping '((?b . "emph")
