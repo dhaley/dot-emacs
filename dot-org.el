@@ -670,7 +670,7 @@ end tell" (match-string 1))))
 ;;           (lambda (bug)
 ;;             (interactive "sBug: ")
 ;;             (insert (format "[[fpco:%s][fpco#%s]]" bug bug))))
-(bind-key "C-c x e" 'org-export)
+(bind-key "C-c x e" 'org-export-dispatch)
 (bind-key "C-c x l" 'org-insert-dtp-link)
 (bind-key "C-c x L" 'org-set-dtp-link)
 (bind-key "C-c x m" 'org-insert-message-link)
@@ -1793,6 +1793,29 @@ Late deadlines first, then scheduled, then non-late deadlines"
           (t
            (org-build-note-webpage)))
      ))
+
+
+(defvar yt-iframe-format
+  ;; You may want to change your width and height.
+  (concat "<iframe width=\"695\""
+          " height=\"386\""
+          " src=\"https://www.youtube.com/embed/%s\""
+          " frameborder=\"0\""
+          " allowfullscreen>%s</iframe>"))
+
+(org-add-link-type
+ "yt"
+ (lambda (handle)
+   (browse-url
+    (concat "https://www.youtube.com/embed/"
+            handle)))
+ (lambda (path desc backend)
+   (cl-case backend
+     (html (format yt-iframe-format
+                   path (or desc "")))
+     (latex (format "\href{%s}{%s}"
+                    path (or desc "video"))))))
+
 
 (provide 'dot-org)
 
