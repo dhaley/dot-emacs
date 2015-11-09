@@ -1637,7 +1637,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;;(add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
 (add-hook 'message-mode-hook 'orgtbl-mode 'append)
 (add-hook 'message-mode-hook
-          '(lambda () (setqT fill-column 72))
+          '(lambda () (setq fill-column 72))
           'append)
 (add-hook 'message-mode-hook
           '(lambda () (local-set-key (kbd "C-c M-o") 'org-mime-htmlize))
