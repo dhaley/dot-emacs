@@ -524,7 +524,6 @@
  '(mac-pass-control-to-system nil)
  '(mac-wheel-button-is-mouse-2 nil)
  '(magit-auto-revert-mode nil)
- '(magit-backup-mode t)
  '(magit-completing-read-function (quote helm--completing-read-default))
  '(magit-diff-options nil)
  '(magit-fetch-arguments nil)
@@ -762,7 +761,6 @@
  '(workgroups-mode nil)
  '(x-select-enable-clipboard t)
  '(x-stretch-cursor t)
- '(yaoddmuse-browse-function (quote w3m-browse-url))
  '(yaoddmuse-directory "~/.emacs.d/doc")
  '(yas-prompt-functions
    (quote

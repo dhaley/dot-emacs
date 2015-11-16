@@ -127,7 +127,7 @@
      ("mail\\.archive"
       (gnus-summary-line-format "%«%U%R %uS %ur %»%(%*%-14,14f %4u&size;
 %1«%B%s%»%) "))
-     ("list\\.emacs\\.devel"
+     ("list\\.emacs\\.devel$"
       (to-address . "emacs-devel@gnu.org")
       (to-list . "emacs-devel@gnu.org")
       (total-expire . t)
@@ -147,7 +147,7 @@
                       ("To" "From" "Cc" "Sender")
                       "gnu-emacs-sources.gnu.org")
               (header :contains "list-id" "<gnu-emacs-sources.gnu.org>"))))
-     ("list\\.emacs\\.help"
+     ("list\\.emacs\\.help$"
       (to-address . "help-gnu-emacs@gnu.org")
       (to-list . "help-gnu-emacs@gnu.org")
       (sieve anyof
@@ -283,7 +283,6 @@
      (nnir "nnimap:Local")
      (nntp "Gmane"
            (nntp-address "news.gmane.org")))))
- '(gnus-refer-thread-use-nnir t)
  '(gnus-registry-ignored-groups (quote (("nntp" t) ("^INBOX" t))))
  '(gnus-save-killed-list nil)
  '(gnus-save-newsrc-file nil)

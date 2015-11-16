@@ -3708,6 +3708,7 @@ You can use arrow-keys or WASD.
   (setenv "GIT_PAGER" "")
 
   (use-package magit-backup
+    :disabled t
     :commands magit-backup-mode
     :config
     (magit-backup-mode -1))
