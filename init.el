@@ -2282,17 +2282,17 @@ You can use arrow-keys or WASD.
   (defvar emms-initialized nil)
   (declare-function emms-smart-browse "emms-browser")
   (require 'emms-player-simple)
-  (define-emms-simple-player mplayer '(file url)
-    (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv" ".wma"
-                  ".mov" ".avi" ".divx" ".ogm" ".asf" ".mkv" "http://" "mms://"
-                  ".rm" ".rmvb" ".mp4" ".flac" ".vob" ".m4a" ".flv" ".ogv" ".pls"))
-    "mplayer" "-slave" "-quiet" "-really-quiet" "-fullscreen")
   (defun my-emms ()
     (interactive)
+    ; Stop set up stuff from runnig wit every function call.
     (unless emms-initialized
       (emms-standard)
       (emms-default-players)
       (require 'emms-info-libtag)
+      (require 'emms-browser)
+      (define-emms-simple-player flac123 '(file) 
+        "\\.flac$" "/usr/local/bin/mplayer")
+      (add-to-list 'emms-player-list emms-player-flac123)
       (setq emms-info-functions '(emms-info-libtag)
             emms-initialized t))
     (call-interactively #'emms-smart-browse))
