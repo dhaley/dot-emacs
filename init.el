@@ -2298,6 +2298,7 @@ You can use arrow-keys or WASD.
     (call-interactively #'emms-smart-browse))
 
   :config
+  (setq emms-info-libtag-program-name "/Users/dhaley/bin/emms-print-metadata")
   (bind-key "S-<f7>" #'emms-previous)
   (bind-key "S-<f8>" #'emms-pause)
   (bind-key "S-<f9>" #'emms-next)
