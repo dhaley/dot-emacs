@@ -2276,12 +2276,17 @@ You can use arrow-keys or WASD.
 (use-package emms-setup
   :load-path "site-lisp/emms/lisp"
   :defines (emms-info-functions emms-player-simple-process-name)
-  :commands (emms-standard emms-devel)
+  :commands (emms-standard emms-devel emms-stream-init)  ;; for helm-emms
   :bind ("C-. M" . my-emms)
   :preface
   (defvar emms-initialized nil)
   (declare-function emms-smart-browse "emms-browser")
-
+  (require 'emms-player-simple)
+  (define-emms-simple-player mplayer '(file url)
+    (regexp-opt '(".ogg" ".mp3" ".wav" ".mpg" ".mpeg" ".wmv" ".wma"
+                  ".mov" ".avi" ".divx" ".ogm" ".asf" ".mkv" "http://" "mms://"
+                  ".rm" ".rmvb" ".mp4" ".flac" ".vob" ".m4a" ".flv" ".ogv" ".pls"))
+    "mplayer" "-slave" "-quiet" "-really-quiet" "-fullscreen")
   (defun my-emms ()
     (interactive)
     (unless emms-initialized
@@ -2297,7 +2302,9 @@ You can use arrow-keys or WASD.
   (bind-key "S-<f8>" #'emms-pause)
   (bind-key "S-<f9>" #'emms-next)
   (bind-key "S-<f10>" #'emms-stop)
-
+  ; Add music file or directory to EMMS playlist on ! in dired.
+  (bind-key "!" 'emms-add-dired)
+  
   (defun emms-player-mplayer-volume-up ()
     "Depends on mplayer’s -slave mode."
     (interactive)

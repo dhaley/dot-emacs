@@ -191,10 +191,6 @@
        (local-set-key
         [(control 109)]
         (quote newline-and-indent))))))
- '(emms-player-mplayer-parameters (quote ("-slave" "-quiet" "-really-quiet" "-volume" "15")))
- '(emms-setup-default-player-list
-   (quote
-    (emms-player-mplayer emms-player-mpg321 emms-player-ogg123 emms-player-mplayer-playlist emms-player-vlc)))
  '(emms-source-file-default-directory "/Volumes/Multimedia")
  '(enable-recursive-minibuffers t)
  '(erc-auto-query (quote window-noselect))

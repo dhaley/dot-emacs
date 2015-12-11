@@ -124,9 +124,6 @@
 [submodule "site-lisp/emacs-edbi"]
         path = site-lisp/emacs-edbi
         url = git://github.com/kiwanami/emacs-edbi.git
-[submodule "site-lisp/emms"]
-        path = site-lisp/emms
-        url = git://github.com/dhaley/emms
 [submodule "site-lisp/autopair"]
         path = site-lisp/autopair
         url = git://github.com/capitaomorte/autopair.git
