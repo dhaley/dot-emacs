@@ -221,6 +221,7 @@
  '(erc-port 6667)
  '(erc-priority-people-regexp "\\`[^#].+")
  '(erc-prompt-for-nickserv-password nil)
+ '(erc-rename-buffers t)
  '(erc-replace-alist (quote (("</?FONT>" . ""))))
  '(erc-server "asimov.freenode.net")
  '(erc-server-reconnect-timeout 60)
