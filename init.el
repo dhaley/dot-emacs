@@ -174,7 +174,7 @@
 (bind-key "<H-left>" #'shrink-window-horizontally)
 (bind-key "<H-right>" #'enlarge-window-horizontally)
 (bind-key "<H-up>" #'enlarge-window)
-(bind-key "H-`" #'new-frame)
+(bind-key "H-`" #'make-frame)
 ;;; C-
 
 (defvar ctl-period-map)
