@@ -1066,3 +1066,6 @@
 [submodule "site-lisp/org-autolist"]
 	path = site-lisp/org-autolist
 	url = git@github.com:calvinwyoung/org-autolist.git
+[submodule "site-lisp/emacs-which-key"]
+	path = site-lisp/emacs-which-key
+	url = git@github.com:justbur/emacs-which-key.git
