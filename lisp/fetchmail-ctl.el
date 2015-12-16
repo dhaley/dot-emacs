@@ -119,7 +119,7 @@
            (lambda ()
              (let ((process-environment (copy-alist process-environment)))
                (setenv "FETCHMAILHOME" (expand-file-name "~/Messages/Newsdir"))
-               (start-fetchmail "*fetchmail-lists*" nil
+               (start-fetchmail "*fetchmail-lists*" nil "--idle"
                                 "-f" (expand-file-name
                                       "~/Messages/fetchmailrc.lists")))))))
         ;; (fetchmail-spam-buf
@@ -161,12 +161,6 @@
 
 (add-hook 'gnus-after-exiting-gnus-hook 'shutdown-fetchmail)
 
-(eval-after-load "gnus-group"
-  '(progn
-     (define-key gnus-group-mode-map [?v ?b] 'switch-to-fetchmail)
-     (define-key gnus-group-mode-map [?v ?o] 'start-fetchmail)
-     (define-key gnus-group-mode-map [?v ?d] 'shutdown-fetchmail)
-     (define-key gnus-group-mode-map [?v ?k] 'kick-fetchmail)))
 
 (provide 'fetchmail-ctl)
 
