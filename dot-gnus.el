@@ -104,26 +104,16 @@
 (defun quickping (host)
   (= 0 (call-process "ping" nil nil nil "-c1" "-W50" "-q" host)))
 
-(use-package fetchmail-ctl
-  :commands switch-to-fetchmail
-  :init
-  (defun maybe-start-fetchmail-and-news ()
-    (interactive)
-    (when (and (not switch-to-gnus-unplugged)
-               (quickping "mail.messagingengine.com"))
-      ;; (do-applescript "tell application \"Notify\" to run")
-      (switch-to-fetchmail)))
-
-  (add-hook 'gnus-startup-hook 'maybe-start-fetchmail-and-news)
-
+(use-package gnus-group
+  :defer t
   :config
-  (defadvice shutdown-fetchmail (after stop-mail-after-fetchmail activate)
-    (async-start
-     (lambda ()
-       (call-process (expand-file-name "~/Messages/manage-mail/stop-mail")))
-     (lambda (ret)
-       ;; (do-applescript "tell application \"Notify\" to quit")
-       ))))
+  (use-package fetchmail-ctl
+    :config
+    (bind-key "v b" #'switch-to-fetchmail gnus-group-mode-map)
+    (bind-key "v o" #'start-fetchmail gnus-group-mode-map)
+    (bind-key "v d" #'shutdown-fetchmail gnus-group-mode-map)
+    (bind-key "v k" #'kick-fetchmail gnus-group-mode-map)
+    (bind-key "v p" #'fetchnews-post gnus-group-mode-map)))
 
 (use-package gnus-sum
   :config
@@ -170,9 +160,6 @@
   (set (make-local-variable 'gnus-agent-queue-mail)
        (if (quickping "mail.messagingengine.com") t 'always)))
 
-;; (add-hook 'message-send-hook 'queue-message-if-not-connected)
-(defvar my-message-attachment-regexp
-  "attach\\|\Wfiles?\W\\|enclose\\|\Wdraft\\|\Wversion")
 (defun check-mail ()
   "ask for confirmation before sending a mail. Scan for possible attachment"
   (save-excursion
@@ -185,7 +172,7 @@
       (unless (message-y-or-n-p (concat warning "Send the message ? ") nil nil)
         (error "Message not sent")))))
 
-(add-hook 'message-send-hook 'check-mail)
+;; (add-hook 'message-send-hook 'check-mail)
 
 
 (add-hook 'message-send-hook 'queue-message-if-not-connected)
@@ -376,6 +363,21 @@ is:
 
 (use-package message-x)
 
+;; (use-package message
+;;   :defer t
+;;   :config
+;;   (defun adjust-body-goto-location ()
+;;     (if (looking-at "^--")
+;;         (save-excursion (insert ?\n ?\n))
+;;       (when (re-search-forward "^-- $" nil t)
+;;         (goto-char (match-beginning 0))
+;;         (if (looking-back "\n\n")
+;;             (forward-line -2)
+;;           (save-excursion (insert ?\n ?\n ?\n))
+;;           (forward-line 1)))))
+
+;;   (advice-add 'message-goto-body :after #'adjust-body-goto-location))
+
 (use-package gnus-dired
   :commands gnus-dired-mode
   :init
@@ -389,7 +391,8 @@ is:
     (gnus-group-get-new-news 5)
     (gnus-group-list-groups 4)
     (my-gnus-score-groups)
-    (gnus-group-list-groups 4))
+    (gnus-group-list-groups 4)
+    (gnus-group-save-newsrc t))
 
   (define-key gnus-group-mode-map [?v ?g] 'gnus-group-get-all-new-news))
 
@@ -423,6 +426,26 @@ is:
 
 (defun activate-gnus ()
   (unless (get-buffer "*Group*") (gnus)))
+
+(use-package epa
+  :defer t
+  :config
+  (defun epa--key-widget-value-create (widget)
+    (let* ((key (widget-get widget :value))
+           (primary-sub-key (car (last (epg-key-sub-key-list key) 3)))
+           (primary-user-id (car (epg-key-user-id-list key))))
+      (insert (format "%c "
+                      (if (epg-sub-key-validity primary-sub-key)
+                          (car (rassq (epg-sub-key-validity primary-sub-key)
+                                      epg-key-validity-alist))
+                        ? ))
+              (epg-sub-key-id primary-sub-key)
+              " "
+              (if primary-user-id
+                  (if (stringp (epg-user-id-string primary-user-id))
+                      (epg-user-id-string primary-user-id)
+                    (epg-decode-dn (epg-user-id-string primary-user-id)))
+                "")))))
 
 (use-package nnir
   :init
@@ -604,6 +627,30 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
     'gnus-article-browse-urls)
   (define-key gnus-article-mode-map [(control ?c) (control ?o)]
     'gnus-article-browse-urls))
+
+(use-package mml
+  :defer t
+  :config
+  (defvar mml-signing-attachment nil)
+
+  (defun mml-sign-attached-file (file &optional type description disposition)
+    (unless (or mml-signing-attachment
+                (null current-prefix-arg))
+      (let ((signature
+             (expand-file-name (concat (file-name-nondirectory file) ".sig")
+                               temporary-file-directory))
+            (mml-signing-attachment t))
+        (message "Signing %s..." file)
+        (if t
+            (call-process epg-gpg-program file nil nil
+                          "--output" signature "--detach-sign" file)
+          (with-temp-file signature
+            (setq buffer-file-coding-system 'raw-text-unix)
+            (call-process epg-gpg-program file t nil "--detach-sign")))
+        (message "Signing %s...done" file)
+        (mml-attach-file signature))))
+
+  (advice-add 'mml-attach-file :after #'mml-sign-attached-file))
 
 (provide 'dot-gnus)
 
