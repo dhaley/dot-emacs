@@ -371,6 +371,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
     (goto-char here)))
 
 (bind-key "C-c d" #'delete-current-line)
+(bind-key "C-c g" #'goto-line)
 
 (defun do-eval-buffer ()
   (interactive)
@@ -741,7 +742,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
     (my-org-startup)))
 
 (use-package dot-gnus
-  :load-path "override/gnus"
+  :load-path ("override/gnus/lisp" "override/gnus/contrib")
   :bind (("M-G"   . switch-to-gnus)
          ("C-x m" . compose-mail))
   :init
@@ -2672,23 +2673,6 @@ You can use arrow-keys or WASD.
     (bind-key "<f10>" #'gud-next)
     (bind-key "<f11>" #'gud-step)
     (bind-key "S-<f11>" #'gud-finish)))
-
-(use-package guide-key
-  :disabled t
-  :load-path "site-lisp/guide-key"
-  :diminish guide-key-mode
-  :commands guide-key-mode
-  :defer 10
-  :config
-  (setq guide-key/guide-key-sequence
-        '("C-."
-          "C-h e"
-          "C-x 4"
-          "C-x 5"
-          "C-x r"
-          "M-o"
-          "M-s"))
-  (guide-key-mode 1))
 
 (use-package helm-grep
   :commands helm-do-grep-1
@@ -5010,6 +4994,14 @@ Relies on functions of `php-mode'."
 (use-package wcount
   :disabled t
   :commands wcount-mode)
+
+(use-package which-key
+  :load-path "site-lisp/which-key"
+  :diminish which-key-mode
+  :commands which-key-mode
+  :defer 10
+  :config
+  (which-key-mode 1))
 
 (use-package whitespace
   :diminish (global-whitespace-mode
