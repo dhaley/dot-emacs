@@ -13,8 +13,8 @@
  '(gnus-agent-go-online t)
  '(gnus-agent-mark-unread-after-downloaded nil)
  '(gnus-agent-synchronize-flags t)
- '(gnus-alias-default-identity "Haley")
  '(gnus-alias-allow-forward-as-reply t)
+ '(gnus-alias-default-identity "Haley")
  '(gnus-alias-identity-alist
    (quote
     (("CU" "" "\"Damon Haley\" <damon.haley@colorado.edu>" "University of Colorado" nil "" "~/Messages/sig/cu.sig")
@@ -450,9 +450,9 @@ Bcc:
  '(sc-use-only-preference-p t)
  '(send-mail-function (quote sendmail-send-it))
  '(smtpmail-default-smtp-server "mail.messagingengine.com")
- '(smtpmail-queue-dir "~/Messages/Gnus/Mail/queue/")
+ '(smtpmail-queue-dir "~/Messages/Gnus/News/drafts/queue")
  '(smtpmail-smtp-server "mail.messagingengine.com")
- '(smtpmail-auth-credentials (expand-file-name "~/.authinfo.gpg"))
+ '(smtpmail-auth-credentials (expand-file-name "~/Documents/.authinfo.gpg"))
  '(user-full-name "Damon Haley")
  '(user-mail-address "emacs@dhaley.warpmail.net")
  '(gnutls-algorithm-priority "NORMAL:%COMPAT")
@@ -460,5 +460,5 @@ Bcc:
  '(smtpmail-smtp-service 465)
  '(mml2015-use 'epg)
  '(mu4e-attachment-dir  "~/dl")
- '(smtpmail-smtp-user "dhaley@fastmail.com")
+ '(smtpmail-smtp-user "dhaley@warpmail.net")
 )
