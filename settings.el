@@ -370,12 +370,13 @@
  '(ggtags-use-sqlite3 t)
  '(git-commit-mode-hook
    (quote
-    (turn-on-auto-fill flyspell-mode git-commit-save-message)))
+    (turn-on-auto-fill flyspell-mode git-commit-save-message)) t)
  '(glasses-separator "-")
  '(glasses-uncapitalize-p t)
  '(global-auto-complete-mode t)
  '(global-font-lock-mode t nil (font-lock))
  '(global-undo-tree-mode t)
+ '(gnutls-algorithm-priority "NORMAL:%COMPAT")
  '(grep-find-command (quote ("ag --noheading --column --ignore branches " . 43)))
  '(helm-adaptive-history-file "~/.emacs.d/data/helm-adaptive-history")
  '(helm-buffers-fuzzy-matching t)
@@ -539,8 +540,10 @@
  '(markdown-enable-math t)
  '(markdown-open-command "open-markdown")
  '(menu-bar-mode nil)
+ '(mml2015-use (quote epg) t)
  '(moccur-following-mode-toggle nil)
  '(modelinepos-column-limit 80)
+ '(mu4e-attachment-dir "~/dl")
  '(mudel-mode-hook (quote (mudel-add-scroll-to-bottom)))
  '(mudel-output-filter-functions (quote (ansi-color-process-output)))
  '(multi-term-program "/usr/bin/screen")
@@ -606,7 +609,7 @@
  '(recentf-auto-cleanup (quote never))
  '(recentf-exclude
    (quote
-    ("~\\'" "\\`out\\'" "\\.log\\'" "^/[^/]*:" "\\.el\\.gz\\'")) t)
+    ("~\\'" "\\`out\\'" "\\.log\\'" "^/[^/]*:" "\\.el\\.gz\\'")))
  '(recentf-max-saved-items 2000)
  '(recentf-save-file "~/.emacs.d/data/recentf")
  '(redisplay-dont-pause t t)
@@ -733,7 +736,7 @@
  '(url-irc-function (quote url-irc-erc))
  '(user-full-name "Damon Haley")
  '(user-initials "dkh")
- '(user-mail-address "dkk@member.fsf.org")
+ '(user-mail-address "emacs@dhaley.warpmail.net")
  '(vc-command-messages t)
  '(vc-follow-symlinks t)
  '(vc-git-diff-switches (quote ("-w" "-U3")))
