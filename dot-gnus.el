@@ -12,6 +12,7 @@
 
 (require 'gnus)
 (require 'starttls)
+(require 'smtpmail)
 ;; (require 'nnmairix)
 (require 'message)
 ;; (require 'spam)

@@ -364,6 +364,7 @@ Bcc:
  '(message-fill-column 78)
  '(message-interactive nil)
  '(message-mail-alias-type nil)
+ '(message-send-mail-function (quote smtpmail-send-it))
  '(message-signature-separator "^-- *$")
  '(message-subscribed-address-functions (quote (gnus-find-subscribed-addresses)))
  '(message-x-completion-alist
