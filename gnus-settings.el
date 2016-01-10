@@ -362,19 +362,7 @@ Bcc:
 ")
  '(message-directory "~/Messages/Gnus/Mail/")
  '(message-fill-column 78)
- '(message-interactive t)
  '(message-mail-alias-type nil)
- '(message-mode-hook
-   (quote
-    (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell
-                 (lambda nil
-                   (set-fill-column 78))
-                 turn-on-orgstruct++ turn-on-orgtbl)))
- '(message-send-mail-function (quote message-send-mail-with-sendmail))
- '(message-send-mail-partially-limit nil)
- '(message-sendmail-envelope-from (quote header))
- '(message-sent-hook (quote (my-gnus-score-followup)))
- '(message-setup-hook (quote (gnus-harvest-set-from message-check-recipients)))
  '(message-signature-separator "^-- *$")
  '(message-subscribed-address-functions (quote (gnus-find-subscribed-addresses)))
  '(message-x-completion-alist
@@ -388,7 +376,6 @@ Bcc:
  '(mm-attachment-override-types
    (quote
     ("text/x-vcard" "application/pkcs7-mime" "application/x-pkcs7-mime" "application/pkcs7-signature" "application/x-pkcs7-signature" "image/.*")))
- '(mm-decrypt-option (quote always))
  '(mm-discouraged-alternatives (quote ("application/msword" "text/richtext")))
  '(mm-inline-text-html-with-images nil)
  '(mm-text-html-renderer (quote shr))
