@@ -14,7 +14,6 @@
 (require 'starttls)
 (require 'smtpmail)
 ;; (require 'nnmairix)
-(require 'message)
 ;; (require 'spam)
 ;; (require 'spam-report)
 (require 'bbdb)
@@ -160,21 +159,12 @@
 (defun queue-message-if-not-connected ()
   (set (make-local-variable 'gnus-agent-queue-mail)
        (if (quickping "mail.messagingengine.com") t 'always)))
+(eval-when-compile
+ (defvar gnus-agent-queue-mail))
 
-(defun check-mail ()
-  "ask for confirmation before sending a mail. Scan for possible attachment"
-  (save-excursion
-    (message-goto-body)
-    (let ((warning ""))
-      (when (and (search-forward-regexp my-message-attachment-regexp nil t nil)
-                 (not (search-forward "<#part" nil t nil)))
-        (setq warning "No attachment.\n"))
-      (goto-char (point-min))
-      (unless (message-y-or-n-p (concat warning "Send the message ? ") nil nil)
-        (error "Message not sent")))))
-
-;; (add-hook 'message-send-hook 'check-mail)
-
+(defun queue-message-if-not-connected ()
+  (set (make-local-variable 'gnus-agent-queue-mail)
+       (if (quickping "mail.messagingengine.com") t 'always)))
 
 (add-hook 'message-send-hook 'queue-message-if-not-connected)
 
