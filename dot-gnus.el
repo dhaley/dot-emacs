@@ -13,6 +13,7 @@
 (require 'gnus)
 (require 'starttls)
 (require 'smtpmail)
+(require 'message)
 ;; (require 'nnmairix)
 ;; (require 'spam)
 ;; (require 'spam-report)
@@ -641,7 +642,22 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
         (message "Signing %s...done" file)
         (mml-attach-file signature))))
 
+
   (advice-add 'mml-attach-file :after #'mml-sign-attached-file))
+
+;; (use-package message-mode
+;;   :init
+  ;; (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
+  ;; (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
+  ;; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
+  ;; (add-hook 'message-mode-hook 'orgtbl-mode 'append)
+  ;; (add-hook 'message-mode-hook
+  ;;           '(lambda () (setq fill-column 72))
+  ;;           'append)
+  ;; (add-hook 'message-mode-hook
+  ;;           '(lambda () (local-set-key (kbd "C-c M-o") 'org-mime-htmlize))
+  ;;           'append)
+;;  )
 
 (provide 'dot-gnus)
 
