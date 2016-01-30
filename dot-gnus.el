@@ -154,20 +154,14 @@
 
 (bind-key "X m" 'my-gnus-summary-save-parts gnus-summary-mode-map)
 
-(eval-when-compile
-  (defvar gnus-agent-queue-mail))
+;; (eval-when-compile
+;;   (defvar gnus-agent-queue-mail))
 
-(defun queue-message-if-not-connected ()
-  (set (make-local-variable 'gnus-agent-queue-mail)
-       (if (quickping "mail.messagingengine.com") t 'always)))
-(eval-when-compile
- (defvar gnus-agent-queue-mail))
+;; (defun queue-message-if-not-connected ()
+;;   (set (make-local-variable 'gnus-agent-queue-mail)
+;;        (if (quickping "mail.messagingengine.com") t 'always)))
 
-(defun queue-message-if-not-connected ()
-  (set (make-local-variable 'gnus-agent-queue-mail)
-       (if (quickping "mail.messagingengine.com") t 'always)))
-
-(add-hook 'message-send-hook 'queue-message-if-not-connected)
+;;(add-hook 'message-send-hook 'queue-message-if-not-connected)
 
 (defun kick-postfix-if-needed ()
   (if (and (quickping "mail.messagingengine.com")
