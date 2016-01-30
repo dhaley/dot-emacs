@@ -373,6 +373,10 @@ Bcc:
                    (set-fill-column 78))
                  turn-on-orgstruct++ turn-on-orgtbl)))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
+ '(message-send-mail-partially-limit nil)
+ '(message-sendmail-envelope-from (quote header))
+ '(message-sent-hook (quote (my-gnus-score-followup)))
+ '(message-setup-hook (quote (gnus-harvest-set-from message-check-recipients)))
  '(message-signature-separator "^-- *$")
  '(message-subscribed-address-functions (quote (gnus-find-subscribed-addresses)))
  '(message-x-completion-alist
