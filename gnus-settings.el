@@ -365,6 +365,12 @@ Bcc:
  '(message-fill-column 78)
  '(message-interactive nil)
  '(message-mail-alias-type nil)
+ '(message-mode-hook
+   (quote
+    (abbrev-mode footnote-mode turn-on-auto-fill turn-on-flyspell
+                 (lambda nil
+                   (set-fill-column 78))
+                 turn-on-orgstruct++ turn-on-orgtbl)))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(message-signature-separator "^-- *$")
  '(message-subscribed-address-functions (quote (gnus-find-subscribed-addresses)))
