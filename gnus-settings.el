@@ -353,6 +353,7 @@
  '(mail-user-agent (quote gnus-user-agent))
  '(message-alternative-emails
    "\\(dhaley\\|vinylisl\\)@\\(hushmail\\|ssl\\-mail\\).com\\|\\(dkh@member\\.fsf\\|news@vinylisland\\)\\.org\\|damon\\.haley@colorado\\.edu")
+ '(message-confirm-send t)
  '(message-default-headers
    "X-Face: \"'PJ-yb+fYF0]%?,#==_(s>`~Hw_iwG![Cc+Sq$k>S|QbU)>?}Y51$4)\\9OEt:NL.@kZIqy <UnVZ*!XnGGV:iDO$YDhK7i~$.fs%r^0LJdztkb\\6=DI6by:GdO>.L<,Nd[nsMwrN3b]os1UqBw
 X-Accept-Language: en-us
@@ -364,7 +365,7 @@ Bcc:
  '(message-fill-column 78)
  '(message-interactive nil)
  '(message-mail-alias-type nil)
- '(message-send-mail-function (quote smtpmail-send-it))
+ '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(message-signature-separator "^-- *$")
  '(message-subscribed-address-functions (quote (gnus-find-subscribed-addresses)))
  '(message-x-completion-alist
@@ -437,6 +438,7 @@ Bcc:
       (sc-fill-if-different "")))))
  '(sc-preferred-attribution-list nil)
  '(sc-use-only-preference-p t)
+ '(send-mail-function (quote sendmail-send-it))
  '(smtpmail-auth-credentials (expand-file-name "~/Documents/.authinfo.gpg") t)
  '(smtpmail-debug-info t)
  '(smtpmail-debug-verb t)
