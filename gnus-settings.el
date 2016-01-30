@@ -274,7 +274,6 @@
       (gnus-summary-line-format "%U%z %(%[%15&user-date;%]  %-15,15f  %B%s%)
 ")))))
  '(gnus-permanently-visible-groups "INBOX")
- '(gnus-picon-style (quote right))
  '(gnus-read-active-file nil)
  '(gnus-read-newsrc-file nil)
  '(gnus-refer-article-method
@@ -288,6 +287,7 @@
  '(gnus-save-newsrc-file nil)
  '(gnus-score-default-duration (quote p))
  '(gnus-score-expiry-days 30)
+ '(gnus-score-interactive-default-score 10)
  '(gnus-select-group-hook (quote (gnus-group-set-timestamp)))
  '(gnus-select-method
    (quote
@@ -364,7 +364,7 @@ Bcc:
 ")
  '(message-directory "~/Messages/Gnus/Mail/")
  '(message-fill-column 78)
- '(message-interactive nil)
+ '(message-interactive t)
  '(message-mail-alias-type nil)
  '(message-mode-hook
    (quote
