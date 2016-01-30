@@ -12,6 +12,7 @@
  '(gnus-agent-expire-days 14)
  '(gnus-agent-go-online t)
  '(gnus-agent-mark-unread-after-downloaded nil)
+ '(gnus-agent-queue-mail nil)
  '(gnus-agent-synchronize-flags t)
  '(gnus-alias-allow-forward-as-reply t)
  '(gnus-alias-default-identity "Haley")
