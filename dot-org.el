@@ -31,6 +31,7 @@
 (require 'ob-ditaa)
 (require 'ox-md)
 (require 'ox-opml)
+(require 'ob-rec)
 (use-package org-eshell)
 (use-package orgit
   :load-path "site-lisp/orgit")
@@ -1644,7 +1645,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
           'append)
 
 ;; flyspell mode for spell checking everywhere
-(add-hook 'org-mode-hook 'turn-on-flyspell 'append)
+;; (add-hook 'org-mode-hook 'turn-on-flyspell 'append)
 
 ;; Disable keys in org-mode
 ;;    C-c [
