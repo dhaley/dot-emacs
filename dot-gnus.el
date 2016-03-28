@@ -12,8 +12,9 @@
 
 (require 'gnus)
 (require 'starttls)
-;; (require 'nnmairix)
+(require 'smtpmail)
 (require 'message)
+;; (require 'nnmairix)
 ;; (require 'spam)
 ;; (require 'spam-report)
 (require 'bbdb)
@@ -153,29 +154,14 @@
 
 (bind-key "X m" 'my-gnus-summary-save-parts gnus-summary-mode-map)
 
-(eval-when-compile
-  (defvar gnus-agent-queue-mail))
+;; (eval-when-compile
+;;   (defvar gnus-agent-queue-mail))
 
-(defun queue-message-if-not-connected ()
-  (set (make-local-variable 'gnus-agent-queue-mail)
-       (if (quickping "mail.messagingengine.com") t 'always)))
+;; (defun queue-message-if-not-connected ()
+;;   (set (make-local-variable 'gnus-agent-queue-mail)
+;;        (if (quickping "mail.messagingengine.com") t 'always)))
 
-(defun check-mail ()
-  "ask for confirmation before sending a mail. Scan for possible attachment"
-  (save-excursion
-    (message-goto-body)
-    (let ((warning ""))
-      (when (and (search-forward-regexp my-message-attachment-regexp nil t nil)
-                 (not (search-forward "<#part" nil t nil)))
-        (setq warning "No attachment.\n"))
-      (goto-char (point-min))
-      (unless (message-y-or-n-p (concat warning "Send the message ? ") nil nil)
-        (error "Message not sent")))))
-
-;; (add-hook 'message-send-hook 'check-mail)
-
-
-(add-hook 'message-send-hook 'queue-message-if-not-connected)
+;;(add-hook 'message-send-hook 'queue-message-if-not-connected)
 
 (defun kick-postfix-if-needed ()
   (if (and (quickping "mail.messagingengine.com")
@@ -650,7 +636,22 @@ buffer with the list of URLs found with the `gnus-button-url-regexp'."
         (message "Signing %s...done" file)
         (mml-attach-file signature))))
 
+
   (advice-add 'mml-attach-file :after #'mml-sign-attached-file))
+
+;; (use-package message-mode
+;;   :init
+  ;; (add-hook 'message-mode-hook 'orgstruct++-mode 'append)
+  ;; (add-hook 'message-mode-hook 'turn-on-auto-fill 'append)
+  ;; (add-hook 'message-mode-hook 'bbdb-define-all-aliases 'append)
+  ;; (add-hook 'message-mode-hook 'orgtbl-mode 'append)
+  ;; (add-hook 'message-mode-hook
+  ;;           '(lambda () (setq fill-column 72))
+  ;;           'append)
+  ;; (add-hook 'message-mode-hook
+  ;;           '(lambda () (local-set-key (kbd "C-c M-o") 'org-mime-htmlize))
+  ;;           'append)
+;;  )
 
 (provide 'dot-gnus)
 

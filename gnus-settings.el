@@ -12,9 +12,10 @@
  '(gnus-agent-expire-days 14)
  '(gnus-agent-go-online t)
  '(gnus-agent-mark-unread-after-downloaded nil)
+ '(gnus-agent-queue-mail nil)
  '(gnus-agent-synchronize-flags t)
- '(gnus-alias-default-identity "Haley")
  '(gnus-alias-allow-forward-as-reply t)
+ '(gnus-alias-default-identity "Haley")
  '(gnus-alias-identity-alist
    (quote
     (("CU" "" "\"Damon Haley\" <damon.haley@colorado.edu>" "University of Colorado" nil "" "~/Messages/sig/cu.sig")
@@ -273,7 +274,6 @@
       (gnus-summary-line-format "%U%z %(%[%15&user-date;%]  %-15,15f  %B%s%)
 ")))))
  '(gnus-permanently-visible-groups "INBOX")
- '(gnus-picon-style (quote right))
  '(gnus-read-active-file nil)
  '(gnus-read-newsrc-file nil)
  '(gnus-refer-article-method
@@ -287,6 +287,7 @@
  '(gnus-save-newsrc-file nil)
  '(gnus-score-default-duration (quote p))
  '(gnus-score-expiry-days 30)
+ '(gnus-score-interactive-default-score 10)
  '(gnus-select-group-hook (quote (gnus-group-set-timestamp)))
  '(gnus-select-method
    (quote
@@ -312,7 +313,7 @@
  '(gnus-subscribe-newsgroup-method (quote gnus-subscribe-topics))
  '(gnus-sum-thread-tree-single-indent "  ")
  '(gnus-summary-expunge-below -100)
- '(gnus-summary-line-format "%Â«%U%R %uS %ur %Â»%(%*%-14,14f   %1Â«%B%s%Â»%)
+ '(gnus-summary-line-format "%«%3t %U%R %uS %ur %»%(%*%-14,14f   %1«%B%s%»%)
 ")
  '(gnus-summary-mark-below -100)
  '(gnus-summary-pick-line-format "%U%R %uS %ur %(%*%-14,14f  %B%s%)
@@ -353,6 +354,7 @@
  '(mail-user-agent (quote gnus-user-agent))
  '(message-alternative-emails
    "\\(dhaley\\|vinylisl\\)@\\(hushmail\\|ssl\\-mail\\).com\\|\\(dkh@member\\.fsf\\|news@vinylisland\\)\\.org\\|damon\\.haley@colorado\\.edu")
+ '(message-confirm-send t)
  '(message-default-headers
    "X-Face: \"'PJ-yb+fYF0]%?,#==_(s>`~Hw_iwG![Cc+Sq$k>S|QbU)>?}Y51$4)\\9OEt:NL.@kZIqy <UnVZ*!XnGGV:iDO$YDhK7i~$.fs%r^0LJdztkb\\6=DI6by:GdO>.L<,Nd[nsMwrN3b]os1UqBw
 X-Accept-Language: en-us
@@ -391,7 +393,6 @@ Bcc:
  '(mm-decrypt-option (quote always))
  '(mm-discouraged-alternatives (quote ("application/msword" "text/richtext")))
  '(mm-inline-text-html-with-images nil)
- '(mm-text-html-renderer (quote shr))
  '(mm-verify-option (quote always))
  '(mm-w3m-safe-url-regexp nil)
  '(nnir-imap-default-search-key "imap")
@@ -449,16 +450,10 @@ Bcc:
  '(sc-preferred-attribution-list nil)
  '(sc-use-only-preference-p t)
  '(send-mail-function (quote sendmail-send-it))
- '(smtpmail-default-smtp-server "mail.messagingengine.com")
- '(smtpmail-queue-dir "~/Messages/Gnus/Mail/queue/")
- '(smtpmail-smtp-server "mail.messagingengine.com")
- '(smtpmail-auth-credentials (expand-file-name "~/.authinfo.gpg"))
- '(user-full-name "Damon Haley")
- '(user-mail-address "emacs@dhaley.warpmail.net")
- '(gnutls-algorithm-priority "NORMAL:%COMPAT")
- '(smtpmail-stream-type 'ssl)
- '(smtpmail-smtp-service 465)
- '(mml2015-use 'epg)
- '(mu4e-attachment-dir  "~/dl")
- '(smtpmail-smtp-user "dhaley@fastmail.com")
-)
+ '(smtpmail-default-smtp-server "smtp.gmail.com")
+ '(smtpmail-queue-dir "~/Messages/Gnus/News/drafts/queue")
+ '(smtpmail-smtp-server "smtp.gmail.com")
+ '(smtpmail-smtp-service 587)
+ '(smtpmail-smtp-user "damon.k.haley@gmail.com")
+ '(smtpmail-starttls-credentials (quote (("smtp.gmail.com" 587 nil nil))) t)
+ '(smtpmail-warn-about-unknown-extensions t))
