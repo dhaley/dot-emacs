@@ -4558,6 +4558,14 @@ Relies on functions of `php-mode'."
   :config
   (recentf-mode 1))
 
+(use-package rec-mode
+  :load-path "~/.emacs.d/site-lisp/rec-mode"
+  :init
+  (add-to-list 'auto-mode-alist '("\\.rec\\'" . rec-mode)))
+
+(use-package orb-rec
+  :load-path "~/.emacs.d/site-lisp/orb-rec")
+
 (use-package repeat-insert
   :disabled t
   :commands (insert-patterned
