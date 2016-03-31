@@ -205,9 +205,6 @@
 [submodule "lib/dash-el"]
 	path = lib/dash-el
 	url = git://github.com/magnars/dash.el.git
-[submodule "site-lisp/nodejs-mode"]
-        path = site-lisp/nodejs-mode
-        url = git://github.com/emacsmirror/nodejs-mode.git
 [submodule "site-lisp/eshell-manual"]
         path = site-lisp/eshell-manual
         url = git://github.com/nicferrier/eshell-manual.git
