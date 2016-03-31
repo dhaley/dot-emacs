@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: Form checkbox
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+\$form['$1'] = array(
+'#type' => 'checkbox',
+'#title' => t('$2'),
+'#return_value => ${3:1},
+'#default_value' => $4,
+);

@@ -1,0 +1,41 @@
+# -*- mode: snippet -*-
+# name : hook_nodeapi
+# contributor : Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+/**
+ * Implements hook_node_api().
+ */
+function `(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`_$1(&\$node, \$op, \$a3 = NULL, \$a4 = NULL) {
+switch ($op) {
+case 'alter':
+break;
+case 'delete':
+break;
+case 'delete revision':
+break;
+case 'insert':
+break;
+case 'load':
+break;
+case 'prepare':
+break;
+case 'prepare translation':
+break;
+case 'print':
+break;
+case 'rss item':
+break;
+case 'search result':
+break;
+case 'presave':
+break;
+case 'update':
+break;
+case 'update index':
+break;
+case 'validate':
+break;
+case 'view':
+break;
+}
+}

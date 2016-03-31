@@ -1,0 +1,36 @@
+# -*- mode: snippet -*-
+# name: Form builder
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+/**
+ * Form builder for ...
+ *
+ * @see $1_validate()
+ * @see $1_submit()
+ * @ingroup forms
+ */
+function ${1:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`_form}(\$form_state) {
+\$form = array();
+$0
+return \$form;
+}
+
+/**
+ * Form validation handler for $1().
+ *
+ * @see $1()
+ * @see $1_submit()
+ */
+function $1_validate(\$form, &$form_state) {
+
+}
+
+/**
+ * Form submit handler for $1().
+ *
+ * @see $1()
+ * @see $1_validate()
+ */
+function $1_submit(\$form, &$form_state) {
+
+}

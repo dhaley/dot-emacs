@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: Form textfield
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+\$form['$1'] = array(
+'#type' => 'textfield',
+'#title' => t('$2'),
+'#required'  => ${3:$$(yas/choose-value '("FALSE" "TRUE"))},
+'#maxlength' => ${4:128},
+'#size' => ${5:60},
+'#default_value' => $6,
+);

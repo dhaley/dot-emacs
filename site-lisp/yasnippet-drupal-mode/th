@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: Themable function
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+/**
+ * Returns HTML for foo.
+ *
+ * @param \$variables
+ *   An associative array containing:
+ *   - foo: The foo object that is being formatted.
+ *
+ * @ingroup themeable
+ */
+function theme_${1:name}(\$variables) {
+\$output = '';
+$0
+return \$output;
+}

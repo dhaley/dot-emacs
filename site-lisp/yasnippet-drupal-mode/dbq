@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: db_query
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+\$query = "$1";
+\$result = db_query(\$query${2:, $3});
+while (\$row = db_fetch_object(\$result)) {
+$0
+}

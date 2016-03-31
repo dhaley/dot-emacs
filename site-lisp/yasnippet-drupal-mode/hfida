@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: hook_form_FORM_ID_alter
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+/**
+ * Implements hook_form_$1_alter().
+ */
+function `(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`_form_${1:FORM_ID}_alter(&\$form, &\$form_state) {
+$0
+}
+

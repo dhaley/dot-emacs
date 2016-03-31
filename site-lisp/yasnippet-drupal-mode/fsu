@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Form submit
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+\$form['$1'] = array(
+'#type' => 'submit',
+'#value' => t('$4'),
+);

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: Form item
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+\$form['$1'] = array(
+'#type' => 'item',
+'#title' => t('$2')
+'#value' => $3,
+);

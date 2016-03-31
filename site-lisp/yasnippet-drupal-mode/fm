@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Form markup
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+\$form['$1'] = array(
+'#type' => 'markup',
+'#value' => $2,
+);

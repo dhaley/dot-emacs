@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: Menu item
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+\$items['$1'] = array(
+'title' => '$2',
+'page callback' => '$3',
+'page arguments' => array($4),
+'access callback' => '${5:user_access}',
+'access arguments' => array($6),
+'type' => ${7:$$(yas/choose-value '("MENU_CALLBACK" "MENU_NORMAL_ITEM" "MENU_LOCAL_TASK" "MENU_DEFAULT_LOCAL_TASK"))},
+);

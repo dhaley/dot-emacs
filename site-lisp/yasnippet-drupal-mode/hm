@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name : hook_menu
+# contributor : Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+/**
+ * Implements hook_menu().
+ */
+function `(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`_menu() {
+\$items = array();
+$0
+return \$items;
+}

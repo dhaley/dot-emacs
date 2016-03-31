@@ -1,0 +1,13 @@
+# -*- mode:snippet -*-
+# name : if (...) { ... } elseif(...) { ... } else { ... }
+# contributor Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+if (${1:condition}) {
+$0
+}
+elseif (${2:condition}) {
+
+}
+else {
+
+}

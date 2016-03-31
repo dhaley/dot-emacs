@@ -1,0 +1,35 @@
+# -*- mode: snippet -*-
+# name : hook_user
+# contributor : Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+/**
+ * Implements hook_user().
+ */
+function `(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`_user(\$op, &\$edit, &\$account, \$category = NULL) {
+switch ($op) {
+case 'after_update':
+break;
+case 'categories':
+break;
+case 'delete':
+break;
+case 'form':
+break;
+case 'insert':
+break;
+case 'load':
+break;
+case 'login':
+break;
+case 'logout':
+break;
+case 'register':
+break;
+case 'submit':
+break;
+case 'validate':
+break;
+case 'view':
+break;
+}
+}

@@ -1,0 +1,7 @@
+# -*- mode:snippet -*-
+# name : foreach (array_expression as $key => $value) { ... }
+# contributor Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+foreach (${1:array_expression} as ${2:\$key} => ${3:\$value}) {
+$0
+}

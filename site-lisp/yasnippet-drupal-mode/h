@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name : hook
+# contributor : Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+/**
+ * Implements hook_$1().
+ */
+function `(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`_$1() {
+$0
+}

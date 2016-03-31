@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+# name: function
+# contributor: Orestis Markou
+# contributor: Yasser González Fernández <yglez@uh.cu>
+# contributor: Stefan Freudenberg
+# --
+/**
+* $3
+*${2:$
+      (let*
+       ((indent
+           "\n *")
+           (args
+            (mapconcat
+             '(lambda (x)
+                (if (not (string= (nth 0 x) ""))
+                    (concat " @param " (nth 0 x))))
+             (mapcar
+              '(lambda (x)
+                 (mapcar
+                  '(lambda (x)
+                     (replace-regexp-in-string "[[:blank:]]*$" ""
+                      (replace-regexp-in-string "^[[:blank:]&]*" "" x)))
+                  x))
+              (mapcar '(lambda (x) (split-string x "="))
+                      (split-string text ",")))
+             indent)))
+     (if (string= args "")
+         "/"
+        (mapconcat
+         'identity
+         (list "" args "/")
+         indent)))
+    }
+function `(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`_$1($2) {
+$0
+}

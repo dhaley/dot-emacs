@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: Form radio
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+\$form['$1'] = array(
+'#type' => 'radio',
+'#title' => t('$2'),
+'#default_value' => $3,
+);

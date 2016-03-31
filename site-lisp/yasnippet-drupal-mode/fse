@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: Form select
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+\$form['$1'] = array(
+'#type' => 'select',
+'#title' => t('$2'),
+'#options' => ${3:array()},
+'#required'  => ${4:$$(yas/choose-value '("FALSE" "TRUE"))},
+'#multiple'  => ${5:$$(yas/choose-value '("FALSE" "TRUE"))},
+'#size' => ${6:1},
+'#default_value' => $7,
+);

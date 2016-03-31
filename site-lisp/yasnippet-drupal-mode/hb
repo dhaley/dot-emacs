@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name : hook_block
+# contributor : Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+/**
+ * Implements hook_block().
+ */
+function `(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`_block(\$op = 'list', \$delta = 0, \$edit = array()) {
+switch ($op) {
+case 'list':
+break;
+case 'configure':
+break;
+case 'save':
+break;
+case 'view':
+break;
+}
+}

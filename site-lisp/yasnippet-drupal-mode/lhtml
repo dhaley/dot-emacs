@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name : l($text, $path, array('html' => TRUE))
+# contributor : Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+l(${1:text}, ${2:path}, array('html' => TRUE));

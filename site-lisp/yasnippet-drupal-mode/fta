@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: Form textarea
+# contributor: Stefan Freudenberg <s.freudenberg@jpberlin.de>
+# --
+\$form['$1'] = array(
+'#type' => 'textarea',
+'#title' => t('$2'),
+'#required'  => ${3:$$(yas/choose-value '("FALSE" "TRUE"))},
+'#rows' => ${4:5},
+'#cols' => ${5:6},
+'#default_value' => $6,
+);
