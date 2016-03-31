@@ -1060,3 +1060,6 @@
 [submodule "site-lisp/helm-c-yasnippet"]
 	path = site-lisp/helm-c-yasnippet
 	url = https://github.com/emacs-jp/helm-c-yasnippet.git
+[submodule "site-lisp/magit-review"]
+	path = site-lisp/magit-review
+	url = https://github.com/cwebber/magit-review.git
