@@ -742,9 +742,6 @@
 [submodule "site-lisp/solarized"]
 	path = site-lisp/solarized
 	url = git@github.com:bbatsov/solarized-emacs.git
-[submodule "site-lisp/helm-gist"]
-	path = site-lisp/helm-gist
-	url = git://github.com/emacs-helm/helm-gist.git
 [submodule "site-lisp/helm-ls-git"]
 	path = site-lisp/helm-ls-git
 	url = git://github.com/emacs-helm/helm-ls-git.git
@@ -1063,3 +1060,6 @@
 [submodule "lisp/emacs-async"]
 	path = lisp/emacs-async
 	url = git://github.com/jwiegley/emacs-async.git
+[submodule "site-lisp/helm-c-yasnippet"]
+	path = site-lisp/helm-c-yasnippet
+	url = https://github.com/emacs-jp/helm-c-yasnippet.git
