@@ -235,9 +235,6 @@
 [submodule "site-lisp/paredit"]
         path = site-lisp/paredit
         url = git://github.com/emacsmirror/paredit.git
-[submodule "site-lisp/yasnippet-drupal-mode"]
-        path = site-lisp/yasnippet-drupal-mode
-        url = git://gitorious.org/drupal-development-helpers/yasnippet-drupal-mode.git
 [submodule "site-lisp/skewer-mode"]
         path = site-lisp/skewer-mode
         url = git://github.com/skeeto/skewer-mode.git
