@@ -121,6 +121,7 @@
 (use-package popwin         :defer t :load-path "lib/popwin-el")
 (use-package pos-tip        :defer t :load-path "lib/pos-tip")
 (use-package s              :defer t :load-path "lib/s-el")
+(use-package seq              :defer t :load-path "lib/seq")
 (use-package working        :defer t)
 (use-package xml-rpc        :defer t)
 
@@ -3693,7 +3694,8 @@ You can use arrow-keys or WASD.
   :bind ("C-c e m" . macrostep-expand))
 
 (use-package magit
-  :load-path "site-lisp/magit/lisp"
+  :load-path ("site-lisp/magit/lisp"
+              "site-lisp/with-editor")
   :bind (("C-x g" . magit-status)
          ("C-x G" . magit-status-with-prefix))
   :preface

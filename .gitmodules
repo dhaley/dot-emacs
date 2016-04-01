@@ -1057,3 +1057,9 @@
 [submodule "site-lisp/org-mac-protocol"]
 	path = site-lisp/org-mac-protocol
 	url = https://github.com/claviclaws/org-mac-protocol.git
+[submodule "site-lisp/with-editor"]
+	path = site-lisp/with-editor
+	url = https://github.com/magit/with-editor.git
+[submodule "lib/seq"]
+	path = lib/seq
+	url = https://github.com/NicolasPetton/seq.el.git
