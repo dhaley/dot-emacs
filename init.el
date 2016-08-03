@@ -110,6 +110,7 @@
 (use-package f              :defer t :load-path "lib/f-el")
 (use-package fame           :defer t)
 (use-package fuzzy          :defer t)
+(use-package marshal             :defer t :load-path "lib/marshal")
 (use-package gh             :defer t :load-path "lib/gh-el")
 (use-package ht             :defer t :load-path "lib/ht-el")
 (use-package let-alist      :defer t)
@@ -462,7 +463,7 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
       ;; "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"
       "-*-Hack-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1"
       ))
-   ((string= system-name "ubuntu")
+   ((string= (system-name) "ubuntu")
     ;; "-*-Source Code Pro-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"
     "-*-Hack-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1"
     )
