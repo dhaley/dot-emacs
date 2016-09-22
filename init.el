@@ -122,6 +122,7 @@
 (use-package popwin         :defer t :load-path "lib/popwin-el")
 (use-package pos-tip        :defer t :load-path "lib/pos-tip")
 (use-package s              :defer t :load-path "lib/s-el")
+(use-package tablist        :defer t :load-path "lib/tablist")
 (use-package seq              :defer t :load-path "lib/seq")
 (use-package working        :defer t)
 (use-package xml-rpc        :defer t)
@@ -161,7 +162,7 @@
 (defun smart-tab (&optional arg)
   (interactive "P")
   (cond
-   ((looking-back "^[-+* \t]*")
+   ((looking-back "^[-+* \t]*" nil)
     (if (eq major-mode 'org-mode)
         (org-cycle arg)
       (indent-according-to-mode)))
@@ -2201,11 +2202,20 @@ You can use arrow-keys or WASD.
   :config
   (add-hook 'dired-toggle-mode-hook #'my-dired-toggle-mode-hook))
 
+(use-package docker-images
+  :commands docker-images
+  :load-path "site-lisp/docker-el/")
+
+(use-package dockerfile-mode
+  :mode ("Dockerfile\\'" . dockerfile-mode)
+  :load-path "site-lisp/dockerfile-mode/")
+
 (use-package doxymacs
   :disabled t
   :load-path "site-lisp/doxymacs/lisp/")
 
 (use-package eclimd
+  :disabled
   :load-path "site-lisp/emacs-eclim"
   :commands start-eclimd
   :config
@@ -2285,6 +2295,14 @@ You can use arrow-keys or WASD.
   :init
   (add-hook 'after-init-hook 'server-start t)
   (add-hook 'after-init-hook 'edit-server-start t))
+
+(use-package editorconfig
+  :load-path "site-lisp/editorconfig"
+  :init
+  (add-to-list 'auto-mode-alist '("\\.editorconfig" . conf-unix-mode))
+  :config
+  (add-hook 'prog-mode-hook (editorconfig-mode 1))
+  (add-hook 'text-mode-hook (editorconfig-mode 1)))
 
 (use-package edit-var
   :bind ("C-c e v" . edit-variable))
@@ -3464,18 +3482,18 @@ You can use arrow-keys or WASD.
 
       (use-package edebug)
 
-      (use-package eldoc
-        :diminish eldoc-mode
-        :commands eldoc-mode
-        :config
-        (use-package eldoc-extension
-          :disabled t
-          :defer t
-          :init
-          (add-hook 'emacs-lisp-mode-hook
-                    #'(lambda () (require 'eldoc-extension)) t))
-        (eldoc-add-command 'paredit-backward-delete
-                           'paredit-close-round))
+      ;; (use-package eldoc
+      ;;   :diminish eldoc-mode
+      ;;   :commands eldoc-mode
+      ;;   :config
+      ;;   (use-package eldoc-extension
+      ;;     :disabled t
+      ;;     :defer t
+      ;;     :init
+      ;;     (add-hook 'emacs-lisp-mode-hook
+      ;;               #'(lambda () (require 'eldoc-extension)) t))
+      ;;   (eldoc-add-command 'paredit-backward-delete
+      ;;                      'paredit-close-round))
 
       (use-package cldoc
         :commands (cldoc-mode turn-on-cldoc-mode)
@@ -4388,7 +4406,11 @@ Relies on functions of `php-mode'."
   :init
   (require 'grizzl)
   (projectile-global-mode)
-
+  (bind-key "s s"
+            #'(lambda ()
+                (interactive)
+                (helm-do-grep-1 (list (projectile-project-root)) t))
+            'projectile-command-map)
   (use-package projectile-drupal
     :load-path "lisp/projectile-drupal"
     :init
@@ -4837,6 +4859,10 @@ Relies on functions of `php-mode'."
   :commands smerge-mode
   :config
   (setq smerge-command-prefix (kbd "C-. C-.")))
+
+(use-package sort-words
+  :load-path "site-lisp/sort-words"
+  :commands sort-words)
 
 (use-package stopwatch
   :bind ("<f8>" . stopwatch))

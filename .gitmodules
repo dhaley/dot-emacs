@@ -1072,3 +1072,6 @@
 [submodule "site-lisp/editorconfig"]
 	path = site-lisp/editorconfig
 	url = git@github.com:editorconfig/editorconfig-emacs.git
+[submodule "lib/tablist"]
+	path = lib/tablist
+	url = https://github.com/politza/tablist.git

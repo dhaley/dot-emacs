@@ -552,7 +552,7 @@
  '(multi-term-program-switches "-DR")
  '(multi-term-scroll-show-maximum-output t)
  '(next-line-add-newlines nil)
- '(ns-alternate-modifier (quote none))
+ '(ns-alternate-modifier (quote alt))
  '(ns-command-modifier (quote meta))
  '(nxml-sexp-element-flag t)
  '(nxml-slash-auto-complete-flag t)
