@@ -16,9 +16,8 @@
 (require 'org-crypt)
 (require 'org-bbdb)
 (require 'org-devonthink)
-(require 'org-mac-link)
 ;; (require 'org-magit)
-(require 'org-velocity)
+;; (require 'org-velocity)
 (require 'ob-emacs-lisp)
 (require 'ob-sh)
 (use-package ob-php
