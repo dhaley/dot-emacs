@@ -563,6 +563,9 @@
     (("gnu" . "http://elpa.gnu.org/packages/")
      ("ELPA" . "http://tromey.com/elpa/")
      ("Marmalade" . "http://marmalade-repo.org/packages/"))))
+ '(package-selected-packages
+   (quote
+    (zenburn-theme twilight-theme tronesque-theme tron-theme theme-changer ssh soothe-theme solarized-theme purple-haze-theme pony-mode pastels-on-dark-theme let-alist late-night-theme jujube-theme irfc inf-ruby gratuitous-dark-theme gotham-theme gandalf-theme django-theme deep-thought-theme csv-mode color-theme-ir-black clues-theme bubbleberry-theme auctex assemblage-theme ascii ample-zen-theme ample-theme)))
  '(page-break-lines-modes
    (quote
     (emacs-lisp-mode compilation-mode outline-mode prog-mode)))
@@ -640,6 +643,7 @@
  '(save-interprogram-paste-before-kill t)
  '(save-kill-file-name "~/.emacs.d/data/kill-ring-saved.el")
  '(scroll-bar-mode nil)
+ '(select-enable-clipboard t)
  '(semanticdb-default-save-directory "~/.emacs.d/data/semanticdb")
  '(session-globals-exclude (quote (load-history flyspell-auto-correct-ring)))
  '(session-globals-include
@@ -766,7 +770,6 @@
  '(whitespace-silent t t)
  '(whitespace-style (quote (face trailing lines space-before-tab empty)))
  '(workgroups-mode nil)
- '(x-select-enable-clipboard t)
  '(x-stretch-cursor t)
  '(yaoddmuse-directory "~/.emacs.d/doc")
  '(yas-prompt-functions
@@ -774,7 +777,7 @@
     (yas-ido-prompt yas-completing-prompt yas-no-prompt)))
  '(yas-snippet-dirs
    (quote
-    ("~/.emacs.d/snippets" "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets" "~/.emacs.d/site-lisp/css-scss")) nil (yasnippet))
+    ("~/.emacs.d/snippets" "~/.emacs.d/site-lisp/emacs-drupal-snippets/snippets" "~/.emacs.d/site-lisp/css-scss")))
  '(yas-triggers-in-field t)
  '(yas-wrap-around-region t))
 (custom-set-faces
