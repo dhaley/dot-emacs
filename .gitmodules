@@ -853,9 +853,6 @@
 [submodule "site-lisp/lua-mode"]
 	path = site-lisp/lua-mode
 	url = git@github.com:immerrr/lua-mode.git
-[submodule "site-lisp/dom"]
-	path = site-lisp/dom
-	url = https://gitlab.com/mva.led/dom-el.git
 [submodule "site-lisp/flx"]
 	path = site-lisp/flx
 	url = git@github.com:lewang/flx.git
