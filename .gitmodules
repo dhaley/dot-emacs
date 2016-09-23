@@ -79,9 +79,6 @@
 [submodule "site-lisp/emacs-quickrun"]
         path = site-lisp/emacs-quickrun
         url = git://github.com/syohex/emacs-quickrun.git
-[submodule "site-lisp/helm"]
-        path = site-lisp/helm
-        url = git://github.com/emacs-helm/helm.git
 [submodule "site-lisp/helm-descbinds"]
         path = site-lisp/helm-descbinds
         url = git://github.com/emacs-helm/helm-descbinds.git
