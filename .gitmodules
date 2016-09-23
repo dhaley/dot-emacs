@@ -1072,3 +1072,6 @@
 [submodule "lib/tablist"]
 	path = lib/tablist
 	url = https://github.com/politza/tablist.git
+[submodule "site-lisp/helm"]
+	path = site-lisp/helm
+	url = git@github.com:emacs-helm/helm.git
