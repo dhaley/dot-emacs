@@ -460,9 +460,6 @@
 [submodule "site-lisp/github-browse-file"]
         path = site-lisp/github-browse-file
         url = git://github.com/osener/github-browse-file.git
-[submodule "override/gnus"]
-        path = override/gnus
-        url = git@github.com:dhaley/gnus.git
 [submodule "lisp/projectile-drupal"]
         path = lisp/projectile-drupal
         url = git@github.com:dhaley/projectile-drupal.git

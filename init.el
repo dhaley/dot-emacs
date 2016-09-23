@@ -774,7 +774,6 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
     (my-org-startup)))
 
 (use-package dot-gnus
-  :load-path "override/gnus"
   :bind (("M-G"   . switch-to-gnus)
          ("C-x m" . compose-mail))
   :init
