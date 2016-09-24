@@ -1923,6 +1923,7 @@ You can use arrow-keys or WASD.
          ("C-. c p" . bm-previous)))
 
 (use-package bookmark
+  :disabled t
   :load-path "site-lisp/bookmark-plus"
   :defer 10
   :config
@@ -2106,6 +2107,8 @@ You can use arrow-keys or WASD.
   :config
   (use-package dired-x)
   (use-package dired+
+    :disabled t
+    :load-path "site-lisp/dired-plus"
     :config
     (unbind-key "M-s f" dired-mode-map))
 
@@ -2626,6 +2629,7 @@ You can use arrow-keys or WASD.
     (setq golden-ratio-auto-scale t))
 
 (use-package google-maps
+  :disabled t
   :load-path "site-lisp/google-maps"
   :defer 5
   :config

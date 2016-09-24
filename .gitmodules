@@ -1066,3 +1066,6 @@
 [submodule "site-lisp/helm"]
 	path = site-lisp/helm
 	url = git@github.com:emacs-helm/helm.git
+[submodule "site-lisp/dired-plus"]
+	path = site-lisp/dired-plus
+	url = git@github.com:emacsmirror/dired-plus.git
