@@ -46,7 +46,7 @@
  '(async-bytecomp-allowed-packages nil)
  '(auth-source-debug (quote trivia))
  '(auth-sources (quote ("~/Documents/.authinfo.gpg")))
- '(auto-compression-mode t nil (jka-compr))
+ '(auto-compression-mode t)
  '(auto-save-file-name-transforms (quote (("\\`/[^/]*:.*" "/tmp" t))))
  '(auto-save-interval 64)
  '(auto-save-list-file-prefix "~/.emacs.d/data/auto-save-list/.saves-")
@@ -376,7 +376,7 @@
  '(glasses-separator "-")
  '(glasses-uncapitalize-p t)
  '(global-auto-complete-mode t)
- '(global-font-lock-mode t nil (font-lock))
+ '(global-font-lock-mode t)
  '(global-undo-tree-mode t)
  '(gnutls-algorithm-priority "NORMAL:%COMPAT")
  '(grep-find-command (quote ("ag --noheading --column --ignore branches " . 43)))
@@ -565,7 +565,7 @@
      ("Marmalade" . "http://marmalade-repo.org/packages/"))))
  '(package-selected-packages
    (quote
-    (zenburn-theme twilight-theme tronesque-theme tron-theme theme-changer ssh soothe-theme solarized-theme purple-haze-theme pony-mode pastels-on-dark-theme let-alist late-night-theme jujube-theme irfc inf-ruby gratuitous-dark-theme gotham-theme gandalf-theme django-theme deep-thought-theme csv-mode color-theme-ir-black clues-theme bubbleberry-theme auctex assemblage-theme ascii ample-zen-theme ample-theme)))
+    (auto-overlays zenburn-theme twilight-theme tronesque-theme tron-theme theme-changer ssh soothe-theme solarized-theme purple-haze-theme pony-mode pastels-on-dark-theme let-alist late-night-theme jujube-theme irfc inf-ruby gratuitous-dark-theme gotham-theme gandalf-theme django-theme deep-thought-theme csv-mode color-theme-ir-black clues-theme bubbleberry-theme auctex assemblage-theme ascii ample-zen-theme ample-theme)))
  '(page-break-lines-modes
    (quote
     (emacs-lisp-mode compilation-mode outline-mode prog-mode)))
@@ -688,7 +688,7 @@
  '(tags-case-fold-search nil)
  '(tail-max-size 25)
  '(tail-volatile nil)
- '(temp-buffer-resize-mode t nil (help))
+ '(temp-buffer-resize-mode t)
  '(term-bind-key-alist
    (quote
     (("C-c C-c" . term-interrupt-subjob)
