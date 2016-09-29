@@ -2316,7 +2316,7 @@ You can use arrow-keys or WASD.
   :preface
   (defvar emms-initialized nil)
   (declare-function emms-smart-browse "emms-browser")
-  (require 'emms-player-simple)
+  ;; (require 'emms-player-simple)
   (defun my-emms ()
     (interactive)
     ; Stop set up stuff from runnig wit every function call.

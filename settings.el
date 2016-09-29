@@ -568,9 +568,9 @@
  '(pabbrev-idle-timer-verbose nil)
  '(package-archives
    (quote
-    (("gnu" . "http://elpa.gnu.org/packages/")
-     ("ELPA" . "http://tromey.com/elpa/")
-     ("Marmalade" . "http://marmalade-repo.org/packages/"))))
+    (("gnu" . "https://elpa.gnu.org/packages/")
+     ("MELPA" . "https://melpa.org/packages/")
+     ("Marmalade" . "https://marmalade-repo.org/packages/"))))
  '(package-selected-packages
    (quote
     (auto-overlays zenburn-theme twilight-theme tronesque-theme tron-theme theme-changer ssh soothe-theme solarized-theme purple-haze-theme pony-mode pastels-on-dark-theme let-alist late-night-theme jujube-theme irfc inf-ruby gratuitous-dark-theme gotham-theme gandalf-theme django-theme deep-thought-theme csv-mode color-theme-ir-black clues-theme bubbleberry-theme auctex assemblage-theme ascii ample-zen-theme ample-theme)))
