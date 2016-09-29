@@ -51,6 +51,8 @@
  '(auto-save-interval 64)
  '(auto-save-list-file-prefix "~/.emacs.d/data/auto-save-list/.saves-")
  '(auto-save-timeout 2)
+ '(avy-case-fold-search nil)
+ '(avy-keys (quote (97 111 101 117 105 100 104 116 110 115)))
  '(aw-background nil)
  '(aw-keys (quote (97 111 101 117 105 100 104 116 110)))
  '(backup-directory-alist
@@ -382,6 +384,18 @@
  '(grep-find-command (quote ("ag --noheading --column --ignore branches " . 43)))
  '(helm-adaptive-history-file "~/.emacs.d/data/helm-adaptive-history")
  '(helm-buffers-fuzzy-matching t)
+ '(helm-completing-read-handlers-alist
+   (quote
+    ((describe-function . helm-completing-read-symbols)
+     (describe-variable . helm-completing-read-symbols)
+     (debug-on-entry . helm-completing-read-symbols)
+     (find-function . helm-completing-read-symbols)
+     (find-tag . helm-completing-read-with-cands-in-buffer)
+     (ffap-alternate-file)
+     (ffap)
+     (tmm-menubar)
+     (find-file)
+     (magit-status . ido))))
  '(helm-delete-minibuffer-contents-from-point t)
  '(helm-descbinds-window-style (quote split-window))
  '(helm-ff-file-name-history-use-recentf t)
@@ -408,9 +422,8 @@
  '(hoogle-binary-path "hoogle")
  '(hpaste-announce (quote always))
  '(hpaste-blank-title nil)
- '(hpaste-channel "#haskell")
- '(hpaste-default-lang "haskell")
- '(hpaste-default-nick "johnw")
+ '(hpaste-channel "#drupal")
+ '(hpaste-default-nick "dkh")
  '(hpaste-lang (quote always))
  '(ibuffer-default-display-maybe-show-predicates t)
  '(ibuffer-expert t)
@@ -442,11 +455,6 @@
        (or
         (mode . magit-status-mode)
         (mode . magit-log-mode)))
-      ("Haskell"
-       (or
-        (mode . haskell-mode)
-        (mode . haskell-cabal-mode)
-        (mode . literate-haskell-mode)))
       ("Coq"
        (mode . coq-mode))
       ("C++"
@@ -619,20 +627,6 @@
  '(redisplay-dont-pause t t)
  '(regex-tool-backend (quote perl))
  '(runner-init-file "~/.emacs.d/data/runner-conf.el")
- '(safe-local-variable-values
-   (quote
-    ((nix-package-name . "pkgs.haskellPackages_ghc782.newartisans")
-     (eval require
-           (quote edg))
-     (eval ignore-errors
-           (require
-            (quote edg)))
-     (after-save-hook git-commit-changes)
-     (shm-lambda-indent-style . leftmost-parent)
-     (haskell-indent-spaces . 4)
-     (haskell-indent-spaces . 2)
-     (coq-prog-args "-emacs" "-no-native-compiler" "-R" "." "Hask")
-     (coq-prog-args "-emacs" "-R" "." "Hask"))))
  '(sage-view-anti-aliasing-level 4)
  '(sage-view-margin (quote (20 . 20)))
  '(sage-view-scale 2.0)
@@ -765,7 +759,7 @@
  '(wg-query-for-save-on-emacs-exit nil)
  '(wg-query-for-save-on-workgroups-mode-exit nil)
  '(whitespace-auto-cleanup t t)
- '(whitespace-line-column 80)
+ '(whitespace-line-column 110)
  '(whitespace-rescan-timer-time nil t)
  '(whitespace-silent t t)
  '(whitespace-style (quote (face trailing lines space-before-tab empty)))

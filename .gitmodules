@@ -1054,9 +1054,6 @@
 [submodule "lib/marshal"]
 	path = lib/marshal
 	url = git@github.com:sigma/marshal.el.git
-[submodule "site-lisp/auto-complete"]
-	path = site-lisp/auto-complete
-	url = git@github.com:auto-complete/auto-complete.git
 [submodule "site-lisp/editorconfig"]
 	path = site-lisp/editorconfig
 	url = git@github.com:editorconfig/editorconfig-emacs.git

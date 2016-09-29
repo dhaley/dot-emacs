@@ -1724,16 +1724,6 @@ You can use arrow-keys or WASD.
     :defer t
     :config
     (use-package preview)
-    (use-package ac-math
-      :disabled t
-      :config
-      (defun ac-latex-mode-setup ()
-        (nconc ac-sources
-               '(ac-source-math-unicode ac-source-math-latex
-                                        ac-source-latex-commands)))
-
-      (add-to-list 'ac-modes 'latex-mode)
-      (add-hook 'latex-mode-hook 'ac-latex-mode-setup))
 
     (add-hook 'LaTeX-mode-hook 'reftex-mode)
 
@@ -1742,21 +1732,6 @@ You can use arrow-keys or WASD.
                           :parse-rule "\\\\?[a-zA-Z]+\\|\\\\[^a-zA-Z]"
                           :doc-spec '(("(latex2e)Concept Index" )
                                       ("(latex2e)Command Index")))))
-
-(use-package auto-complete-config
-  :disabled t
-  :load-path "site-lisp/auto-complete"
-  :diminish auto-complete-mode
-  :init
-  (use-package pos-tip)
-  (ac-config-default)
-
-  :config
-  (ac-set-trigger-key "<backtab>")
-  (setq ac-use-menu-map t)
-
-  (bind-key "H-M-?" #'ac-last-help)
-  (unbind-key "C-s" ac-completing-map))
 
 ;;;_ , auto-dim-other-buffers
 
@@ -5133,7 +5108,7 @@ Relies on functions of `php-mode'."
   ;; For some reason, having these in settings.el gets ignored if whitespace
   ;; loads lazily.
   (setq whitespace-auto-cleanup t
-        whitespace-line-column 80
+        whitespace-line-column 110
         whitespace-rescan-timer-time nil
         whitespace-silent t
         whitespace-style '(face trailing lines space-before-tab empty)))
