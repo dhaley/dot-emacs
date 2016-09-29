@@ -120,10 +120,10 @@
 (use-package pkg-info       :defer t :load-path "lib/pkg-info")
 (use-package popup          :defer t :load-path "lib/popup-el")
 (use-package popwin         :defer t :load-path "lib/popwin-el")
-(use-package pos-tip        :defer t :load-path "lib/pos-tip")
+(use-package pos-tip        :defer t )
 (use-package s              :defer t :load-path "lib/s-el")
 (use-package tablist        :defer t :load-path "lib/tablist")
-(use-package seq              :defer t :load-path "lib/seq")
+(use-package seq              :defer t)
 (use-package working        :defer t)
 (use-package xml-rpc        :defer t)
 
