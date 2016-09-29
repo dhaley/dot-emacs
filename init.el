@@ -1,3 +1,11 @@
+
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (defconst emacs-start-time (current-time))
 (unless noninteractive
   (message "Loading %s..." load-file-name))
@@ -824,6 +832,7 @@ Keys are in kbd format."
 
 (use-package ace-link
   :defer 1
+  :load-path "site-lisp/ace-link"
   :config
   (ace-link-setup-default))
 
@@ -2082,7 +2091,6 @@ You can use arrow-keys or WASD.
   :config
   (use-package dired-x)
   (use-package dired+
-    :disabled t
     :load-path "site-lisp/dired-plus"
     :config
     (unbind-key "M-s f" dired-mode-map))
