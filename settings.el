@@ -20,13 +20,6 @@
      (output-pdf "Skim")
      (output-html "xdg-open"))))
  '(abbrev-file-name "~/.emacs.d/abbrevs")
- '(ac-auto-show-menu 1.0)
- '(ac-auto-start 3)
- '(ac-comphist-file "~/.emacs.d/data/ac-comphist.dat")
- '(ac-dwim nil)
- '(ac-ignore-case nil)
- '(ac-trigger-key "<tab>")
- '(ac-use-fuzzy nil)
  '(ace-isearch-submode (quote ace-jump-char-mode))
  '(ace-window-display-mode t)
  '(ad-redefinition-action (quote accept))
@@ -404,6 +397,7 @@
  '(helm-for-files-preferred-list
    (quote
     (helm-source-files-in-current-dir helm-source-recentf helm-source-bookmarks helm-source-file-cache helm-source-buffers-list helm-source-locate helm-source-ls-git)))
+ '(helm-grep-default-recurse-command "rg --no-heading --color=always -j4 -n%cH -e %p %f")
  '(helm-gtags-auto-update t)
  '(helm-gtags-ignore-case t)
  '(helm-gtags-path-style (quote relative))
