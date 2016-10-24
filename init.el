@@ -109,21 +109,20 @@
 
 (use-package anaphora       :defer t :load-path "lib/anaphora")
 (use-package button-lock    :defer t :load-path "lib/button-lock")
-(use-package dash           :defer t :load-path "lib/dash-el")
 (use-package ctable         :defer t :load-path "lib/emacs-ctable")
+(use-package dash           :defer t :load-path "lib/dash-el")
 (use-package deferred       :defer t :load-path "lib/emacs-deferred")
 (use-package epc            :defer t :load-path "lib/emacs-epc")
-(use-package web            :defer t :load-path "lib/emacs-web")
 (use-package epl            :defer t :load-path "lib/epl")
 (use-package f              :defer t :load-path "lib/f-el")
 (use-package fame           :defer t)
 (use-package fuzzy          :defer t)
-(use-package marshal             :defer t :load-path "lib/marshal")
 (use-package gh             :defer t :load-path "lib/gh-el")
 (use-package ht             :defer t :load-path "lib/ht-el")
 (use-package let-alist      :defer t)
 (use-package logito         :defer t :load-path "lib/logito")
 (use-package makey          :defer t :load-path "lib/makey")
+(use-package marshal             :defer t :load-path "lib/marshal")
 (use-package pcache         :defer t :load-path "lib/pcache")
 (use-package pkg-info       :defer t :load-path "lib/pkg-info")
 (use-package popup          :defer t :load-path "lib/popup-el")
@@ -132,6 +131,7 @@
 (use-package s              :defer t :load-path "lib/s-el")
 (use-package tablist        :defer t :load-path "lib/tablist")
 (use-package seq              :defer t)
+(use-package web            :defer t :load-path "lib/emacs-web")
 (use-package working        :defer t)
 (use-package xml-rpc        :defer t)
 
@@ -436,6 +436,8 @@ Inspired by Erik Naggum's `recursive-edit-with-single-window'."
            ("r" . do-eval-region)
            ("s" . scratch)
            ("z" . byte-recompile-directory))
+
+(use-package bytecomp-simplify :defer 15)
 
 (bind-key "C-c f" #'flush-lines)
 (bind-key "C-c k" #'keep-lines)
@@ -1884,10 +1886,26 @@ You can use arrow-keys or WASD.
 
   (setq backup-enable-predicate 'my-dont-backup-files-p))
 
+
 (use-package bbdb-com
   :load-path "override/bbdb/lisp"
   :commands bbdb-create
-  :bind ("M-B" . bbdb))
+  :bind ("M-B" . bbdb)
+  :config
+  (use-package osx-bbdb
+    :load-path "site-lisp/osx-bbdb"
+    :commands import-osx-contacts-to-bbdb)
+
+  (use-package bbdb-vcard
+    :disabled t
+    :load-path "site-lisp/bbdb-vcard")
+
+  (use-package bbdb-vcard-export
+    :disabled t)
+
+  (use-package bbdb-vcard-import
+    :disabled t))
+
 
 (use-package bm
   :disabled t
@@ -1971,7 +1989,9 @@ You can use arrow-keys or WASD.
   :bind ("M-s O" . moccur)
   :init
   (bind-key "M-o" #'isearch-moccur isearch-mode-map)
+  (bind-key "M-h" #'helm-occur-from-isearch isearch-mode-map)
   (bind-key "M-O" #'isearch-moccur-all isearch-mode-map)
+  (bind-key "M-H" #'helm-multi-occur-from-isearch isearch-mode-map)
   :config
   (use-package moccur-edit))
 
@@ -1985,11 +2005,7 @@ You can use arrow-keys or WASD.
   (defadvice company-pseudo-tooltip-unless-just-one-frontend
       (around only-show-tooltip-when-invoked activate)
     (when (company-explicit-action-p)
-      ad-do-it))
-
-  (use-package helm-company
-    :disabled t
-    :load-path "site-lisp/helm-company"))
+      ad-do-it)))
 
 (use-package compile
   :bind (("C-c c" . compile)
@@ -2036,6 +2052,7 @@ You can use arrow-keys or WASD.
       (lambda (x) (delete-file (expand-file-name x ivy--directory))))))
   (use-package smex))
 
+;; uses col-highlight.el
 (use-package crosshairs
   :bind ("M-o c" . crosshairs-mode))
 
@@ -2059,6 +2076,10 @@ You can use arrow-keys or WASD.
   :commands diff-mode
   :config
   (use-package diff-mode-))
+
+
+(use-package diffview
+  :commands (diffview-current diffview-region diffview-message))
 
 (use-package dired
   :bind ("C-c J" . dired-double-jump)
@@ -3170,6 +3191,10 @@ You can use arrow-keys or WASD.
                 (bind-key "<return>" #'ido-smart-select-text
                           ido-file-completion-map))))
 
+(use-package iedit
+  :load-path "site-lisp/iedit"
+  :bind (("C-;" . iedit-mode)))
+
 (use-package ielm
   :bind ("C-c :" . ielm)
   :config
@@ -3251,6 +3276,9 @@ You can use arrow-keys or WASD.
 
 (use-package info-look
   :commands info-lookup-add-help)
+
+(use-package inventory
+  :commands inventory)
 
 (use-package indirect
   :bind ("C-c C" . indirect-region))
@@ -3468,18 +3496,18 @@ You can use arrow-keys or WASD.
 
       (use-package edebug)
 
-      ;; (use-package eldoc
-      ;;   :diminish eldoc-mode
-      ;;   :commands eldoc-mode
-      ;;   :config
-      ;;   (use-package eldoc-extension
-      ;;     :disabled t
-      ;;     :defer t
-      ;;     :init
-      ;;     (add-hook 'emacs-lisp-mode-hook
-      ;;               #'(lambda () (require 'eldoc-extension)) t))
-      ;;   (eldoc-add-command 'paredit-backward-delete
-      ;;                      'paredit-close-round))
+      (use-package eldoc
+        :diminish eldoc-mode
+        :commands eldoc-mode
+        :config
+        (use-package eldoc-extension
+          :disabled t
+          :defer t
+          :init
+          (add-hook 'emacs-lisp-mode-hook
+                    #'(lambda () (require 'eldoc-extension)) t))
+        (eldoc-add-command 'paredit-backward-delete
+                           'paredit-close-round))
 
       (use-package cldoc
         :commands (cldoc-mode turn-on-cldoc-mode)
@@ -4322,9 +4350,9 @@ Relies on functions of `php-mode'."
 
   (add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1))))
 
+
 (use-package popup-ruler
-  :bind (("C-. r" . popup-ruler)
-         ("C-. R" . popup-ruler-vertical)))
+  :bind (("C-. C-r" . popup-ruler)))
 
 (use-package popwin
   :load-path "lib/popwin-el"
@@ -5000,6 +5028,16 @@ Relies on functions of `php-mode'."
   :defer t)
 
 (use-package unbound)
+
+(use-package visual-regexp
+  :load-path "site-lisp/visual-regexp"
+  :commands (vr/replace
+             vr/query-replace)
+  :bind (("C-. r" . vr/replace)
+         ("C-. M-%" . vr/query-replace))
+  :config
+  (use-package visual-regexp-steroids
+    :load-path "site-lisp/visual-regexp-steroids"))
 
 (use-package vkill
   :commands vkill
