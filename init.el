@@ -3463,6 +3463,11 @@ You can use arrow-keys or WASD.
           (insert account))
         (forward-line)))))
 
+(use-package lentic
+  ;; (shell-command "rm -fr site-lisp/lentic")
+  ;; (shell-command "git remote rm ext/lentic")
+  :load-path "site-lisp/lentic")
+
 (use-package lisp-mode
   :defer t
   :preface
@@ -3905,6 +3910,10 @@ You can use arrow-keys or WASD.
                            "-xml" "-i" "-wrap" "0" "-omit" "-q" "-utf8")))
 
   (bind-key "C-c M-h" #'tidy-xml-buffer nxml-mode-map))
+
+
+(use-package ob-http
+    :load-path "site-lisp/ob-http")
 
 (use-package on-screen
   :disabled t
