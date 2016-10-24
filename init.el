@@ -832,12 +832,6 @@ Keys are in kbd format."
           ace-jump-word-mode
           ace-jump-line-mode)))
 
-(use-package ace-link
-  :defer 1
-  :load-path "site-lisp/ace-link"
-  :config
-  (ace-link-setup-default))
-
 (use-package ace-isearch
   :disabled t
   :load-path "site-lisp/ace-isearch"

@@ -30,10 +30,14 @@
 (require 'ob-ditaa)
 (require 'ox-md)
 (require 'ox-opml)
-(require 'ob-rec)
+(use-package ob-rec
+  :load-path "site-lisp/ob-rec")
 (use-package org-eshell)
 (use-package orgit
   :load-path "site-lisp/orgit")
+
+(use-package org-habit-plus
+  :load-path "site-lisp/org-habit-plus")
 
 ;; (require 'ox-reveal)
 
