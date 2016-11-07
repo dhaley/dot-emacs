@@ -183,7 +183,7 @@
        (gnus-string-remove-all-properties (substring message-id 2)))
     (org-mac-message-open message-id)))
 
-(add-to-list 'org-link-protocols (list "message" 'org-my-message-open nil))
+;; (add-to-list 'org-link-protocols (list "message" 'org-my-message-open nil))
 
 (defun save-org-mode-files ()
   (dolist (buf (buffer-list))
