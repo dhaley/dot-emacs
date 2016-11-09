@@ -739,9 +739,6 @@
 [submodule "site-lisp/esup"]
 	path = site-lisp/esup
 	url = https://github.com/jschaf/esup.git
-[submodule "site-lisp/company-ghc"]
-	path = site-lisp/company-ghc
-	url = git://github.com/iquiw/company-ghc.git
 [submodule "site-lisp/git-timemachine"]
 	path = site-lisp/git-timemachine
 	url = https://github.com/pidu/git-timemachine.git
@@ -964,15 +961,9 @@
 [submodule "site-lisp/backup-walker"]
 	path = site-lisp/backup-walker
 	url = git@github.com:lewang/backup-walker.git
-[submodule "site-lisp/company-auctex"]
-	path = site-lisp/company-auctex
-	url = git@github.com:alexeyr/company-auctex.git
 [submodule "site-lisp/company-math"]
 	path = site-lisp/company-math
 	url = git@github.com:vspinu/company-math.git
-[submodule "site-lisp/company-quickhelp"]
-	path = site-lisp/company-quickhelp
-	url = git@github.com:expez/company-quickhelp.git
 [submodule "site-lisp/diffview-mode"]
 	path = site-lisp/diffview-mode
 	url = git@github.com:mgalgs/diffview-mode.git

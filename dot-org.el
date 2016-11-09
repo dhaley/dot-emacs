@@ -19,7 +19,7 @@
 ;; (require 'org-magit)
 ;; (require 'org-velocity)
 (require 'ob-emacs-lisp)
-(require 'ob-sh)
+(require 'ob-shell)
 (use-package ob-php
   :load-path "site-lisp/ob-php"
   :init
