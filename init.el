@@ -1,5 +1,3 @@
-
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -4198,7 +4196,6 @@ unless return was pressed outside the comment"
                (hs-minor-mode 1)
                (turn-on-eldoc-mode)
                (diminish 'hs-minor-mode)
-               (helm-gtags-mode 1)
                (setq indicate-empty-lines t)
                'my-php-mode-hook
                (local-set-key "\r" 'my-php-return)
