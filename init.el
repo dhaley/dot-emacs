@@ -2787,20 +2787,6 @@ You can use arrow-keys or WASD.
     ;; (global-set-key (kbd "C-c o i") 'helm-open-github-from-issues)
     ;; (global-set-key (kbd "C-c o p") 'helm-open-github-from-pull-requests)
     )
-
-  (use-package helm-gtags
-    :load-path "site-lisp/helm-gtags"
-    :config
-    (setq helm-gtags-path-style 'relative)
-    (setq helm-gtags-ignore-case t)
-    (setq helm-gtags-auto-update t)
-
-    (ggtags-mode 1)
-    (helm-gtags-mode 1)
-    (define-key ggtags-mode-map (kbd "M-.") nil)
-    (define-key ggtags-mode-map (kbd "M-/") nil)
-    (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-find-tag)
-    (define-key helm-gtags-mode-map (kbd "M-/") 'helm-gtags-pop-stack))
   
   (use-package helm-mode
     :diminish helm-mode
