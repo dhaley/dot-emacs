@@ -2744,14 +2744,6 @@ You can use arrow-keys or WASD.
     :config
     (helm-match-plugin-mode 1)))
 
-(use-package helm-descbinds
-  :load-path "site-lisp/helm-descbinds"
-  :bind ("C-h b" . helm-descbinds)
-  :init
-  (fset 'describe-bindings 'helm-descbinds)
-  :config
-  (require 'helm-config))
-
 (use-package helm-config
   :if (not running-alternate-emacs)
   :demand t
@@ -2762,7 +2754,9 @@ You can use arrow-keys or WASD.
          ("C-x f"   . helm-multi-files)
          ("M-s b"   . helm-occur)
          ("M-s n"   . my-helm-find)
-         ("M-H"     . helm-resume))
+         ("M-H"     . helm-resume)
+         ;; ("M-x"     . helm-M-x)
+         )
 
   :preface
   (defun my-helm-find ()
@@ -2773,30 +2767,12 @@ You can use arrow-keys or WASD.
   (use-package helm-commands)
   (use-package helm-files)
   (use-package helm-buffers)
-  (use-package helm-bm
-    :load-path "site-lisp/helm-bm"
-    :bind ("C-c b" . helm-bm))
-
-  (use-package helm-open-github
-    :load-path "site-lisp/helm-open-github"
-    :init
-    ;; (global-set-key (kbd "C-c o f") 'helm-open-github-from-file)
-    ;; (global-set-key (kbd "C-c o c") 'helm-open-github-from-commit)
-    ;; (global-set-key (kbd "C-c o i") 'helm-open-github-from-issues)
-    ;; (global-set-key (kbd "C-c o p") 'helm-open-github-from-pull-requests)
-    )
-  
   (use-package helm-mode
     :diminish helm-mode
     :init
     (helm-mode 1))
 
-  (use-package helm-ls-git
-    :load-path "site-lisp/helm-ls-git")
-
-  (use-package helm-match-plugin
-    :config
-    (helm-match-plugin-mode 1))
+  (use-package helm-multi-match)
 
   (helm-autoresize-mode 1)
 
@@ -2806,51 +2782,17 @@ You can use arrow-keys or WASD.
   (bind-key "H-v" #'helm-previous-page helm-map)
 
   (when (executable-find "curl")
-    (setq helm-net-prefer-curl t))
+    (setq helm-google-suggest-use-curl-p t)))
 
-  (when (when-feature-loaded 'hydra)
-      (define-key helm-map (kbd "\\") 'hydra-helm/body)
-      (defhydra hydra-helm (:hint nil :color pink)
-        "
-                                                                          ╭──────┐
-   Navigation   Other  Sources     Mark             Do             Help   │ Helm │
-  ╭───────────────────────────────────────────────────────────────────────┴──────╯
-        ^_k_^         _K_       _p_   [_m_] mark         [_v_] view         [_H_] helm help
-        ^^↑^^         ^↑^       ^↑^   [_t_] toggle all   [_d_] delete       [_s_] source help
-    _h_ ←   → _l_     _c_       ^ ^   [_u_] unmark all   [_f_] follow: %(helm-attr 'follow)
-        ^^↓^^         ^↓^       ^↓^    ^ ^               [_y_] yank selection
-        ^_j_^         _J_       _n_    ^ ^               [_w_] toggle windows
-  --------------------------------------------------------------------------------
-        "
-        ("<tab>" helm-keyboard-quit "back" :exit t)
-        ("<escape>" nil "quit")
-        ("\\" (insert "\\") "\\" :color blue)
-        ("h" helm-beginning-of-buffer)
-        ("j" helm-next-line)
-        ("k" helm-previous-line)
-        ("l" helm-end-of-buffer)
-        ("g" helm-beginning-of-buffer)
-        ("G" helm-end-of-buffer)
-        ("n" helm-next-source)
-        ("p" helm-previous-source)
-        ("K" helm-scroll-other-window-down)
-        ("J" helm-scroll-other-window)
-        ("c" helm-recenter-top-bottom-other-window)
-        ("m" helm-toggle-visible-mark)
-        ("t" helm-toggle-all-marks)
-        ("u" helm-unmark-all)
-        ("H" helm-help)
-        ("s" helm-buffer-help)
-        ("v" helm-execute-persistent-action)
-        ("d" helm-persistent-delete-marked)
-        ("y" helm-yank-selection)
-        ("w" helm-toggle-resplit-and-swap-windows)
-        ("f" helm-follow-mode)))
 
-  (use-package helm-themes
-    :load-path "site-lisp/helm-themes"
-    :commands helm-themes)
-    (setq helm-google-suggest-use-curl-p t))
+(use-package helm-descbinds
+  :load-path "site-lisp/helm-descbinds"
+  :bind ("C-h b" . helm-descbinds)
+  :init
+  (fset 'describe-bindings 'helm-descbinds)
+  :config
+  (require 'helm-config))
+
 
 (use-package hi-lock
   :bind (("M-o l" . highlight-lines-matching-regexp)
