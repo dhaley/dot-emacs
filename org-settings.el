@@ -195,7 +195,6 @@ SCHEDULED: %t
  '(org-clock-in-switch-to-state (quote bh/clock-in-to-next))
  '(org-clock-into-drawer t)
  '(org-clock-mode-line-total (quote current))
- '(org-clock-modeline-total (quote current))
  '(org-clock-out-remove-zero-time-clocks t)
  '(org-clock-out-switch-to-state nil)
  '(org-clock-out-when-done t)
