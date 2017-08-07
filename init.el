@@ -922,13 +922,14 @@ Keys are in kbd format."
         avy-case-fold-search nil))
 
 (use-package hydra
+  :disabled t
   :load-path "site-lisp/hydra"
   :defer 0.1
   :preface
   (require 'hydra-examples)
   :init
   (bind-key* "\\" 'hydra-master/body)
-  (bind-key* "C-x o" 'hydra-window/body)
+  ;; (bind-key* "C-x o" 'hydra-window/body)
 
   (bind-key "C-z" 'delete-other-windows)
 
@@ -1694,6 +1695,12 @@ You can use arrow-keys or WASD.
     (if ascii-display
         (ascii-off)
       (ascii-on))))
+
+(use-package auto-yasnippet
+  :load-path "site-lisp/auto-yasnippet"
+  :bind (("C-. w" . aya-create)
+         ("C-. y" . aya-expand)
+         ("C-. o" . aya-open-line)))
 
 (use-package tex-site
   :load-path "~/.emacs.d/elpa/auctex-11.88.7"
@@ -5163,8 +5170,7 @@ Relies on functions of `php-mode'."
       (kill-all-local-variables)
       (snippet-mode)
       (set (make-local-variable 'yas-guessed-modes)
-           (mapcar #'(lambda (d)
-                       (intern (yas-table-name (car d))))
+           (mapcar #'(lambda (d) (intern (yas-table-name (car d))))
                    guessed-directories))
       (unless (and choose-instead-of-guess
                    (not (y-or-n-p "Insert a snippet with useful headers? ")))

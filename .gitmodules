@@ -1051,3 +1051,6 @@
 [submodule "site-lisp/ob-rec"]
 	path = site-lisp/ob-rec
 	url = git@github.com:millarc/ob-rec.el.git
+[submodule "site-lisp/auto-yasnippet"]
+	path = site-lisp/auto-yasnippet
+	url = git@github.com:abo-abo/auto-yasnippet.git

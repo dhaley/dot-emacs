@@ -549,6 +549,34 @@
  '(ispell-extra-args (quote ("--sug-mode=fast" "--keyboard=dvorak")))
  '(ispell-personal-dictionary "~/Documents/.aspell.en.pws")
  '(ispell-program-name "/usr/local/bin/aspell")
+ '(jka-compr-compression-info-list
+   (quote
+    (["\\.Z\\(~\\|\\.~[0-9]+~\\)?\\'" "compressing" "compress"
+      ("-c")
+      "uncompressing" "uncompress"
+      ("-c")
+      nil t "^_\235"]
+     ["\\.bz2\\(~\\|\\.~[0-9]+~\\)?\\'" "bzip2ing" "bzip2" nil "bunzip2ing" "bzip2"
+      ("-d")
+      nil t "BZh"]
+     ["\\.tbz\\'" "bzip2ing" "bzip2" nil "bunzip2ing" "bzip2"
+      ("-d")
+      nil nil\
+      "BZh"]
+["\\.tgz\\'" "compressing" "gzip"
+("-c")
+"uncompressing" "gzip"
+("-c" "-q" "-d")
+t nil "^_\213"]
+["\\.g?z\\(~\\|\\.~[0-9]+~\\)?\\'" "compressing" "gzip"
+("-c")
+"uncompressing" "gzip"
+("-c" "-d")
+t t "^_\213"]
+["\\
+      .dz\\'" nil nil nil "uncompressing" "gzip"
+("-c" "-d")
+nil t "^_\213"])))
  '(kill-do-not-save-duplicates t)
  '(kill-whole-line t)
  '(large-file-warning-threshold nil)
