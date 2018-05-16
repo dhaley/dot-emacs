@@ -5,10 +5,27 @@
 (package-initialize)
 
 (defconst emacs-start-time (current-time))
+
 (unless noninteractive
   (message "Loading %s..." load-file-name))
 
-(setq message-log-max 16384)
+
+(defvar file-name-handler-alist-old file-name-handler-alist)
+
+(setq package-enable-at-startup nil
+      file-name-handler-alist nil
+      message-log-max 16384
+      gc-cons-threshold 402653184
+      gc-cons-percentage 0.6
+      auto-window-vscroll nil)
+
+(add-hook 'after-init-hook
+          `(lambda ()
+             (setq file-name-handler-alist file-name-handler-alist-old
+                   gc-cons-threshold 800000
+                   gc-cons-percentage 0.1)
+             (garbage-collect)) t)
+
 
 (defconst user-site-lisp-directory
   (expand-file-name "site-lisp/" user-emacs-directory))
@@ -106,6 +123,7 @@
   (push (expand-file-name "lib" user-emacs-directory) load-path))
 
 (use-package anaphora       :defer t :load-path "lib/anaphora")
+(use-package async         :defer t  :load-path "lisp/async")
 (use-package button-lock    :defer t :load-path "lib/button-lock")
 (use-package ctable         :defer t :load-path "lib/emacs-ctable")
 (use-package dash           :defer t :load-path "lib/dash-el")
@@ -5170,7 +5188,8 @@ Relies on functions of `php-mode'."
       (kill-all-local-variables)
       (snippet-mode)
       (set (make-local-variable 'yas-guessed-modes)
-           (mapcar #'(lambda (d) (intern (yas-table-name (car d))))
+           (mapcar #'(lambda (d)
+                       (intern (yas-table-name (car d))))
                    guessed-directories))
       (unless (and choose-instead-of-guess
                    (not (y-or-n-p "Insert a snippet with useful headers? ")))

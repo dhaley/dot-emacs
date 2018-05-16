@@ -32,8 +32,6 @@
  '(align-c++-modes (quote (csharp-mode c++-mode c-mode java-mode groovy-mode)))
  '(align-to-tab-stop nil)
  '(allout-command-prefix ".")
- '(ansi-color-names-vector
-   ["black" "red" "green" "brown" "blue" "magenta" "blue" "white"])
  '(appt-display-interval 30)
  '(appt-message-warning-time 60)
  '(async-bytecomp-allowed-packages nil)
@@ -188,7 +186,7 @@
  '(doc-view-resolution 300)
  '(drupal-convert-line-ending t)
  '(drupal-css-modes (quote (css-mode scss-mode)))
- '(drupal-drush-program "~/src/drush/drush")
+ '(drupal-drush-program "~/drush8/vendor/bin/drush")
  '(drupal-ignore-paths-regexp "\\(vendor\\|node_modules\\|libraries\\)")
  '(drupal-php-modes (quote (php-mode web-mode)))
  '(ediff-combination-pattern
@@ -563,20 +561,20 @@
       ("-d")
       nil nil\
       "BZh"]
-["\\.tgz\\'" "compressing" "gzip"
-("-c")
-"uncompressing" "gzip"
-("-c" "-q" "-d")
-t nil "^_\213"]
-["\\.g?z\\(~\\|\\.~[0-9]+~\\)?\\'" "compressing" "gzip"
-("-c")
-"uncompressing" "gzip"
-("-c" "-d")
-t t "^_\213"]
-["\\
+     ["\\.tgz\\'" "compressing" "gzip"
+      ("-c")
+      "uncompressing" "gzip"
+      ("-c" "-q" "-d")
+      t nil "^_\213"]
+     ["\\.g?z\\(~\\|\\.~[0-9]+~\\)?\\'" "compressing" "gzip"
+      ("-c")
+      "uncompressing" "gzip"
+      ("-c" "-d")
+      t t "^_\213"]
+     ["\\
       .dz\\'" nil nil nil "uncompressing" "gzip"
-("-c" "-d")
-nil t "^_\213"])))
+      ("-c" "-d")
+      nil t "^_\213"])))
  '(kill-do-not-save-duplicates t)
  '(kill-whole-line t)
  '(large-file-warning-threshold nil)
@@ -629,7 +627,7 @@ nil t "^_\213"])))
      ("Marmalade" . "https://marmalade-repo.org/packages/"))))
  '(package-selected-packages
    (quote
-    (auto-overlays zenburn-theme twilight-theme tronesque-theme tron-theme theme-changer ssh soothe-theme solarized-theme purple-haze-theme pony-mode pastels-on-dark-theme let-alist late-night-theme jujube-theme irfc inf-ruby gratuitous-dark-theme gotham-theme gandalf-theme django-theme deep-thought-theme csv-mode color-theme-ir-black clues-theme bubbleberry-theme auctex assemblage-theme ascii ample-zen-theme ample-theme)))
+    (drupal-mode heap auto-overlays zenburn-theme twilight-theme tronesque-theme tron-theme theme-changer ssh soothe-theme solarized-theme purple-haze-theme pony-mode pastels-on-dark-theme let-alist late-night-theme jujube-theme irfc inf-ruby gratuitous-dark-theme gotham-theme gandalf-theme django-theme deep-thought-theme csv-mode color-theme-ir-black clues-theme bubbleberry-theme auctex assemblage-theme ascii ample-zen-theme ample-theme)))
  '(page-break-lines-modes
    (quote
     (emacs-lisp-mode compilation-mode outline-mode prog-mode)))
@@ -695,6 +693,7 @@ nil t "^_\213"])))
  '(scroll-bar-mode nil)
  '(select-enable-clipboard t)
  '(semanticdb-default-save-directory "~/.emacs.d/data/semanticdb")
+ '(server-mode t)
  '(session-globals-exclude (quote (load-history flyspell-auto-correct-ring)))
  '(session-globals-include
    (quote
@@ -776,11 +775,11 @@ nil t "^_\213"])))
    (quote
     ("openssl s_client -connect %h:%p -no_ssl2 -ign_eof -CApath /etc/postfix/certs -cert ~/Messages/me.pem")))
  '(tool-bar-mode nil)
- '(tramp-auto-save-directory "~/.backups")
- '(tramp-default-method "ssh")
+ '(tramp-auto-save-directory "~/.backups" nil (tramp))
+ '(tramp-default-method "ssh" nil (tramp))
  '(tramp-default-method-alist
    (quote
-    (("\\`\\(127\\.0\\.0\\.1\\|::1\\|localhost6?\\)\\'" "\\`root\\'" "sudo"))))
+    (("\\`\\(127\\.0\\.0\\.1\\|::1\\|localhost6?\\)\\'" "\\`root\\'" "sudo"))) nil (tramp))
  '(tramp-persistency-file-name "~/.emacs.d/data/tramp")
  '(trash-directory "~/.Trash")
  '(undo-limit 800000)
@@ -808,7 +807,7 @@ nil t "^_\213"])))
  '(w3m-use-cookies t)
  '(warning-minimum-log-level :error)
  '(wdired-use-dired-vertical-movement (quote sometimes))
- '(web-mode-enable-comment-keywords t)
+ '(web-mode-enable-comment-keywords t t)
  '(wg-mode-line-on nil)
  '(wg-morph-on nil)
  '(wg-prefix-key "")
@@ -835,9 +834,6 @@ nil t "^_\213"])))
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(auto-dim-other-buffers-face ((t (:inherit fringe :foreground "Grey70"))))
- '(aw-background-face ((t (:background "red" :foreground "black"))))
- '(aw-leading-char-face ((t (:foreground "white"))))
  '(diff-added ((((background dark)) (:foreground "#FFFF9B9BFFFF")) (t (:foreground "DarkGreen"))))
  '(diff-changed ((((background dark)) (:foreground "Yellow")) (t (:foreground "MediumBlue"))))
  '(diff-context ((((background dark)) (:foreground "White")) (t (:foreground "Black"))))
@@ -850,9 +846,4 @@ nil t "^_\213"])))
  '(ghc-face-error ((t (:inherit default))))
  '(ghc-face-warn ((t (:inherit default))))
  '(idris-loaded-region-face ((t (:background "#eaf8ff"))))
- '(persp-selected-face ((t (:foreground "purple"))))
- '(swiper-minibuffer-match-face-1 ((t :background "#dddddd")))
- '(swiper-minibuffer-match-face-2 ((t :background "#bbbbbb" :weight bold)))
- '(swiper-minibuffer-match-face-3 ((t :background "#bbbbff" :weight bold)))
- '(swiper-minibuffer-match-face-4 ((t :background "#ffbbff" :weight bold)))
  '(wg-current-workgroup-face ((t (:foreground "purple")))))

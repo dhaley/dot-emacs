@@ -169,7 +169,7 @@
      (ruby . t)
      (gnuplot . t)
      (sql . t)
-     (sh . t)
+     (shell . t)
      (screen . t)
      (org . t)
      (plantuml . t)
@@ -232,7 +232,6 @@ SCHEDULED: %t
  '(org-enable-priority-commands t)
  '(org-enforce-todo-dependencies t)
  '(org-export-allow-BIND t)
- '(org-export-babel-evaluate nil)
  '(org-export-html-inline-images t)
  '(org-export-html-style-extra
    "<link rel=\"stylesheet\" href=\"http://doc.norang.ca/org.css\" type=\"text/css\" />")
@@ -275,24 +274,25 @@ SCHEDULED: %t
       ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
      ("beamer" "\\documentclass{beamer}" org-beamer-sectioning))))
  '(org-export-latex-listings t)
+ '(org-export-use-babel nil)
  '(org-export-with-section-numbers nil)
  '(org-export-with-sub-superscripts (quote {}))
  '(org-export-with-timestamps nil)
  '(org-extend-today-until 7)
  '(org-fast-tag-selection-single-key (quote expert))
  '(org-file-apps
-(quote
- ((auto-mode . emacs)
-  ("\\.mm\\'" . system)
-  ("\\.x?html?\\'" . system)
-  ("\\.pdf\\'" . system))))
+   (quote
+    ((auto-mode . emacs)
+     ("\\.mm\\'" . system)
+     ("\\.x?html?\\'" . system)
+     ("\\.pdf\\'" . system))))
  '(org-fontify-done-headline t)
  '(org-footnote-section nil)
  '(org-global-properties
-(quote
- (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
-  ("Confidence_ALL" . "low medium high")
-  ("STYLE_ALL" . "habit"))))
+   (quote
+    (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+     ("Confidence_ALL" . "low medium high")
+     ("STYLE_ALL" . "habit"))))
  '(org-habit-graph-column 50)
  '(org-habit-preceding-days 42)
  '(org-habit-today-glyph 45)
@@ -306,51 +306,51 @@ SCHEDULED: %t
  '(org-insert-heading-respect-content t)
  '(org-irc-link-to-logs t t)
  '(org-latex-default-packages-alist
-(quote
- (("T1" "fontenc" t)
-  ("" "fixltx2e" nil)
-  ("" "graphicx" t)
-  ("" "longtable" nil)
-  ("" "float" nil)
-  ("" "wrapfig" nil)
-  ("" "rotating" nil)
-  ("normalem" "ulem" t)
-  ("" "amsmath" t)
-  ("" "textcomp" t)
-  ("" "marvosym" t)
-  ("" "wasysym" t)
-  ("" "amssymb" t)
-  ("" "hyperref" nil)
-  "\\tolerance=1000")))
+   (quote
+    (("T1" "fontenc" t)
+     ("" "fixltx2e" nil)
+     ("" "graphicx" t)
+     ("" "longtable" nil)
+     ("" "float" nil)
+     ("" "wrapfig" nil)
+     ("" "rotating" nil)
+     ("normalem" "ulem" t)
+     ("" "amsmath" t)
+     ("" "textcomp" t)
+     ("" "marvosym" t)
+     ("" "wasysym" t)
+     ("" "amssymb" t)
+     ("" "hyperref" nil)
+     "\\tolerance=1000")))
  '(org-link-abbrev-alist
-(quote
- (("gmail" . "https://mail.google.com/mail/u/0/#all/%s")
-  ("google" . "http://www.google.com/search?q=%s")
-  ("map" . "http://maps.google.com/maps?q=%s")
-  ("github_nrel" . "https://github.nrel.gov")
-  ("github" . "https://github.com")
-  ("ndg" . "https://github.nrel.gov/NrelDrupal/%s"))))
+   (quote
+    (("gmail" . "https://mail.google.com/mail/u/0/#all/%s")
+     ("google" . "http://www.google.com/search?q=%s")
+     ("map" . "http://maps.google.com/maps?q=%s")
+     ("github_nrel" . "https://github.nrel.gov")
+     ("github" . "https://github.com")
+     ("ndg" . "https://github.nrel.gov/NrelDrupal/%s"))))
  '(org-link-frame-setup
-(quote
- ((vm . vm-visit-folder)
-  (gnus . org-gnus-no-new-news)
-  (file . find-file))))
+   (quote
+    ((vm . vm-visit-folder)
+     (gnus . org-gnus-no-new-news)
+     (file . find-file))))
  '(org-link-mailto-program (quote (compose-mail "%a" "%s")))
  '(org-list-allow-alphabetical t)
  '(org-list-demote-modify-bullet
-(quote
- (("+" . "-")
-  ("*" . "-")
-  ("1." . "-")
-  ("1)" . "-")
-  ("A)" . "-")
-  ("B)" . "-")
-  ("a)" . "-")
-  ("b)" . "-")
-  ("A." . "-")
-  ("B." . "-")
-  ("a." . "-")
-  ("b." . "-"))))
+   (quote
+    (("+" . "-")
+     ("*" . "-")
+     ("1." . "-")
+     ("1)" . "-")
+     ("A)" . "-")
+     ("B)" . "-")
+     ("a)" . "-")
+     ("b)" . "-")
+     ("A." . "-")
+     ("B." . "-")
+     ("a." . "-")
+     ("b." . "-"))))
  '(org-log-done (quote time))
  '(org-log-into-drawer t)
  '(org-log-state-notes-insert-after-drawers nil)
@@ -365,15 +365,15 @@ SCHEDULED: %t
  '(org-outline-path-complete-in-steps nil)
  '(org-plantuml-jar-path nil)
  '(org-priority-faces
-(quote
- ((65 :foreground "ForestGreen" :weight bold)
-  (67 :foreground "dark gray" :slant italic))))
+   (quote
+    ((65 :foreground "ForestGreen" :weight bold)
+     (67 :foreground "dark gray" :slant italic))))
  '(org-refile-allow-creating-parent-nodes (quote confirm))
  '(org-refile-target-verify-function (quote bh/verify-refile-target))
  '(org-refile-targets
-(quote
- ((nil :maxlevel . 9)
-  (org-agenda-files :maxlevel . 9))))
+   (quote
+    ((nil :maxlevel . 9)
+     (org-agenda-files :maxlevel . 9))))
  '(org-refile-use-outline-path t)
  '(org-remove-highlights-with-change t)
  '(org-return-follows-link t)
@@ -382,56 +382,56 @@ SCHEDULED: %t
  '(org-special-ctrl-a/e (quote reversed))
  '(org-special-ctrl-k t)
  '(org-speed-commands-user
-(quote
- (("0" . ignore)
-  ("1" . ignore)
-  ("2" . ignore)
-  ("3" . ignore)
-  ("4" . ignore)
-  ("5" . ignore)
-  ("6" . ignore)
-  ("7" . ignore)
-  ("8" . ignore)
-  ("9" . ignore)
-  ("a" . ignore)
-  ("d" . ignore)
-  ("h" . bh/hide-other)
-  ("i" progn
-   (forward-char 1)
-   (call-interactively
-    (quote org-insert-heading-respect-content)))
-  ("k" . org-kill-note-or-show-branches)
-  ("l" . ignore)
-  ("m" . ignore)
-  ("q" . bh/show-org-agenda)
-  ("r" . ignore)
-  ("s" . org-save-all-org-buffers)
-  ("w" . org-refile)
-  ("x" . ignore)
-  ("y" . ignore)
-  ("z" . org-add-note)
-  ("A" . ignore)
-  ("B" . ignore)
-  ("E" . ignore)
-  ("F" . bh/restrict-to-file-or-follow)
-  ("G" . ignore)
-  ("H" . ignore)
-  ("J" . org-clock-goto)
-  ("K" . ignore)
-  ("L" . ignore)
-  ("M" . ignore)
-  ("N" . bh/narrow-to-org-subtree)
-  ("P" . bh/narrow-to-org-project)
-  ("Q" . ignore)
-  ("R" . ignore)
-  ("S" . ignore)
-  ("T" . bh/org-todo)
-  ("U" . bh/narrow-up-one-org-level)
-  ("V" . ignore)
-  ("W" . bh/widen)
-  ("X" . ignore)
-  ("Y" . ignore)
-  ("Z" . ignore))))
+   (quote
+    (("0" . ignore)
+     ("1" . ignore)
+     ("2" . ignore)
+     ("3" . ignore)
+     ("4" . ignore)
+     ("5" . ignore)
+     ("6" . ignore)
+     ("7" . ignore)
+     ("8" . ignore)
+     ("9" . ignore)
+     ("a" . ignore)
+     ("d" . ignore)
+     ("h" . bh/hide-other)
+     ("i" progn
+      (forward-char 1)
+      (call-interactively
+       (quote org-insert-heading-respect-content)))
+     ("k" . org-kill-note-or-show-branches)
+     ("l" . ignore)
+     ("m" . ignore)
+     ("q" . bh/show-org-agenda)
+     ("r" . ignore)
+     ("s" . org-save-all-org-buffers)
+     ("w" . org-refile)
+     ("x" . ignore)
+     ("y" . ignore)
+     ("z" . org-add-note)
+     ("A" . ignore)
+     ("B" . ignore)
+     ("E" . ignore)
+     ("F" . bh/restrict-to-file-or-follow)
+     ("G" . ignore)
+     ("H" . ignore)
+     ("J" . org-clock-goto)
+     ("K" . ignore)
+     ("L" . ignore)
+     ("M" . ignore)
+     ("N" . bh/narrow-to-org-subtree)
+     ("P" . bh/narrow-to-org-project)
+     ("Q" . ignore)
+     ("R" . ignore)
+     ("S" . ignore)
+     ("T" . bh/org-todo)
+     ("U" . bh/narrow-up-one-org-level)
+     ("V" . ignore)
+     ("W" . bh/widen)
+     ("X" . ignore)
+     ("Y" . ignore)
+     ("Z" . ignore))))
  '(org-src-fontify-natively t)
  '(org-src-preserve-indentation nil)
  '(org-src-window-setup (quote current-window))
@@ -439,111 +439,111 @@ SCHEDULED: %t
  '(org-startup-indented t)
  '(org-startup-with-inline-images nil)
  '(org-structure-template-alist
-(quote
- (("s" "#+begin_src ?
+   (quote
+    (("s" "#+begin_src ?
 
 #+end_src" "<src lang=\"?\">
 
 </src>")
-  ("e" "#+begin_example
+     ("e" "#+begin_example
 ?
 #+end_example" "<example>
 ?
 </example>")
-  ("m" "#+begin_src message
+     ("m" "#+begin_src message
 
 #+end_src" "<src lang=message>
 
 </src>")
-  ("q" "#+begin_quote
+     ("q" "#+begin_quote
 ?
 #+end_quote" "<quote>
 ?
 </quote>")
-  ("v" "#+begin_verse
+     ("v" "#+begin_verse
 ?
 #+end_verse" "<verse>
 ?
 </verse>")
-  ("c" "#+begin_center
+     ("c" "#+begin_center
 ?
 #+end_center" "<center>
 ?
 </center>")
-  ("l" "#+begin_latex
+     ("l" "#+begin_latex
 ?
 #+end_latex" "<literal style=\"latex\">
 ?
 </literal>")
-  ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
-  ("h" "#+begin_html
+     ("L" "#+latex: " "<literal style=\"latex\">?</literal>")
+     ("h" "#+begin_html
 ?
 #+end_html" "<literal style=\"html\">
 ?
 </literal>")
-  ("H" "#+html: " "<literal style=\"html\">?</literal>")
-  ("a" "#+begin_ascii
+     ("H" "#+html: " "<literal style=\"html\">?</literal>")
+     ("a" "#+begin_ascii
 ?
 #+end_ascii")
-  ("A" "#+ascii: ")
-  ("i" "#+index: ?" "#+index: ?")
-  ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
+     ("A" "#+ascii: ")
+     ("i" "#+index: ?" "#+index: ?")
+     ("I" "#+include %file ?" "<include file=%file markup=\"?\">"))))
  '(org-stuck-projects (quote ("TODO=\"PROJECT\"" nil nil "SCHEDULED:")))
  '(org-tag-alist
-(quote
- ((:startgroup)
-  ("@errand" . 101)
-  ("@net" . 110)
-  ("@home" . 72)
-  (:endgroup)
-  ("WAITING" . 119)
-  ("HOLD" . 104)
-  ("PERSONAL" . 80)
-  ("WORK" . 87)
-  ("ORG" . 79)
-  ("NOTE" . 78)
-  ("CANCELLED" . 99)
-  ("FLAGGED" . 63))))
+   (quote
+    ((:startgroup)
+     ("@errand" . 101)
+     ("@net" . 110)
+     ("@home" . 72)
+     (:endgroup)
+     ("WAITING" . 119)
+     ("HOLD" . 104)
+     ("PERSONAL" . 80)
+     ("WORK" . 87)
+     ("ORG" . 79)
+     ("NOTE" . 78)
+     ("CANCELLED" . 99)
+     ("FLAGGED" . 63))))
  '(org-tags-column -97)
  '(org-tags-exclude-from-inheritance (quote ("crypt")))
  '(org-tags-match-list-sublevels t)
  '(org-time-clocksum-format
-(quote
- (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
+   (quote
+    (:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t)))
  '(org-time-clocksum-use-fractional t)
  '(org-todo-keyword-faces
-(quote
- (("TODO" :inherit org-todo)
-  ("PHONE" :foreground "forest green" :weight bold))))
+   (quote
+    (("TODO" :inherit org-todo)
+     ("PHONE" :foreground "forest green" :weight bold))))
  '(org-todo-keywords
-(quote
- ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-  (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+   (quote
+    ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+     (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
  '(org-todo-repeat-to-state "TODO")
  '(org-todo-state-tags-triggers
-(quote
- (("CANCELLED"
-   ("CANCELLED" . t))
-  ("WAITING"
-   ("WAITING" . t))
-  ("HOLD"
-   ("WAITING")
-   ("HOLD" . t))
-  (done
-   ("WAITING")
-   ("HOLD"))
-  ("TODO"
-   ("WAITING")
-   ("CANCELLED")
-   ("HOLD"))
-  ("NEXT"
-   ("WAITING")
-   ("CANCELLED")
-   ("HOLD"))
-  ("DONE"
-   ("WAITING")
-   ("CANCELLED")
-   ("HOLD")))))
+   (quote
+    (("CANCELLED"
+      ("CANCELLED" . t))
+     ("WAITING"
+      ("WAITING" . t))
+     ("HOLD"
+      ("WAITING")
+      ("HOLD" . t))
+     (done
+      ("WAITING")
+      ("HOLD"))
+     ("TODO"
+      ("WAITING")
+      ("CANCELLED")
+      ("HOLD"))
+     ("NEXT"
+      ("WAITING")
+      ("CANCELLED")
+      ("HOLD"))
+     ("DONE"
+      ("WAITING")
+      ("CANCELLED")
+      ("HOLD")))))
  '(org-treat-S-cursor-todo-selection-as-state-change nil)
  '(org-use-fast-todo-selection t)
  '(org-use-property-inheritance (quote ("AREA")))
@@ -553,10 +553,10 @@ SCHEDULED: %t
  '(org-velocity-always-use-bucket t)
  '(org-velocity-bucket "~/Documents/notes.txt")
  '(org-velocity-capture-templates
-(quote
- (("v" "Velocity" entry
-   (file "~/Documents/notes.txt")
-   "* NOTE %:search
+   (quote
+    (("v" "Velocity" entry
+      (file "~/Documents/notes.txt")
+      "* NOTE %:search
 %i%?
 :PROPERTIES:
 :ID:       %(shell-command-to-string \\\"uuidgen\\\"):CREATED:  %U

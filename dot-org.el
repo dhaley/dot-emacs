@@ -1,14 +1,22 @@
 ;;;_ , Org-mode
 
-(require 'cl)
-(require 'use-package)
+(eval-and-compile
+  (require 'cl-lib)
+  (require 'use-package)
+  (setq use-package-verbose nil)
+  (setq use-package-expand-minimally t)
+  (load "org-settings"))
+
+(eval-when-compile
+  (require 'cl)
+  (setplist 'string-to-multibyte
+            (use-package-plist-delete
+             (symbol-plist 'string-to-multibyte) 'byte-obsolete-info)))
 
 (eval-and-compile
   (push (expand-file-name "override/org-mode/contrib/lisp"
                           user-emacs-directory)
         load-path))
-
-(load "org-settings")
 
 (require 'org)
 (require 'org-agenda)
@@ -19,7 +27,8 @@
 ;; (require 'org-magit)
 ;; (require 'org-velocity)
 (require 'ob-emacs-lisp)
-(require 'ob-shell)
+;; (require 'ob-shell)
+
 (use-package ob-php
   :load-path "site-lisp/ob-php"
   :init
